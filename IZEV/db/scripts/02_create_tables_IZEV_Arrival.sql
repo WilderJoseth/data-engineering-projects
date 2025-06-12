@@ -1,0 +1,105 @@
+USE IZEV_Arrival;
+
+CREATE TABLE dbo.Incentives_2019(
+	Id INT NOT NULL IDENTITY,
+	Request_Date VARCHAR(100) NULL,
+	Month_Year VARCHAR(100) NULL,
+	Fiscal_Year VARCHAR(100) NULL,
+	Calendar_Year VARCHAR(100) NULL,
+	Dealership_Province VARCHAR(100) NULL,
+	Dealership_Code VARCHAR(100) NULL,
+	Purchase_or_Lease VARCHAR(100) NULL,
+	Vehicle_Year VARCHAR(100) NULL,
+	Vehicle_Make VARCHAR(100) NULL,
+	Vehicle_Model VARCHAR(100) NULL,
+	Vehicle_Make_Model VARCHAR(100) NULL,
+	BEV_PHEV_FCEV VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15 VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15_2022 VARCHAR(100) NULL,
+	Eligible_Incentive_Amount VARCHAR(100) NULL,
+	Recipient VARCHAR(100) NULL,
+	Recipient_Province VARCHAR(100) NULL,
+	Country VARCHAR(100) NULL,
+
+    CONSTRAINT PK_dbo_Incentives_2019 PRIMARY KEY (Id)
+) ON [PRIMARY];
+
+CREATE TABLE dbo.Incentives_2023(
+	Id INT NOT NULL IDENTITY,
+	Request_Date VARCHAR(100) NULL,
+	Month_Year VARCHAR(100) NULL,
+	Fiscal_Year VARCHAR(100) NULL,
+	Calendar_Year VARCHAR(100) NULL,
+	Dealership_Province VARCHAR(100) NULL,
+	Dealership_Code VARCHAR(100) NULL,
+	Purchase_or_Lease VARCHAR(100) NULL,
+	Vehicle_Year VARCHAR(100) NULL,
+	Vehicle_Make VARCHAR(100) NULL,
+	Vehicle_Model VARCHAR(100) NULL,
+	Vehicle_Make_Model VARCHAR(100) NULL,
+	BEV_PHEV_FCEV VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15 VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15_2022 VARCHAR(100) NULL,
+	Eligible_Incentive_Amount_1 VARCHAR(100) NULL,
+	Eligible_Incentive_Amount_2 VARCHAR(100) NULL,
+	Recipient VARCHAR(100) NULL,
+	Recipient_Province VARCHAR(100) NULL,
+	Country VARCHAR(100) NULL,
+
+    CONSTRAINT PK_dbo_Incentives_2023 PRIMARY KEY (Id)
+) ON [PRIMARY];
+
+CREATE TABLE dbo.Incentives_2024(
+	Id INT NOT NULL IDENTITY,
+	Request_Date VARCHAR(100) NULL,
+	Month_Year VARCHAR(100) NULL,
+	Fiscal_Year VARCHAR(100) NULL,
+	Calendar_Year VARCHAR(100) NULL,
+	Dealership_Province VARCHAR(100) NULL,
+	Dealership_Code VARCHAR(100) NULL,
+	Purchase_or_Lease VARCHAR(100) NULL,
+	Vehicle_Year VARCHAR(100) NULL,
+	Vehicle_Make VARCHAR(100) NULL,
+	Vehicle_Model VARCHAR(100) NULL,
+	Vehicle_Make_Model VARCHAR(100) NULL,
+	BEV_PHEV_FCEV VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15 VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15_2022 VARCHAR(100) NULL,
+	Eligible_Incentive_Amount_1 VARCHAR(100) NULL,
+	Eligible_Incentive_Amount_2 VARCHAR(100) NULL,
+	Recipient VARCHAR(100) NULL,
+	Recipient_Province VARCHAR(100) NULL,
+	Country VARCHAR(100) NULL,
+
+    CONSTRAINT PK_dbo_Incentives_2024 PRIMARY KEY (Id)
+) ON [PRIMARY];
+
+CREATE TABLE dbo.Incentives(
+	Id INT IDENTITY NOT NULL,
+	Request_Date VARCHAR(100) NULL,
+	Month_Year VARCHAR(100) NULL,
+	Fiscal_Year VARCHAR(100) NULL,
+	Calendar_Year VARCHAR(100) NULL,
+	Dealership_Province VARCHAR(100) NULL,
+	Dealership_Code VARCHAR(100) NULL,
+	Purchase_or_Lease VARCHAR(100) NULL,
+	Vehicle_Year VARCHAR(100) NULL,
+	Vehicle_Make VARCHAR(100) NULL,
+	Vehicle_Model VARCHAR(100) NULL,
+	Vehicle_Make_Model VARCHAR(100) NULL,
+	BEV_PHEV_FCEV VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15 VARCHAR(100) NULL,
+	BEV_PHEV_FCEV_15_2022 VARCHAR(100) NULL,
+	Eligible_Incentive_Amount VARCHAR(100) NULL,
+	Recipient VARCHAR(100) NULL,
+	Recipient_Province VARCHAR(100) NULL,
+	Country VARCHAR(100) NULL,
+	Id_Incentives_2019 INT NULL,
+	Id_Incentives_2023 INT NULL,
+	Id_Incentives_2024 INT NULL,
+
+	CONSTRAINT PK_dbo_Incentives PRIMARY KEY (Id)
+
+) ON [PRIMARY];
+
+SELECT name, crdate FROM SYSOBJECTS WHERE xtype = 'U';
