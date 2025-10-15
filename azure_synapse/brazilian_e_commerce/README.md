@@ -9,3 +9,5 @@ Technologies:
 * Power BI
 
 Link data: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce?resource=download
+
+![Architecture diagram](docs/img/architecture_diagram.png "Architecture diagram")
