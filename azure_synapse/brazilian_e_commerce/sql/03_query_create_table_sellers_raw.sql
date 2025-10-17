@@ -1,7 +1,7 @@
-Use Sales_Bronze;
+Use Sales;
 GO;
 
-CREATE EXTERNAL TABLE dbo.sellers
+CREATE EXTERNAL TABLE dbo.sellers_raw
 (
     seller_id VARCHAR(100),
     seller_zip_code_prefix VARCHAR(5),
@@ -10,8 +10,11 @@ CREATE EXTERNAL TABLE dbo.sellers
 )
 WITH
 (
-    DATA_SOURCE = sales_bronze_data,
-    LOCATION = 'csv/*sellers*.csv',
+    DATA_SOURCE = sales_raw_data,
+    LOCATION = '*sellers*.csv',
     FILE_FORMAT = CsvFormat
 );
-GO
+GO;
+
+SELECT TOP 5 * FROM dbo.sellers_raw;
+GO;

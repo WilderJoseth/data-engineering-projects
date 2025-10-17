@@ -1,7 +1,7 @@
-Use Sales_Bronze;
+Use Sales;
 GO;
 
-CREATE EXTERNAL TABLE dbo.products
+CREATE EXTERNAL TABLE dbo.products_raw
 (
     product_id VARCHAR(100),
     product_category_name VARCHAR(100),
@@ -15,8 +15,11 @@ CREATE EXTERNAL TABLE dbo.products
 )
 WITH
 (
-    DATA_SOURCE = sales_bronze_data,
-    LOCATION = 'csv/*products*.csv',
+    DATA_SOURCE = sales_raw_data,
+    LOCATION = '*products*.csv',
     FILE_FORMAT = CsvFormat
 );
-GO
+GO;
+
+SELECT TOP 5 * FROM dbo.products_raw;
+GO;
