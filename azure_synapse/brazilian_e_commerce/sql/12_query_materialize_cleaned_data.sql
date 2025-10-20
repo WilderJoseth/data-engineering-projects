@@ -1,6 +1,7 @@
 Use Olist_DB;
 GO;
 
+--------------- dw.fact_orders ---------------
 CREATE EXTERNAL TABLE dw.fact_orders
     WITH (
         LOCATION = 'orders/',
@@ -34,7 +35,9 @@ INNER JOIN raw.order_items i ON o.order_id = i.order_id
 INNER JOIN stage.vw_order_payments_no_missing_values p ON p.order_id = o.order_id
 INNER JOIN stage.vw_order_reviews_no_missing_values r ON r.order_id = o.order_id;
 GO;
+--------------- dw.fact_orders ---------------
 
+--------------- dw.dim_customers ---------------
 CREATE EXTERNAL TABLE dw.dim_customers
     WITH (
         LOCATION = 'customers/',
@@ -50,7 +53,9 @@ SELECT
 	CAST(customer_state AS CHAR(2)) AS customer_state
 FROM stage.vw_customers_no_missing_values;
 GO;
+--------------- dw.dim_customers ---------------
 
+--------------- dw.dim_products ---------------
 CREATE EXTERNAL TABLE dw.dim_products
     WITH (
         LOCATION = 'products/',
@@ -66,7 +71,9 @@ SELECT
 	CAST(product_width_cm AS INT) AS product_width_cm
 FROM stage.vw_products_no_missing_values;
 GO;
+--------------- dw.dim_products ---------------
 
+--------------- dw.dim_sellers ---------------
 CREATE EXTERNAL TABLE dw.dim_sellers
     WITH (
         LOCATION = 'sellers/',
@@ -81,6 +88,6 @@ SELECT
 	CAST(seller_state AS CHAR(2)) AS seller_state
 FROM stage.vw_sellers_no_missing_values;
 GO;
-
+--------------- dw.dim_sellers ---------------
 
 

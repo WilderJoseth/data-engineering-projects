@@ -1,6 +1,8 @@
 Use Olist_DB;
 GO;
 
+---------------------------- Start Identify Duplicated Values ----------------------------
+--------------- raw.orders ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	order_id,
@@ -23,7 +25,9 @@ GROUP BY
 	order_estimated_delivery_date
 HAVING COUNT(*) > 1;
 GO;
+--------------- raw.orders ---------------
 
+--------------- raw.order_items ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	order_id,
@@ -44,7 +48,9 @@ GROUP BY
 	freight_value
 HAVING COUNT(*) > 1;
 GO;
+--------------- raw.order_items ---------------
 
+--------------- raw.order_payments ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	order_id,
@@ -61,7 +67,9 @@ GROUP BY
 	payment_value
 HAVING COUNT(*) > 1;
 GO;
+--------------- raw.order_payments ---------------
 
+--------------- raw.order_reviews ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	review_id,
@@ -82,7 +90,9 @@ GROUP BY
 	review_answer_timestamp
 HAVING COUNT(*) > 1;
 GO;
+--------------- raw.order_reviews ---------------
 
+--------------- raw.customers ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	customer_id,
@@ -99,7 +109,9 @@ GROUP BY
 	customer_state
 HAVING COUNT(*) > 1;
 GO;
+--------------- raw.customers ---------------
 
+--------------- raw.products ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	product_id,
@@ -124,7 +136,9 @@ GROUP BY
 	product_width_cm
 HAVING COUNT(*) > 1;
 GO;
+--------------- raw.products ---------------
 
+--------------- raw.sellers ---------------
 SELECT
 	COUNT(*) AS count_duplicated,
 	seller_id,
@@ -139,4 +153,5 @@ GROUP BY
 	seller_state
 HAVING COUNT(*) > 1;
 GO;
-
+--------------- raw.sellers ---------------
+---------------------------- End Identify Duplicated Values ----------------------------

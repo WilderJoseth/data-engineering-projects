@@ -2,6 +2,7 @@ Use Olist_DB;
 GO;
 
 ---------------------------- Start Identify Missing Values ----------------------------
+--------------- raw.orders ---------------
 SELECT
 	SUM(IIF(order_id IS NULL, 1, 0)) AS order_id_missing,
 	SUM(IIF(customer_id IS NULL, 1, 0)) AS customer_id_missing,
@@ -19,7 +20,9 @@ SELECT
 FROM raw.orders
 GROUP BY order_status;
 GO;
+--------------- raw.orders ---------------
 
+--------------- raw.order_items ---------------
 SELECT
 	SUM(IIF(order_id IS NULL, 1, 0)) AS order_id_missing,
 	SUM(IIF(order_item_id IS NULL, 1, 0)) AS order_item_id_missing,
@@ -30,7 +33,9 @@ SELECT
 	SUM(IIF(freight_value IS NULL, 1, 0)) AS freight_value_date_missing
 FROM raw.order_items;
 GO;
+--------------- raw.order_items ---------------
 
+--------------- raw.order_payments ---------------
 SELECT
 	SUM(IIF(order_id IS NULL, 1, 0)) AS order_id_missing,
 	SUM(IIF(payment_sequential IS NULL, 1, 0)) AS payment_sequential_missing,
@@ -39,7 +44,9 @@ SELECT
 	SUM(IIF(payment_value IS NULL, 1, 0)) AS payment_value_missing
 FROM raw.order_payments;
 GO;
+--------------- raw.order_payments ---------------
 
+--------------- raw.order_reviews ---------------
 SELECT
 	SUM(IIF(review_id IS NULL, 1, 0)) AS review_id_missing,
 	SUM(IIF(order_id IS NULL, 1, 0)) AS order_id_missing,
@@ -50,7 +57,9 @@ SELECT
 	SUM(IIF(review_answer_timestamp IS NULL, 1, 0)) AS review_answer_timestamp_missing
 FROM raw.order_reviews;
 GO;
+--------------- raw.order_reviews ---------------
 
+--------------- raw.products ---------------
 SELECT
 	SUM(IIF(product_id IS NULL, 1, 0)) AS product_id_missing,
 	SUM(IIF(product_category_name IS NULL, 1, 0)) AS product_category_name_missing,
@@ -63,7 +72,9 @@ SELECT
 	SUM(IIF(product_width_cm IS NULL, 1, 0)) AS product_width_cm_missing
 FROM raw.products;
 GO;
+--------------- raw.products ---------------
 
+--------------- raw.sellers ---------------
 SELECT
 	SUM(IIF(seller_id IS NULL, 1, 0)) AS seller_id_missing,
 	SUM(IIF(seller_zip_code_prefix IS NULL, 1, 0)) AS seller_zip_code_prefix_missing,
@@ -71,9 +82,12 @@ SELECT
 	SUM(IIF(seller_state IS NULL, 1, 0)) AS seller_state_missing
 FROM raw.sellers;
 GO;
+--------------- raw.sellers ---------------
 ---------------------------- End Identify Missing Values ----------------------------
 
 ---------------------------- Start View Missing Values ----------------------------
+--------------- raw.orders ---------------
+-- View for trimming and making capital letter string columns
 CREATE VIEW stage.vw_orders_trim
 AS
 SELECT
@@ -88,6 +102,7 @@ SELECT
 FROM raw.orders;
 GO;
 
+-- View for filling missing values
 CREATE VIEW stage.vw_orders_no_missing_values
 AS
 SELECT
@@ -126,7 +141,10 @@ SELECT
 FROM stage.vw_orders_trim
 WHERE order_status = 'DELIVERED';
 GO;
+--------------- raw.orders ---------------
 
+--------------- raw.order_payments ---------------
+-- View for trimming and making capital letter string columns
 CREATE VIEW stage.vw_order_payments_no_missing_values
 AS
 SELECT
@@ -137,7 +155,11 @@ SELECT
 	payment_value
 FROM raw.order_payments;
 GO;
+--------------- raw.order_payments ---------------
 
+--------------- raw.order_reviews ---------------
+-- View for trimming and making capital letter string columns
+-- View for filling missing values
 CREATE VIEW stage.vw_order_reviews_no_missing_values
 AS
 SELECT
@@ -150,7 +172,10 @@ SELECT
 	review_answer_timestamp
 FROM raw.order_reviews;
 GO;
+--------------- raw.order_reviews ---------------
 
+--------------- raw.customers ---------------
+-- View for trimming and making capital letter string columns
 CREATE VIEW stage.vw_customers_no_missing_values
 AS
 SELECT
@@ -161,7 +186,12 @@ SELECT
 	UPPER(TRIM(customer_state)) AS customer_state
 FROM raw.customers;
 GO;
+--------------- raw.customers ---------------
 
+--------------- raw.products ---------------
+-- View for trimming and making capital letter string columns
+-- View for filling missing values
+-- Create 'UNKNOWN' category
 CREATE VIEW stage.vw_products_no_missing_values
 AS
 SELECT
@@ -176,7 +206,10 @@ SELECT
 	ISNULL(product_width_cm, '0') AS product_width_cm
 FROM raw.products;
 GO;
+--------------- raw.products ---------------
 
+--------------- raw.sellers ---------------
+-- View for trimming and making capital letter string columns
 CREATE VIEW stage.vw_sellers_no_missing_values
 AS
 SELECT
@@ -186,6 +219,7 @@ SELECT
 	UPPER(TRIM(seller_state)) AS seller_state
 FROM raw.sellers;
 GO;
+--------------- raw.sellers ---------------
 ---------------------------- End View Missing Values ----------------------------
 
 
