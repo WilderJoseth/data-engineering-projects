@@ -1,7 +1,7 @@
-Use Sales;
+Use Olist_DB;
 GO;
 
-CREATE EXTERNAL TABLE dbo.customers_raw
+CREATE EXTERNAL TABLE raw.customers
 (
     customer_id VARCHAR(100),
     customer_unique_id VARCHAR(100),
@@ -11,11 +11,8 @@ CREATE EXTERNAL TABLE dbo.customers_raw
 )
 WITH
 (
-    DATA_SOURCE = sales_raw_data,
+    DATA_SOURCE = olist_raw_data,
     LOCATION = '*customers*.csv',
     FILE_FORMAT = CsvFormat
 );
-GO;
-
-SELECT TOP 5 * FROM dbo.customers_raw;
 GO;

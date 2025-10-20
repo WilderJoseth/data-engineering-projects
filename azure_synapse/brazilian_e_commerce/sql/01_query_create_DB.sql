@@ -1,12 +1,21 @@
-CREATE DATABASE Sales
+CREATE DATABASE Olist_DB
     COLLATE Latin1_General_100_BIN2_UTF8;
 GO;
 
-Use Sales;
+Use Olist_DB;
 GO;
 
-CREATE EXTERNAL DATA SOURCE sales_raw_data WITH (
-    LOCATION = 'https://datalakeuldp7bo.dfs.core.windows.net/files/sales/csv/'
+CREATE SCHEMA raw;
+GO;
+
+CREATE SCHEMA stage;
+GO;
+
+CREATE SCHEMA dw;
+GO;
+
+CREATE EXTERNAL DATA SOURCE olist_raw_data WITH (
+    LOCATION = 'https://datalakefyod36h.dfs.core.windows.net/files/Olist/csv/'
 );
 GO;
 
@@ -21,8 +30,8 @@ CREATE EXTERNAL FILE FORMAT CsvFormat
     );
 GO;
 
-CREATE EXTERNAL DATA SOURCE sales_cleaned_data WITH (
-    LOCATION = 'https://datalakeuldp7bo.dfs.core.windows.net/files/sales/parquet/'
+CREATE EXTERNAL DATA SOURCE olist_cleaned_data WITH (
+    LOCATION = 'https://datalakefyod36h.dfs.core.windows.net/files/Olist/parquet/'
 );
 GO;
 
