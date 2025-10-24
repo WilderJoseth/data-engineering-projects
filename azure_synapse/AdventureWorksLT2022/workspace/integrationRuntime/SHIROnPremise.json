@@ -1,0 +1,6 @@
+{
+	"name": "SHIROnPremise",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
