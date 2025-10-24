@@ -1,0 +1,435 @@
+{
+	"name": "02_pl_workflow_Product",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create raw file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "00:05:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "ProductID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ProductID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "Name",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Name",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductNumber",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ProductNumber",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Color",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Color",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "StandardCost",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "StandardCost",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "ListPrice",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "ListPrice",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "Size",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Size",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Weight",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 8
+								},
+								"sink": {
+									"name": "Weight",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductCategoryID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ProductCategoryID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductModelID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ProductModelID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "SellStartDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "SellStartDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							},
+							{
+								"source": {
+									"name": "SellEndDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "SellEndDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							},
+							{
+								"source": {
+									"name": "DiscontinuedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "DiscontinuedDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							},
+							{
+								"source": {
+									"name": "ThumbNailPhoto",
+									"type": "Byte[]",
+									"physicalType": "varbinary"
+								},
+								"sink": {
+									"name": "ThumbNailPhoto",
+									"type": "Byte[]",
+									"physicalType": "BINARY"
+								}
+							},
+							{
+								"source": {
+									"name": "ThumbnailPhotoFileName",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ThumbnailPhotoFileName",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Product_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@pipeline().parameters.Container",
+								"type": "Expression"
+							},
+							"Layer": "bronze",
+							"File": {
+								"value": "@concat('Product/', 'raw_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.parquet')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create table bronze",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create raw file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('bronze.Product', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE bronze.Product;\r\n\r\nCREATE EXTERNAL TABLE bronze.Product\r\n(\r\n    ProductID INT,\r\n    Name NVARCHAR(50),\r\n    ProductNumber NVARCHAR(25),\r\n    Color NVARCHAR(15),\r\n    StandardCost MONEY,\r\n    ListPrice MONEY,\r\n    Size NVARCHAR(5),\r\n    Weight DECIMAL(8, 2),\r\n    ProductCategoryID INT,\r\n    ProductModelID INT,\r\n    SellStartDate DATETIME,\r\n    SellEndDate DATETIME,\r\n    DiscontinuedDate DATETIME,\r\n    ThumbNailPhoto VARBINARY(MAX),\r\n    ThumbnailPhotoFileName NVARCHAR(50),\r\n    rowguid UNIQUEIDENTIFIER,\r\n    ModifiedDate DATETIME\r\n)\r\nWITH\r\n(\r\n    DATA_SOURCE = bronze_data,\r\n    LOCATION = 'Product/*.parquet',\r\n    FILE_FORMAT = ParquetFormat\r\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop view silver cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create table bronze",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_Product_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create view silver cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop view silver cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_Product_Clean\r\nAS\r\nSELECT\r\n\tProductID,\r\n\tUPPER(TRIM(Name)) AS Name,\r\n\tUPPER(TRIM(ProductNumber)) AS ProductNumber,\r\n\tUPPER(TRIM(ISNULL(Color, ''))) AS Color,\r\n\tCAST(StandardCost AS DECIMAL(10, 4)) AS StandardCost,\r\n\tCAST(ListPrice AS DECIMAL(10, 4)) AS ListPrice,\r\n\tUPPER(TRIM(ISNULL(Size, ''))) AS Size,\r\n\tISNULL(Weight, 0) AS Weight,\r\n\tISNULL(ProductCategoryID, 0) AS ProductCategoryID,\r\n\tISNULL(ProductModelID, 0) AS ProductModelID,\r\n\tSellStartDate,\r\n\tISNULL(SellEndDate, CAST('1900-01-01' AS DATETIME)) AS SellEndDate,\r\n\tISNULL(DiscontinuedDate, CAST('1900-01-01' AS DATETIME)) AS DiscontinuedDate,\r\n\tUPPER(TRIM(ISNULL(ThumbnailPhotoFileName, ''))) AS ThumbnailPhotoFileName\r\nFROM bronze.Product;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create view silver cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('silver.Product', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE silver.Product;\r\n\r\nCREATE EXTERNAL TABLE silver.Product\r\n    WITH (\r\n        LOCATION = 'Product/',\r\n        DATA_SOURCE = silver_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n\tProductID,\r\n\tName,\r\n\tProductNumber,\r\n\tColor,\r\n\tStandardCost,\r\n\tListPrice,\r\n\tSize,\r\n\tWeight,\r\n\tProductCategoryID,\r\n\tProductModelID,\r\n\tSellStartDate,\r\n\tSellEndDate,\r\n\tDiscontinuedDate,\r\n\tThumbnailPhotoFileName\r\nFROM silver.vw_Product_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AdventureWorksLT2022/workflows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-10-24T02:17:47Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
