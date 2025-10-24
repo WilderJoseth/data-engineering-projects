@@ -1,0 +1,497 @@
+{
+	"name": "04_pl_workflow_SalesOrderHeader",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create raw file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "00:05:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SalesOrderID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "SalesOrderID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "RevisionNumber",
+									"type": "Byte",
+									"physicalType": "tinyint"
+								},
+								"sink": {
+									"name": "RevisionNumber",
+									"type": "Byte",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "OrderDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							},
+							{
+								"source": {
+									"name": "DueDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "DueDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "ShipDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							},
+							{
+								"source": {
+									"name": "Status",
+									"type": "Byte",
+									"physicalType": "tinyint"
+								},
+								"sink": {
+									"name": "Status",
+									"type": "Byte",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "OnlineOrderFlag",
+									"type": "Boolean",
+									"physicalType": "bit"
+								},
+								"sink": {
+									"name": "OnlineOrderFlag",
+									"type": "Boolean",
+									"physicalType": "BOOLEAN"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesOrderNumber",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "SalesOrderNumber",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "PurchaseOrderNumber",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "PurchaseOrderNumber",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "AccountNumber",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AccountNumber",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CustomerID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "CustomerID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipToAddressID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ShipToAddressID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "BillToAddressID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "BillToAddressID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "ShipMethod",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "ShipMethod",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditCardApprovalCode",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CreditCardApprovalCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "SubTotal",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "SubTotal",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "TaxAmt",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "TaxAmt",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "Freight",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "Freight",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "TotalDue",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "TotalDue",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "Comment",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "Comment",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SalesOrderHeader_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@pipeline().parameters.Container",
+								"type": "Expression"
+							},
+							"Layer": "bronze",
+							"File": {
+								"value": "@concat('SalesOrderHeader/', 'raw_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.parquet')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create table bronze",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create raw file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('bronze.SalesOrderHeader', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE bronze.SalesOrderHeader;\r\n\r\nCREATE EXTERNAL TABLE bronze.SalesOrderHeader\r\n(\r\n    SalesOrderID INT,\r\n    RevisionNumber TINYINT,\r\n    OrderDate DATETIME,\r\n    DueDate DATETIME,\r\n    ShipDate DATETIME,\r\n    Status TINYINT,\r\n    OnlineOrderFlag BIT,\r\n    SalesOrderNumber NVARCHAR(25),\r\n    PurchaseOrderNumber NVARCHAR(25),\r\n    AccountNumber NVARCHAR(15),\r\n    CustomerID INT,\r\n    ShipToAddressID INT,\r\n    BillToAddressID INT,\r\n    ShipMethod NVARCHAR(50),\r\n    CreditCardApprovalCode VARCHAR(25),\r\n    SubTotal MONEY,\r\n    TaxAmt MONEY,\r\n    Freight MONEY,\r\n    TotalDue MONEY,\r\n    Comment NVARCHAR(MAX),\r\n    rowguid UNIQUEIDENTIFIER,\r\n    ModifiedDate DATETIME\r\n)\r\nWITH\r\n(\r\n    DATA_SOURCE = bronze_data,\r\n    LOCATION = 'SalesOrderHeader/*.parquet',\r\n    FILE_FORMAT = ParquetFormat\r\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop view silver cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create table bronze",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_SalesOrderHeader_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create view silver cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop view silver cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_SalesOrderHeader_Clean\r\nAS\r\nSELECT\r\n\tSalesOrderID,\r\n\tRevisionNumber,\r\n\tOrderDate,\r\n\tDueDate,\r\n\tISNULL(ShipDate, CONVERT(DATETIME, '1900-01-01')) AS ShipDate,\r\n\tStatus,\r\n\tOnlineOrderFlag,\r\n\tUPPER(TRIM(SalesOrderNumber)) AS SalesOrderNumber,\r\n\tUPPER(TRIM(ISNULL(PurchaseOrderNumber, ''))) AS PurchaseOrderNumber,\r\n\tUPPER(TRIM(ISNULL(AccountNumber, ''))) AS AccountNumber,\r\n\tCustomerID,\r\n\tISNULL(ShipToAddressID, 0) AS ShipToAddressID,\r\n\tISNULL(BillToAddressID, 0) AS BillToAddressID,\r\n\tUPPER(TRIM(ShipMethod)) AS ShipMethod,\r\n\tUPPER(TRIM(ISNULL(CreditCardApprovalCode, ''))) AS CreditCardApprovalCode,\r\n\tCAST(SubTotal AS DECIMAL(12, 4)) AS SubTotal,\r\n\tCAST(TaxAmt AS DECIMAL(12, 4)) AS TaxAmt,\r\n\tCAST(Freight AS DECIMAL(12, 4)) AS Freight,\r\n\tCAST(TotalDue AS DECIMAL(12, 4)) AS TotalDue,\r\n\tUPPER(TRIM(ISNULL(Comment, ''))) AS Comment\r\nFROM bronze.SalesOrderHeader;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create view silver cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": "AdventureWorksLT2022_DB"
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('silver.SalesOrderHeader', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE silver.SalesOrderHeader;\r\n\r\nCREATE EXTERNAL TABLE silver.SalesOrderHeader\r\n    WITH (\r\n        LOCATION = 'SalesOrderHeader/',\r\n        DATA_SOURCE = silver_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n\tSalesOrderID,\r\n\tRevisionNumber,\r\n\tOrderDate,\r\n\tDueDate,\r\n\tShipDate,\r\n\tStatus,\r\n\tOnlineOrderFlag,\r\n\tSalesOrderNumber,\r\n\tPurchaseOrderNumber,\r\n\tAccountNumber,\r\n\tCustomerID,\r\n\tShipToAddressID,\r\n\tBillToAddressID,\r\n\tShipMethod,\r\n\tCreditCardApprovalCode,\r\n\tSubTotal,\r\n\tTaxAmt,\r\n\tFreight,\r\n\tTotalDue,\r\n\tComment\r\nFROM silver.vw_SalesOrderHeader_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AdventureWorksLT2022/workflows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-10-24T02:17:59Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}
