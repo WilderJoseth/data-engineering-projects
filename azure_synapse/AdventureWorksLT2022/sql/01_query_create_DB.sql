@@ -24,6 +24,11 @@ CREATE EXTERNAL DATA SOURCE silver_data WITH (
 );
 GO;
 
+CREATE EXTERNAL DATA SOURCE gold_data WITH (
+    LOCATION = 'https://datalake20251021.dfs.core.windows.net/adventureworkslt2022/gold/'
+);
+GO;
+
 CREATE EXTERNAL FILE FORMAT ParquetFormat
     WITH (
             FORMAT_TYPE = PARQUET,
