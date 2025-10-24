@@ -1,0 +1,20 @@
+{
+	"name": "05_query_create_table_bronze_Product",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\nIF (SELECT OBJECT_ID('bronze.Product', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE bronze.Product;\n\nCREATE EXTERNAL TABLE bronze.Product\n(\n    ProductID INT,\n    Name NVARCHAR(50),\n    ProductNumber NVARCHAR(25),\n    Color NVARCHAR(15),\n    StandardCost MONEY,\n    ListPrice MONEY,\n    Size NVARCHAR(5),\n    Weight DECIMAL(8, 2),\n    ProductCategoryID INT,\n    ProductModelID INT,\n    SellStartDate DATETIME,\n    SellEndDate DATETIME,\n    DiscontinuedDate DATETIME,\n    ThumbNailPhoto VARBINARY(MAX),\n    ThumbnailPhotoFileName NVARCHAR(50),\n    rowguid UNIQUEIDENTIFIER,\n    ModifiedDate DATETIME\n)\nWITH\n(\n    DATA_SOURCE = bronze_data,\n    LOCATION = 'Product/*.parquet',\n    FILE_FORMAT = ParquetFormat\n);\nGO;\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,45 @@
+{
+	"name": "ProductCategory_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerOnPremise",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "on-premise"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "ProductCategoryID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ParentProductCategoryID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Name",
+				"type": "nvarchar"
+			},
+			{
+				"name": "rowguid",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "SalesLT",
+			"table": "ProductCategory"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
