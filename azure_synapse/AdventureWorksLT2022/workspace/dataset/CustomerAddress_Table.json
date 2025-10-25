@@ -1,0 +1,45 @@
+{
+	"name": "CustomerAddress_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServerOnPremise",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "on-premise"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "CustomerID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AddressID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AddressType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "rowguid",
+				"type": "uniqueidentifier"
+			},
+			{
+				"name": "ModifiedDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "SalesLT",
+			"table": "CustomerAddress"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

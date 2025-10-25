@@ -1,0 +1,20 @@
+{
+	"name": "08_query_workflow_Address",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\n--------------------- Start bronze layer ---------------------\nIF (SELECT OBJECT_ID('bronze.Address', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE bronze.Address;\n\nCREATE EXTERNAL TABLE bronze.Address\n(\n    AddressID INT NULL,\n    AddressLine1 NVARCHAR(60) NULL,\n    AddressLine2 NVARCHAR(60) NULL,\n    City NVARCHAR(30) NULL,\n    StateProvince NVARCHAR(50) NULL,\n    CountryRegion NVARCHAR(50) NULL,\n    PostalCode NVARCHAR(15) NULL,\n    rowguid UNIQUEIDENTIFIER NULL,\n    ModifiedDate DATETIME NULL\n)\nWITH\n(\n    DATA_SOURCE = bronze_data,\n    LOCATION = 'Address/*.parquet',\n    FILE_FORMAT = ParquetFormat\n);\n--------------------- End bronze layer ---------------------\n\n--------------------- Start silver layer ---------------------\n-- Cleaning\nDROP VIEW IF EXISTS silver.vw_Address_Clean;\n\nCREATE VIEW silver.vw_Address_Clean\nAS\nSELECT\n\tAddressID,\n\tUPPER(TRIM(AddressLine1)) AS AddressLine1,\n\tUPPER(TRIM(ISNULL(AddressLine2, ''))) AS AddressLine2,\n\tUPPER(TRIM(City)) AS City,\n\tUPPER(TRIM(StateProvince)) AS StateProvince,\n\tUPPER(TRIM(CountryRegion)) AS CountryRegion,\n\tUPPER(TRIM(PostalCode)) AS PostalCode\nFROM bronze.Address;\n\n-- Materialization\nIF (SELECT OBJECT_ID('silver.Address', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE silver.Address;\n\nCREATE EXTERNAL TABLE silver.Address\n    WITH (\n        LOCATION = 'Address/',\n        DATA_SOURCE = silver_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tAddressID,\n\tAddressLine1,\n\tAddressLine2,\n\tCity,\n\tStateProvince,\n\tCountryRegion,\n\tPostalCode\nFROM silver.vw_Address_Clean;\n--------------------- End silver layer ---------------------\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

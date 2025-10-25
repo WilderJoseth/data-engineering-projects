@@ -1,0 +1,348 @@
+{
+	"name": "07_pl_workflow_Address",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create raw file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "00:05:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "AddressID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "AddressID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "AddressLine1",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AddressLine1",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "AddressLine2",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "AddressLine2",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "City",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "StateProvince",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "StateProvince",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CountryRegion",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "CountryRegion",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "PostalCode",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "PostalCode",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Address_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@pipeline().parameters.Container",
+								"type": "Expression"
+							},
+							"Layer": "bronze",
+							"File": {
+								"value": "@concat('Address/', 'raw_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.parquet')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create bronze table",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create raw file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('bronze.Address', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE bronze.Address;\r\n\r\nCREATE EXTERNAL TABLE bronze.Address\r\n(\r\n    AddressID INT NULL,\r\n    AddressLine1 NVARCHAR(60) NULL,\r\n    AddressLine2 NVARCHAR(60) NULL,\r\n    City NVARCHAR(30) NULL,\r\n    StateProvince NVARCHAR(50) NULL,\r\n    CountryRegion NVARCHAR(50) NULL,\r\n    PostalCode NVARCHAR(15) NULL,\r\n    rowguid UNIQUEIDENTIFIER NULL,\r\n    ModifiedDate DATETIME NULL\r\n)\r\nWITH\r\n(\r\n    DATA_SOURCE = bronze_data,\r\n    LOCATION = 'Address/*.parquet',\r\n    FILE_FORMAT = ParquetFormat\r\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop silver view cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_Address_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop silver view cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_Address_Clean\r\nAS\r\nSELECT\r\n\tAddressID,\r\n\tUPPER(TRIM(AddressLine1)) AS AddressLine1,\r\n\tUPPER(TRIM(ISNULL(AddressLine2, ''))) AS AddressLine2,\r\n\tUPPER(TRIM(City)) AS City,\r\n\tUPPER(TRIM(StateProvince)) AS StateProvince,\r\n\tUPPER(TRIM(CountryRegion)) AS CountryRegion,\r\n\tUPPER(TRIM(PostalCode)) AS PostalCode\r\nFROM bronze.Address;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create silver view cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('silver.Address', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE silver.Address;\r\n\r\nCREATE EXTERNAL TABLE silver.Address\r\n    WITH (\r\n        LOCATION = 'Address/',\r\n        DATA_SOURCE = silver_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n\tAddressID,\r\n\tAddressLine1,\r\n\tAddressLine2,\r\n\tCity,\r\n\tStateProvince,\r\n\tCountryRegion,\r\n\tPostalCode\r\nFROM silver.vw_Address_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"BD": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AdventureWorksLT2022/workflows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-10-24T02:17:47Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

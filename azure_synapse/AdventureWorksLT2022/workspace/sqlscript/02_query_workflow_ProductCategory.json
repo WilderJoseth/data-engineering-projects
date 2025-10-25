@@ -1,0 +1,20 @@
+{
+	"name": "02_query_workflow_ProductCategory",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\n--------------------- Start bronze layer ---------------------\nIF (SELECT OBJECT_ID('bronze.ProductCategory', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE bronze.ProductCategory;\n\nCREATE EXTERNAL TABLE bronze.ProductCategory\n(\n    ProductCategoryID INT NULL,\n    ParentProductCategoryID INT NULL,\n    Name NVARCHAR(50) NULL,\n    rowguid UNIQUEIDENTIFIER NULL,\n    ModifiedDate DATETIME NULL\n)\nWITH\n(\n    DATA_SOURCE = bronze_data,\n    LOCATION = 'ProductCategory/*.parquet',\n    FILE_FORMAT = ParquetFormat\n);\n--------------------- End bronze layer ---------------------\n\n--------------------- Start silver layer ---------------------\n-- Cleaning\nDROP VIEW IF EXISTS silver.vw_ProductCategory_Clean;\n\nCREATE VIEW silver.vw_ProductCategory_Clean\nAS\nSELECT\n\tProductCategoryID,\n\tUPPER(TRIM(Name)) AS Name\nFROM bronze.ProductCategory;\n\n-- Materialization\nIF (SELECT OBJECT_ID('silver.ProductCategory', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE silver.ProductCategory;\n\nCREATE EXTERNAL TABLE silver.ProductCategory\n    WITH (\n        LOCATION = 'ProductCategory/',\n        DATA_SOURCE = silver_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tProductCategoryID,\n\tName\nFROM silver.vw_ProductCategory_Clean;\n--------------------- End silver layer ---------------------\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "09_gold_process",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\n------------------ Start Fact_Orders ------------------\nIF (SELECT OBJECT_ID('gold.Fact_Orders', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE gold.Fact_Orders;\n\nCREATE EXTERNAL TABLE gold.Fact_Orders\n    WITH (\n        LOCATION = 'Fact_Orders/',\n        DATA_SOURCE = gold_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n    d.SalesOrderDetailID,\n    h.OrderDate,\n    h.DueDate,\n    h.ShipDate,\n    h.OnlineOrderFlag,\n    h.SalesOrderNumber,\n    h.PurchaseOrderNumber,\n    h.AccountNumber,\n    h.CustomerID,\n    h.ShipToAddressID,\n    h.BillToAddressID,\n    h.ShipMethod,\n    h.CreditCardApprovalCode,\n    d.OrderQty,\n    d.ProductID,\n    d.UnitPrice,\n    d.UnitPriceDiscount,\n    d.LineTotal,\n    h.SubTotal,\n    h.TaxAmt,\n    h.Freight,\n    h.TotalDue\nFROM silver.SalesOrderDetail d\nINNER JOIN silver.SalesOrderHeader h ON h.SalesOrderID = d.SalesOrderID\n------------------ End Fact_Orders ------------------\n\n------------------ Start Dim_Products ------------------\nIF (SELECT OBJECT_ID('gold.Dim_Products', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE gold.Dim_Products;\n\nCREATE EXTERNAL TABLE gold.Dim_Products\n    WITH (\n        LOCATION = 'Dim_Products/',\n        DATA_SOURCE = gold_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n    p.ProductID,\n    p.Name,\n    p.ProductNumber,\n    c.Name AS CategoryName,\n    m.Name AS ModelName,\n    p.Color,\n    p.StandardCost,\n    p.ListPrice,\n    p.Size,\n    p.SellStartDate,\n    p.SellEndDate\nFROM silver.Product p\nINNER JOIN silver.ProductCategory c ON c.ProductCategoryID = p.ProductCategoryID\nINNER JOIN silver.ProductModel m ON m.ProductModelID = p.ProductModelID;\n------------------ End Dim_Products ------------------\n\n------------------ Start Dim_Address ------------------\nIF (SELECT OBJECT_ID('gold.Dim_Address', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE gold.Dim_Address;\n\nCREATE EXTERNAL TABLE gold.Dim_Address\n    WITH (\n        LOCATION = 'Dim_Address/',\n        DATA_SOURCE = gold_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tAddressID,\n\tAddressLine1,\n\tAddressLine2,\n\tCity,\n\tStateProvince,\n\tCountryRegion,\n\tPostalCode\nFROM silver.Address;\n------------------ End Dim_Address ------------------\n\n------------------ Start Dim_Customer ------------------\nIF (SELECT OBJECT_ID('gold.Dim_Customer', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE gold.Dim_Customer;\n\nCREATE EXTERNAL TABLE gold.Dim_Customer\n    WITH (\n        LOCATION = 'Dim_Customer/',\n        DATA_SOURCE = gold_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tCustomerID,\n\tNameStyle,\n\tTitle,\n\tFirstName,\n\tMiddleName,\n\tLastName,\n\tSuffix,\n\tCompanyName,\n\tSalesPerson,\n\tEmailAddress,\n\tPhone\nFROM silver.Customer;\n------------------ End Dim_Customer ------------------\n\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

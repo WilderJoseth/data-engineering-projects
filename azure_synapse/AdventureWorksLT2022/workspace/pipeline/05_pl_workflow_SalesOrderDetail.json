@@ -1,0 +1,354 @@
+{
+	"name": "05_pl_workflow_SalesOrderDetail",
+	"properties": {
+		"activities": [
+			{
+				"name": "Create raw file",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "00:05:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "SalesOrderID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "SalesOrderID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "SalesOrderDetailID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "SalesOrderDetailID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "OrderQty",
+									"type": "Int16",
+									"physicalType": "smallint"
+								},
+								"sink": {
+									"name": "OrderQty",
+									"type": "Int16",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "ProductID",
+									"type": "Int32",
+									"physicalType": "int"
+								},
+								"sink": {
+									"name": "ProductID",
+									"type": "Int32",
+									"physicalType": "INT_32"
+								}
+							},
+							{
+								"source": {
+									"name": "UnitPrice",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "UnitPrice",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "UnitPriceDiscount",
+									"type": "Decimal",
+									"physicalType": "money",
+									"scale": 4,
+									"precision": 19
+								},
+								"sink": {
+									"name": "UnitPriceDiscount",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "LineTotal",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 6,
+									"precision": 38
+								},
+								"sink": {
+									"name": "LineTotal",
+									"type": "Decimal",
+									"physicalType": "DECIMAL"
+								}
+							},
+							{
+								"source": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "uniqueidentifier"
+								},
+								"sink": {
+									"name": "rowguid",
+									"type": "Guid",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "ModifiedDate",
+									"type": "DateTime",
+									"physicalType": "INT_96"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SalesOrderDetail_Table",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Parquet_File",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@pipeline().parameters.Container",
+								"type": "Expression"
+							},
+							"Layer": "bronze",
+							"File": {
+								"value": "@concat('SalesOrderDetail/', 'raw_', formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '.parquet')",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "Create bronze table",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create raw file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('bronze.SalesOrderDetail', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE bronze.SalesOrderDetail;\r\n\r\nCREATE EXTERNAL TABLE bronze.SalesOrderDetail\r\n(\r\n    SalesOrderID INT NULL,\r\n    SalesOrderDetailID INT NULL,\r\n    OrderQty SMALLINT NULL,\r\n    ProductID INT NULL,\r\n    UnitPrice MONEY NULL,\r\n    UnitPriceDiscount MONEY NULL,\r\n    LineTotal NUMERIC(38, 6) NULL,\r\n    rowguid UNIQUEIDENTIFIER NULL,\r\n    ModifiedDate DATETIME NULL\r\n)\r\nWITH\r\n(\r\n    DATA_SOURCE = bronze_data,\r\n    LOCATION = 'SalesOrderDetail/*.parquet',\r\n    FILE_FORMAT = ParquetFormat\r\n);"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop silver view cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_SalesOrderDetail_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view cleaning",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop silver view cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_SalesOrderDetail_Clean\r\nAS\r\nSELECT\r\n\tSalesOrderID,\r\n\tSalesOrderDetailID,\r\n\tOrderQty,\r\n\tProductID,\r\n\tCAST(UnitPrice AS DECIMAL(8, 4)) AS UnitPrice,\r\n\tCAST(UnitPriceDiscount AS DECIMAL(8, 4)) AS UnitPriceDiscount,\r\n\tCAST(LineTotal AS DECIMAL(38, 6)) AS LineTotal\r\nFROM bronze.SalesOrderDetail;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create silver view cleaning",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('silver.SalesOrderDetail', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE silver.SalesOrderDetail;\r\n\r\nCREATE EXTERNAL TABLE silver.SalesOrderDetail\r\n    WITH (\r\n        LOCATION = 'SalesOrderDetail/',\r\n        DATA_SOURCE = silver_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n\tSalesOrderID,\r\n\tSalesOrderDetailID,\r\n\tOrderQty,\r\n\tProductID,\r\n\tUnitPrice,\r\n\tUnitPriceDiscount,\r\n\tLineTotal\r\nFROM silver.vw_SalesOrderDetail_Clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"BD": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "AdventureWorksLT2022/workflows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-10-24T02:18:08Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

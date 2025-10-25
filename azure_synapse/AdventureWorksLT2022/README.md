@@ -255,4 +255,4 @@ INNER JOIN silver.SalesOrderHeader h ON h.SalesOrderID = d.SalesOrderID;
 
 In terms of reporting, a lake database layer was created.
 
-
+![Lake Database](docs/img/lake_database.png)

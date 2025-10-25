@@ -1,0 +1,538 @@
+{
+	"name": "01_pl_initial_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute workflow ProductCategory",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01_pl_workflow_ProductCategory",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow Product",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02_pl_workflow_Product",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow Customer",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "03_pl_workflow_Customer",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow SalesOrderHeader",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "04_pl_workflow_SalesOrderHeader",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow SalesOrderDetail",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "05_pl_workflow_SalesOrderDetail",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Delete bronze files",
+				"type": "Delete",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('container')",
+								"type": "Expression"
+							},
+							"Layer": "bronze"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete gold files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Delete silver files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('container')",
+								"type": "Expression"
+							},
+							"Layer": "gold"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Execute workflow ProductModel",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "06_pl_workflow_ProductModel",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow Address",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "07_pl_workflow_Address",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Create gold fact table orders",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow SalesOrderHeader",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Execute workflow SalesOrderDetail",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('gold.Fact_Orders', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE gold.Fact_Orders;\r\n\r\nCREATE EXTERNAL TABLE gold.Fact_Orders\r\n    WITH (\r\n        LOCATION = 'Fact_Orders/',\r\n        DATA_SOURCE = gold_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n    d.SalesOrderDetailID,\r\n    h.OrderDate,\r\n    h.DueDate,\r\n    h.ShipDate,\r\n    h.OnlineOrderFlag,\r\n    h.SalesOrderNumber,\r\n    h.PurchaseOrderNumber,\r\n    h.AccountNumber,\r\n    h.CustomerID,\r\n    h.ShipToAddressID,\r\n    h.BillToAddressID,\r\n    h.ShipMethod,\r\n    h.CreditCardApprovalCode,\r\n    d.OrderQty,\r\n    d.ProductID,\r\n    d.UnitPrice,\r\n    d.UnitPriceDiscount,\r\n    d.LineTotal,\r\n    h.SubTotal,\r\n    h.TaxAmt,\r\n    h.Freight,\r\n    h.TotalDue\r\nFROM silver.SalesOrderDetail d\r\nINNER JOIN silver.SalesOrderHeader h ON h.SalesOrderID = d.SalesOrderID;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create gold dim table products",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow ProductCategory",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Execute workflow Product",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Execute workflow ProductModel",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('gold.Dim_Products', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE gold.Dim_Products;\r\n    \r\nCREATE EXTERNAL TABLE gold.Dim_Products\r\n    WITH (\r\n        LOCATION = 'Dim_Products/',\r\n        DATA_SOURCE = gold_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n    p.ProductID,\r\n    p.Name,\r\n    p.ProductNumber,\r\n    c.Name AS CategoryName,\r\n    m.Name AS ModelName,\r\n    p.Color,\r\n    p.StandardCost,\r\n    p.ListPrice,\r\n    p.Size,\r\n    p.SellStartDate,\r\n    p.SellEndDate\r\nFROM silver.Product p\r\nINNER JOIN silver.ProductCategory c ON c.ProductCategoryID = p.ProductCategoryID\r\nINNER JOIN silver.ProductModel m ON m.ProductModelID = p.ProductModelID;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create gold dim table customers",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow Customer",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('gold.Dim_Customer', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE gold.Dim_Customer;\r\n\r\nCREATE EXTERNAL TABLE gold.Dim_Customer\r\n    WITH (\r\n        LOCATION = 'Dim_Customer/',\r\n        DATA_SOURCE = gold_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n\tCustomerID,\r\n\tTitle,\r\n\tFirstName,\r\n\tMiddleName,\r\n\tLastName,\r\n\tSuffix,\r\n\tCompanyName,\r\n\tSalesPerson,\r\n\tEmailAddress,\r\n\tPhone\r\nFROM silver.Customer;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create gold dim table address",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow Address",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "IF (SELECT OBJECT_ID('gold.Dim_Address', 'U')) IS NOT NULL\r\n    DROP EXTERNAL TABLE gold.Dim_Address;\r\n\r\nCREATE EXTERNAL TABLE gold.Dim_Address\r\n    WITH (\r\n        LOCATION = 'Dim_Address/',\r\n        DATA_SOURCE = gold_data,\r\n        FILE_FORMAT = ParquetFormat\r\n    )\r\nAS\r\nSELECT\r\n\tAddressID,\r\n\tAddressLine1,\r\n\tAddressLine2,\r\n\tCity,\r\n\tStateProvince,\r\n\tCountryRegion,\r\n\tPostalCode\r\nFROM silver.Address;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Delete silver files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Delete bronze files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('container')",
+								"type": "Expression"
+							},
+							"Layer": "silver"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			}
+		],
+		"variables": {
+			"container": {
+				"type": "String",
+				"defaultValue": "adventureworkslt2022"
+			},
+			"BD": {
+				"type": "String",
+				"defaultValue": "AdventureWorksLT2022_DB"
+			}
+		},
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-10-24T02:18:13Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

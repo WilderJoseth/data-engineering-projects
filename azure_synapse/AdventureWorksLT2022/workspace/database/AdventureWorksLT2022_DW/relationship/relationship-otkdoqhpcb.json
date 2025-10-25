@@ -1,0 +1,23 @@
+{
+	"name": "relationship-otkdoqhpcb",
+	"properties": {
+		"Name": "relationship-otkdoqhpcb",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "AdventureWorksLT2022_DW"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "Dim_Customer",
+		"ToTableName": "Fact_Orders",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "CustomerID",
+				"ToColumnName": "CustomerID"
+			}
+		],
+		"RelationshipType": 0
+	},
+	"type": "RELATIONSHIP"
+}

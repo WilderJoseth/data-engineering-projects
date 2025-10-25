@@ -102,7 +102,6 @@ CREATE EXTERNAL TABLE gold.Dim_Customer
 AS
 SELECT
 	CustomerID,
-	NameStyle,
 	Title,
 	FirstName,
 	MiddleName,

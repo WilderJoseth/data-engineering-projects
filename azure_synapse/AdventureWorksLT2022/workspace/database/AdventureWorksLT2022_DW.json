@@ -1,0 +1,22 @@
+{
+	"name": "AdventureWorksLT2022_DW",
+	"properties": {
+		"Name": "AdventureWorksLT2022_DW",
+		"EntityType": "DATABASE",
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"Properties": {
+			"IsSyMSCDMDatabase": true
+		},
+		"Source": {
+			"Provider": "ADLS",
+			"Location": "abfss://adventureworkslt2022@datalake20251021.dfs.core.windows.net/gold",
+			"Properties": {
+				"FormatType": "parquet",
+				"LinkedServiceName": "ws20251021-WorkspaceDefaultStorage"
+			}
+		}
+	},
+	"type": "DATABASE"
+}
