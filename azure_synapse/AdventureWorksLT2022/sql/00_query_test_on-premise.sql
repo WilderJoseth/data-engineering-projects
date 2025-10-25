@@ -3,6 +3,14 @@ GO;
 
 -- CREATE SCHEMA stage;
 
+SELECT * FROM SalesLT.Customer
+
+SELECT DISTINCT Size FROM SalesLT.Product
+
+SELECT DISTINCT RevisionNumber FROM SalesLT.SalesOrderHeader
+
+sp_Help 'SalesLT.SalesOrderHeader'
+
 ---------------------------- Start Identify Missing Values ----------------------------
 SELECT
 	SUM(IIF(AddressLine2 IS NULL, 1, 0)) AS AddressLine2_missing
@@ -21,6 +29,7 @@ FROM SalesLT.Customer
 GO;
 
 SELECT
+	COUNT(1) AS total_rows,
 	SUM(IIF(Color IS NULL, 1, 0)) AS Color_missing,
 	SUM(IIF(Size IS NULL, 1, 0)) AS Size_missing,
 	SUM(IIF(Weight IS NULL, 1, 0)) AS Weight_missing,
@@ -395,4 +404,40 @@ GROUP BY
 	Comment
 HAVING COUNT(*) > 1;
 ---------------------------- End Identifyng Duplicated Values ----------------------------
+
+-- 2008-06-01 00:00:00.000
+-- 2008-06-13 00:00:00.000
+SELECT MAX(OrderDate), MAX(DueDate), MAX(ShipDate)
+FROM stage.vw_SalesOrderHeader_first_transformation
+
+-- 1900-01-01 00:00:00.000 / 2002-06-01 00:00:00.000
+SELECT MIN(SellStartDate), MIN(SellEndDate)
+FROM stage.vw_product_first_transformation
+
+DECLARE @dates_table TABLE (DateKey DATE)
+DECLARE @start_date DATE, @end_date DATE
+SET @start_date = CAST('2002-06-01' AS DATE)
+SET @end_date = CAST('2008-06-13' AS DATE)
+
+INSERT @dates_table VALUES (CAST('1900-01-01 00:00:00.000' AS DATE))
+WHILE @start_date <= @end_date
+BEGIN
+	INSERT @dates_table VALUES (@start_date)
+	SET @start_date = DATEADD(DAY, 1, @start_date);
+END
+
+SELECT
+	CONVERT(INT, CONVERT(NVARCHAR(8), DateKey, 112)) AS DateKey,
+	DateKey AS FullDate,
+	YEAR(DateKey) AS CalendarYear,
+	DATEPART(QUARTER, DateKey) AS CalendarQuarter,
+	MONTH(DateKey) AS CalendarMonth,
+	DAY(DateKey) AS CalendarDay,
+	DATEPART(WEEKDAY, DateKey) AS DayOfWeek,
+	UPPER(DATENAME(WEEKDAY, DateKey)) AS DayName,
+	UPPER(DATENAME(MONTH, DateKey)) AS MonthName,
+	'Q' + CAST(DATEPART(QUARTER, DateKey) AS NVARCHAR(1)) AS QuarterName,
+	DATEPART(WEEK, DateKey) AS WeekOfYear
+FROM @dates_table
+
 

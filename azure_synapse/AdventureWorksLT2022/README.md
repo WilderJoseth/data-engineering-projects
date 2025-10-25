@@ -2,6 +2,8 @@
 
 The goal of this project was to build a **data lakehouse structure** on Azure using **Serverless SQL Pool** for exploration, transformation, and reporting.
 
+Pipelines work under an initial load approach. So each time they run, everything is loaded again.
+
 Technologies:
 
 * MSSQL On-Premise
@@ -12,13 +14,13 @@ Technologies:
 
 ## 1. Data Lake Design
 
-The data was organized following a **three-layer architecture**:
+The data was organized following a **medallion architecture**:
 
 | Layer | Description | Example Path |
 |--------|--------------|--------------|
-| **Bronze** | Raw data in parquet files | `/adventureworkslt2022/bronze/Product/*.parquet` | |
-| **Silver** | Cleaned and standardized data using Synapse **views** | `/adventureworkslt2022/bronze/Product/*.parquet` |
-| **Gold** | Final curated tables stored as **Parquet** files | `/adventureworkslt2022/silver/Product/*.parquet` |
+| **Bronze** | Raw data in parquet files | `/adventureworkslt2022/bronze/Product/*.parquet` |
+| **Silver** | Clean and standardized data using Synapse **views** | `/adventureworkslt2022/bronze/Product/*.parquet` |
+| **Gold** | Final tables stored as **Parquet** files | `/adventureworkslt2022/silver/Product/*.parquet` |
 
 ![Data Lake Design](docs/img/data_lake_design.png)
 
@@ -28,15 +30,18 @@ Using pipelines, the data was extracted from on-premise, stored in cloud and app
 
 In general, the pipeline has the following steps:
 
-1. Delete previous files.
-2. Copy data from on-premise to cloud.
+1. Delete previous file, in order to start from scratch.
+2. Copy data from on-premise to cloud using self-hosted integration runtime.
 3. Create external bronze tables.
 4. Create silver views.
-5. Materialized clean data.
+5. Materialize clean data.
+6. Create gold tables for data warehousing.
 
 ![Pipeline per table](docs/img/pipeline_per_table.png)
 
 ### 2.1. Create database
+
+A layer database was created in order to perform sql operations over serverless pool by pipelines. 
 
 ```sql
 CREATE DATABASE AdventureWorksLT2022_DB
@@ -58,15 +63,18 @@ GO;
 ------------------ End create schemas ------------------
 
 ------------------ Start external data object ------------------
--- Path for raw data
 CREATE EXTERNAL DATA SOURCE bronze_data WITH (
-    LOCATION = 'https://xxxxxxxxxxxxxxx.dfs.core.windows.net/files/Olist/csv/'
+    LOCATION = 'https://datalakexxxxxx.dfs.core.windows.net/adventureworkslt2022/bronze/'
 );
 GO;
 
--- Path for curated and cleaned data
 CREATE EXTERNAL DATA SOURCE silver_data WITH (
-    LOCATION = 'https://xxxxxxxxxxxxxxx.dfs.core.windows.net/files/Olist/parquet/'
+    LOCATION = 'https://datalakexxxxxx.dfs.core.windows.net/adventureworkslt2022/silver/'
+);
+GO;
+
+CREATE EXTERNAL DATA SOURCE gold_data WITH (
+    LOCATION = 'https://datalakexxxxxx.dfs.core.windows.net/adventureworkslt2022/gold/'
 );
 GO;
 ------------------ End external data object ------------------
@@ -82,7 +90,26 @@ GO;
 ------------------ End external file format object ------------------
 ```
 
-### 2.2. Bronze Layer – External Tables
+### 2.2. Copy data
+
+The on-premise source has the following tables:
+
+* SalesLT.Address
+* SalesLT.Customer
+* SalesLT.CustomerAddress
+* SalesLT.Product
+* SalesLT.ProductCategory
+* SalesLT.ProductDescription
+* SalesLT.ProductModel
+* SalesLT.ProductModelProductDescription
+* SalesLT.SalesOrderDetail
+* SalesLT.SalesOrderHeader
+
+Each table is copied into a parquet file without any transformation (bronze layer).
+
+![Bronze files](docs/img/bronze_files.png)
+
+### 2.3. Create external Tables - Bronze Layer
 
 Each external table points directly to each parquet file, which is located in Azure Data Lake.
 
@@ -107,9 +134,9 @@ WITH
 );
 ```
 
-### 2.3. Stage Layer – Data Cleaning and Transformation
+### 2.4. Data Cleaning and Transformation - Stage Layer
 
-Created views to clean and standardize the data.
+Views to clean and standardize the data.
 
 Steps:
 
@@ -119,6 +146,29 @@ Steps:
     * String columns were filled with ''.
 2. Trimmed spaces from string columns.
 3. Transform money columns to decimal.
+4. Columns "rowguid" and "ModifiedDate" are removed.
+
+Special cases:
+
+| Table | Column | Action | Reason |
+|--------|--------------|--------------|--------------|
+| **Customer** | NameStyle | Remove | Does not provide useful information |
+| **Customer** | PasswordHash | Remove | Does not provide useful information |
+| **Customer** | PasswordSalt | Remove | Does not provide useful information |
+| **Product** | Color | Fill with N/A | Unknown category |
+| **Product** | Size | Fill with N/A | Unknown category |
+| **Product** | Weight | Remove | Does not provide useful information |
+| **Product** | DiscontinuedDate | Remove | No information at all |
+| **Product** | ThumbNailPhoto | Remove | Does not provide useful information |
+| **Product** | ThumbnailPhotoFileName | Remove | Does not provide useful information |
+| **ProductCategory** | ParentProductCategoryID | Remove | Does not provide useful information |
+| **ProductModel** | CatalogDescription | Remove | Does not provide useful information |
+| **SalesOrderHeader** | RevisionNumber | Remove | Does not provide useful information |
+| **SalesOrderHeader** | Status | Remove | Does not provide useful information |
+| **SalesOrderHeader** | OnlineOrderFlag | Replace with YES/NO | Easier to read |
+| **SalesOrderHeader** | Comment | Remove | No information at all |
+
+**Note:** tables CustomerAddress, ProductDescription and ProductModelProductDescription were not included in silver layer.
 
 ```sql
 -- Example
@@ -133,9 +183,9 @@ SELECT
 FROM bronze.ProductCategory;
 ```
 
-### 2.4. Silver Layer - Curated data
+### 2.5. Curated data - Silver Layer
 
-The data was materialized into Parquet files.
+The data was materialized into parquet files.
 
 ```sql
 -- Example
@@ -156,4 +206,53 @@ SELECT
 FROM silver.vw_ProductCategory_Clean;
 ```
 
-### 2.5. Lake Database
+![Silver files](docs/img/silver_files.png)
+
+### 2.6. Create table for start schema - Gold Layer
+
+For analysis, denormalization was applied.
+
+```sql
+-- Example
+IF (SELECT OBJECT_ID('gold.Fact_Orders', 'U')) IS NOT NULL
+    DROP EXTERNAL TABLE gold.Fact_Orders;
+
+CREATE EXTERNAL TABLE gold.Fact_Orders
+    WITH (
+        LOCATION = 'Fact_Orders/',
+        DATA_SOURCE = gold_data,
+        FILE_FORMAT = ParquetFormat
+    )
+AS
+SELECT
+    d.SalesOrderDetailID,
+    h.OrderDate,
+    h.DueDate,
+    h.ShipDate,
+    h.OnlineOrderFlag,
+    h.SalesOrderNumber,
+    h.PurchaseOrderNumber,
+    h.AccountNumber,
+    h.CustomerID,
+    h.ShipToAddressID,
+    h.BillToAddressID,
+    h.ShipMethod,
+    h.CreditCardApprovalCode,
+    d.OrderQty,
+    d.ProductID,
+    d.UnitPrice,
+    d.UnitPriceDiscount,
+    d.LineTotal,
+    h.SubTotal,
+    h.TaxAmt,
+    h.Freight,
+    h.TotalDue
+FROM silver.SalesOrderDetail d
+INNER JOIN silver.SalesOrderHeader h ON h.SalesOrderID = d.SalesOrderID;
+```
+
+### 2.7. Lake Database
+
+In terms of reporting, a lake database layer was created.
+
+
