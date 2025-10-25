@@ -1,0 +1,23 @@
+{
+	"name": "relationship-eggufeqmyu",
+	"properties": {
+		"Name": "relationship-eggufeqmyu",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "AdventureWorksLT2022_DW"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "Dim_Products",
+		"ToTableName": "Fact_Orders",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "ProductID",
+				"ToColumnName": "ProductID"
+			}
+		],
+		"RelationshipType": 0
+	},
+	"type": "RELATIONSHIP"
+}

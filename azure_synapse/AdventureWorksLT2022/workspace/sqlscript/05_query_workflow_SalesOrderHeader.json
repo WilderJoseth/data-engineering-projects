@@ -1,0 +1,20 @@
+{
+	"name": "05_query_workflow_SalesOrderHeader",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\n--------------------- Start bronze layer ---------------------\nIF (SELECT OBJECT_ID('bronze.SalesOrderHeader', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE bronze.SalesOrderHeader;\n\nCREATE EXTERNAL TABLE bronze.SalesOrderHeader\n(\n    SalesOrderID INT NULL,\n    RevisionNumber TINYINT NULL,\n    OrderDate DATETIME NULL,\n    DueDate DATETIME NULL,\n    ShipDate DATETIME NULL,\n    Status TINYINT NULL,\n    OnlineOrderFlag BIT NULL,\n    SalesOrderNumber NVARCHAR(25) NULL,\n    PurchaseOrderNumber NVARCHAR(25) NULL,\n    AccountNumber NVARCHAR(15) NULL,\n    CustomerID INT NULL,\n    ShipToAddressID INT NULL,\n    BillToAddressID INT NULL,\n    ShipMethod NVARCHAR(50) NULL,\n    CreditCardApprovalCode VARCHAR(25) NULL,\n    SubTotal MONEY NULL,\n    TaxAmt MONEY NULL,\n    Freight MONEY NULL,\n    TotalDue MONEY NULL,\n    Comment NVARCHAR(MAX) NULL,\n    rowguid UNIQUEIDENTIFIER NULL,\n    ModifiedDate DATETIME NULL\n)\nWITH\n(\n    DATA_SOURCE = bronze_data,\n    LOCATION = 'SalesOrderHeader/*.parquet',\n    FILE_FORMAT = ParquetFormat\n);\n--------------------- End bronze layer ---------------------\n\n--------------------- Start silver layer ---------------------\n-- Cleaning\nDROP VIEW IF EXISTS silver.vw_SalesOrderHeader_Clean;\n\nCREATE VIEW silver.vw_SalesOrderHeader_Clean\nAS\nSELECT\n\tSalesOrderID,\n\tCAST(OrderDate AS DATE) AS OrderDate,\n\tCAST(DueDate AS DATE) AS DueDate,\n\tCAST(ISNULL(ShipDate, CONVERT(DATETIME, '1900-01-01')) AS DATE) AS ShipDate,\n\tIIF(OnlineOrderFlag = 'TRUE', 'YES', 'NO') AS OnlineOrderFlag,\n\tUPPER(TRIM(SalesOrderNumber)) AS SalesOrderNumber,\n\tUPPER(TRIM(ISNULL(PurchaseOrderNumber, ''))) AS PurchaseOrderNumber,\n\tUPPER(TRIM(ISNULL(AccountNumber, ''))) AS AccountNumber,\n\tCustomerID,\n\tISNULL(ShipToAddressID, 0) AS ShipToAddressID,\n\tISNULL(BillToAddressID, 0) AS BillToAddressID,\n\tUPPER(TRIM(ShipMethod)) AS ShipMethod,\n\tUPPER(TRIM(ISNULL(CreditCardApprovalCode, ''))) AS CreditCardApprovalCode,\n\tCAST(SubTotal AS DECIMAL(12, 4)) AS SubTotal,\n\tCAST(TaxAmt AS DECIMAL(12, 4)) AS TaxAmt,\n\tCAST(Freight AS DECIMAL(12, 4)) AS Freight,\n\tCAST(TotalDue AS DECIMAL(12, 4)) AS TotalDue\nFROM bronze.SalesOrderHeader;\n\n-- Materialization\nIF (SELECT OBJECT_ID('silver.SalesOrderHeader', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE silver.SalesOrderHeader;\n\nCREATE EXTERNAL TABLE silver.SalesOrderHeader\n    WITH (\n        LOCATION = 'SalesOrderHeader/',\n        DATA_SOURCE = silver_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tSalesOrderID,\n\tOrderDate,\n\tDueDate,\n\tShipDate,\n\tOnlineOrderFlag,\n\tSalesOrderNumber,\n\tPurchaseOrderNumber,\n\tAccountNumber,\n\tCustomerID,\n\tShipToAddressID,\n\tBillToAddressID,\n\tShipMethod,\n\tCreditCardApprovalCode,\n\tSubTotal,\n\tTaxAmt,\n\tFreight,\n\tTotalDue\nFROM silver.vw_SalesOrderHeader_Clean;\n--------------------- End silver layer ---------------------\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

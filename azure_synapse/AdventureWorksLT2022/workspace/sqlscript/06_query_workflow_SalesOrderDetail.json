@@ -1,0 +1,20 @@
+{
+	"name": "06_query_workflow_SalesOrderDetail",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\n--------------------- Start bronze layer ---------------------\nIF (SELECT OBJECT_ID('bronze.SalesOrderDetail', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE bronze.SalesOrderDetail;\n\nCREATE EXTERNAL TABLE bronze.SalesOrderDetail\n(\n    SalesOrderID INT NULL,\n    SalesOrderDetailID INT NULL,\n    OrderQty SMALLINT NULL,\n    ProductID INT NULL,\n    UnitPrice MONEY NULL,\n    UnitPriceDiscount MONEY NULL,\n    LineTotal NUMERIC(38, 6) NULL,\n    rowguid UNIQUEIDENTIFIER NULL,\n    ModifiedDate DATETIME NULL\n)\nWITH\n(\n    DATA_SOURCE = bronze_data,\n    LOCATION = 'SalesOrderDetail/*.parquet',\n    FILE_FORMAT = ParquetFormat\n);\n--------------------- End bronze layer ---------------------\n\n--------------------- Start silver layer ---------------------\n-- Cleaning\nDROP VIEW IF EXISTS silver.vw_SalesOrderDetail_Clean;\n\nCREATE VIEW silver.vw_SalesOrderDetail_Clean\nAS\nSELECT\n\tSalesOrderID,\n\tSalesOrderDetailID,\n\tOrderQty,\n\tProductID,\n\tCAST(UnitPrice AS DECIMAL(8, 4)) AS UnitPrice,\n\tCAST(UnitPriceDiscount AS DECIMAL(8, 4)) AS UnitPriceDiscount,\n\tCAST(LineTotal AS DECIMAL(38, 6)) AS LineTotal\nFROM bronze.SalesOrderDetail;\n\n-- Materialization\nIF (SELECT OBJECT_ID('silver.SalesOrderDetail', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE silver.SalesOrderDetail;\n\nCREATE EXTERNAL TABLE silver.SalesOrderDetail\n    WITH (\n        LOCATION = 'SalesOrderDetail/',\n        DATA_SOURCE = silver_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tSalesOrderID,\n\tSalesOrderDetailID,\n\tOrderQty,\n\tProductID,\n\tUnitPrice,\n\tUnitPriceDiscount,\n\tLineTotal\nFROM silver.vw_SalesOrderDetail_Clean;\n--------------------- End silver layer ---------------------\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

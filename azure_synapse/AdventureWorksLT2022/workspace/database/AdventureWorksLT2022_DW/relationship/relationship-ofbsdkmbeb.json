@@ -1,0 +1,23 @@
+{
+	"name": "relationship-ofbsdkmbeb",
+	"properties": {
+		"Name": "relationship-ofbsdkmbeb",
+		"EntityType": "RELATIONSHIP",
+		"Namespace": {
+			"DatabaseName": "AdventureWorksLT2022_DW"
+		},
+		"Origin": {
+			"Type": "SPARK"
+		},
+		"FromTableName": "Dim_Address",
+		"ToTableName": "Fact_Orders",
+		"ColumnRelationshipInformations": [
+			{
+				"FromColumnName": "AddressID",
+				"ToColumnName": "ShipToAddressID"
+			}
+		],
+		"RelationshipType": 0
+	},
+	"type": "RELATIONSHIP"
+}

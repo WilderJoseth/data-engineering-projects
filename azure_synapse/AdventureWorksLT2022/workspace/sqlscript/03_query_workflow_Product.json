@@ -1,0 +1,20 @@
+{
+	"name": "03_query_workflow_Product",
+	"properties": {
+		"folder": {
+			"name": "AdventureWorksLT2022"
+		},
+		"content": {
+			"query": "Use AdventureWorksLT2022_DB;\nGO;\n\n--------------------- Start bronze layer ---------------------\nIF (SELECT OBJECT_ID('bronze.Product', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE bronze.Product;\n\nCREATE EXTERNAL TABLE bronze.Product\n(\n    ProductID INT NULL,\n    Name NVARCHAR(50) NULL,\n    ProductNumber NVARCHAR(25) NULL,\n    Color NVARCHAR(15) NULL,\n    StandardCost MONEY NULL,\n    ListPrice MONEY NULL,\n    Size NVARCHAR(5) NULL,\n    Weight DECIMAL(8, 2) NULL,\n    ProductCategoryID INT NULL,\n    ProductModelID INT NULL,\n    SellStartDate DATETIME NULL,\n    SellEndDate DATETIME NULL,\n    DiscontinuedDate DATETIME NULL,\n    ThumbNailPhoto VARBINARY(MAX) NULL,\n    ThumbnailPhotoFileName NVARCHAR(50) NULL,\n    rowguid UNIQUEIDENTIFIER NULL,\n    ModifiedDate DATETIME NULL\n)\nWITH\n(\n    DATA_SOURCE = bronze_data,\n    LOCATION = 'Product/*.parquet',\n    FILE_FORMAT = ParquetFormat\n);\n--------------------- End bronze layer ---------------------\n\n--------------------- Start silver layer ---------------------\n-- Cleaning\nDROP VIEW IF EXISTS silver.vw_Product_Clean;\n\nCREATE VIEW silver.vw_Product_Clean\nAS\nSELECT\n\tProductID,\n\tUPPER(TRIM(Name)) AS Name,\n\tUPPER(TRIM(ProductNumber)) AS ProductNumber,\n\tUPPER(TRIM(ISNULL(Color, 'N/A'))) AS Color,\n\tCAST(StandardCost AS DECIMAL(10, 4)) AS StandardCost,\n\tCAST(ListPrice AS DECIMAL(10, 4)) AS ListPrice,\n\tUPPER(TRIM(ISNULL(Size, 'N/A'))) AS Size,\n\tISNULL(ProductCategoryID, 0) AS ProductCategoryID,\n\tISNULL(ProductModelID, 0) AS ProductModelID,\n\tCAST(SellStartDate AS DATE) AS SellStartDate,\n\tCAST(ISNULL(SellEndDate, CAST('1900-01-01' AS DATETIME)) AS DATE) AS SellEndDate\nFROM bronze.Product;\n\n-- Materialization\nIF (SELECT OBJECT_ID('silver.Product', 'U')) IS NOT NULL\n    DROP EXTERNAL TABLE silver.Product;\n\nCREATE EXTERNAL TABLE silver.Product\n    WITH (\n        LOCATION = 'Product/',\n        DATA_SOURCE = silver_data,\n        FILE_FORMAT = ParquetFormat\n    )\nAS\nSELECT\n\tProductID,\n\tName,\n\tProductNumber,\n\tColor,\n\tStandardCost,\n\tListPrice,\n\tSize,\n\tProductCategoryID,\n\tProductModelID,\n\tSellStartDate,\n\tSellEndDate\nFROM silver.vw_Product_Clean;\n--------------------- End silver layer ---------------------\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "AdventureWorksLT2022_DB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
