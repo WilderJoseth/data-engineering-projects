@@ -4,7 +4,7 @@ This section of the repository contains **hands-on projects built with Azure Syn
 
 Each project demonstrates a different scenario — from classic ETL migrations to cloud-scale analytics — using **Serverless SQL Pools**, **Dedicated SQL Pools**, **COPY INTO**, **external tables**, and **views** across **bronze, silver, and gold** layers.
 
-## Technologies involved:
+## Technologies involved
 
 * Azure Synapse Analytics (Serverless & Dedicated SQL Pools)
 * Azure Data Lake Storage Gen2 (ADLS)
@@ -13,7 +13,15 @@ Each project demonstrates a different scenario — from classic ETL migrations t
 * Parquet / Delta / External Tables
 * Power BI (optional visualization)
 
-## 🗂️ Project List:
+## 🧠 Learning Focus
+
+* End-to-end ELT workflows (raw → clean → curated).
+* Comparing Serverless vs Dedicated query performance.
+* Using CTAS and external tables efficiently.
+* Best practices for partitioning, naming conventions, and schema organization.
+* Applying Medallion principles progressively as projects evolve.
+
+## 🗂️ Project List
 
 * Adult Income Kaggle Project
 * AdventureWorks 2022 Lightweight
