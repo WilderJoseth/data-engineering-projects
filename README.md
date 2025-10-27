@@ -13,7 +13,7 @@ It serves two purposes:
 
 | Folder | Description |
 |---------|--------------|
-| **/synapse/** | Projects using Azure Synapse (Serverless/Dedicated), with examples of external tables, CTAS, and `COPY INTO` for initial loads and incremental ingestion. Some follow the **Medallion Architecture** pattern (bronze/silver/gold). |
+| **/zure_synapse/** | Projects using Azure Synapse (Serverless/Dedicated), with examples of external tables, CTAS, and `COPY INTO` for initial loads and incremental ingestion. Some follow the **Medallion Architecture** pattern (bronze/silver/gold). |
 | **/databricks/** | Notebooks demonstrating Delta Lake pipelines, transformations with PySpark, and cost/performance experiments (Delta optimization, caching, partitioning). |
 | **/on_premise/** | Legacy or hybrid SQL Server workloads showing incremental loads, historical data management, and CDC strategies before cloud migration. |
 
@@ -22,12 +22,12 @@ It serves two purposes:
 ---
 
 ## ⚙️ Key Technologies
-**Languages:** SQL (T-SQL), Python (pandas, PySpark)  
-**Cloud / Platforms:** Azure Synapse, Microsoft Fabric, Databricks, Azure Data Lake Storage Gen2  
-**ETL / Orchestration:** Azure Data Factory, SSIS  
-**Data Modeling:** Star schema, Medallion (bronze/silver/gold), Parquet/Delta  
-**Governance:** Purview, Unity Catalog  
-**Visualization:** Power BI  
-**Infra & DevOps:** Docker, GitHub Actions, Bicep/Terraform (basics)
+* **Languages:** SQL (T-SQL), Python (pandas, PySpark)  
+* **Cloud / Platforms:** Azure Synapse, Microsoft Fabric, Databricks, Azure Data Lake Storage Gen2  
+* **ETL / Orchestration:** Azure Data Factory, SSIS  
+* **Data Modeling:** Star schema, Medallion (bronze/silver/gold), Parquet/Delta  
+* **Governance:** Purview, Unity Catalog  
+* **Visualization:** Power BI  
+* **Infra & DevOps:** Docker, GitHub Actions, Bicep/Terraform (basics)
 
 ---
