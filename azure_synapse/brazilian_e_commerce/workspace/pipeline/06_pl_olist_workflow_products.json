@@ -1,0 +1,242 @@
+{
+	"name": "06_pl_olist_workflow_products",
+	"properties": {
+		"activities": [
+			{
+				"name": "Drop silver view clean",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_products_clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view clean",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop silver view clean",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Drop silver view final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_products_clean\r\nAS\r\nSELECT\r\n\tproduct_id,\r\n\tUPPER(TRIM(ISNULL(product_category_name, 'UNKNOWN'))) AS product_category_name,\r\n\tISNULL(product_name_lenght, '0') AS product_name_lenght,\r\n\tISNULL(product_description_lenght, '0') AS product_description_lenght,\r\n\tISNULL(product_photos_qty, '0') AS product_photos_qty,\r\n\tISNULL(product_weight_g, '0') AS product_weight_g,\r\n\tISNULL(product_length_cm, '0') AS product_length_cm,\r\n\tISNULL(product_height_cm, '0') AS product_height_cm,\r\n\tISNULL(product_width_cm, '0') AS product_width_cm\r\nFROM bronze.products\r\nWHERE product_id IS NOT NULL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop silver view final",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_products_final;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view final",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create silver view clean",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_products_final\r\nAS\r\nSELECT DISTINCT\r\n    product_id,\r\n    product_category_name,\r\n    CAST(product_name_lenght AS INT) product_name_lenght,\r\n    CAST(product_description_lenght AS INT) product_description_lenght,\r\n    CAST(product_photos_qty AS INT) product_photos_qty,\r\n    CAST(product_weight_g AS INT) product_weight_g,\r\n    CAST(product_length_cm AS INT) product_length_cm,\r\n    CAST(product_height_cm AS INT) product_height_cm,\r\n    CAST(product_width_cm AS INT) product_width_cm\r\nFROM silver.vw_products_clean\r\nWHERE TRY_CAST(product_name_lenght AS INT) IS NOT NULL\r\nAND TRY_CAST(product_description_lenght AS INT) IS NOT NULL\r\nAND TRY_CAST(product_photos_qty AS INT) IS NOT NULL\r\nAND TRY_CAST(product_weight_g AS INT) IS NOT NULL\r\nAND TRY_CAST(product_length_cm AS INT) IS NOT NULL\r\nAND TRY_CAST(product_height_cm AS INT) IS NOT NULL\r\nAND TRY_CAST(product_width_cm AS INT) IS NOT NULL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create bronze table",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "bronze.usp_load_products"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Create silver view final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "silver.usp_load_products"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"BD": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Olist/workflow"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-11-01T23:53:18Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

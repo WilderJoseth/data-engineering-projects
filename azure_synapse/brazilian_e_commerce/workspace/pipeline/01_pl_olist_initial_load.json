@@ -1,0 +1,1264 @@
+{
+	"name": "01_pl_olist_initial_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute workflow orders",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01_pl_olist_workflow_orders",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('Container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow order_items",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "02_pl_olist_workflow_order_items",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('Container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow order payments",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "03_pl_olist_workflow_order_payments",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('Container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow order reviews",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "04_pl_olist_workflow_order_reviews",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('Container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow customers",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "05_pl_olist_workflow_customers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('Container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow products",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "06_pl_olist_workflow_products",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Container": {
+							"value": "@variables('Container')",
+							"type": "Expression"
+						},
+						"BD": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Execute workflow sellers",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Delete gold files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "07_pl_olist_workflow_sellers",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"BD": "Olist_DB"
+					}
+				}
+			},
+			{
+				"name": "Delete gold files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Delete silver files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "olist_All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('Container')",
+								"type": "Expression"
+							},
+							"Layer": "gold"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Delete silver files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Clean dedicated tables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "olist_All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('Container')",
+								"type": "Expression"
+							},
+							"Layer": "silver"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Get bronze files",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "Load dedicated Dim_Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Load dedicated Dim_Products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Load dedicated Dim_Sellers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Load dedicated Dim_Date",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "olist_All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('Container')",
+								"type": "Expression"
+							},
+							"Layer": "bronze"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Move files",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get bronze files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get bronze files').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Move bronze file",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "BinarySource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "BinaryReadSettings"
+									}
+								},
+								"sink": {
+									"type": "BinarySink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									}
+								},
+								"enableStaging": false
+							},
+							"inputs": [
+								{
+									"referenceName": "olist_All_Single_File",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@variables('Container')",
+											"type": "Expression"
+										},
+										"Layer": "bronze",
+										"File": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "olist_All_Single_File",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": {
+											"value": "@variables('Container')",
+											"type": "Expression"
+										},
+										"Layer": "archive",
+										"File": {
+											"value": "@concat(formatDateTime(utcNow(), 'yyyyMMdd_HHmmss'), '_', item().name)",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			{
+				"name": "Delete bronze files",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Move files",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "olist_All_Files",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": {
+								"value": "@variables('Container')",
+								"type": "Expression"
+							},
+							"Layer": "bronze"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
+			},
+			{
+				"name": "Load dedicated Fact_Orders",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create gold Fact_Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "order_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "order_id_alternate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "order_item_id",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "order_item_id",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "customer_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customer_id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "order_status",
+									"type": "String"
+								},
+								"sink": {
+									"name": "order_status",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "order_purchase_timestamp",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "order_purchase_timestamp",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "order_approved_at",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "order_approved_at",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "order_delivered_carrier_date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "order_delivered_carrier_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "order_delivered_customer_date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "order_delivered_customer_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "order_estimated_delivery_date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "order_estimated_delivery_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "product_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "product_id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "seller_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "seller_id",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "shipping_limit_date",
+									"type": "DateTime"
+								},
+								"sink": {
+									"name": "shipping_limit_date",
+									"type": "DateTime"
+								}
+							},
+							{
+								"source": {
+									"name": "price",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "price",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "freight_value",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "freight_value",
+									"type": "Decimal"
+								}
+							},
+							{
+								"source": {
+									"name": "review_score",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "review_score",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "review_comment_title",
+									"type": "String"
+								},
+								"sink": {
+									"name": "review_comment_title",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "payment_sequential",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "payment_sequential",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "payment_type",
+									"type": "String"
+								},
+								"sink": {
+									"name": "payment_type",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "payment_installments",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "payment_installments",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "payment_value",
+									"type": "Decimal"
+								},
+								"sink": {
+									"name": "payment_value",
+									"type": "Decimal"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "olist_s_Fact_Orders",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "olist_d_Fact_Orders",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Load dedicated Dim_Customers",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create gold Dim_Customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "customer_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customer_id_alternate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "customer_zip_code_prefix",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customer_zip_code_prefix",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "customer_city",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customer_city",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "customer_state",
+									"type": "String"
+								},
+								"sink": {
+									"name": "customer_state",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "olist_s_Dim_Customers",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "olist_d_Dim_Customers",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Load dedicated Dim_Products",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create gold Dim_Products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "product_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "product_id_alternate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "product_category_name",
+									"type": "String"
+								},
+								"sink": {
+									"name": "product_category_name",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "product_weight_g",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "product_weight_g",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "product_height_cm",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "product_height_cm",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "product_width_cm",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "product_width_cm",
+									"type": "Int32"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "olist_s_Dim_Products",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "olist_d_Dim_Products",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Load dedicated Dim_Sellers",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create gold Dim_Sellers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "ParquetSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*.parquet",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "ParquetReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlPoolSink",
+						"allowCopyCommand": true
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "seller_id",
+									"type": "String"
+								},
+								"sink": {
+									"name": "seller_id_alternate",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "seller_zip_code_prefix",
+									"type": "String"
+								},
+								"sink": {
+									"name": "seller_zip_code_prefix",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "seller_city",
+									"type": "String"
+								},
+								"sink": {
+									"name": "seller_city",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "seller_state",
+									"type": "String"
+								},
+								"sink": {
+									"name": "seller_state",
+									"type": "String"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "olist_s_Dim_Sellers",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "olist_d_Dim_Sellers",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Load dedicated Dim_Date",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Load dedicated Fact_Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[OLIST_DB].[usp_load_Dim_Date]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Dedicated_Pool",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Create gold Fact_Orders",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Execute workflow order_items",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Execute workflow order payments",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Execute workflow order reviews",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "gold.usp_load_Fact_Orders"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Create gold Dim_Customers",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow customers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "gold.usp_load_Dim_Customers"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Create gold Dim_Products",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow products",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "gold.usp_load_Dim_Products"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Create gold Dim_Sellers",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Execute workflow sellers",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "gold.usp_load_Dim_Sellers"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@variables('BD')",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Clean dedicated tables",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "OLIST_DB.usp_clean_tables"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Dedicated_Pool",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"variables": {
+			"BD": {
+				"type": "String",
+				"defaultValue": "Olist_DB"
+			},
+			"Container": {
+				"type": "String",
+				"defaultValue": "olist"
+			}
+		},
+		"folder": {
+			"name": "Olist"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-11-02T16:52:21Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

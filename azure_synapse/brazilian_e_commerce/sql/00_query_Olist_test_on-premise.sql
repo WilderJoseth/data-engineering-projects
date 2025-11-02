@@ -4,16 +4,16 @@ GO
 -- 1900-01-01 00:00:00.000
 SELECT CONVERT(DATETIME, '1900-01-01')
 
-SELECT MAX(LEN(seller_zip_code_prefix)), MAX(LEN(seller_state)) FROM raw.sellers
+SELECT MAX(LEN(seller_zip_code_prefix)), MAX(LEN(seller_state)) FROM bronze.sellers
 
-SELECT * FROM raw.sellers
+SELECT * FROM bronze.sellers
 
 ---------------------------- Start Identify Missing Values ----------------------------
 SELECT
 	SUM(IIF(order_id IS NULL, 1, 0)) AS order_id_missing,
 	SUM(IIF(customer_id IS NULL, 1, 0)) AS customer_id_missing,
 	SUM(IIF(order_status IS NULL, 1, 0)) AS order_status_missing
-FROM raw.orders
+FROM bronze.orders
 
 SELECT
 	order_Status,
@@ -22,10 +22,10 @@ SELECT
 	SUM(IIF(order_delivered_carrier_date IS NULL, 1, 0)) AS order_delivered_carrier_date_missing,
 	SUM(IIF(order_delivered_customer_date IS NULL, 1, 0)) AS order_delivered_customer_date_missing,
 	SUM(IIF(order_estimated_delivery_date IS NULL, 1, 0)) AS order_estimated_delivery_date_missing
-FROM raw.orders
+FROM bronze.orders
 GROUP BY order_Status
 
-CREATE VIEW stage.vw_orders_trim
+CREATE VIEW silver.vw_orders_trim
 AS
 SELECT
 	order_id,
@@ -36,9 +36,9 @@ SELECT
 	order_delivered_carrier_date,
 	order_delivered_customer_date,
 	order_estimated_delivery_date
-FROM raw.orders
+FROM bronze.orders
 
-CREATE VIEW stage.vw_orders_no_missing_values
+CREATE VIEW silver.vw_orders_clean
 AS
 SELECT
 	order_id,
@@ -49,7 +49,7 @@ SELECT
 	ISNULL(order_delivered_carrier_date, '1900-01-01 00:00:00.000') AS order_delivered_carrier_date,
 	ISNULL(order_delivered_customer_date, '1900-01-01 00:00:00.000') AS order_delivered_customer_date,
 	order_estimated_delivery_date
-FROM stage.vw_orders_trim
+FROM silver.vw_orders_trim
 WHERE order_Status IN ('CREATED', 'PROCESSING', 'APPROVED', 'INVOICED', 'UNAVAILABLE', 'CANCELED')
 UNION ALL
 SELECT
@@ -61,7 +61,7 @@ SELECT
 	ISNULL(order_delivered_carrier_date, order_delivered_carrier_date) AS order_delivered_carrier_date,
 	ISNULL(order_delivered_customer_date, '1900-01-01 00:00:00.000') AS order_delivered_customer_date,
 	order_estimated_delivery_date
-FROM stage.vw_orders_trim
+FROM silver.vw_orders_trim
 WHERE order_Status = 'SHIPPED'
 UNION ALL
 SELECT
@@ -73,7 +73,7 @@ SELECT
 	ISNULL(order_delivered_carrier_date, order_purchase_timestamp) AS order_delivered_carrier_date,
 	ISNULL(order_delivered_customer_date, order_purchase_timestamp) AS order_delivered_customer_date,
 	order_estimated_delivery_date
-FROM stage.vw_orders_trim
+FROM silver.vw_orders_trim
 WHERE order_Status = 'DELIVERED'
 
 
@@ -85,7 +85,7 @@ SELECT
 	SUM(IIF(shipping_limit_date IS NULL, 1, 0)) AS shipping_limit_date_missing,
 	SUM(IIF(price IS NULL, 1, 0)) AS price_date_missing,
 	SUM(IIF(freight_value IS NULL, 1, 0)) AS freight_value_date_missing
-FROM raw.order_items
+FROM bronze.order_items
 
 SELECT
 	SUM(IIF(order_id IS NULL, 1, 0)) AS order_id_missing,
@@ -93,9 +93,9 @@ SELECT
 	SUM(IIF(payment_type IS NULL, 1, 0)) AS payment_type_missing,
 	SUM(IIF(payment_installments IS NULL, 1, 0)) AS payment_installments_missing,
 	SUM(IIF(payment_value IS NULL, 1, 0)) AS payment_value_missing
-FROM raw.order_payments
+FROM bronze.order_payments
 
-CREATE VIEW stage.vw_order_payments_no_missing_values
+CREATE VIEW silver.vw_order_payments_no_missing_values
 AS
 SELECT
 	order_id,
@@ -103,7 +103,7 @@ SELECT
 	UPPER(TRIM(payment_type)) AS payment_type,
 	payment_installments,
 	payment_value
-FROM raw.order_payments
+FROM bronze.order_payments
 
 
 SELECT
@@ -114,9 +114,9 @@ SELECT
 	SUM(IIF(review_comment_message IS NULL, 1, 0)) AS review_comment_message_missing,
 	SUM(IIF(review_creation_date IS NULL, 1, 0)) AS review_creation_date_missing,
 	SUM(IIF(review_answer_timestamp IS NULL, 1, 0)) AS review_answer_timestamp_missing
-FROM raw.order_reviews
+FROM bronze.order_reviews
 
-CREATE VIEW stage.vw_order_reviews_no_missing_values
+CREATE VIEW silver.vw_order_reviews_no_missing_values
 AS
 SELECT
 	review_id,
@@ -126,9 +126,9 @@ SELECT
 	UPPER(TRIM(ISNULL(review_comment_message, ''))) AS review_comment_message,
 	review_creation_date,
 	review_answer_timestamp
-FROM raw.order_reviews
+FROM bronze.order_reviews
 
-CREATE VIEW stage.vw_customers_no_missing_values
+CREATE VIEW silver.vw_customers_no_missing_values
 AS
 SELECT
 	customer_id,
@@ -136,7 +136,7 @@ SELECT
 	customer_zip_code_prefix,
 	UPPER(TRIM(customer_city)) AS customer_city,
 	UPPER(TRIM(customer_state)) AS customer_state
-FROM raw.customers
+FROM bronze.customers
 
 SELECT
 	SUM(IIF(product_id IS NULL, 1, 0)) AS product_id_missing,
@@ -148,9 +148,9 @@ SELECT
 	SUM(IIF(product_length_cm IS NULL, 1, 0)) AS product_length_cm_missing,
 	SUM(IIF(product_height_cm IS NULL, 1, 0)) AS product_height_cm_missing,
 	SUM(IIF(product_width_cm IS NULL, 1, 0)) AS product_width_cm_missing
-FROM raw.products
+FROM bronze.products
 
-CREATE VIEW stage.vw_products_no_missing_values
+CREATE VIEW silver.vw_products_no_missing_values
 AS
 SELECT
 	product_id,
@@ -162,23 +162,23 @@ SELECT
 	ISNULL(product_length_cm, '0') AS product_length_cm,
 	ISNULL(product_height_cm, '0') AS product_height_cm,
 	ISNULL(product_width_cm, '0') AS product_width_cm
-FROM raw.products
+FROM bronze.products
 
 SELECT
 	SUM(IIF(seller_id IS NULL, 1, 0)) AS seller_id_missing,
 	SUM(IIF(seller_zip_code_prefix IS NULL, 1, 0)) AS seller_zip_code_prefix_missing,
 	SUM(IIF(seller_city IS NULL, 1, 0)) AS seller_city_missing,
 	SUM(IIF(seller_state IS NULL, 1, 0)) AS seller_state_missing
-FROM raw.sellers
+FROM bronze.sellers
 
-CREATE VIEW stage.vw_sellers_no_missing_values
+CREATE VIEW silver.vw_sellers_no_missing_values
 AS
 SELECT
 	seller_id,
 	seller_zip_code_prefix,
 	UPPER(TRIM(seller_city)) AS seller_city,
 	UPPER(TRIM(seller_state)) AS seller_state
-FROM raw.sellers
+FROM bronze.sellers
 ---------------------------- End Identify Missing Values ----------------------------
 
 ---------------------------- Start Duplicated Values ----------------------------
