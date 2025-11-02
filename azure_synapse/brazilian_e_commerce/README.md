@@ -1,4 +1,4 @@
-# Data exploration using Serverless SQL endpoint
+# Data exploration using Serverless and Dedicated SQL endpoint
 
 The goal of this project was to build a **data lakehouse structure** on Azure using **Serverless SQL Pool** for exploration, transformation, and reporting.
 Additionality, the curated data was loaded into dedicated data warehouse base.
