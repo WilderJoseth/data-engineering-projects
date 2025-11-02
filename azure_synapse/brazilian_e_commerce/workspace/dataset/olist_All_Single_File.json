@@ -1,0 +1,43 @@
+{
+	"name": "olist_All_Single_File",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws20251021-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"Layer": {
+				"type": "string"
+			},
+			"File": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "olist/cloud"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().File",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().Layer",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().Container",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

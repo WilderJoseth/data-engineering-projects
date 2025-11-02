@@ -1,0 +1,326 @@
+{
+	"name": "01_pl_olist_workflow_orders",
+	"properties": {
+		"activities": [
+			{
+				"name": "Drop silver view trim",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_orders_trim;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view trim",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop silver view trim",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Drop silver view clean",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Drop silver view final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_orders_trim\r\nAS\r\nSELECT\r\n\torder_id,\r\n\tISNULL(customer_id, 'UNKNOWN') AS customer_id,\r\n\tUPPER(TRIM(ISNULL(order_status, 'UNKNOWN'))) AS order_status,\r\n\tISNULL(order_purchase_timestamp, '1900-01-01 00:00:00.000') AS order_purchase_timestamp,\r\n\torder_approved_at,\r\n\torder_delivered_carrier_date,\r\n\torder_delivered_customer_date,\r\n\torder_estimated_delivery_date\r\nFROM bronze.orders\r\nWHERE order_id IS NOT NULL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop silver view clean",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_orders_clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view clean",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create silver view trim",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_orders_clean\r\nAS\r\nSELECT\r\n\torder_id,\r\n\tcustomer_id,\r\n\torder_status,\r\n\torder_purchase_timestamp,\r\n\tISNULL(order_approved_at, '1900-01-01 00:00:00.000') AS order_approved_at,\r\n\tISNULL(order_delivered_carrier_date, '1900-01-01 00:00:00.000') AS order_delivered_carrier_date,\r\n\tISNULL(order_delivered_customer_date, '1900-01-01 00:00:00.000') AS order_delivered_customer_date,\r\n\torder_estimated_delivery_date\r\nFROM silver.vw_orders_trim\r\nWHERE order_status IN ('CREATED', 'PROCESSING', 'APPROVED', 'INVOICED', 'UNAVAILABLE', 'CANCELED')\r\nUNION ALL\r\nSELECT\r\n\torder_id,\r\n\tcustomer_id,\r\n\torder_status,\r\n\torder_purchase_timestamp,\r\n\tISNULL(order_approved_at, order_approved_at) AS order_approved_at,\r\n\tISNULL(order_delivered_carrier_date, order_delivered_carrier_date) AS order_delivered_carrier_date,\r\n\tISNULL(order_delivered_customer_date, '1900-01-01 00:00:00.000') AS order_delivered_customer_date,\r\n\torder_estimated_delivery_date\r\nFROM silver.vw_orders_trim\r\nWHERE order_status = 'SHIPPED'\r\nUNION ALL\r\nSELECT\r\n\torder_id,\r\n\tcustomer_id,\r\n\torder_status,\r\n\torder_purchase_timestamp,\r\n\tISNULL(order_approved_at, order_purchase_timestamp) AS order_approved_at,\r\n\tISNULL(order_delivered_carrier_date, order_purchase_timestamp) AS order_delivered_carrier_date,\r\n\tISNULL(order_delivered_customer_date, order_purchase_timestamp) AS order_delivered_customer_date,\r\n\torder_estimated_delivery_date\r\nFROM silver.vw_orders_trim\r\nWHERE order_status = 'DELIVERED'\r\nUNION ALL\r\nSELECT\r\n\torder_id,\r\n\tcustomer_id,\r\n\torder_status,\r\n\torder_purchase_timestamp,\r\n\tISNULL(order_approved_at, order_purchase_timestamp) AS order_approved_at,\r\n\tISNULL(order_delivered_carrier_date, order_purchase_timestamp) AS order_delivered_carrier_date,\r\n\tISNULL(order_delivered_customer_date, order_purchase_timestamp) AS order_delivered_customer_date,\r\n\torder_estimated_delivery_date\r\nFROM silver.vw_orders_trim\r\nWHERE order_status = 'UNKNOWN';"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view final",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create silver view clean",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_orders_final\r\nAS\r\nSELECT DISTINCT\r\n    order_id,\r\n    customer_id,\r\n    order_status,\r\n    CAST(order_purchase_timestamp AS DATE) AS order_purchase_timestamp,\r\n    YEAR(order_purchase_timestamp) AS year,\r\n    MONTH(order_purchase_timestamp) AS month,\r\n    CAST(order_approved_at AS DATE) AS order_approved_at,\r\n    CAST(order_delivered_carrier_date AS DATE) AS order_delivered_carrier_date,\r\n    CAST(order_delivered_customer_date AS DATE) AS order_delivered_customer_date,\r\n    CAST(order_estimated_delivery_date AS DATE) AS order_estimated_delivery_date\r\nFROM silver.vw_orders_clean\r\nWHERE TRY_CAST(order_purchase_timestamp AS DATE) IS NOT NULL\r\nAND TRY_CAST(order_approved_at AS DATE) IS NOT NULL\r\nAND TRY_CAST(order_delivered_carrier_date AS DATE) IS NOT NULL\r\nAND TRY_CAST(order_delivered_customer_date AS DATE) IS NOT NULL\r\nAND TRY_CAST(order_estimated_delivery_date AS DATE) IS NOT NULL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop silver view final",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_orders_final;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create bronze table",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "bronze.usp_load_orders"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Create silver view final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "silver.usp_load_orders"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"BD": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Olist/workflow"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-11-01T23:49:55Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

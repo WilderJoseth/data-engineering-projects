@@ -1,0 +1,242 @@
+{
+	"name": "04_pl_olist_workflow_order_reviews",
+	"properties": {
+		"activities": [
+			{
+				"name": "Drop silver view clean",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_order_reviews_clean;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view clean",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Drop silver view clean",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Drop silver view final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_order_reviews_clean\r\nAS\r\nSELECT\r\n\treview_id,\r\n\torder_id,\r\n\tISNULL(review_score, '0') AS review_score,\r\n\tUPPER(TRIM(ISNULL(review_comment_title, ''))) AS review_comment_title,\r\n\tUPPER(TRIM(ISNULL(review_comment_message, ''))) AS review_comment_message,\r\n\tISNULL(review_creation_date, '1900-01-01 00:00:00.000') AS review_creation_date,\r\n\tISNULL(review_answer_timestamp, '1900-01-01 00:00:00.000') AS review_answer_timestamp\r\nFROM bronze.order_reviews\r\nWHERE review_id IS NOT NULL\r\nAND order_id IS NOT NULL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Drop silver view final",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create bronze table",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "DROP VIEW IF EXISTS silver.vw_order_reviews_final;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create silver view final",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Create silver view clean",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "CREATE VIEW silver.vw_order_reviews_final\r\nAS\r\nSELECT DISTINCT\r\n    review_id,\r\n    order_id,\r\n    CAST(review_score AS INT) AS review_score,\r\n    review_comment_title,\r\n    review_comment_message,\r\n    CAST(review_creation_date AS DATE) AS review_creation_date,\r\n    CAST(review_answer_timestamp AS DATE) AS review_answer_timestamp\r\nFROM silver.vw_order_reviews_clean\r\nWHERE TRY_CAST(review_score AS INT) IS NOT NULL\r\nAND TRY_CAST(review_creation_date AS DATE) IS NOT NULL\r\nAND TRY_CAST(review_answer_timestamp AS DATE) IS NOT NULL;"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Create bronze table",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "bronze.usp_load_order_reviews"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Materialize clean data",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Create silver view final",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "silver.usp_load_order_reviews"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Serverless_Pool",
+					"type": "LinkedServiceReference",
+					"parameters": {
+						"DBName": {
+							"value": "@pipeline().parameters.BD",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"Container": {
+				"type": "string"
+			},
+			"BD": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Olist/workflow"
+		},
+		"annotations": [],
+		"lastPublishTime": "2025-11-01T23:53:07Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

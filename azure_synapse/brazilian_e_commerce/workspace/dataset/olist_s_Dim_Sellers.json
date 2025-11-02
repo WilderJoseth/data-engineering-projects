@@ -1,0 +1,41 @@
+{
+	"name": "olist_s_Dim_Sellers",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws20251021-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "olist/serverless"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "gold/Dim_Sellers",
+				"fileSystem": "olist"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "seller_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "seller_zip_code_prefix",
+				"type": "UTF8"
+			},
+			{
+				"name": "seller_city",
+				"type": "UTF8"
+			},
+			{
+				"name": "seller_state",
+				"type": "UTF8"
+			}
+		]
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
