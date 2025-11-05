@@ -20,8 +20,6 @@ BEGIN
         customer_id,
         order_status,
         order_purchase_timestamp,
-        year,
-        month,
         order_approved_at,
         order_delivered_carrier_date,
         order_delivered_customer_date,
@@ -179,3 +177,6 @@ BEGIN
     FROM silver.vw_sellers_final;
 END;
 --------------- sellers ---------------
+
+SELECT TOP 5 * FROM silver.order_items;
+
