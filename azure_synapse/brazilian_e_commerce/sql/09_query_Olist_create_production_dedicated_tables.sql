@@ -1,6 +1,4 @@
 
-CREATE SCHEMA OLIST_DB;
-
 --------------- Fact_Orders ---------------
 IF (SELECT OBJECT_ID('OLIST_DB.Fact_Orders', 'U')) IS NOT NULL
     DROP TABLE OLIST_DB.Fact_Orders;
@@ -8,16 +6,16 @@ IF (SELECT OBJECT_ID('OLIST_DB.Fact_Orders', 'U')) IS NOT NULL
 CREATE TABLE OLIST_DB.Fact_Orders
 (
     order_id_alternate VARCHAR(50) NOT NULL,
+    customer_id_surrogate INT NOT NULL,
+    product_id_surrogate INT NOT NULL,
+    seller_id_surrogate INT NOT NULL,
     order_item_id INT NOT NULL,
-    customer_id VARCHAR(50) NOT NULL,
     order_status NVARCHAR(20) NOT NULL,
     order_purchase_timestamp DATE NOT NULL,
     order_approved_at DATE NOT NULL,
     order_delivered_carrier_date DATE NOT NULL,
     order_delivered_customer_date DATE NOT NULL,
     order_estimated_delivery_date DATE NOT NULL,
-    product_id VARCHAR(50) NOT NULL,
-    seller_id VARCHAR(50) NOT NULL,
     shipping_limit_date DATE NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     freight_value DECIMAL(10, 2) NOT NULL,

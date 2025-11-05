@@ -11,9 +11,6 @@ GO;
 CREATE SCHEMA silver
 GO;
 
-CREATE SCHEMA gold
-GO;
-
 CREATE EXTERNAL DATA SOURCE bronze_data WITH (
     LOCATION = 'https://datalake20251021.dfs.core.windows.net/olist/bronze/'
 );
@@ -21,11 +18,6 @@ GO;
 
 CREATE EXTERNAL DATA SOURCE silver_data WITH (
     LOCATION = 'https://datalake20251021.dfs.core.windows.net/olist/silver/'
-);
-GO;
-
-CREATE EXTERNAL DATA SOURCE gold_data WITH (
-    LOCATION = 'https://datalake20251021.dfs.core.windows.net/olist/gold/'
 );
 GO;
 

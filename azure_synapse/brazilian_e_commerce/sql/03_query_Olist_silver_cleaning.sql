@@ -24,14 +24,15 @@ CREATE VIEW silver.vw_orders_trim
 AS
 SELECT
 	order_id,
-	customer_id,
-	UPPER(TRIM(order_status)) AS order_status,
-	order_purchase_timestamp,
+	ISNULL(customer_id, 'UNKNOWN') AS customer_id,
+	UPPER(TRIM(ISNULL(order_status, 'UNKNOWN'))) AS order_status,
+	ISNULL(order_purchase_timestamp, '1900-01-01 00:00:00.000') AS order_purchase_timestamp,
 	order_approved_at,
 	order_delivered_carrier_date,
 	order_delivered_customer_date,
 	order_estimated_delivery_date
-FROM bronze.orders;
+FROM bronze.orders
+WHERE order_id IS NOT NULL;
 
 DROP VIEW IF EXISTS silver.vw_orders_clean;
 
@@ -47,7 +48,7 @@ SELECT
 	ISNULL(order_delivered_customer_date, '1900-01-01 00:00:00.000') AS order_delivered_customer_date,
 	order_estimated_delivery_date
 FROM silver.vw_orders_trim
-WHERE order_Status IN ('CREATED', 'PROCESSING', 'APPROVED', 'INVOICED', 'UNAVAILABLE', 'CANCELED')
+WHERE order_status IN ('CREATED', 'PROCESSING', 'APPROVED', 'INVOICED', 'UNAVAILABLE', 'CANCELED')
 UNION ALL
 SELECT
 	order_id,
@@ -59,7 +60,7 @@ SELECT
 	ISNULL(order_delivered_customer_date, '1900-01-01 00:00:00.000') AS order_delivered_customer_date,
 	order_estimated_delivery_date
 FROM silver.vw_orders_trim
-WHERE order_Status = 'SHIPPED'
+WHERE order_status = 'SHIPPED'
 UNION ALL
 SELECT
 	order_id,
@@ -71,7 +72,19 @@ SELECT
 	ISNULL(order_delivered_customer_date, order_purchase_timestamp) AS order_delivered_customer_date,
 	order_estimated_delivery_date
 FROM silver.vw_orders_trim
-WHERE order_Status = 'DELIVERED';
+WHERE order_status = 'DELIVERED'
+UNION ALL
+SELECT
+	order_id,
+	customer_id,
+	order_status,
+	order_purchase_timestamp,
+	ISNULL(order_approved_at, order_purchase_timestamp) AS order_approved_at,
+	ISNULL(order_delivered_carrier_date, order_purchase_timestamp) AS order_delivered_carrier_date,
+	ISNULL(order_delivered_customer_date, order_purchase_timestamp) AS order_delivered_customer_date,
+	order_estimated_delivery_date
+FROM silver.vw_orders_trim
+WHERE order_status = 'UNKNOWN';
 --------------- orders ---------------
 
 --------------- order_items ---------------
@@ -92,12 +105,14 @@ AS
 SELECT
 	order_id,
 	order_item_id,
-	product_id,
-	seller_id,
-	shipping_limit_date,
-	price_date,
-	freight_value_date
-FROM bronze.order_items;
+	ISNULL(product_id, 'UNKNOWN') AS product_id,
+	ISNULL(seller_id, 'UNKNOWN') AS seller_id,
+	ISNULL(shipping_limit_date, '1900-01-01 00:00:00.000') AS shipping_limit_date,
+	ISNULL(price, '0') AS price,
+	ISNULL(freight_value, '0') AS freight_value
+FROM bronze.order_items
+WHERE order_id IS NOT NULL
+AND order_item_id IS NOT NULL;
 --------------- order_items ---------------
 
 --------------- order_payments ---------------
@@ -115,11 +130,12 @@ CREATE VIEW silver.vw_order_payments_clean
 AS
 SELECT
 	order_id,
-	payment_sequential,
+	ISNULL(payment_sequential, '0') AS payment_sequential,
 	UPPER(TRIM(payment_type)) AS payment_type,
-	payment_installments,
-	payment_value
-FROM bronze.order_payments;
+	ISNULL(payment_installments, '0') AS payment_installments,
+	ISNULL(payment_value, '0') AS payment_value
+FROM bronze.order_payments
+WHERE order_id IS NOT NULL;
 --------------- order_payments ---------------
 
 --------------- order_reviews ---------------
@@ -140,12 +156,14 @@ AS
 SELECT
 	review_id,
 	order_id,
-	review_score,
+	ISNULL(review_score, '0') AS review_score,
 	UPPER(TRIM(ISNULL(review_comment_title, ''))) AS review_comment_title,
 	UPPER(TRIM(ISNULL(review_comment_message, ''))) AS review_comment_message,
-	review_creation_date,
-	review_answer_timestamp
-FROM bronze.order_reviews;
+	ISNULL(review_creation_date, '1900-01-01 00:00:00.000') AS review_creation_date,
+	ISNULL(review_answer_timestamp, '1900-01-01 00:00:00.000') AS review_answer_timestamp
+FROM bronze.order_reviews
+WHERE review_id IS NOT NULL
+AND order_id IS NOT NULL;
 --------------- order_reviews ---------------
 
 --------------- customers ---------------
@@ -155,11 +173,11 @@ CREATE VIEW silver.vw_customers_clean
 AS
 SELECT
 	customer_id,
-	customer_unique_id,
-	customer_zip_code_prefix,
-	UPPER(TRIM(customer_city)) AS customer_city,
-	UPPER(TRIM(customer_state)) AS customer_state
-FROM bronze.customers;
+	ISNULL(customer_zip_code_prefix, '00000') AS customer_zip_code_prefix,
+	UPPER(TRIM(ISNULL(customer_city, ''))) AS customer_city,
+	UPPER(TRIM(ISNULL(customer_state, ''))) AS customer_state
+FROM bronze.customers
+WHERE customer_id IS NOT NULL;
 --------------- customers ---------------
 
 --------------- products ---------------
@@ -189,7 +207,8 @@ SELECT
 	ISNULL(product_length_cm, '0') AS product_length_cm,
 	ISNULL(product_height_cm, '0') AS product_height_cm,
 	ISNULL(product_width_cm, '0') AS product_width_cm
-FROM bronze.products;
+FROM bronze.products
+WHERE product_id IS NOT NULL;
 --------------- products ---------------
 
 --------------- sellers ---------------
@@ -206,9 +225,10 @@ CREATE VIEW silver.vw_sellers_clean
 AS
 SELECT
 	seller_id,
-	seller_zip_code_prefix,
-	UPPER(TRIM(seller_city)) AS seller_city,
-	UPPER(TRIM(seller_state)) AS seller_state
+	ISNULL(seller_zip_code_prefix, '00000') AS seller_zip_code_prefix,
+	UPPER(TRIM(ISNULL(seller_city, ''))) AS seller_city,
+	UPPER(TRIM(ISNULL(seller_state, ''))) AS seller_state
 FROM bronze.sellers
+WHERE seller_id IS NOT NULL;
 --------------- sellers ---------------
 
