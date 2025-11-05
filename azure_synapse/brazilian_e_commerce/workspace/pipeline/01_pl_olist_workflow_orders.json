@@ -306,6 +306,33 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "Load dedicated Stage_orders",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Materialize clean data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "OLIST_DB.usp_load_Stage_orders"
+				},
+				"linkedServiceName": {
+					"referenceName": "SqlServer_Dedicated_Pool",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
