@@ -1,0 +1,38 @@
+{
+	"name": "dajobcanada_control_db_table_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws20251021-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"in_parameter_run_id": {
+				"type": "int"
+			},
+			"in_table_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "dajobcanada"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(string(dataset().in_parameter_run_id), '.parquet')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('control_db', '/', dataset().in_table_name)",
+					"type": "Expression"
+				},
+				"fileSystem": "dajobcanada"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

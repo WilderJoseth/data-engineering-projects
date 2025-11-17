@@ -1,0 +1,83 @@
+{
+	"name": "dajobcanada_jobs_staging_table",
+	"properties": {
+		"folder": {
+			"name": "dajobcanada"
+		},
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [
+			{
+				"name": "job_id",
+				"type": "varchar"
+			},
+			{
+				"name": "job_title",
+				"type": "varchar"
+			},
+			{
+				"name": "company_name",
+				"type": "varchar"
+			},
+			{
+				"name": "language_tools",
+				"type": "varchar"
+			},
+			{
+				"name": "city",
+				"type": "varchar"
+			},
+			{
+				"name": "province",
+				"type": "varchar"
+			},
+			{
+				"name": "job_link",
+				"type": "varchar"
+			},
+			{
+				"name": "level",
+				"type": "varchar"
+			},
+			{
+				"name": "role",
+				"type": "varchar"
+			},
+			{
+				"name": "job_salary_min",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "job_salary_max",
+				"type": "decimal",
+				"precision": 15,
+				"scale": 2
+			},
+			{
+				"name": "job_salary_type",
+				"type": "char"
+			},
+			{
+				"name": "run_id",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "process_datetime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "DAJOBCANADA_DB",
+			"table": "Stage_jobs"
+		},
+		"sqlPool": {
+			"referenceName": "dedicatedws",
+			"type": "SqlPoolReference"
+		}
+	}
+}

@@ -1,0 +1,40 @@
+{
+	"name": "dajobcanada_log_validation_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws20251021-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"in_parameter_run_id": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "dajobcanada"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat('control_db/log_validation/', dataset().in_parameter_run_id)",
+					"type": "Expression"
+				},
+				"fileSystem": "dajobcanada"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "id_run",
+				"type": "INT_16"
+			},
+			{
+				"name": "description",
+				"type": "UTF8"
+			}
+		]
+	}
+}

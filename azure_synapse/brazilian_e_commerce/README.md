@@ -22,7 +22,7 @@ The data was organized following a **medallion architecture**:
 
 | Layer | Description | Example Path |
 |--------|--------------|--------------|
-| **Bronze** | Original CSV files | `/olist/bronze/*products*.csv` | |
+| **Bronze** | Original CSV files | `/olist/bronze/*products*.csv` |
 | **Silver** | Cleaned and standardized data using Synapse **views** | `/olist/silver/products/*.parquet` |
 | **Gold** | Dedicated server where gold tables live | |
 | **Archive** | Copy of CSV files | `/olist/archive/*products*.csv` |
