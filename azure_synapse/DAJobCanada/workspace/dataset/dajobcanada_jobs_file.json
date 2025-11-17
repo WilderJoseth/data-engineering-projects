@@ -1,0 +1,34 @@
+{
+	"name": "dajobcanada_jobs_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ws20251021-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"in_parameter_process_date": {
+				"type": "string"
+			},
+			"in_parameter_path": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "dajobcanada"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@concat(dataset().in_parameter_path, '/process_date=', dataset().in_parameter_process_date)",
+					"type": "Expression"
+				},
+				"fileSystem": "dajobcanada"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}

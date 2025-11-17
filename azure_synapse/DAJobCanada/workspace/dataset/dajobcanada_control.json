@@ -1,0 +1,44 @@
+{
+	"name": "dajobcanada_control",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer_Azure",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DB": "control_db"
+			}
+		},
+		"folder": {
+			"name": "dajobcanada"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "start_process",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "end_process",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "status",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dajobcanada_db",
+			"table": "control"
+		}
+	}
+}
