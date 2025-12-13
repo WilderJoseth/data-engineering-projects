@@ -16,3 +16,6 @@ WHERE run_id = 27
 
 SELECT * FROM study_space_missions_db.logs
 WHERE run_id = 27
+
+SELECT * FROM study_space_missions_db.validation_rules
+
