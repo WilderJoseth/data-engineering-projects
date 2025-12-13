@@ -44,7 +44,7 @@ Link data: <https://www.kaggle.com/datasets/sidraaazam/a-comprehensive-study-of-
 
 ## 3. Workflow
 
-### 3.1. Control and bbservability layer (Azure SQL)
+### 3.1. Control and observability layer (Azure SQL)
 
 A dedicated Azure SQL database is used to store process control and operational metadata, decoupled from the analytical data stored in Fabric.
 
