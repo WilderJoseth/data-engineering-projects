@@ -10,6 +10,16 @@ It serves two purposes:
 1. **For recruiters and peers** — to showcase my hands-on experience building data pipelines, performing migrations, and optimizing data architectures on modern cloud platforms.  
 2. **For learners** — to provide clear, reproducible examples of data engineering patterns, including ingestion, transformation, and performance tuning.
 
+## ⭐ Featured Projects
+
+#### Azure Synapse – Brazilian E-Commerce Lakehouse:
+* End-to-end data lakehouse project built using Azure Synapse Serverless.
+* Link: <https://github.com/WilderJoseth/data-engineering-projects/tree/main/azure_synapse/brazilian_e_commerce>
+
+#### Fabric - Study space missions:
+* End-to-end data lakehouse / warehouse project built using Microsoft Fabric.
+* Link: <https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/study_space_missions>
+
 ## 🗂️ Repository Structure
 
 | Folder | Description |
