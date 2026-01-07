@@ -10,7 +10,7 @@ SELECT * FROM dbo.runs
 ORDER BY id DESC
 
 SELECT * FROM dbo.sub_runs
-WHERE run_id = 54;
+WHERE run_id = 24;
 
 -- 01: Notebook does not exist
 -- 02: Notebook executed
