@@ -1,6 +1,6 @@
 # Data engineering projects
 
-This repository is a **technical portfolio** and **learning space** where I document real data engineering workflows I've built using:
+This repository is a technical portfolio showcasing real-world data engineering workflows I've designed and implemented using:
 - **Azure Synapse Analytics**
 - **Databricks / Delta Lake**
 - **Microsoft SQL Server (On-Premise)**
