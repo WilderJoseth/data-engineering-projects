@@ -16,6 +16,8 @@ The project consists of three main components:
 * **Azure Synapse Dedicated SQL Pool**: data source (AdventureWorksDW2022).
 * **Microsoft Fabric**: data destination.
 
+![Data Processing Design](docs/img/data_processing_design.png)
+
 ## 2. About data
 
 This project uses the sample data warehousing: AdventureWorksDW2022, which was loaded to Synapse dedicated pool.
