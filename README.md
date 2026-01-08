@@ -12,6 +12,10 @@ It serves two purposes:
 
 ## ⭐ Featured Projects
 
+#### Synapse Dedicated DW → Microsoft Fabric DW Migration (Medallion + Control Plane)
+* End-to-end migration data project built using Microsoft Fabric and Synapse.
+* Link: <https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/adventure_works_dw_2022_migration>
+
 #### Azure Synapse – Brazilian E-Commerce Lakehouse:
 * End-to-end data lakehouse project built using Azure Synapse Serverless.
 * Link: <https://github.com/WilderJoseth/data-engineering-projects/tree/main/azure_synapse/brazilian_e_commerce>
