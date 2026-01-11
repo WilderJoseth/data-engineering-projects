@@ -1,5 +1,29 @@
 # Deployment steps
 
+### Prerequisites
+- Azure SQL Database (control plane)
+- Azure Synapse Dedicated SQL Pool (source warehouse)
+- Microsoft Fabric Workspace with:
+  - Lakehouse
+  - Warehouse
+  - Pipelines enabled
+- Storage location for Parquet exports (Synapse extract output)
+- Permissions:
+  - Create/execute SQL objects (Azure SQL + Synapse + Fabric Warehouse)
+  - Read/write permissions to the export storage location
+  - Fabric permission to create tables in Lakehouse/Warehouse and run pipelines
+
+### Configuration (values to update)
+- Azure SQL DB name: `control_db`
+- Fabric Lakehouse name: `lakehouse_main`
+- Fabric Warehouse name: `warehouse_main`
+- Export folder pattern (Synapse → Parquet): `.../<table_name>/` and for fact: `.../FactFinance/year=<YYYY>/`
+- Pipeline parameters used across stages:
+  - `run_id`
+  - `process_date`
+  - `table_name`
+  - `year` (FactFinance only)
+
 ## 1. Azure SQL DB - control_db
 
 Execute T-SQL query artifacts/azure_sql/01_query_create_objects.sql, which creates the following tables:
