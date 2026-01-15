@@ -49,15 +49,18 @@ Execute T-SQL query artifacts/azure_sql/02_query_create_storeds.sql, which creat
 
 Execute T-SQL query artifacts/azure_sql/03_query_insert_data.sql to load data.
 
+Execute T-SQL query artifacts/azure_sql/04_query_user.sql for permissions.
+
 ## 2. Synapse
 
-The project includes a pipeline to load AdventureWorksDW2022 database (on-premise) into a dedicated pool, however it is optional. The idea is to have a database in Synapse.
+The project includes a pipeline to load AdventureWorksDW2022 database (on-premise) into a Dedicated pool.
 
 Objects to load into Synapse:
 
 1. Scripts:
-    * artifacts/synapse/sql/01_query_create_objects.sql
-    * artifacts/synapse/sql/02_query_create_storeds.sql
+    * artifacts/synapse/sql/01_query_create_staging_objects.sql
+    * artifacts/synapse/sql/02_query_create_production_objects.sql
+    * artifacts/synapse/sql/03_query_create_storeds.sql
 2. Pipelines:
     * artifacts/pipelines/pl_AdventureWorksDW2022_on_premise_support_live.zip
 
@@ -91,7 +94,7 @@ For migration, the project starts with the following objects:
 ### 3.2. Warehouse
 
 1. Create warehouse warehouse_main.
-2. Execute T-SQL query artifacts/fabric/sql/01_query_create_objects.sql, which creates the following objects:
+2. Execute T-SQL query artifacts/fabric/sql/01_query_create_staging_objects.sql and artifacts/fabric/sql/02_query_create_production_objects.sql, which create the following objects:
     * **Schemas**: staging and production.
     * **Tables**:
         * staging.FactFinance
@@ -106,7 +109,7 @@ For migration, the project starts with the following objects:
         * production.DimDepartmentGroup
         * production.DimScenario
         * production.DimAccount
-3. Execute T-SQL query artifacts/fabric/sql/02_query_create_sp.sql, which creates the following storeds:
+3. Execute T-SQL query artifacts/fabric/sql/03_query_create_staging_sp.sql and artifacts/fabric/sql/04_query_create_production_sp.sql, which create the following storeds:
     * staging.usp_load_FactFinance
     * staging.usp_load_DimDate
     * staging.usp_load_DimOrganization

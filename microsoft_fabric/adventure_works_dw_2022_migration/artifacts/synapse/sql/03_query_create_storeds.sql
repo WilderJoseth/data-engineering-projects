@@ -1,8 +1,8 @@
 
-
 CREATE PROCEDURE AdventureWorksDW2022_prod.usp_truncate_tables
 AS
 BEGIN
+	-- Remove data from previous executions
 	TRUNCATE TABLE AdventureWorksDW2022_prod.FactFinance
 	TRUNCATE TABLE AdventureWorksDW2022_prod.DimDate
 	TRUNCATE TABLE AdventureWorksDW2022_prod.DimOrganization
@@ -91,27 +91,3 @@ BEGIN
 	FROM AdventureWorksDW2022_stag.DimAccount
 END;
 
-EXEC AdventureWorksDW2022_prod.usp_load_FactFinance
-EXEC AdventureWorksDW2022_prod.usp_load_DimDate
-EXEC AdventureWorksDW2022_prod.usp_load_DimOrganization
-EXEC AdventureWorksDW2022_prod.usp_load_DimDepartmentGroup
-EXEC AdventureWorksDW2022_prod.usp_load_DimScenario
-EXEC AdventureWorksDW2022_prod.usp_load_DimAccount
-
-SELECT
-	d.CalendarYear,
-	d.EnglishMonthName,
-	d.EnglishDayNameOfWeek,
-	o.OrganizationName,
-	dg.DepartmentGroupName,
-	s.ScenarioName,
-	f.Amount
-FROM AdventureWorksDW2022_prod.FactFinance f
-INNER JOIN AdventureWorksDW2022_prod.DimDate d ON d.DateKey = f.DateKey
-INNER JOIN AdventureWorksDW2022_prod.DimOrganization o ON o.OrganizationKey = f.OrganizationKey
-INNER JOIN AdventureWorksDW2022_prod.DimDepartmentGroup dg ON dg.DepartmentGroupKey = f.DepartmentGroupKey
-INNER JOIN AdventureWorksDW2022_prod.DimScenario s ON s.ScenarioKey = f.ScenarioKey
-INNER JOIN AdventureWorksDW2022_prod.DimAccount a ON a.AccountKey = f.AccountKey
-
-
-SELECT * FROM AdventureWorksDW2022_prod.FactFinance

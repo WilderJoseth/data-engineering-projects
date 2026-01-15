@@ -10,7 +10,11 @@ SELECT * FROM dbo.runs
 ORDER BY id DESC
 
 SELECT * FROM dbo.sub_runs
-WHERE run_id = 24;
+WHERE run_id = 60;
+
+DELETE FROM dbo.sub_runs
+WHERE run_id = 56
+AND layer LIKE '%FACT%';
 
 -- 01: Notebook does not exist
 -- 02: Notebook executed
@@ -26,3 +30,4 @@ SELECT * FROM dbo.project_tables
 UPDATE dbo.project_tables SET is_active = 1
 WHERE id = 1
 
+EXEC dbo.usp_list_years_fact_table_to_process 1
