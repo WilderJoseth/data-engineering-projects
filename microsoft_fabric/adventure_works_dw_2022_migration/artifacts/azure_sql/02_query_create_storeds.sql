@@ -9,9 +9,11 @@ SET NOCOUNT ON
 	DECLARE @start_process_date DATETIME
 	SET @start_process_date = GETDATE()
 
+	-- Save new run execution
 	INSERT INTO dbo.runs (name, start_process_date, status, project_id)
 	VALUES (@name, GETDATE(), 'STARTED', @project_id)
 
+	-- Get latest run id
 	SELECT id, FORMAT(start_process_date, 'yyyy-MM-dd HH:mm:ss') AS start_process_date
 	FROM dbo.runs WHERE id = SCOPE_IDENTITY()
 SET NOCOUNT OFF
@@ -90,6 +92,7 @@ BEGIN
 	SELECT year
 	FROM dbo.fact_table_years 
 	WHERE table_id = @table_id
-	AND is_active = 0
+	AND is_active = 1
 END;
 ----------------- END create sp -----------------
+

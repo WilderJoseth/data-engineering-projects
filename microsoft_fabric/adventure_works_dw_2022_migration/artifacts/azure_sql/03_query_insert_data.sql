@@ -121,9 +121,9 @@ VALUES (8, 'ValueType', 'NVARCHAR', 50, NULL, '', 5)
 -------------------------
 SELECT * FROM dbo.fact_table_years
 
-INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2010, 0, 1)
-INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2011, 0, 1)
-INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2012, 0, 1)
-INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2013, 0, 1)
+INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2010, 1, 1)
+INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2011, 1, 1)
+INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2012, 1, 1)
+INSERT INTO dbo.fact_table_years (year, is_active, table_id) VALUES (2013, 1, 1)
 -------------------------
 ----------------- END load data -----------------

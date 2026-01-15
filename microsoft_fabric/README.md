@@ -25,3 +25,4 @@ Each project demonstrates a different scenario — from classic ETL migrations t
 ## 🗂️ Project List
 
 * Study space missions
+* Adventure work DW 2022 migration (Synapse to Fabric)
