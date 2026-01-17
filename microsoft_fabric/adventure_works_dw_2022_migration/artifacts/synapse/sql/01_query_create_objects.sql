@@ -1,19 +1,19 @@
 
 ----------------- START schemas -----------------
-CREATE SCHEMA AdventureWorksDW2022_prod
+CREATE SCHEMA AdventureWorksDW2022_prod;
 ----------------- END schemas -----------------
 
 ----------------- START fact tables -----------------
 CREATE TABLE AdventureWorksDW2022_prod.FactFinance
 (
-    FinanceKey INT NOT NULL,
-    DateKey INT NOT NULL,
-    OrganizationKey INT NOT NULL,
-    DepartmentGroupKey INT NOT NULL,
-    ScenarioKey INT NOT NULL,
-    AccountKey INT NOT NULL,
-    Amount DECIMAL(10, 2) NOT NULL,
-    Date DATETIME NOT NULL
+    FinanceKey INT NULL,
+    DateKey INT NULL,
+    OrganizationKey INT NULL,
+    DepartmentGroupKey INT NULL,
+    ScenarioKey INT NULL,
+    AccountKey INT NULL,
+    Amount DECIMAL(10, 2) NULL,
+    Date DATETIME NULL
 )
 WITH
 (
@@ -23,7 +23,7 @@ WITH
 ----------------- END fact tables -----------------
 
 ----------------- START dimension tables -----------------
-CREATE TABLE AdventureWorksDW2022_prod.DimDate 
+CREATE TABLE AdventureWorksDW2022_prod.DimDate
 (
 	DateKey INT NOT NULL,
 	FullDateAlternateKey DATE NOT NULL,
@@ -53,11 +53,11 @@ WITH
 
 CREATE TABLE AdventureWorksDW2022_prod.DimOrganization
 (
-	OrganizationKey INT NOT NULL,
-	ParentOrganizationKey INT NOT NULL,
-	PercentageOfOwnership DECIMAL(3, 2) NOT NULL,
-	OrganizationName NVARCHAR(50) NOT NULL,
-	CurrencyKey INT NOT NULL
+	OrganizationKey INT NULL,
+	ParentOrganizationKey INT NULL,
+	PercentageOfOwnership DECIMAL(3, 2) NULL,
+	OrganizationName NVARCHAR(50) NULL,
+	CurrencyKey INT NULL
 )
 WITH
 (
@@ -67,9 +67,9 @@ WITH
 
 CREATE TABLE AdventureWorksDW2022_prod.DimDepartmentGroup
 (
-	DepartmentGroupKey INT NOT NULL,
-	ParentDepartmentGroupKey INT NOT NULL,
-	DepartmentGroupName NVARCHAR(50) NOT NULL
+	DepartmentGroupKey INT NULL,
+	ParentDepartmentGroupKey INT NULL,
+	DepartmentGroupName NVARCHAR(50) NULL
 )
 WITH
 (
@@ -79,8 +79,8 @@ WITH
 
 CREATE TABLE AdventureWorksDW2022_prod.DimScenario
 (
-	ScenarioKey INT NOT NULL,
-	ScenarioName NVARCHAR(50) NOT NULL
+	ScenarioKey INT NULL,
+	ScenarioName NVARCHAR(50) NULL
 )
 WITH
 (
@@ -90,14 +90,16 @@ WITH
 
 CREATE TABLE AdventureWorksDW2022_prod.DimAccount
 (
-	AccountKey INT NOT NULL,
-	ParentAccountKey INT NOT NULL,
-	AccountCodeAlternateKey INT NOT NULL,
-	ParentAccountCodeAlternateKey INT NOT NULL,
-	AccountDescription NVARCHAR(50) NOT NULL,
-	AccountType NVARCHAR(50) NOT NULL,
-	Operator NVARCHAR(50) NOT NULL,
-	ValueType NVARCHAR(50) NOT NULL
+	AccountKey INT NULL,
+	ParentAccountKey INT NULL,
+	AccountCodeAlternateKey INT NULL,
+	ParentAccountCodeAlternateKey INT NULL,
+	AccountDescription NVARCHAR(50) NULL,
+	AccountType NVARCHAR(50) NULL,
+	Operator NVARCHAR(50) NULL,
+    CustomMembers NVARCHAR(300) NULL,
+	ValueType NVARCHAR(50) NULL,
+    CustomMemberOptions NVARCHAR(200) NULL
 )
 WITH
 (

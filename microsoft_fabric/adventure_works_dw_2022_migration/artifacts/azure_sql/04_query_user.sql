@@ -15,6 +15,10 @@ GRANT EXECUTE ON dbo.usp_list_validation_rules TO etl_executor;
 GRANT EXECUTE ON dbo.usp_list_tables_project TO etl_executor;
 
 GRANT EXECUTE ON dbo.usp_list_years_fact_table_to_process TO etl_executor;
+
+GRANT INSERT ON dbo.logs TO etl_executor;
+
+GRANT SELECT ON dbo.logs TO etl_executor;
 ----------------- END roles -----------------
 
 
