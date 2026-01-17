@@ -58,9 +58,8 @@ The project includes a pipeline to load AdventureWorksDW2022 database (on-premis
 Objects to load into Synapse:
 
 1. Scripts:
-    * artifacts/synapse/sql/01_query_create_staging_objects.sql
-    * artifacts/synapse/sql/02_query_create_production_objects.sql
-    * artifacts/synapse/sql/03_query_create_storeds.sql
+    * artifacts/synapse/sql/01_query_create_objects.sql
+    * artifacts/synapse/sql/02_query_create_storeds.sql
 2. Pipelines:
     * artifacts/pipelines/pl_AdventureWorksDW2022_on_premise_support_live.zip
 
@@ -69,6 +68,14 @@ For migration, the project starts with the following objects:
 1. artifacts/pipelines/pl_AdventureWorksDW2022_extract_dim_support_live.zip
 2. artifacts/pipelines/pl_AdventureWorksDW2022_extract_fact_support_live.zip
 3. artifacts/pipelines/pl_AdventureWorksDW2022_extract_main_support_live.zip
+
+Linked services:
+
+* **Azure SQL Database**: for Azure SQL DB
+* **Azure Key Vault**: for passwords
+* **SQL Server**: on-premise
+
+Azure Data Lake Storage Gen2: migration/adventure_works_dw_2022
 
 ## 3. Fabric
 
@@ -138,3 +145,10 @@ For migration, the project starts with the following objects:
 11. Restore the pipeline: artifacts/fabric/pipelines/05_pl_dw_production_fact_table.zip
 12. Restore the pipeline: artifacts/fabric/pipelines/05_pl_dw_production.zip
 13. Restore the pipeline: artifacts/fabric/pipelines/01_pl_main.zip
+
+### 3.4. Connections
+
+* **SQL Server**: for Azure SQL DB
+* **Fabric Data Pipelines**: for calling pipelines
+* **Lakehouse (view)**: for SQL querying
+* **Azure Data Lake Storage Gen2**: OneLake shorcut
