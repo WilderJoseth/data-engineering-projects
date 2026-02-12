@@ -18,7 +18,7 @@ The goal is:
 
 This architecture is designed for a business that receives **monthly batch extracts** from an operational application and needs a reliable path from raw data to BI-ready insights. It balances **auditability, operational reliability, scalability, and analytics performance**.
 
-![Data Processing Design](docs/img/data_processing_design_NYC_Taxi.png)
+![Data Processing Design](docs/img/data_processing_design.png)
 
 1. **Taxi App** generates monthly Parquet trip files.
 2. Files are dropped into **ADLS Gen2** in a landing path (partitioned by month).
