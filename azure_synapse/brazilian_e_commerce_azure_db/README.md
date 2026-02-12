@@ -1,12 +1,12 @@
-# Data Engineering Project - Synapse / Azure SQL end-to-end scenario
+# Data Engineering Project - Synapse Pipelines + Azure SQL (End-to-End)
 
-This project implements an end-to-end data engineering pipeline using **Synapse** to ingest, curate, and serve Brazilian E-Commerce data following the **Medallion Architecture (Bronze/Silver/Gold)**.
+This project designs an end-to-end data engineering solution on Microsoft Azure to ingest, curate, and serve Brazilian E-Commerce data using a **Medallion Architecture (Bronze/Silver/Gold)**. The solution uses **Synapse Pipelines (ADF-style orchestration)** for ingestion, and **Azure SQL Database** for relational transformations and serving.
 
 Link data: <https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce>
 
 ## 1. Business Scenario
 
-A ecommerce company wants to understand demand patterns, revenue drivers. For that reason, data arrives daily as CSV, which extracts information from the ecommerce application.
+A E-commerce company wants to understand **demand patterns**. For that reason, data arrives daily as CSV, which extracts information from the E-commerce application.
 
 The goal is:
 * **Standardize ingestion** and ensure **reproducible and idempotent** loads.
@@ -19,62 +19,68 @@ This architecture is designed for a business that receives **daily batch extract
 
 ![Data Processing Design](docs/img/data_processing_design.png)
 
-1. **Ecommerce App** generates daily CSV files.
-2. Files are dropped into **ADLS Gen2** in a landing path.
-3. On arrival, a **Synapse Data Pipeline** is triggered.
-4. Synapse uses a **Copy Task** to load data into a Azure SQL database.
-5. A single **Azure SQL database** contains three schemas:
+1. **E-commerce App** generates daily CSV extracts.
+2. Files are dropped into **ADLS Gen2 (Landing zone)**.
+3. On arrival, a **Synapse Data Pipeline** is triggered (event-based).
+4. Synapse performs loads raw data into **Azure SQL (Bronze)**.
+5. Transformations are executed in **Azure SQL** to produce:
    - `bronze` (raw, as received)
-   - `silver` (cleaned, conformed)
-   - `gold` (enriched, analytics-ready)
-6. Gold data is loaded into a Lakehouse in Synapse.
+   - `silver` (cleaned, conformed, etc)
+   - `gold` serving layer for application consumption (stable contracts)
+6. Analytics Gold is exported to **ADLS Gen2 (Parquet/Delta)** and exposed via **Synapse SQL Serverless** for BI querying.
+7. Power BI consumes Gold through **DirectQuery to Synapse SQL Serverless** views.
+8. A separate **Control Plane (Azure SQL)** stores pipeline configuration and operational logs (runs, row counts, failures, reprocess history).
 
 ## 3. Architecture decisions
 
 ### 3.1. Batch processing
 
-The ecommerce app produces **daily CSV drops** (not continuous streaming). Using ADLS Gen2 as the landing zone and event-based triggering in Synapse aligns with a batch ingestion pattern:
+The source produces **daily CSV drops** (not continuous streaming). Using ADLS Gen2 as the landing zone and event-based triggering in Synapse aligns with a batch ingestion pattern:
 
 * Partition data by process like: payments, orders, etc.
 * Clear operational boundaries per process (reprocess a single process if needed).
 
-This matches the source reality.
-
 ### 3.2. Landing zone
 
-Keeping a dedicated **ADLS landing zone** provides a clean boundary between:
+Keeping a dedicated **ADLS Gen2 landing zone** provides a clean boundary between:
 
 * Upstream producer responsibilities (drop files).
 * Downstream data engineering responsibilities (validate, transform, serve).
 
 This removes coupling between the pipeline and the producer proving a clear separation of concerns.
 
-### 3.3. Bronze layer - SQL tables
+### 3.3. Bronze in Azure SQL (raw + metadata)
 
-Bronze is implemented as **SQL tables** to make raw data queryable with ACID reliability.
+Bronze is implemented as SQL tables to make raw data immediately queryable with transactional guarantees.
+Each record includes ingestion metadata (e.g., `run_id`, `ingest_ts`, `source_file_path`) to support:
 
-This provides two important guarantees:
+* Auditing and reproducibility.
+* Controlled reruns and operational debugging.
+* Consistent downstream reads.
 
-* **Audit trail / reproducibility**: archived files preserve exactly what arrived and when.
-* **Operational safety**: tables support safe reruns, schema evolution handling, and consistent downstream reads.
+### 3.4. Silver in Azure SQL (trust boundary)
 
-### 3.4. Silver layer - SQL tables
+Source data can contain errors, so silver is the “trust boundary” where:
 
-Taxi data can contain errors. Silver is the “trust boundary” where:
+* Standard data types and formats.
+* Deduplication and key enforcement.
+* Data quality rules and constraints.
 
-* Types are standardized (timestamps, numeric fields).
-* Data quality rules are applied consistently.
+### 3.5. Gold serving in Azure SQL (for apps)
 
-This enforces data quality for trustworthy analytics.
+Gold serving tables/views provide:
 
-### 3.5. Gold layer
+* Stable schema contracts.
+* Performance-oriented modeling (indexes, aggregations where appropriate).
 
-Gold is tailored to how the business consumes data:
+### 3.6 Gold analytics in ADLS (queried via Synapse SQL Serverless)
 
-* Pre-aggregations reduce the need for expensive ad hoc calculations.
-* Store data in OLAP format.
+For BI and analytics, curated Gold is published to ADLS in columnar format (Parquet). Synapse SQL Serverless exposes these files through views, enabling:
 
-### 3.6. Event-triggered pipelines
+* Cost-efficient, scalable analytics queries.
+* Clean interface for Power BI (DirectQuery) without managing dedicated pools.
+
+### 3.7. Event-triggered pipelines
 
 Running the pipeline automatically when a file arrives:
 
@@ -82,21 +88,20 @@ Running the pipeline automatically when a file arrives:
 * Prevents “someone forgot to run the job” failures.
 * Creates a consistent operational pattern for future datasets.
 
-### 3.7. SQL database with schemas
+### 3.8. Control plane (configuration + run logging)
 
-Using one Database with three schemas (`bronze`, `silver`, `gold`) provides:
+A control database supports:
 
-* Clear structure without managing many items.
-* Straightforward access control by schema/table.
+* Dataset configuration (paths, schema mappings, keys, rules).
+* Ingestion state (processed files, hashes, watermarks).
+* Pipeline runs and metrics (duration, row counts, status, errors).
 
-### 3.8. Reporting with Direct Lake
+This enables **idempotency**, replay, and traceability.
 
-With Gold in Delta tables, the project can use **Direct Lake** for Power BI:
+### 3.9. Why SQL for transformations
 
-* Low-latency BI experience without heavy import refresh cycles.
-* A single curated semantic model that multiple reports can reuse.
+Transformations are primarily relational (joins, deduplication, conformance, star-schema shaping). Implementing them in Azure SQL:
 
-### 3.10. SQL for data tranformations
-
-SQL is used for Bronze/Silver/Gold processing because the transformations are mostly relational.
-
+* Reinforces SQL optimization skills (indexes, query tuning).
+* Provides predictable serving performance for apps.
+* Keeps orchestration separate from transformation logic.
