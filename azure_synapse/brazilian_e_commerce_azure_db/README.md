@@ -21,7 +21,7 @@ This architecture is designed for a business that receives **daily batch extract
 
 1. **E-commerce App** generates daily CSV extracts.
 2. Files are dropped into **ADLS Gen2 (Landing zone)**.
-3. On arrival, a **Synapse Data Pipeline** is triggered (event-based).
+3. A **Synapse Data Pipeline** is triggered based on an scheduled.
 4. Synapse performs loads raw data into **Azure SQL (Bronze)**.
 5. Transformations are executed in **Azure SQL** to produce:
    - `bronze` (raw, as received)
@@ -80,9 +80,9 @@ For BI and analytics, curated Gold is published to ADLS in columnar format (Parq
 * Cost-efficient, scalable analytics queries.
 * Clean interface for Power BI (DirectQuery) without managing dedicated pools.
 
-### 3.7. Event-triggered pipelines
+### 3.7. Scheduled-triggered pipelines
 
-Running the pipeline automatically when a file arrives:
+Running the pipeline based on an schedule:
 
 * Improves data freshness for reporting.
 * Prevents “someone forgot to run the job” failures.
@@ -105,3 +105,57 @@ Transformations are primarily relational (joins, deduplication, conformance, sta
 * Reinforces SQL optimization skills (indexes, query tuning).
 * Provides predictable serving performance for apps.
 * Keeps orchestration separate from transformation logic.
+
+## 4. Data Model Overview
+
+The data is made of a group of CSV files, where each one represents an entity:
+
+* Customers
+* Geolocation
+* Order_Items
+* Order_Payments
+* Order_Reviews
+* Orders
+* Products
+* Sellers
+
+## 5. Storage Layout (ADLS Gen2)
+
+The path where the input files are stored is: `raw/brazilian_e_commerce/<entity>/file_name.csv`. The name of the file does not follow any pre-defined value, because the pipeline reads all CSV files.
+
+## 6. Orchestration (Synapse Pipelines)
+
+Pipelines are desined like Data Factory:
+
+* **Trigger**: scheduled (once per day).
+* **Steps**:
+   1) Get Metadata (which entities to process) + initial / incremental execution.
+   2) Apply basic validations (file exists, size > 0).
+   3) Idempontency check (control table).
+   4) Copy to Azure SQL (Bronze).
+   5) Execute stored procedures (Bronze → Silver → Gold Serving).
+   6) Export Gold Analytics to ADLS (Parquet)
+
+## 7. Idempotency & Reprocessing
+
+Pipelines run **per entity folder** (e.g., `raw/orders/`) and ingest **all CSV files found** in that folder in a single execution (file names can be anything).
+
+* **On success:** processed files are **deleted** from the landing path.
+* **Incremental logic:** new arrivals are applied using **SCD Type 1 upserts**.
+* **Reruns:** safe to re-execute—data is **replaced/updated where applicable**.
+
+## 8. Serving & Consumption
+
+* **Applications:** read from `gold_serving` in Azure SQL (stable schema contracts).
+* **BI/Analytics:** query `gold_analytics` in ADLS through **Synapse SQL Serverless** views (Power BI DirectQuery or Import).
+
+## 9. Security & Access Control
+
+This project follows least-privilege access.
+
+* **Synapse Managed Identity** is used for all service-to-service access (no secrets).
+* **Azure SQL** uses schema-based permissions and database roles:
+  - ETL can write `bronze/silver/gold` and run stored procedures.
+  - Applications have read-only access to `gold` only.
+  - Bronze/Silver are not exposed to consumers.
+* **BI access** is provided via Synapse SQL Serverless curated views, not direct file paths.
