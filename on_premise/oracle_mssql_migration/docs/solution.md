@@ -1,285 +1,199 @@
 # Solution Design
 
-This section describes the target solution in sufficient detail to support implementation.
+## Overview
+
+This document defines the technical implementation of the Oracle 11gR2 to SQL Server 2022 migration for the Sales / Customer Orders module.
+
+The solution includes:
+- One SQL Server 2022 database for OLTP
+- One SQL Server 2022 database for OLAP
+- SSIS for extraction and load processes
+- Stored procedures for validation, transformation, and load logic
+- SQL Server Agent for scheduling and execution
 
-The purpose of the solution is to migrate the legacy Oracle Sales module into a modern SQL Server 2022 platform with explicit logic, controlled data movement, and separation between operational and analytical workloads.
+## Target Databases
 
-## 1. Target databases
+The target solution uses three SQL Server 2022 databases:
+
+- **Sales_Operational**: transactional database for operational processes.
+- **Sales_Analytics**: analytical database for reporting and historical analysis.
+- **Control_DB**: technical database for execution tracking, logging, reconciliation, and reusable control metadata.
+
+### Design Rules
+- OLTP, OLAP, and technical control responsibilities must remain separated.
+- `Sales_Operational` stores operational business data.
+- `Sales_Analytics` stores analytical and historical reporting data.
+- `Control_DB` stores technical metadata and operational control objects only.
+- Cross-database dependencies should be minimized and documented to reduce coupling and simplify maintenance.
 
-The target platform will be implemented with two SQL Server databases:
+## Schema Organization
 
-- Sales_DB
-- Sales_DW
+The solution uses business and technical schemas to separate final business objects from processing and control support objects.
+
+### Sales_Operational
 
-### Sales_DB
-This database supports the new web application and stores current operational data.
+**Business schemas**
+- Business schemas will be defined from the detailed source analysis and target model design.
+- The final schema structure may change as Oracle source objects are analyzed and grouped into target business domains.
 
-It is responsible for:
+**Technical schemas**
+- `staging`
+- `work`
+- `control`
 
-- Customer and product master data used by the application.
-- Sales transactions.
-- Inventory-related operational data.
-- Explicit database-side logic required for controlled writes.
-- Technical schemas for migration and synchronization support.
+### Sales_Analytics
 
-### Sales_DW
-This database supports reporting and analytics.
+**Business schemas**
+- `dim`
+- `fact`
+
+**Technical schemas**
+- `staging`
+- `work`
+- `control`
+
+### Schema Rules
+- Business schemas store final business-facing tables only.
+- Technical schemas store temporary, intermediate, and support objects used during processing.
+- `staging` stores extracted data before validation and transformation.
+- `work` stores intermediate processed data used during load execution.
+- `control` stores technical objects required by the solution, including objects used to register, prepare, or return execution data to the central control database `Control_DB`.
+- Objects must be created explicitly in the correct schema and must not rely on default schema behavior.
+
+## Table Design Principles
+
+Final table structures will be defined during detailed source analysis and target model design. However, the following design principles apply to table creation across the solution.
+
+### General Rules
+- Tables must be created explicitly in the correct schema.
+- SQL Server data types must be selected according to business meaning and expected usage.
+- Final tables must define a surrogate primary key.
+
+### OLTP Principles
+- `Sales_Operational` tables must support transactional processing and controlled updates.
+- Business keys from the source must be preserved where required for reconciliation, integration, or business uniqueness.
+- Audit and technical columns should be included where required for operational traceability.
+
+### OLAP Principles
+- `Sales_Analytics` tables must be designed for reporting, historical analysis, and query performance.
+- The model should use dimension and fact structures where appropriate.
+- Business keys from source systems should be preserved where needed for lineage and reconciliation.
+- Where appropriate, unknown or missing values should be mapped to predefined default value.
+
+### Keys and Relationships
+- Each final table must define a primary key.
+- Surrogate keys are implemented as system-generated identifier columns in SQL Server.
+- Foreign key relationships should be implemented where they support integrity and do not conflict with controlled load processes.
+
+### Audit and Technical Columns
+Where applicable, final tables should include technical columns such as:
+- `created_at`
+- `updated_at`
+- `batch_id`
+- `is_active`
+
+### Default Values
+- Default values must be used only when they represent valid technical or business behavior.
+- Technical audit columns may use system defaults where appropriate.
+
+### Nullability
+- Nullability must be defined explicitly during target design.
+- Required business columns should be defined as `NOT NULL`.
+
+### Data Types
+- SQL Server data types must be selected according to business meaning and expected usage.
+- Oracle data type mappings must be reviewed during design.
+- Date, numeric, and text columns should use precise target types instead of generic oversized definitions.
+
+### Storage and Filegroup Principles
+
+For this project, all objects in `Sales_Operational` and `Sales_Analytics` are created in the default `PRIMARY` filegroup. No custom filegroup allocation is required for the initial implementation. This decision is based on project scope and implementation simplicity.
+
+For enterprise production environments, filegroup design should be evaluated according to:
+- Expected data volume
+- Workload type
+- Maintenance windows
+- Index rebuild strategy
+- Partitioning requirements
+- Backup and restore objectives
+
+Where justified, separate filegroups may be defined for large tables, large indexes, or partitioned structures.
+
+## Implementation Tooling
+
+The solution is implemented using the following components:
+
+- **Source platform**: Oracle Database 11g Release 2
+- **Target platform**: SQL Server 2022
+- **ETL tool**: SQL Server Integration Services (SSIS)
+- **Development environment**: Visual Studio 2026 version 18.4
+- **Target-side processing**: Transact-SQL stored procedures
+- **Job scheduling**: SQL Server Agent
+
+## ETL and Data Movement
+
+Data migration is implemented through a controlled ETL flow from Oracle to SQL Server.
+
+### Processing Flow
+1. Extract data from Oracle source objects.
+2. Load extracted data into `staging` tables.
+3. Validate and transform data in `work` tables.
+4. Execute target-side load logic through stored procedures.
+5. Load final target tables in `Sales_Operational` or `Sales_Analytics`.
+6. Register execution results, reconciliation data, and process status in `Control_DB`.
+
+### ETL Rules
+- SSIS is used for extraction and controlled data movement.
+- Stored procedures are used for validation, transformation, and final load logic.
+- Data must not be loaded directly from source into final business tables.
+- `staging` stores source-aligned extracted data before processing.
+- `work` stores intermediate data used during validation and transformation.
+- Final loads must be executed in a controlled and traceable way.
+- Execution tracking, logs, and reconciliation results must be sent to `Control_DB`.
+
+### Load Types
+- **Initial load**: used for first-time population of target tables.
+- **Incremental load**: used for recurring data synchronization after the initial load.
+
+### Failure Handling and Rollback
+- Final target loads must be executed within controlled transactions.
+- If a failure occurs during a final load step, the transaction for that load unit must be rolled back.
+- Failed executions must be registered in `Control_DB` with status, error details, and batch identifier.
+- Load processes must be restartable and must prevent duplicate target data after failure.
+
+## Control and Monitoring
+
+Execution control and operational monitoring are managed through `Control_DB`.
+
+### Purpose
+`Control_DB` is used to:
+- Register process executions
+- Store execution status and timestamps
+- Store logs and reconciliation results
+- Support rerun and recovery control
+- Centralize technical tracking for the solution
+
+## Security, Users, and Roles
+
+Security must separate business access, ETL execution, and administrative control.
+
+### Design Rules
+- Access must follow the principle of least privilege.
+- Business users must not have direct write access to technical schemas.
+- ETL execution accounts must use only the permissions required for extraction, processing, and load operations.
+- Administrative permissions must be restricted to authorized technical users.
+- Access to `Control_DB` must be limited to operational and technical roles.
+
+### Access Scope
+- `Sales_Operational` must expose business data only through approved schemas and objects.
+- `Sales_Analytics` must expose analytical data only through approved schemas and objects.
+- Technical schemas such as `staging`, `work`, and `control` must be restricted to ETL and support processes.
+
+### Role Categories
+The solution may define separate roles for:
+- Application access
+- ETL execution
+- Read-only reporting access
+- Operational support
+- Database administration
 
-It is responsible for:
-
-- Historical and analytical data storage.
-- Dimensional and fact-oriented structures.
-- Reporting views and reporting-ready data sets.
-- Technical schemas for warehouse loading and transformation.
-
-## 2. Schema organization
-
-Each database will contain both business schemas and technical schemas.
-
-### Sales_DB schemas
-
-Business schemas:
-- customer
-- sales
-- billing
-
-Technical schemas:
-- staging
-- work
-- control
-
-### Sales_DW schemas
-
-Business schemas:
-- dim
-- fact
-
-Technical schemas:
-- staging
-- work
-- control
-
-### Purpose of technical schemas
-
-- **staging** stores raw extracted data before final processing.
-- **work** stores intermediate transformed data sets.
-- **control** stores control metadata such as batch identifiers, watermarks, row counts, and execution status.
-
-## 3. Table design principles
-
-The target table design differs between the operational and analytical databases according to their responsibilities.
-
-### Sales_DB
-
-- Audit columns like CreationDate, CreationUser, ModificationDate, ModificationUser.
-- Id columns are identity-based and primary key.
-
-### Sales_DW
-
-- Audit columns like CreationDate, CreationUser, ModificationDate, ModificationUser.
-- Id columns are autoincremetal and primary key.
-- No null values are allowed.
-
-## 4. ETL and data movement
-
-The solution will use **SSIS** as the primary ETL and orchestration tool for data extraction, transformation, and loading.
-
-The ETL design will support:
-
-- Initial migration of source data.
-- Recurring incremental synchronization.
-- Loading of OLTP target data.
-- Loading of OLAP target data.
-- Validation and reconciliation.
-- Error capture and restartability.
-
-### Data movement flow
-
-The standard data movement pattern will be:
-
-**Oracle source → SQL Server `staging` → SQL Server `work` → final target tables**
-
-### ETL responsibilities
-
-ETL processes will be responsible for:
-
-- Extracting data from Oracle.
-- Standardizing source values.
-- Loading raw staging tables.
-- Invoking transformation and load procedures.
-- Capturing rejected rows.
-- Updating control metadata.
-- Recording execution logs.
-
-## 5. Stored procedures and business logic
-
-The target platform will use explicit **SQL Server stored procedures** for controlled database-side processing.
-
-Stored procedures will be used for:
-
-- Merge and upsert operations from staging into final tables.
-- Validation of business rules during load.
-- Controlled write operations for important business entities.
-- Batch-oriented data processing.
-- Reconciliation and audit support.
-
-The project will not use triggers in the target database. This means that any Oracle trigger-based behavior must be reassigned explicitly to one of the following:
-
-- Stored procedures
-- ETL processes
-- Application logic
-
-The objective is to ensure that all important business behavior is explicit, testable, and maintainable.
-
-## 6. Jobs and scheduling
-
-The solution will use **SQL Server Agent** for job execution and scheduling.
-
-SQL Server Agent jobs will be used for:
-
-- Initial migration runs.
-- Incremental synchronization cycles.
-- Warehouse refresh processes.
-- Cleanup of staging and error tables.
-- Reconciliation execution.
-- Operational monitoring processes.
-
-## 7. Control and monitoring
-
-The solution will include a control framework to support migration operation and traceability.
-
-Control information will be stored in `control` schemas and will include:
-
-- Batch identifiers
-- Source and target row counts
-- Execution start and end times
-- Execution status
-- Watermark values
-- Reconciliation results
-- Error counts
-- Process logs
-
-## 8. Load strategy
-
-The migration will support two load modes:
-
-### Initial load
-Used to migrate the existing source data into the new platform.
-
-The initial load will:
-
-- Extract data from Oracle in controlled batches.
-- Load raw data into `staging`.
-- Transform data in `work`.
-- Load final OLTP and DW tables.
-- Perform validations and reconciliation before acceptance.
-
-### Incremental load
-Used to synchronize changes after the initial baseline has been loaded.
-
-The incremental load will:
-
-- Identify source changes.
-- Extract only the required deltas.
-- Apply controlled merge logic.
-- Update target data.
-- Record watermark progress and execution results.
-
-## 9. Security, Users, and Roles
-
-The target solution must include a controlled security model for both operational and analytical environments.
-
-The objective is to ensure that application access, ETL execution, reporting access, and administrative activities are clearly separated and governed through explicit users and roles.
-
-### 9.1. Security principles
-
-The security model follows these principles:
-
-- Least privilege.
-- Separation of duties.
-- Schema-based access control.
-- No direct access to technical schemas by end users or application users.
-- Controlled execution of ETL and scheduled jobs.
-- Explicit ownership of objects and permissions.
-
-### 9.2. Users
-
-The implementation should define dedicated users or service accounts according to system responsibility.
-
-Typical users include:
-
-- **Application user**
-  - Used by the web application.
-  - Allowed to execute controlled stored procedures and access required operational objects.
-  - No direct access to staging or control schemas.
-
-- **ETL user**
-  - Used by SSIS packages and migration processes.
-  - Allowed to read/write staging, work, error, and control schemas.
-  - Allowed to execute load and merge stored procedures.
-
-- **Reporting user**
-  - Used by reporting tools or BI consumers.
-  - Read-only access to the DW reporting structures.
-  - No write access to OLTP.
-
-- **SQL Agent execution user**
-  - Used for scheduled job execution.
-  - Allowed to execute ETL packages and operational procedures as required.
-  - Restricted to job-related responsibilities.
-
-- **DBA / administrative user**
-  - Used for database administration and maintenance.
-  - Full operational privileges according to environment.
-
-### 9.3. Roles
-
-Permissions should be assigned through database roles rather than directly to individual users whenever possible.
-
-Recommended roles include:
-
-#### Sales_DB roles
-
-- `role_app_readwrite`
-  - access to application-required schemas and stored procedures
-- `role_etl_executor`
-  - access to `staging`, `work`, and `control`
-  - execute permissions on ETL-related procedures
-- `role_ops_monitor`
-  - read access to logs, control data, and operational monitoring objects
-- `role_audit_reader`
-  - read access to audit-related objects where required
-
-#### Sales_DW roles
-
-- `role_report_reader`
-  - read-only access to `dim`, `fact`, and reporting views
-- `role_dw_etl_executor`
-  - access to technical schemas for warehouse loading
-  - execute permissions on load and refresh procedures
-- `role_dw_monitor`
-  - read access to warehouse control and load metadata
-
-### 9.4. Schema access model
-
-Permissions should be assigned according to schema responsibility.
-
-#### Sales_DB
-
-- `customer`, `sales`, `billing`, `reference`
-  - application and controlled operational access
-- `staging`, `work`, `control`
-  - ETL and operational support access only
-
-#### Sales_DW
-
-- `dim`, `fact`
-  - reporting read access and ETL load access
-- `staging`, `work`, `control`
-  - ETL and operational support access only
-
-Technical schemas must not be part of normal application or end-user access.
-
-### 9.5. Stored procedure access pattern
-
-Where possible, business writes should be performed through stored procedures instead of granting unrestricted write access to base tables.
