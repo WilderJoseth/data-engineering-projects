@@ -7,18 +7,14 @@ This project defines the target architecture and migration approach for moderniz
 
 The migration is driven by the implementation of a new **web platform** that requires a new SQL Server-based data layer for operational processing. The legacy Oracle environment remains the source of existing business data, while the new platform becomes the target application environment.
 
-The source environment is an Oracle-adapted implementation of the **AdventureWorks2022** model under schema `ADVENTUREWORKS2022`. Although the source database contains multiple functional areas, the current migration scope is limited to **Sales** and to the supporting entities required by the target design.
+The source environment is an Oracle-adapted implementation of the **AdventureWorks2022** model under schema `ADVENTUREWORKS2022`, tested on **Oracle XE 21c**. Although the source database contains multiple functional areas, the current migration scope is limited to **Sales** and to the supporting entities required by the target design.
 
-The target solution is designed to provide:
+The target solution provides:
 - A new SQL Server 2022 operational database for the web platform
 - A separate analytical database for reporting and historical analysis
 - Controlled migration processes for initial and incremental loads
 - Explicit and maintainable target-side logic
 - Execution tracking, reconciliation, and restartability
-
-The resulting solution must support both:
-- Data migration from the legacy Oracle source
-- Ongoing operation of the new web platform against the SQL Server target
 
 ## 2. Architecture
 
@@ -83,7 +79,7 @@ Data is migrated through staged processes that support:
 - Controlled cutover
 - Initial and incremental loading
 
-## 4. Scope of the Sales Domain
+## 4. Project Scope
 
 The current project is centered on the **Sales domain**.
 
@@ -138,7 +134,21 @@ This supports:
 - Operational monitoring
 - Production cutover readiness
 
-## 8. Migration Outcome
+## 8. Limitations and Out of Scope
+
+This project focuses on the migration architecture and target solution design for the Sales domain.
+
+The following topics are outside the scope of this project:
+- Evaluation of alternative target database platforms
+- Evaluation of alternative application architectures
+- Detailed justification of why the web platform was selected
+- Detailed justification of why SQL Server 2022 was selected
+- Full migration of all functional areas from the source database
+- Production infrastructure sizing, licensing, and cost analysis
+
+These items are treated as project inputs rather than design decisions to be evaluated in this document.
+
+## 9. Migration Outcome
 
 The final solution provides:
 - A new SQL Server-based operational platform for the Sales domain

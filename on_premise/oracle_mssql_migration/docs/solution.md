@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document defines the technical design for migrating the **Sales domain** from Oracle Database 11g Release 2 to SQL Server 2022.
+This document defines the technical design for migrating the **Sales domain** from Oracle XE 21c to SQL Server 2022.
 
 The source environment is an Oracle-adapted implementation of the **AdventureWorks2022** model under schema `ADVENTUREWORKS2022`. Although the source includes multiple functional areas, the current scope is limited to **Sales** and the supporting entities required by the target design.
 
@@ -85,7 +85,7 @@ Where applicable, final tables should include technical columns such as:
 
 The solution is implemented using the following components:
 
-- **Source platform**: Oracle Database 11g Release 2
+- **Source platform**: Oracle XE 21c
 - **Target platform**: SQL Server 2022
 - **ETL tool**: SQL Server Integration Services (SSIS)
 - **Development environment**: Visual Studio 2026 version 18.4
