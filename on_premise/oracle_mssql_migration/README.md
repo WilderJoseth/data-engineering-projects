@@ -1,158 +1,60 @@
 # Oracle to SQL Server 2022 Migration Architecture
 ## Sales Domain Modernization Project
 
-## 1. Overview
+## Overview
 
-This project defines the target architecture and migration approach for modernizing the **Sales domain** from Oracle to SQL Server 2022.
+This project presents a migration and modernization case study for moving a Sales-focused legacy data domain from Oracle to SQL Server 2022.
 
-The migration is driven by the implementation of a new **web platform** that requires a new SQL Server-based data layer for operational processing. The legacy Oracle environment remains the source of existing business data, while the new platform becomes the target application environment.
+The objective is to design and document a phased migration solution using professional data engineering practices, from problem framing and target architecture to implementation-oriented design decisions.
 
-The source environment is an Oracle-adapted implementation of the **AdventureWorks2022** model under schema `ADVENTUREWORKS2022`, tested on **Oracle XE 21c**. Although the source database contains multiple functional areas, the current migration scope is limited to **Sales** and to the supporting entities required by the target design.
+This case study is intended to:
+- Explain the migration problem
+- Propose a target solution from architecture to implementation design
+- Justify the main technical decisions
+- Evaluate whether key data engineering design concepts are applied appropriately
 
-The target solution provides:
-- A new SQL Server 2022 operational database for the web platform
-- A separate analytical database for reporting and historical analysis
-- Controlled migration processes for initial and incremental loads
-- Explicit and maintainable target-side logic
-- Execution tracking, reconciliation, and restartability
+## Problem Context
 
-## 2. Architecture
+The scenario assumes that a company has operated for more than 10 years with a legacy Oracle database as its main business data platform.
 
-The solution is based on three layers:
+Over time, the company has accumulated transactional, historical, and reference data in Oracle while also relying on database-side logic to support operational processing and reporting. As the business evolves, a **new web platform** is introduced to modernize operational processes and improve maintainability. As a result, business data must be migrated to a new database platform hosted on SQL Server 2022.
 
-- **Oracle source layer**
-- **SQL Server destination layer**
-- **Migration and control layer**
+The company has chosen to execute the migration in phases defined by business domain. For that reason, the first migration scope is centered on the **Sales domain**, including the supporting entities required for customer, product, territory, and related sales processing. This means the project does not attempt to migrate the full legacy platform at once, but instead focuses on one domain with clear business value and strong dependency on surrounding master data.
 
-![Data Processing Design](docs/img/data_processing_design.png)
+## Data Source Profile
 
-### Oracle source layer
-The source layer contains:
-- Business tables
-- Historical data
-- Oracle procedures, jobs, and triggers
-- Foreign-key relationships across multiple functional areas
-- Oracle-specific implementations such as identity and virtual columns
+The source model is based on an Oracle-adapted version of **AdventureWorks2022** and represents a multi-domain environment that includes Sales and supporting areas such as customer, product, and purchasing data.
 
-### SQL Server destination layer
-The destination platform is divided into:
+From a migration perspective, the source cannot be treated as a uniform dataset. It contains:
+- **Reference data**, which is generally low-volume and relatively stable
+- **Master data**, which is low-to-medium volume and supports core Sales processing
+- **Transactional data**, which represents the main operational workload and includes larger tables that may reach millions of rows
+- **Historical data**, which may span many years and includes very large tables
 
-- **Sales_Operational**: OLTP database used by the new web platform for operational processes
-- **Sales_Analytics**: OLAP database for reporting and historical analysis
+### Characteristics
+- Oracle XE 21c
+- Source schema: `ADVENTUREWORKS2022`
 
-### Migration and control layer
-This layer is responsible for extraction, transformation, loading, execution tracking, and reconciliation.
+## Related Document
 
-It uses:
-- SSIS
-- SQL Server stored procedures
-- SQL Server Agent
-- Control_DB
+For the technical design and decision rationale, see:
+- [Solution Design](docs/solution.md)
 
-The migration flow is:
+## Project Scope
 
-**Oracle source → staging → work → final target tables**
+### In Scope
 
-### Architectural principles
-- OLTP and OLAP workloads are separated.
-- Trigger-based logic is not used in the target solution.
-- Data is validated before final load.
-- Legacy Oracle logic is reviewed and reimplemented only where required.
-- The solution supports both initial and incremental loads.
-- Technical execution tracking is handled separately from business-domain storage.
+- Sales domain migration and modernization
+- Supporting entities required for Sales processing
+- SQL Server 2022 target design
+- Operational and analytical workload separation
+- Technical control framework
+- Execution traceability and reconciliation
 
-## 3. Migration Strategy
+### Out of Scope
 
-The migration is based on three principles:
-
-### Schema redesign
-The target SQL Server model is designed according to the needs of the new web platform and is not a direct copy of the Oracle source.
-
-### Logic reengineering
-Legacy Oracle logic is analyzed and reimplemented using explicit mechanisms such as stored procedures, ETL processes, and application-side logic where required.
-
-### Controlled data migration
-Data is migrated through staged processes that support:
-- Validation
-- Reconciliation
-- Restartability
-- Controlled cutover
-- Initial and incremental loading
-
-## 4. Project Scope
-
-The current project is centered on the **Sales domain**.
-
-This includes:
-- Core Sales entities
-- Supporting master and reference data required for Sales processing
-- Analytical structures required for Sales reporting
-
-The project does not attempt to migrate the full Oracle source as a single monolithic scope. The design keeps the door open for future extension to additional domains using the same architectural pattern.
-
-## 5. Table-Based Migration Approach
-
-Tables are classified into four categories:
-
-### Reference tables
-Stable and low-volume tables, usually copied with light adaptation.
-
-### Master tables
-Core business entities required for Sales processing, usually migrated with controlled validation and merge logic.
-
-### Transactional tables
-Operational tables such as sales orders and order details, requiring the most careful redesign and load control.
-
-### Historical tables
-History-oriented data retained selectively and moved to the analytical layer where appropriate.
-
-## 6. Tooling Strategy
-
-The project uses the following toolset:
-
-- Manual source analysis
-- SSIS
-- SQL Server stored procedures
-- SQL Server Agent
-- Bulk-load methods where required for large initial loads
-
-## 7. Control and Validation
-
-Each load cycle must be controlled and validated.
-
-The solution tracks:
-- Execution runs
-- Logs
-- Row counts
-- Reconciliation results
-- Watermarks
-- Errors and rejected records
-
-This supports:
-- Auditability
-- Restartability
-- Operational monitoring
-- Production cutover readiness
-
-## 8. Limitations and Out of Scope
-
-This project focuses on the migration architecture and target solution design for the Sales domain.
-
-The following topics are outside the scope of this project:
-- Evaluation of alternative target database platforms
-- Evaluation of alternative application architectures
-- Detailed justification of why the web platform was selected
-- Detailed justification of why SQL Server 2022 was selected
-- Full migration of all functional areas from the source database
-- Production infrastructure sizing, licensing, and cost analysis
-
-These items are treated as project inputs rather than design decisions to be evaluated in this document.
-
-## 9. Migration Outcome
-
-The final solution provides:
-- A new SQL Server-based operational platform for the Sales domain
-- A separate analytical database for reporting and historical analysis
-- Explicit and maintainable target-side behavior
-- Controlled migration from Oracle to SQL Server
-- An architecture that can be extended later to additional domains
+- Full migration of all source domains
+- Full ERP replatforming
+- Detailed application design for the new web platform
+- Exhaustive debate about platform selection
+- Production infrastructure sizing and deployment topology
