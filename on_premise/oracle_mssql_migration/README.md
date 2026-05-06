@@ -38,7 +38,7 @@ From a migration perspective, the source cannot be treated as a uniform dataset.
 ## Related Document
 
 For the technical design and decision rationale, see:
-- [Solution Design](docs/solution.md)
+- [Solution Design](docs/solution_design.md)
 
 ## Project Scope
 
