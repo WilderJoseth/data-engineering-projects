@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="control_db"
+  DTS:DTSID="{248B846D-257D-4960-B092-2545A0A85847}"
+  DTS:CreationName="OLEDB">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=WILDER-LOQ;User ID=WilderSQL;Initial Catalog=control_db;Provider=SQLOLEDB.1;Application Name=SSIS-Sales_Operational_Migration-{248B846D-257D-4960-B092-2545A0A85847}WILDER-LOQ.control_db.WilderSQL;Auto Translate=False;">
+      <DTS:Password
+        DTS:Name="Password"
+        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAzzBSQWC4t0C4ythSl6p01wAAAAACAAAAAAAQZgAAAAEAACAAAAABR+2Z9hSdnTlyH0RBo2daxPnz5ugT/JAJorBp23bAWgAAAAAOgAAAAAIAACAAAACrYSgzUnPs2zcupmjxLYvJjOMryEn3iWMpeVUAvj9nMoAAAACSVDpHgUzKf2dpI0Y+9cs116vxNTVRWtGVwZ0tlTeLv18M9O8tepL40rseiZNjIJZVyFP8hL9wR/a+tOD8XwSxzv4F+QLKOB3aD23Iy/fXgdJRe2xkRkWNEB6qlNyFyzHzzS1asSDxRZpdq7km4vB/zmX92aWCBQmPcuJODvDsUEAAAADfoRhpHE0W3jkMrpCsPla5QmgzqzqpYoYQw4Ckhcg6oJ9iEEwof3QMKbbWKrTNyv7hXyPycybnIoJO25Ycv+WS</DTS:Password>
+    </DTS:ConnectionManager>
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

@@ -1,0 +1,1185 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/24/2026 9:58:41 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="WILDER-LOQ"
+  DTS:CreatorName="WILDER-LOQ\WILDER"
+  DTS:DTSID="{15C03EC6-DA2D-415A-A26C-169A88086714}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1010.2"
+  DTS:LocaleID="10250"
+  DTS:ObjectName="PKG_TRANSACTION_DATA"
+  DTS:PackageType="5"
+  DTS:VersionBuild="28"
+  DTS:VersionGUID="{6B69915B-384D-4541-86CD-D30C6AD7DCDC}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{27925BCA-B000-415C-8C53-C69C4BB1D5F9}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="SalesOrderHeaderToStart">
+      <DTS:VariableValue
+        DTS:DataType="11">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Clean Up Master Staging and Work Tables - End"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6aa487b7-5803-4a48-b213-d0172cfde23a}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean Up Master Staging and Work Tables - End"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Clean Up Transactional Staging and Work Tables - Start"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5872ab17-fc60-4249-841a-6b829f32d202}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean Up Transactional Staging and Work Tables - Start"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Confirm Master Data Load completed successfully"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5d862876-4569-4882-a474-57a79802099d}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Confirm Master Data Load completed successfully"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\End Master Data Subprocess"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{d9e1a447-41bd-48a9-adaa-64e9995f8093}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="End Master Data Subprocess"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\For Loop Load SalesOrderDetail"
+      DTS:CreationName="STOCK:FORLOOP"
+      DTS:Description="For Loop Container"
+      DTS:DTSID="{E32F91F7-D67B-4E3F-8B3D-1FC12B0EDA57}"
+      DTS:EvalExpression=""
+      DTS:ExecutableType="STOCK:FORLOOP"
+      DTS:LocaleID="-1"
+      DTS:MaxConcurrent="1"
+      DTS:ObjectName="For Loop Load SalesOrderDetail">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Extract SalesOrderDetail to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{93665f3b-52a7-402b-a994-bf9bee654058}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract SalesOrderDetail to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Load SalesOrderDetail to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f3baf4bb-f503-4eaa-b2f4-6293e93657fc}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load SalesOrderDetail to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{b2691d93-58f7-48a1-a29a-68dc17c0174e}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{8a5bcc8a-8b96-4652-88e6-3caf7ab1d39e}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register SalesOrderDetail Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{1cd3e5f5-a825-4214-a0aa-51507cb406d9}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register SalesOrderDetail Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Update SalesOrderDetail Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{9bb81643-5221-4c2e-9992-b353064d444b}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update SalesOrderDetail Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderDetail\Validate and Load SalesOrderDetail to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{82f80e13-3120-4fab-9ebb-e17188c1ea74}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load SalesOrderDetail to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{FCCE5083-AE35-4FD6-9892-50A0E64D6497}"
+          DTS:From="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\For Loop Load SalesOrderDetail\Extract SalesOrderDetail to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{186F05D0-EA66-4489-B6B8-6D862FC1A2FD}"
+          DTS:From="Package\For Loop Load SalesOrderDetail\Extract SalesOrderDetail to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\For Loop Load SalesOrderDetail\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{D00CAEFE-E214-4F7E-8815-E62AEA73C8FA}"
+          DTS:From="Package\For Loop Load SalesOrderDetail\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\For Loop Load SalesOrderDetail\Validate and Load SalesOrderDetail to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{47CC894B-FB28-4B35-A801-28854D61F095}"
+          DTS:From="Package\For Loop Load SalesOrderDetail\Validate and Load SalesOrderDetail to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\For Loop Load SalesOrderDetail\Load SalesOrderDetail to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{AE1BBB2B-F38C-48D8-B824-A1AF36D2583F}"
+          DTS:From="Package\For Loop Load SalesOrderDetail\Load SalesOrderDetail to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{F7835ADA-B83B-48BE-862E-BB73D992E444}"
+          DTS:From="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\For Loop Load SalesOrderDetail\Update SalesOrderDetail Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\For Loop Load SalesOrderHeader"
+      DTS:CreationName="STOCK:FORLOOP"
+      DTS:Description="For Loop Container"
+      DTS:DTSID="{EA6F59B2-6599-4B47-BE45-E36CAB54F6CF}"
+      DTS:EvalExpression=""
+      DTS:ExecutableType="STOCK:FORLOOP"
+      DTS:LocaleID="-1"
+      DTS:MaxConcurrent="1"
+      DTS:ObjectName="For Loop Load SalesOrderHeader">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Extract SalesOrderHeader to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{222aebc2-645e-48a6-aa9b-aa3df1343253}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract SalesOrderHeader to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Load SalesOrderHeader to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{03076d34-9a9f-4d88-9718-fe2d44590d08}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load SalesOrderHeader to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{aac52d46-29ed-422d-8363-be158a1a2465}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5a6bc4ac-3c4a-4b1e-bf73-bbb9d8f93bb9}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register SalesOrderHeader Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{e0222a53-e03b-4a8b-8001-fabe6cd66d4c}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register SalesOrderHeader Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Update SalesOrderHeader Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{2e8fee66-2289-43bd-8454-2b7086e546ee}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update SalesOrderHeader Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\For Loop Load SalesOrderHeader\Validate and Load SalesOrderHeader to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{0037ed34-81ef-4ea8-9524-085cfe3ef674}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load SalesOrderHeader to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{4C6A103A-70D5-444A-94EA-9F029CBAD1BE}"
+          DTS:From="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\For Loop Load SalesOrderHeader\Extract SalesOrderHeader to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{DB73DB0C-1371-4B5C-A46C-5795F48E4EFB}"
+          DTS:From="Package\For Loop Load SalesOrderHeader\Extract SalesOrderHeader to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\For Loop Load SalesOrderHeader\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{B3D039DA-E7AA-4E87-B25E-EBEA77239354}"
+          DTS:From="Package\For Loop Load SalesOrderHeader\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\For Loop Load SalesOrderHeader\Validate and Load SalesOrderHeader to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{E3B4F5B5-B409-48BA-9BE7-E7E05CE1A741}"
+          DTS:From="Package\For Loop Load SalesOrderHeader\Validate and Load SalesOrderHeader to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\For Loop Load SalesOrderHeader\Load SalesOrderHeader to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{53D89F6C-3AA0-4E1F-905F-0F01E946D57B}"
+          DTS:From="Package\For Loop Load SalesOrderHeader\Load SalesOrderHeader to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{B3CC22A4-14FD-4BAC-A5FA-6381EB396C93}"
+          DTS:From="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\For Loop Load SalesOrderHeader\Update SalesOrderHeader Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get Sales Periods"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{147BDCD5-CF82-42EB-8EBF-71719ADAE868}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Sales Periods"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Start Transactional Data Subprocess"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5468c1a6-de30-4f6a-845e-99b645cab3ee}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Start Transactional Data Subprocess"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{570A24D7-CCE5-49E6-A235-13B8A65F70BB}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::SalesOrderHeaderToStart] == True"
+      DTS:From="Package\Get Sales Periods"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\For Loop Load SalesOrderHeader" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{5C2269F2-FBAF-422C-B6AD-A9C037D3B9D7}"
+      DTS:From="Package\For Loop Load SalesOrderHeader"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\For Loop Load SalesOrderDetail" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{DEC2B55D-E94C-4F5B-9AED-E695E6D8AE6B}"
+      DTS:From="Package\Start Transactional Data Subprocess"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Confirm Master Data Load completed successfully" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{C6F037CF-3844-4417-B5E3-366FCC2216FE}"
+      DTS:From="Package\Clean Up Transactional Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Get Sales Periods" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{B833CA2C-77B2-485C-AADF-A545538632B7}"
+      DTS:From="Package\Confirm Master Data Load completed successfully"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Clean Up Transactional Staging and Work Tables - Start" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{60070E2B-44D9-4D6F-8DF8-2A6D0E2AD495}"
+      DTS:From="Package\Clean Up Master Staging and Work Tables - End"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\End Master Data Subprocess" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{8E458B32-A776-492A-8544-6C536DB3AA59}"
+      DTS:From="Package\For Loop Load SalesOrderHeader"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 6"
+      DTS:To="Package\Clean Up Master Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{26BB6A68-5C07-4AD4-A70D-02A9E9BA4C2A}"
+      DTS:From="Package\For Loop Load SalesOrderDetail"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\Clean Up Master Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 8]"
+      DTS:CreationName=""
+      DTS:DTSID="{CFF654A9-0B33-4810-88E0-5BCA36B9D7E3}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::SalesOrderHeaderToStart] == True"
+      DTS:From="Package\Get Sales Periods"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 8"
+      DTS:To="Package\For Loop Load SalesOrderDetail" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="249.6,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load Start"
+          TopLeft="47.4120902756563,27.5606059071996" />
+        <NodeLayout
+          Size="242.4,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Extract SalesOrderDetail to Staging"
+          TopLeft="53.5348351131264,112.526261245968" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Register Initial Count"
+          TopLeft="87.461600936217,195.699998041327" />
+        <NodeLayout
+          Size="282.4,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Validate and Load SalesOrderDetail to Work"
+          TopLeft="37.2848360009872,279.569694427803" />
+        <NodeLayout
+          Size="220,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Load SalesOrderDetail to Prod"
+          TopLeft="70.9600687870312,365.257575286398" />
+        <NodeLayout
+          Size="246.4,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Register SalesOrderDetail Load End"
+          TopLeft="59.8489582830042,445.424241395596" />
+        <NodeLayout
+          Size="252,41.6"
+          Id="Package\For Loop Load SalesOrderDetail\Update SalesOrderDetail Load Status"
+          TopLeft="53.5358273148075,528.282826677992" />
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint]"
+          TopLeft="173.473462694391,69.1606059071996">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.3656553387684"
+              Start="0,0"
+              End="0,35.8656553387684">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.8656553387684" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 1]"
+          TopLeft="174.898218024672,154.126261245968">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.5737367953585"
+              Start="0,0"
+              End="0,34.0737367953585">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.0737367953585" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 2]"
+          TopLeft="176.773218468602,237.299998041327">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.269696386476"
+              Start="0,0"
+              End="0,34.769696386476">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.769696386476" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 3]"
+          TopLeft="179.722452394009,321.169694427803">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.087880858595"
+              Start="0,0"
+              End="0,36.587880858595">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.587880858595" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 4]"
+          TopLeft="182.004513535018,406.857575286398">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.5666661091982"
+              Start="0,0"
+              End="0,31.0666661091982">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0666661091982" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderDetail.PrecedenceConstraints[Constraint 5]"
+          TopLeft="181.292392798906,487.024241395596">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.2585852823967"
+              Start="0,0"
+              End="0,33.7585852823967">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.7585852823967" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="352,622.4"
+          Size="352,665.6"
+          Id="Package\For Loop Load SalesOrderDetail"
+          TopLeft="583.030271174933,366.187876302142" />
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\Get Sales Periods"
+          TopLeft="314.090891929738,270.066664849345" />
+        <NodeLayout
+          Size="257.6,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load Start"
+          TopLeft="27.3454422768323,28.3484846895993" />
+        <NodeLayout
+          Size="249.6,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Extract SalesOrderHeader to Staging"
+          TopLeft="25.1348542362824,114.102018810768" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Register Initial Count"
+          TopLeft="67.3949529373933,196.487876823727" />
+        <NodeLayout
+          Size="290.4,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Validate and Load SalesOrderHeader to Work"
+          TopLeft="17.2181880021634,280.357573210202" />
+        <NodeLayout
+          Size="227.2,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Load SalesOrderHeader to Prod"
+          TopLeft="50.8934207882074,366.045454068797" />
+        <NodeLayout
+          Size="253.6,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Register SalesOrderHeader Load End"
+          TopLeft="39.7823102841804,446.212120177995" />
+        <NodeLayout
+          Size="260,41.6"
+          Id="Package\For Loop Load SalesOrderHeader\Update SalesOrderHeader Load Status"
+          TopLeft="34.2267550321673,529.858584242792" />
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint]"
+          TopLeft="153.040148256557,69.9484846895993">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.1535341211683"
+              Start="0,0"
+              End="0,36.6535341211683">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.6535341211683" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 1]"
+          TopLeft="152.464903586838,155.702018810768">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.7858580129589"
+              Start="0,0"
+              End="0,33.2858580129589">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.2858580129589" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 2]"
+          TopLeft="158.706570469778,238.087876823727">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.2696963864757"
+              Start="0,0"
+              End="0,34.7696963864757">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.7696963864757" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 3]"
+          TopLeft="163.455804395185,321.957573210202">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.0878808585948"
+              Start="0,0"
+              End="0,36.5878808585948">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.5878808585948" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 4]"
+          TopLeft="165.537865536194,407.645454068797">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.5666661091981"
+              Start="0,0"
+              End="0,31.0666661091981">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0666661091981" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\For Loop Load SalesOrderHeader.PrecedenceConstraints[Constraint 5]"
+          TopLeft="165.404532658174,487.812120177995">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.046464064797"
+              Start="0,0"
+              End="0,34.546464064797">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.546464064797" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="327.2,628"
+          Size="327.2,671.2"
+          Id="Package\For Loop Load SalesOrderHeader"
+          TopLeft="200.0757466441,364.218179346142" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="527.2757466441,699.403027824142">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="55.7545245308329,0"
+              Start="0,0"
+              End="48.2545245308329,0">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="48.2545245308329,0" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="366.616652620252,311.666664849345">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,52.5515144967972"
+              Start="0,0"
+              End="0,45.0515144967972">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.0515144967972" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-8,14.5257572483986,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="248,41.6"
+          Id="Package\Start Transactional Data Subprocess"
+          TopLeft="273.560591113914,36.95757821537" />
+        <NodeLayout
+          Size="337.6,41.6"
+          Id="Package\Clean Up Transactional Staging and Work Tables - Start"
+          TopLeft="228.106048142895,193.581819728486" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="396.098470036316,235.181819728486">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.8848451208591"
+              Start="0,0"
+              End="0,27.3848451208591">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.3848451208591" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="309.6,41.6"
+          Id="Package\Confirm Master Data Load completed successfully"
+          TopLeft="244.772713898935,117.539398211771" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="398.566652506425,78.55757821537">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.9818199964006"
+              Start="0,0"
+              End="0,31.4818199964006">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.4818199964006" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="398.239381020915,159.139398211771">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,34.4424215167155"
+              Start="0,0"
+              End="0,26.9424215167155">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.9424215167155" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="213.6,41.6"
+          Id="Package\End Master Data Subprocess"
+          TopLeft="460.681793011275,1181.327269732" />
+        <NodeLayout
+          Size="303.2,41.6"
+          Id="Package\Clean Up Master Staging and Work Tables - End"
+          TopLeft="419.015128621174,1096.99393691094" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="569.048460816224,1138.59393691094">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.7333328210602"
+              Start="0,0"
+              End="0,35.2333328210602">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.2333328210602" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 6]"
+          TopLeft="363.6757466441,1035.41817934614">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="157.739381977073,61.5757575648001"
+              Start="0,0"
+              End="157.739381977073,54.0757575648001">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.7515151449752" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,32.7515151449752"
+                    Point2="0,36.7515151449752"
+                    Point3="4,36.7515151449752" />
+                  <mssgle:LineSegment
+                    End="153.739381977073,36.7515151449752" />
+                  <mssgle:CubicBezierSegment
+                    Point1="153.739381977073,36.7515151449752"
+                    Point2="157.739381977073,36.7515151449752"
+                    Point3="157.739381977073,40.7515151449752" />
+                  <mssgle:LineSegment
+                    End="157.739381977073,54.0757575648001" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="759.030271174933,1031.78787630214">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-139.21514255376,65.2060606088005"
+              Start="0,0"
+              End="-139.21514255376,57.7060606088005">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.91826294604" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,34.91826294604"
+                    Point2="0,38.91826294604"
+                    Point3="-4,38.91826294604" />
+                  <mssgle:LineSegment
+                    End="-135.21514255376,38.91826294604" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-135.21514255376,38.91826294604"
+                    Point2="-139.21514255376,38.91826294604"
+                    Point3="-139.21514255376,42.91826294604" />
+                  <mssgle:LineSegment
+                    End="-139.21514255376,57.7060606088005" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 8]"
+          TopLeft="421.024225263071,311.666664849345">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="338.006045911862,54.521211452797"
+              Start="0,0"
+              End="338.006045911862,47.021211452797">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.1276331359644" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,18.1276331359644"
+                    Point2="0,22.1276331359644"
+                    Point3="4,22.1276331359644" />
+                  <mssgle:LineSegment
+                    End="334.006045911862,22.1276331359644" />
+                  <mssgle:CubicBezierSegment
+                    Point1="334.006045911862,22.1276331359644"
+                    Point2="338.006045911862,22.1276331359644"
+                    Point3="338.006045911862,26.1276331359644" />
+                  <mssgle:LineSegment
+                    End="338.006045911862,47.021211452797" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="161.003022955931,27.1276331359644,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
