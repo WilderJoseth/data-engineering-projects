@@ -21,6 +21,16 @@ Over time, the company has accumulated transactional, historical, and reference 
 
 The company has chosen to execute the migration in phases defined by business domain. For that reason, the first migration scope is centered on the **Sales domain**, including the supporting entities required for customer, product, territory, and related sales processing. This means the project does not attempt to migrate the full legacy platform at once, but instead focuses on one domain with clear business value and strong dependency on surrounding master data.
 
+## Architecture Overview
+
+The proposed architecture separates the migration into operational and analytical workloads.
+
+Data is first migrated from the Oracle Sales domain into `Sales_Operational`, which becomes the normalized operational target for the new application. After the operational data is validated and reconciled, `Sales_Analytics` is built from `Sales_Operational` as the curated source.
+
+A reusable `DataOps_Control` database acts as the technical control plane for the solution. It stores project metadata, execution tracking, validation and reconciliation results, error logs, and rerun support information used by the ETL processes.
+
+![Sales Domain Architecture](docs/img/data_processing_design.png)
+
 ## Data Source Profile
 
 The source model is based on an Oracle-adapted version of **AdventureWorks2022** and represents a multi-domain environment that includes Sales and supporting areas such as customer, product, and purchasing data.
