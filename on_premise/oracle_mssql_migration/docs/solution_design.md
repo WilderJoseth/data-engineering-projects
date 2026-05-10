@@ -4,9 +4,49 @@
 
 This document describes the technical design for the Sales domain migration and modernization solution.
 
+## Data Source in Scope
+
+The operational migration scope includes the Sales order process and the supporting entities like Customer, Address, etc.
+
+### Technical details
+
+- The database engine is `Oracle XE 21c`.
+- Source schema is `ADVENTUREWORKS2022`.
+- Each source table name includes the domain as a prefix, for example `SALES_SALESORDERHEADER`.
+- All table names follow a `UPPER_CASE` pattern.
+
+### Data Model Diagram
+
+The source model shows the selected tables that are part of Sales-domain scope modernization.
+
+![Sales Domain Source Data Model](img/data_model_source.png)
+
+| Data role | Source table | Purpose in migration |
+|---|---|---|
+| Transactional | `SALES_SALESORDERHEADER` | Preserves the main Sales order event and order-level business context. |
+| Transactional | `SALES_SALESORDERDETAIL` | Preserves the products, quantities, prices, discounts, and line totals sold in each order. |
+| Master / Core | `SALES_CUSTOMER` | Identifies the customer associated with each Sales order. |
+| Master / Core | `PERSON_PERSON` | Provides person attributes used to enrich customers and salespeople. |
+| Master / Core | `HUMANRESOURCES_EMPLOYEE` | Provides employee attributes required to build salesperson information. |
+| Master / Core | `SALES_SALESPERSON` | Identifies the salesperson associated with each Sales order. |
+| Master / Core | `PERSON_ADDRESS` | Preserves billing and shipping address context for Sales orders. |
+| Master / Core | `PRODUCTION_PRODUCT` | Identifies the products sold in Sales order lines. |
+| Master / Core | `SALES_CREDITCARD` | Preserves payment context when credit card information is present. |
+| Master / Core | `PURCHASING_SHIPMETHOD` | Identifies the shipping method. |
+| Reference / Lookup | `PERSON_ADDRESSTYPE` | Classifies the business purpose of addresses. |
+| Reference / Lookup | `PERSON_STATEPROVINCE` | Supports regional geography for addresses and territory mapping. |
+| Reference / Lookup | `PERSON_COUNTRYREGION` | Supports country/region grouping for geography and reporting. |
+| Reference / Lookup | `SALES_CURRENCYRATE` | Provides currency context for order amounts. |
+| Reference / Lookup | `SALES_CURRENCY` | Provides currency context for order amounts. |
+| Reference / Lookup | `SALES_SALESTERRITORY` | Groups customers, salespeople, and orders by commercial territory. |
+| Reference / Lookup | `SALES_SPECIALOFFER` | Preserves promotion or discount context applied to Sales lines. |
+| Reference / Lookup | `PRODUCTION_PRODUCTSUBCATEGORY` | Provides the product classification level. |
+| Bridge / Associative | `PERSON_BUSINESSENTITYADDRESS` | Maps business entities to addresses and address types in the source model. |
+| Bridge / Associative | `SALES_SPECIALOFFERPRODUCT` | Provides source product-offer relationships used to validate Sales line context. |
+
 ## Target Databases
 
-The target solution uses three SQL Server 2022 databases:
+The target solution uses three databases:
 
 | Database | Responsibility |
 |---|---|
@@ -14,7 +54,14 @@ The target solution uses three SQL Server 2022 databases:
 | `Sales_Analytics` | Analytical database for reporting and historical analysis. Follows a star schema design to simplify reporting and analytical queries. |
 | `DataOps_Control` | Reusable technical control database for metadata, execution tracking, validation, reconciliation, error logging, batch control, and rerun support. |
 
+### Technical details
+
+- The database engine is `SQL Server 2022`.
+- The database names use descriptive names with underscores to improve readability.
+
 ## Schema Organization
+
+The schema names follow a `lower_case` pattern.
 
 ### Sales_Operational
 
@@ -35,68 +82,7 @@ The target solution uses three SQL Server 2022 databases:
 | `work` | Intermediate dimensional/fact processing. |
 | `control` | Database-specific helper objects used by ETL and integration with `DataOps_Control`. |
 
-## Source Tables in Scope
-
-The operational migration scope includes the Sales order process and the supporting entities required for customer, address, product, territory, currency, shipping, promotion, salesperson, and payment context.
-
-### Source Data Model Diagram
-
-The source model shows the selected ADVENTUREWORKS2022 Sales-domain scope before modernization.
-
-![Sales Domain Source Data Model](img/data_model_source.png)
-
-| Data role | Source table | Purpose in migration |
-|---|---|---|
-| Transactional | `SALES_SALESORDERHEADER` | Preserves the main Sales order event and order-level business context. |
-| Transactional | `SALES_SALESORDERDETAIL` | Preserves the products, quantities, prices, discounts, and line totals sold in each order. |
-| Master / Core | `SALES_CUSTOMER` | Identifies the customer associated with each Sales order. |
-| Master / Core | `PERSON_PERSON` | Provides person attributes used to enrich customers and salespeople. |
-| Master / Core | `HUMANRESOURCES_EMPLOYEE` | Provides employee attributes required to build salesperson information. |
-| Master / Core | `SALES_SALESPERSON` | Identifies the salesperson associated with each Sales order. |
-| Master / Core | `PERSON_ADDRESS` | Preserves billing and shipping address context for Sales orders. |
-| Master / Core | `PRODUCTION_PRODUCT` | Identifies the products sold in Sales order lines. |
-| Master / Core | `SALES_CREDITCARD` | Preserves payment context when credit card information. |
-| Master / Core | `PURCHASING_SHIPMETHOD` | Identifies the shipping method. |
-| Reference / Lookup | `PERSON_ADDRESSTYPE` | Classifies the business purpose of addresses. |
-| Reference / Lookup | `PERSON_STATEPROVINCE` | Supports regional geography for addresses and territory mapping. |
-| Reference / Lookup | `PERSON_COUNTRYREGION` | Supports country/region grouping for geography and reporting. |
-| Reference / Lookup | `SALES_CURRENCYRATE` | Provides currency context for order amounts. |
-| Reference / Lookup | `SALES_CURRENCY` | Provides currency context for order amounts. |
-| Reference / Lookup | `SALES_SALESTERRITORY` | Groups customers, salespeople, and orders by commercial territory. |
-| Reference / Lookup | `SALES_SPECIALOFFER` | Preserves promotion or discount context applied to Sales lines. |
-| Reference / Lookup | `PRODUCTION_PRODUCTSUBCATEGORY` | Provides the product classification level. |
-| Bridge / Associative | `PERSON_BUSINESSENTITYADDRESS` | Cross-reference table mapping customers, and employees to their addresses. |
-| Bridge / Associative | `SALES_SPECIALOFFERPRODUCT` | Provides source product-offer relationships used to validate Sales line context. |
-
-### Dependency Logic
-
-The load order is driven by dependencies:
-
-1. Reference data.
-2. Master/core entities.
-3. Source bridge/associative relationships when needed for target transformations.
-4. Transactional tables.
-
-This order reduces the risk of orphaned transactional records and supports controlled validation.
-
-## Table Design Principles
-
-- Oracle source structures are not copied blindly into SQL Server.
-- All objects for this project are created in the `PRIMARY` filegroup.
-- Final target tables use surrogate primary keys, implemented as SQL Server-generated identifiers such as `IDENTITY`.
-- Source business keys are preserved when required for reconciliation, traceability, reruns, and dependent loads.
-- Nullability and data types are defined explicitly.
-- Required business columns use `NOT NULL`.
-- Defaults are used only when they represent valid technical or business behavior.
-- Relationships are defined explicitly in the target model.
-- Final tables may include audit/technical columns such as `created_at`, `updated_at`, `run_id`, and `is_active`.
-
 ## Target Data Models
-
-The target solution contains two business data models:
-
-- `Sales_Operational`: normalized operational model.
-- `Sales_Analytics`: dimensional analytical model.
 
 ### Sales_Operational Data Model
 
@@ -142,38 +128,126 @@ Key design decisions:
 | Fact | `FactSales` |
 | Dimension | `DimDate`, `DimCustomer`, `DimSalesPerson`, `DimSalesTerritory`, `DimProduct`, `DimPaymentMethod`, `DimShipMethod` |
 
-## DataOps_Control Data Model
+### DataOps_Control Data Model
 
 ![DataOps_Control Data Model](img/data_model_DataOps_Control.png)
-
-In this project, it supports both `Sales_Operational_Migration` and `Sales_Analytics_Migration` by tracking metadata, executions, validation results, reconciliation results, errors, batch executions, and rerun state.
 
 The model is organized into three logical groups:
 
 | Group | Tables | Purpose |
 |---|---|---|
-| Project metadata | `projects`, `project_processes`, `project_databases`, `project_tables`, `project_columns`, `table_batch_executions` | Defines projects, process hierarchy, databases, tables, columns, and table-level load metadata. |
+| Project metadata | `projects`, `project_processes`, `project_databases`, `project_tables`, `project_columns`, `project_table_batches` | Defines projects, process hierarchy, databases, tables, columns, and table-level load metadata. |
 | Execution tracking | `execution_runs`, `execution_steps` | Tracks full runs, hierarchical execution steps, and batch-level execution for large tables. |
 | Observability | `error_logs`, `validation_results`, `reconciliation_results` | Stores technical errors, validation outcomes, and reconciliation checks. |
 
-`project_processes` and `execution_steps` support self-relations to represent hierarchies such as ETL project, package, subprocess, table load, and child execution steps.
+#### Technical details
 
-`project_tables` can store table-level control metadata such as `load_type`, `batch_enabled`, `batch_column_name`, `rerun_required`, `last_load_status`, and `last_successful_run_id`.
+- `project_processes` and `execution_steps` support self-relations to represent hierarchies such as ETL project, package, subprocess, table load, and child execution steps.
+- `project_tables` can store table-level control metadata such as `load_type`, `batch_enabled`, `batch_column_name`, `rerun_required`, `last_load_status`, and `last_successful_run_id`.
+- `project_table_batches` supports large transactional tables split by period or key range. For this project, transactional batches use monthly `yyyyMM` periods based on `SalesOrderHeader.OrderDate`.
 
-`table_batch_executions` supports large transactional tables split by period or key range. For this project, transactional batches use monthly `yyyyMM` periods based on `SalesOrderHeader.OrderDate`.
+## Table Implementation Standards
 
-## Implementation Tooling
+### Table Naming
 
-| Component | Tool |
+- Business tables should use `PascalCase`, for example `prod.SalesOrderHeader`.
+- Staging/work tables should use `PascalCase`, for example `staging.SalesOrderHeader`.
+- Control tables should use `snake_case`, for example `control.reconciliation_results`.
+
+### Data Type Mapping Guidelines
+
+Oracle source types should be mapped to SQL Server target types based on business meaning, precision, and expected usage.
+
+| Oracle source type | SQL Server target type | Mapping rule |
+|---|---|---|
+| `NUMBER(p, 0)` | `INT` or `BIGINT` | Use for whole-number identifiers, counters, etc. |
+| `NUMBER(p, s)` | `DECIMAL(p, s)` | Use for monetary values, rates, percentages, etc. |
+| `VARCHAR2(n)` | `VARCHAR(n)` or `NVARCHAR(n)` | Use for text attributes. Use `NVARCHAR` when Unicode support is required. |
+| `CHAR(n)` | `CHAR(n)` | Use for fixed or short code values when length is stable. |
+| `DATE` | `DATE` or `DATETIME2` | Use `DATE` for date-only attributes. Use `DATETIME2` when time values must be preserved. |
+| `TIMESTAMP` | `DATETIME2` | Use when datetime precision is required. |
+
+### Key and Identifier Guidelines
+
+- All business tables should have a `surrogate key`, which should be SQL Server-generated like `IDENTITY`.
+- Surrogate keys should use the suffix `Key`, for example `CustomerKey`, `ProductKey`, or `SalesOrderHeaderKey`.
+- Source business keys should be preserved with a `Source` prefix, for example `SourceCustomerID`, `SourceProductID`, or `SourceSalesOrderID`. They are needed for:
+  - Source-to-target traceability
+  - Reconciliation
+  - Rerun logic
+  - Historical audit
+  - Integration with other source-derived objects
+
+### Audit Columns
+
+Final business tables may include audit/technical columns when required.
+
+| Column | Purpose | Type | Allow nulls | Default value |
+|---|---|---|---|---|
+| `created_at` | When the record was inserted. | DATETIME2 | No | SYSUTCDATETIME() |
+| `created_by` | User or process that inserted the record. | VARCHAR(50) | No | USER_NAME() |
+| `updated_at` | When the record was last updated. | DATETIME2 | Yes | |
+| `updated_by` | User or process that last updated the record. | VARCHAR(50) | Yes | |
+| `created_run_id` | Execution run that inserted the record. | INT | No | |
+| `is_active` | Indicates whether the record is active in the target model. | BIT | No | 1 |
+
+### Constraint Rules
+
+- All tables should have a primary key.
+- Avoid composite primary keys in final business tables unless there is a clear design reason.
+- Foreign keys should be defined where they support target integrity and do not conflict with the migration/reload strategy.
+- The name of the primary key should follow `pk_[schema]_[table]_[column]`.
+- The name of the foreign key should follow `fk_[schema]_[table]_[column]`.
+
+## Stored Procedure Implementation Pattern
+
+SQL Server stored procedures handle database-side validation, transformation, final loading, reconciliation, and status updates.
+
+### Stored Procedure Naming
+
+Names should follow the following structure: `usp_[action]_[TableName]`. Exceptions may apply.
+
+The common stored procedures are the following:
+
+| Prefix | Purpose | Example |
+|---|---|---|
+| `usp_cleanup_` | Clean staging/work objects | `usp_cleanup_tables` |
+| `usp_load_` | Load data into tables | `usp_load_AddressType` |
+| `usp_validate_` | Validate staged or working data | `usp_validate_AddressType` |
+| `usp_reconcile_` | Register reconciliation checks | `usp_reconcile_AddressType` |
+| `usp_register_` | Register execution, step, log, or result metadata | `usp_register_reconciliation_result` |
+
+### Validation Procedure Pattern
+
+1. Read staged records for the current table or batch.
+2. Apply required data-quality rules.
+3. Write validation errors or warnings to `control.validation_results`, in order to send them to `DataOps_Control`.
+4. Mark valid records for loading into `work`.
+
+### Final Load Procedure Pattern
+
+Final load procedures should use the strategy appropriate to the load type.
+
+| Load type | Final load strategy |
 |---|---|
-| Source platform | Oracle XE 21c |
-| Target platform | SQL Server 2022 |
-| ETL tool | SQL Server Integration Services, SSIS |
-| Development environment | Visual Studio 2026 |
-| Target-side processing | Transact-SQL stored procedures |
-| Job scheduling | SQL Server Agent |
+| Reference / master | `MERGE` or UPSERT using source business keys. |
+| Transactional | Controlled delete and reload by batch period. |
+| Dimension | `MERGE` or UPSERT for Type 1 dimensions unless otherwise defined. |
+| Fact | Controlled delete and reload by batch period. |
 
-## ETL and Data Movement
+### Reconciliation Procedure Pattern
+
+Reconciliation procedures should register results in `control.reconciliation_results`, in order to send them to `DataOps_Control`.
+
+Common reconciliation checks include:
+
+- Source-to-staging row counts.
+- Work-to-final row counts.
+- Financial totals for transactional and fact loads.
+
+## SSIS Implementation Guidelines
+
+### ETL and Data Movement
 
 Data movement is implemented through two controlled flows:
 
@@ -190,6 +264,43 @@ Data movement is implemented through two controlled flows:
 - Analytical loading uses `Sales_Operational.prod` as the curated source.
 - Execution status, validation results, reconciliation results, errors, and batch checkpoints are registered in `DataOps_Control`.
 - `staging` and `work` tables are managed through controlled cleanup rules.
+
+### Project Parameters
+
+Common project-level parameters may include:
+
+| Parameter | Purpose |
+|---|---|
+| `project_id` | Identifies the registered project in `DataOps_Control`. |
+| `[db_name]_initialcatalog` | Identifies name of the database. |
+| `[db_name]_server` | Identifies the name of the server. |
+| `[db_name]_username` | Identifies the name of the user. |
+| `[db_name]_password` | Identifies the user password. |
+
+### Package Parameters
+
+Common package-level parameters may include:
+
+| Parameter | Purpose |
+|---|---|
+| `execution_run_id` | Identifies the current execution run. |
+| `execution_step_id` | Identifies the current execution step. |
+| `project_table_id` | Identifies the table being processed. |
+| `batch_period_YYYYMM` | Identifies the current batch period when batching is used. |
+| `rerun_required` | Indicates whether the object is being reprocessed. |
+
+### Connection Managers
+
+- Oracle source connection
+- `Sales_Operational` target connection
+- `Sales_Analytics` target connection
+- `DataOps_Control` connection
+
+Connection values should be environment-configurable and should not be hardcoded inside package logic.
+
+### Event Handlers
+
+SSIS `OnError` event handlers should register unexpected technical failures in `DataOps_Control.error_logs`.
 
 ## ETL Implementation Projects
 
@@ -232,11 +343,9 @@ Common controls include:
 
 ### Sales_Operational_Migration
 
-The `Sales_Operational_Migration` project contains:
-
 | Package | Purpose |
 |---|---|
-| `PKG_SALES_MIGRATION` | Orchestrates reference, master, and transactional packages. |
+| `PKG_OPERATIONAL_MIGRATION` | Orchestrates reference, master, and transactional packages. |
 | `PKG_REFERENCE_DATA` | Loads reference data. |
 | `PKG_MASTER_DATA` | Loads master/core entities. |
 | `PKG_TRANSACTIONAL_DATA` | Loads Sales transactions by batch. |
@@ -249,11 +358,11 @@ The `Sales_Operational_Migration` project contains:
 | Group 1 | `ProductCategory Load` | `ProductCategory` | `PRODUCTION_PRODUCTSUBCATEGORY` | None | Independent table load; can run in parallel |
 | Group 1 | `SpecialOffer Load` | `SpecialOffer` | `SALES_SPECIALOFFER` | None | Independent table load; can run in parallel |
 | Group 1 | `ShipMethod Load` | `ShipMethod` | `PURCHASING_SHIPMETHOD` | None | Independent table load; can run in parallel |
-| Group 2 | `Geography Load` | `CountryRegion` | `PERSON_COUNTRYREGION` | None | Extracted to staging with the geography group; validated and loaded 1st by stored procedure sequence |
-| Group 2 | `Geography Load` | `StateProvince` | `PERSON_STATEPROVINCE` | `CountryRegion` | Extracted to staging with the geography group; validated and loaded 2nd after `CountryRegion` |
-| Group 2 | `Geography Load` | `SalesTerritory` | `SALES_SALESTERRITORY` | `CountryRegion`, `StateProvince` | Extracted to staging with the geography group; validated and loaded 3rd after geography parent records |
-| Group 2 | `Currency Load` | `Currency` | `SALES_CURRENCY` | None | Extracted to staging with the currency group; validated and loaded 1st by stored procedure sequence |
-| Group 2 | `Currency Load` | `CurrencyRate` | `SALES_CURRENCYRATE` | `Currency` | Extracted to staging with the currency group; validated and loaded 2nd after `Currency` |
+| Group 2 | `Geography Load` | `CountryRegion` | `PERSON_COUNTRYREGION` | None | Extracted to staging with the geography group; validated and loaded first by stored procedure sequence |
+| Group 2 | `Geography Load` | `StateProvince` | `PERSON_STATEPROVINCE` | `CountryRegion` | Extracted to staging with the geography group; validated and loaded second after `CountryRegion` |
+| Group 2 | `Geography Load` | `SalesTerritory` | `SALES_SALESTERRITORY` | `CountryRegion`, `StateProvince` | Extracted to staging with the geography group; validated and loaded third after geography parent records |
+| Group 2 | `Currency Load` | `Currency` | `SALES_CURRENCY` | None | Extracted to staging with the currency group; validated and loaded first by stored procedure sequence |
+| Group 2 | `Currency Load` | `CurrencyRate` | `SALES_CURRENCYRATE` | `Currency` | Extracted to staging with the currency group; validated and loaded second after `Currency` |
 
 Reference validation focuses on controlled values, required codes and descriptions, duplicate business keys, valid parent references, code formats, numeric ranges, and effective date ranges.
 
@@ -309,8 +418,6 @@ Transactional Data Load Flow example.
 
 ### Sales_Analytics_Migration
 
-The `Sales_Analytics_Migration` project contains:
-
 | Package | Purpose |
 |---|---|
 | `PKG_ANALYTICS_MIGRATION` | Orchestrates analytical loads. |
@@ -358,7 +465,7 @@ Fact Data Load Flow example.
 
 ## Rerun and Recovery Strategy
 
-Rerun behavior depends on the data type:
+Rerun behavior is defined by table or batch (transactional/fact) and depends on the data type:
 
 | Load type | Rerun strategy |
 |---|---|
@@ -366,11 +473,46 @@ Rerun behavior depends on the data type:
 | Transactional | Batch-level delete and reload by `yyyyMM` period. |
 | Analytical | Dimension/fact rerun from curated `Sales_Operational.prod`. |
 
+### Standard Status Values
+
+| Status | Meaning |
+|---|---|
+| `Pending` | Object is waiting to run. |
+| `Running` | Object is currently executing. |
+| `Success` | Object completed successfully. |
+| `Failed` | Object failed due to technical or validation issue. |
+| `Skipped` | Object was intentionally skipped. |
+| `RerunRequired` | Object is marked for reprocessing. |
+
+### Table-Level Rerun Rules
+
+Table-level reruns are used for reference, master, and dimension loads.
+
+A table may be included in a rerun when:
+
+- It is active.
+- It requires loading.
+- The previous load failed.
+- It is explicitly marked as rerun required.
+- A parent dependency was reprocessed.
+
+### Batch-Level Rerun Rules
+
+Batch-level reruns are used for large transactional and fact loads.
+
+A batch may be included in a rerun when:
+
+- The batch failed.
+- Reconciliation failed.
+- The batch is explicitly marked as rerun required.
+- The batch belongs to a selected recovery period.
+
 ## Assumptions and Scope Boundaries
 
 - Migration is executed during an offline migration window.
 - The target design modernizes the Sales domain instead of copying the source schema one-to-one.
 - Analytical Sales amounts are standardized to USD.
+- Continuous synchronization is out of scope.
 
 ## Security, Users, and Roles
 
@@ -391,3 +533,14 @@ Security separates business access, ETL execution, and administrative responsibi
 - Read-only reporting access
 - Operational support
 - Database administration
+
+## Implementation Tooling
+
+| Component | Tool |
+|---|---|
+| Source platform | Oracle XE 21c |
+| Target platform | SQL Server 2022 |
+| ETL tool | SQL Server Integration Services, SSIS |
+| Development environment | Visual Studio 2026 |
+| Target-side processing | Transact-SQL stored procedures |
+| Job scheduling | SQL Server Agent |

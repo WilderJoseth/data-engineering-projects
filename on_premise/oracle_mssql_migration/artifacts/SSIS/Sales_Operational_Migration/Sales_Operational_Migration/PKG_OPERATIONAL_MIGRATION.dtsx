@@ -5,14 +5,14 @@
   DTS:CreationName="Microsoft.Package"
   DTS:CreatorComputerName="WILDER-LOQ"
   DTS:CreatorName="WILDER-LOQ\WILDER"
-  DTS:DTSID="{3F360DEE-9713-4554-B337-ACD59D1F6511}"
+  DTS:DTSID="{613A1B1D-881F-45C3-9375-5FAAE488678B}"
   DTS:ExecutableType="Microsoft.Package"
   DTS:LastModifiedProductVersion="17.0.1010.2"
   DTS:LocaleID="10250"
-  DTS:ObjectName="PKG_SALES_MIGRATION"
+  DTS:ObjectName="PKG_OPERATIONAL_MIGRATION"
   DTS:PackageType="5"
-  DTS:VersionBuild="14"
-  DTS:VersionGUID="{17BC0D7E-5922-4D78-81D5-6C04409373E3}">
+  DTS:VersionBuild="15"
+  DTS:VersionGUID="{1250E68E-1826-4408-B872-11CBB11766D1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables />

@@ -1,5 +1,4 @@
-# Oracle to SQL Server 2022 Migration Architecture
-## Sales Domain Modernization Project
+# Sales Domain Architecture: Oracle to SQL Server Migration
 
 ## Overview
 

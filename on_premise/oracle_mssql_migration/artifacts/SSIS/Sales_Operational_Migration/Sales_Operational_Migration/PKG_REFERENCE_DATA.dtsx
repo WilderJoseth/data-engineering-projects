@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_REFERENCE_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="82"
-  DTS:VersionGUID="{5E7066C8-2530-4DFC-956C-BF1F012239F5}">
+  DTS:VersionBuild="97"
+  DTS:VersionGUID="{F48BFD9E-406F-418B-87BC-23068F162DEB}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
@@ -38,6 +38,40 @@
       <DTS:Variables />
       <DTS:Executables>
         <DTS:Executable
+          DTS:refId="Package\AddressType Load\Calculate Final Reconciliation Results"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{e2c3556b-a786-48ac-92f7-48335cd3395c}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Calculate Final Reconciliation Results"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\AddressType Load\Calculate Initial Reconciliation Results"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{BBAE4202-58D8-43D5-B414-D9C332A2DD98}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Calculate Initial Reconciliation Results"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\AddressType Load\Extract AddressType to Staging"
           DTS:CreationName="Microsoft.Pipeline"
           DTS:Description="Tarea Flujo de datos"
@@ -61,7 +95,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Load AddressType to Prod"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="4">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -78,7 +112,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register AddressType Load End"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="4">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -95,7 +129,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register AddressType Load Start"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="4">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -104,32 +138,45 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\AddressType Load\Register Initial Count"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{BBAE4202-58D8-43D5-B414-D9C332A2DD98}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:refId="Package\AddressType Load\Transfer Final Reconciliation Results"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{524e261a-f4c7-489c-af2f-1f634da0eee0}"
+          DTS:ExecutableType="Microsoft.Pipeline"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Register Initial Count"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ObjectName="Transfer Final Reconciliation Results"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
           <DTS:Variables />
           <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\AddressType Load\Transfer Initial Reconciliation Results"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{A5F09860-5540-4924-B2B2-F472A6EEB543}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Transfer Initial Reconciliation Results"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
           DTS:refId="Package\AddressType Load\Update AddressType Load Status"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{62CC031C-AF77-4AFD-AC7F-183DA3481381}"
+          DTS:DTSID="{11EF76E8-3C2F-4F9F-83A2-C993F2A3CBFF}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
           DTS:ObjectName="Update AddressType Load Status"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="4">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -146,7 +193,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Validate and Load AddressType to Work"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
+          DTS:ThreadHint="4">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -167,7 +214,7 @@
         <DTS:PrecedenceConstraint
           DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 1]"
           DTS:CreationName=""
-          DTS:DTSID="{4a23da6b-708d-4e67-aacf-988bfce549e2}"
+          DTS:DTSID="{B96AB348-13DF-431B-BBC1-2CFD2B809D4C}"
           DTS:From="Package\AddressType Load\Validate and Load AddressType to Work"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 1"
@@ -179,31 +226,55 @@
           DTS:From="Package\AddressType Load\Extract AddressType to Staging"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 2"
-          DTS:To="Package\AddressType Load\Register Initial Count" />
+          DTS:To="Package\AddressType Load\Calculate Initial Reconciliation Results" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
-          DTS:DTSID="{922CA5B9-C483-4FB2-8894-DD5BEF646937}"
+          DTS:DTSID="{8FF329C3-C1A9-4CD2-A281-CF2F26F3DD90}"
           DTS:From="Package\AddressType Load\Load AddressType to Prod"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
-          DTS:To="Package\AddressType Load\Register AddressType Load End" />
+          DTS:To="Package\AddressType Load\Calculate Final Reconciliation Results" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 4]"
           DTS:CreationName=""
-          DTS:DTSID="{C4CBA37C-DA39-47FF-BD44-3AC5E2E51F0F}"
-          DTS:From="Package\AddressType Load\Register AddressType Load End"
+          DTS:DTSID="{1412B4C2-BD8A-4BB8-871F-C7E2E9176829}"
+          DTS:From="Package\AddressType Load\Transfer Final Reconciliation Results"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 4"
           DTS:To="Package\AddressType Load\Update AddressType Load Status" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 5]"
           DTS:CreationName=""
-          DTS:DTSID="{DE00A791-029D-4AFA-BE3C-529E7ABB8982}"
-          DTS:From="Package\AddressType Load\Register Initial Count"
+          DTS:DTSID="{A2EB49EB-B327-435C-A3B8-35290E1D29C3}"
+          DTS:From="Package\AddressType Load\Calculate Initial Reconciliation Results"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 5"
+          DTS:To="Package\AddressType Load\Transfer Initial Reconciliation Results" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 6]"
+          DTS:CreationName=""
+          DTS:DTSID="{438607A5-4342-4F9E-92C4-F9121A2C92C8}"
+          DTS:From="Package\AddressType Load\Transfer Initial Reconciliation Results"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 6"
           DTS:To="Package\AddressType Load\Validate and Load AddressType to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 7]"
+          DTS:CreationName=""
+          DTS:DTSID="{0618BF71-F2E4-4392-8FD9-4A6901FF74BB}"
+          DTS:From="Package\AddressType Load\Calculate Final Reconciliation Results"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 7"
+          DTS:To="Package\AddressType Load\Transfer Final Reconciliation Results" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\AddressType Load.PrecedenceConstraints[Constraint 8]"
+          DTS:CreationName=""
+          DTS:DTSID="{5510B630-6FCA-49BA-ABB7-0139BFBE8088}"
+          DTS:From="Package\AddressType Load\Update AddressType Load Status"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 8"
+          DTS:To="Package\AddressType Load\Register AddressType Load End" />
       </DTS:PrecedenceConstraints>
     </DTS:Executable>
     <DTS:Executable
@@ -289,7 +360,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Load Currency to Prod"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="3">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -306,7 +377,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Currency Load End"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="3">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -323,7 +394,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Currency Load Start"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="3">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -340,7 +411,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Initial Count"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="3">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -357,7 +428,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Update Currency Load Status"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="3">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -374,7 +445,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Validate and Load Currency to Work"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="3">
+          DTS:ThreadHint="1">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -531,7 +602,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Load Geography to Prod"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="4">
+          DTS:ThreadHint="3">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -548,7 +619,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Geography Load End"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="4">
+          DTS:ThreadHint="3">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -565,7 +636,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Geography Load Start"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="4">
+          DTS:ThreadHint="3">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -582,7 +653,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Initial Count"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="4">
+          DTS:ThreadHint="3">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -599,7 +670,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Update Geography Load Status"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="4">
+          DTS:ThreadHint="3">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -616,7 +687,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Validate and Load Geography to Work"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="4">
+          DTS:ThreadHint="3">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -938,7 +1009,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Load ShipMethod to Prod"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="5">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -955,7 +1026,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Initial Count"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="5">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -972,7 +1043,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register ShipMethod Load End"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="5">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -989,7 +1060,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register ShipMethod Load Start"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="5">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1006,7 +1077,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Update ShipMethod Load Status"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="5">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1023,7 +1094,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Validate and Load ShipMethod to Work"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="1">
+          DTS:ThreadHint="5">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1117,7 +1188,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Load SpecialOffer to Prod"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="5">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1134,7 +1205,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register Initial Count"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="5">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1151,7 +1222,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register SpecialOffer Load End"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="5">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1168,7 +1239,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Register SpecialOffer Load Start"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="5">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1185,7 +1256,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Update SpecialOffer Load Status"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="5">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1202,7 +1273,7 @@
           DTS:LocaleID="-1"
           DTS:ObjectName="Validate and Load SpecialOffer to Work"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="5">
+          DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
@@ -1446,69 +1517,47 @@
       <GraphLayout
         Capacity="128" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
+          Size="254.4,41.6"
+          Id="Package\AddressType Load\Calculate Initial Reconciliation Results"
+          TopLeft="21.9592567044461,192.140739345896" />
+        <NodeLayout
           Size="224,41.6"
           Id="Package\AddressType Load\Extract AddressType to Staging"
-          TopLeft="41.1259168601334,112.703701679405" />
+          TopLeft="35.2925838455194,108.370368376205" />
         <NodeLayout
           Size="201.6,41.6"
           Id="Package\AddressType Load\Load AddressType to Prod"
-          TopLeft="48.2639636081748,358.443093909957" />
+          TopLeft="50.8565560591143,432.591241542487" />
         <NodeLayout
           Size="228,41.6"
           Id="Package\AddressType Load\Register AddressType Load End"
-          TopLeft="29.9703637936236,442.708414181562" />
+          TopLeft="34.3222154077006,772.138041520378" />
         <NodeLayout
           Size="232,41.6"
           Id="Package\AddressType Load\Register AddressType Load Start"
-          TopLeft="33.3875352803792,24.3272719613352" />
+          TopLeft="33.3875352803792,27.7939386038952" />
         <NodeLayout
-          Size="175.2,41.6"
-          Id="Package\AddressType Load\Register Initial Count"
-          TopLeft="59.4592546555365,194.740739327816" />
-        <NodeLayout
-          Size="234.4,41.6"
-          Id="Package\AddressType Load\Update AddressType Load Status"
-          TopLeft="31.4037006328686,526.614812593644" />
+          Size="249.6,41.6"
+          Id="Package\AddressType Load\Transfer Initial Reconciliation Results"
+          TopLeft="25.2091141301626,269.459256693794" />
         <NodeLayout
           Size="264.8,41.6"
           Id="Package\AddressType Load\Validate and Load AddressType to Work"
-          TopLeft="14.7286119051122,273.098313358654" />
+          TopLeft="18.1545376438537,351.579794294384" />
         <EdgeLayout
           Id="Package\AddressType Load.PrecedenceConstraints[Constraint]"
-          TopLeft="151.256726070256,65.9272719613352">
+          TopLeft="148.340059562949,69.3939386038952">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,46.7764297180698"
+              EndConnector="0,38.97642977231"
               Start="0,0"
-              End="0,39.2764297180698">
+              End="0,31.47642977231">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,39.2764297180698" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 1]"
-          TopLeft="148.096287756644,314.698313358654">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,43.7447805513033"
-              Start="0,0"
-              End="0,36.2447805513033">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,36.2447805513033" />
+                    End="0,31.47642977231" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1519,62 +1568,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\AddressType Load.PrecedenceConstraints[Constraint 2]"
-          TopLeft="150.092585757835,154.303701679405">
+          TopLeft="148.225920274983,149.970368376205">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,40.4370376484113"
+              EndConnector="0,42.1703709696908"
               Start="0,0"
-              End="0,32.9370376484113">
+              End="0,34.6703709696908">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,32.9370376484113" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 3]"
-          TopLeft="146.517163700899,400.043093909958">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,42.6653202716042"
-              Start="0,0"
-              End="0,35.1653202716042">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,35.1653202716042" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 4]"
-          TopLeft="146.287032213246,484.308414181562">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,42.3063984120819"
-              Start="0,0"
-              End="0,34.8063984120819">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,34.8063984120819" />
+                    End="0,34.6703709696908" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1585,18 +1590,162 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\AddressType Load.PrecedenceConstraints[Constraint 5]"
-          TopLeft="147.093933280324,236.340739327816">
+          TopLeft="149.584185417304,233.740739345896">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,36.7575740308379"
+              EndConnector="0,35.7185173478985"
               Start="0,0"
-              End="0,29.2575740308379">
+              End="0,28.2185173478985">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,29.2575740308379" />
+                    End="0,28.2185173478985" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 6]"
+          TopLeft="150.281825887008,311.059256693794">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.52053760059"
+              Start="0,0"
+              End="0,33.02053760059">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.02053760059" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="252.8,41.6"
+          Id="Package\AddressType Load\Calculate Final Reconciliation Results"
+          TopLeft="21.9313441036508,513.322217429994" />
+        <EdgeLayout
+          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="151.105546851484,393.179794294385">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.4114472481029"
+              Start="0,0"
+              End="0,31.9114472481029">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.9114472481029" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="149.993950081383,474.191241542487">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.1309758875063"
+              Start="0,0"
+              End="0,31.6309758875063">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.6309758875063" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="248,41.6"
+          Id="Package\AddressType Load\Transfer Final Reconciliation Results"
+          TopLeft="25.3572698423924,593.462959041926" />
+        <EdgeLayout
+          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 7]"
+          TopLeft="148.844306973022,554.922217429994">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.5407416119325"
+              Start="0,0"
+              End="0,31.0407416119325">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0407416119325" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="234.4,41.6"
+          Id="Package\AddressType Load\Update AddressType Load Status"
+          TopLeft="32.6592561732472,680.162960867013" />
+        <EdgeLayout
+          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="149.60826300782,635.062959041926">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.1000018250871"
+              Start="0,0"
+              End="0,37.6000018250871">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.6000018250871" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\AddressType Load.PrecedenceConstraints[Constraint 8]"
+          TopLeft="149.090735790474,721.762960867013">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,50.375080653365"
+              Start="0,0"
+              End="0,42.875080653365">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,42.875080653365" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1608,14 +1757,14 @@
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
-          PanelSize="302.4,618.4"
-          Size="302.4,661.6"
+          PanelSize="300.8,856.8"
+          Size="300.8,900"
           Id="Package\AddressType Load"
-          TopLeft="25.0313453329965,341.410099670714" />
+          TopLeft="25.9572712083321,341.410099670714" />
         <NodeLayout
           Size="319.2,41.6"
           Id="Package\Clean Up Reference Staging and Work Tables - End"
-          TopLeft="1155.41660353749,1118.80369634277" />
+          TopLeft="1156.52771458789,1477.95925108271" />
         <NodeLayout
           Size="322.4,41.6"
           Id="Package\Clean Up Reference Staging and Work Tables - Start"
@@ -1886,7 +2035,7 @@
         <NodeLayout
           Size="230.4,41.6"
           Id="Package\End Reference Data Subprocess"
-          TopLeft="1194.30549030158,1197.35925142623" />
+          TopLeft="1195.41660135198,1556.51480616617" />
         <NodeLayout
           Size="232.8,41.6"
           Id="Package\Geography Load\Extract CountryRegion to Staging"
@@ -2757,26 +2906,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="466.465433054431,106.620627983771"
+              EndConnector="467.576544104832,465.776182723715"
               Start="0,0"
-              End="466.465433054431,99.1206279837712">
+              End="467.576544104832,458.276182723715">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,53.30063766763" />
+                    End="0,246.319968895004" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,53.30063766763"
-                    Point2="0,57.30063766763"
-                    Point3="4,57.30063766763" />
+                    Point1="0,246.319968895004"
+                    Point2="0,250.319968895004"
+                    Point3="4,250.319968895004" />
                   <mssgle:LineSegment
-                    End="462.465433054431,57.30063766763" />
+                    End="463.576544104832,250.319968895004" />
                   <mssgle:CubicBezierSegment
-                    Point1="462.465433054431,57.30063766763"
-                    Point2="466.465433054431,57.30063766763"
-                    Point3="466.465433054431,61.30063766763" />
+                    Point1="463.576544104832,250.319968895004"
+                    Point2="467.576544104832,250.319968895004"
+                    Point3="467.576544104832,254.319968895004" />
                   <mssgle:LineSegment
-                    End="466.465433054431,99.1206279837712" />
+                    End="467.576544104832,458.276182723715" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2791,26 +2940,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-975.706428015036,99.5661325252784"
+              EndConnector="-974.595316964632,458.721687265222"
               Start="0,0"
-              End="-975.706428015036,92.0661325252784">
+              End="-974.595316964632,451.221687265222">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,72.3768767215332" />
+                    End="0,347.884007836244" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,72.3768767215332"
-                    Point2="0,76.3768767215332"
-                    Point3="-4,76.3768767215332" />
+                    Point1="0,347.884007836244"
+                    Point2="0,351.884007836244"
+                    Point3="-4,351.884007836244" />
                   <mssgle:LineSegment
-                    End="-971.706428015036,76.3768767215332" />
+                    End="-970.595316964632,351.884007836244" />
                   <mssgle:CubicBezierSegment
-                    Point1="-971.706428015036,76.3768767215332"
-                    Point2="-975.706428015036,76.3768767215332"
-                    Point3="-975.706428015036,80.3768767215332" />
+                    Point1="-970.595316964632,351.884007836244"
+                    Point2="-974.595316964632,351.884007836244"
+                    Point3="-974.595316964632,355.884007836244" />
                   <mssgle:LineSegment
-                    End="-975.706428015036,92.0661325252784" />
+                    End="-974.595316964632,451.221687265222" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2821,7 +2970,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 12]"
-          TopLeft="1312.26104691953,1160.40369634277">
+          TopLeft="1313.37215796993,1519.55925108271">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -2847,26 +2996,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-340.138394294559,100.117623622934"
+              EndConnector="-339.027283244154,459.273178362878"
               Start="0,0"
-              End="-340.138394294559,92.6176236229337">
+              End="-339.027283244154,451.773178362878">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,59.2786881146988" />
+                    End="0,286.280603568119" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,59.2786881146988"
-                    Point2="0,63.2786881146988"
-                    Point3="-4,63.2786881146988" />
+                    Point1="0,286.280603568119"
+                    Point2="0,290.280603568119"
+                    Point3="-4,290.280603568119" />
                   <mssgle:LineSegment
-                    End="-336.138394294559,63.2786881146988" />
+                    End="-335.027283244154,290.280603568119" />
                   <mssgle:CubicBezierSegment
-                    Point1="-336.138394294559,63.2786881146988"
-                    Point2="-340.138394294559,63.2786881146988"
-                    Point3="-340.138394294559,67.2786881146988" />
+                    Point1="-335.027283244154,290.280603568119"
+                    Point2="-339.027283244154,290.280603568119"
+                    Point3="-339.027283244154,294.280603568119" />
                   <mssgle:LineSegment
-                    End="-340.138394294559,92.6176236229337" />
+                    End="-339.027283244154,451.773178362878" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2881,26 +3030,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="181.05995458412,107.321158993134"
+              EndConnector="182.171065634523,466.476713733078"
               Start="0,0"
-              End="181.05995458412,99.8211589931343">
+              End="182.171065634523,458.976713733078">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,53.6771208519962" />
+                    End="0,246.69645207937" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,53.6771208519962"
-                    Point2="0,57.6771208519962"
-                    Point3="4,57.6771208519962" />
+                    Point1="0,246.69645207937"
+                    Point2="0,250.69645207937"
+                    Point3="4,250.69645207937" />
                   <mssgle:LineSegment
-                    End="177.05995458412,57.6771208519962" />
+                    End="178.171065634523,250.69645207937" />
                   <mssgle:CubicBezierSegment
-                    Point1="177.05995458412,57.6771208519962"
-                    Point2="181.05995458412,57.6771208519962"
-                    Point3="181.05995458412,61.6771208519962" />
+                    Point1="178.171065634523,250.69645207937"
+                    Point2="182.171065634523,250.69645207937"
+                    Point3="182.171065634523,254.69645207937" />
                   <mssgle:LineSegment
-                    End="181.05995458412,99.8211589931343" />
+                    End="182.171065634523,458.976713733078" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2949,9 +3098,9 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-1033.78136179015,91.3111112215997"
+              EndConnector="-1033.65543591481,91.3111112215999"
               Start="0,0"
-              End="-1033.78136179015,83.8111112215997">
+              End="-1033.65543591481,83.8111112215999">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
@@ -2962,20 +3111,20 @@
                     Point2="0,21.2570876273292"
                     Point3="-4,21.2570876273292" />
                   <mssgle:LineSegment
-                    End="-1029.78136179015,21.2570876273292" />
+                    End="-1029.65543591481,21.2570876273292" />
                   <mssgle:CubicBezierSegment
-                    Point1="-1029.78136179015,21.2570876273292"
-                    Point2="-1033.78136179015,21.2570876273292"
-                    Point3="-1033.78136179015,25.2570876273292" />
+                    Point1="-1029.65543591481,21.2570876273292"
+                    Point2="-1033.65543591481,21.2570876273292"
+                    Point3="-1033.65543591481,25.2570876273292" />
                   <mssgle:LineSegment
-                    End="-1033.78136179015,83.8111112215997" />
+                    End="-1033.65543591481,83.8111112215999" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-524.890680895075,26.2570876273292,16,16"
+              BoundingBox="-524.827717957407,26.2570876273292,16,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -3089,30 +3238,30 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 7]"
-          TopLeft="176.231345332996,1003.01009967071">
+          TopLeft="176.357271208332,1241.41009967071">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="1027.64240106164,115.793596672056"
+              EndConnector="1028.6275862367,236.549151412"
               Start="0,0"
-              End="1027.64240106164,108.293596672056">
+              End="1028.6275862367,229.049151412">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,84.8249149972681" />
+                    End="0,177.456132901323" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,84.8249149972681"
-                    Point2="0,88.8249149972681"
-                    Point3="4,88.8249149972681" />
+                    Point1="0,177.456132901323"
+                    Point2="0,181.456132901323"
+                    Point3="4,181.456132901323" />
                   <mssgle:LineSegment
-                    End="1023.64240106164,88.8249149972681" />
+                    End="1024.6275862367,181.456132901323" />
                   <mssgle:CubicBezierSegment
-                    Point1="1023.64240106164,88.8249149972681"
-                    Point2="1027.64240106164,88.8249149972681"
-                    Point3="1027.64240106164,92.8249149972681" />
+                    Point1="1024.6275862367,181.456132901323"
+                    Point2="1028.6275862367,181.456132901323"
+                    Point3="1028.6275862367,185.456132901323" />
                   <mssgle:LineSegment
-                    End="1027.64240106164,108.293596672056" />
+                    End="1028.6275862367,229.049151412" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -3127,26 +3276,26 @@
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="746.857760023158,93.1814764850201"
+              EndConnector="747.968871073559,452.337031224964"
               Start="0,0"
-              End="746.857760023158,85.6814764850201">
+              End="747.968871073559,444.837031224964">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,54.8947417566555" />
+                    End="0,281.896657210076" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,54.8947417566555"
-                    Point2="0,58.8947417566555"
-                    Point3="4,58.8947417566555" />
+                    Point1="0,281.896657210076"
+                    Point2="0,285.896657210076"
+                    Point3="4,285.896657210076" />
                   <mssgle:LineSegment
-                    End="742.857760023158,58.8947417566555" />
+                    End="743.968871073559,285.896657210076" />
                   <mssgle:CubicBezierSegment
-                    Point1="742.857760023158,58.8947417566555"
-                    Point2="746.857760023158,58.8947417566555"
-                    Point3="746.857760023158,62.8947417566555" />
+                    Point1="743.968871073559,285.896657210076"
+                    Point2="747.968871073559,285.896657210076"
+                    Point3="747.968871073559,289.896657210076" />
                   <mssgle:LineSegment
-                    End="746.857760023158,85.6814764850201" />
+                    End="747.968871073559,444.837031224964" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
