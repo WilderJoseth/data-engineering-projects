@@ -370,7 +370,7 @@ For grouped reference containers, related source tables can be extracted into st
 
 Reference Data Load Flow example showing representative containers from Group 1 and Group 2.
 
-![Reference Data Load Flow](img/reference_data_load_flow.jpg)
+![Reference Data Load Flow](img/data_processing_Sales_Operational_reference_data.png)
 
 #### Master Data Load Flow
 
@@ -389,7 +389,7 @@ Independent master tables can be extracted and loaded in parallel once their req
 
 Master Data Load Flow example showing independent and dependent master table loads.
 
-![Master Data Load Flow](img/master_data_load_flow.jpg)
+![Master Data Load Flow](img/data_processing_Sales_Operational_master_data.png)
 
 #### Transactional Data Load Flow
 
@@ -414,7 +414,7 @@ Reconciliation is performed at batch level using row counts, business keys, orph
 
 Transactional Data Load Flow example.
 
-<img src="img/transactional_data_load_flow.jpg" alt="Transactional Data Load Flow" height="1200"/>
+![Transactional Data Load Flow](img/data_processing_Sales_Operational_transactional_data.png)
 
 ### Sales_Analytics_Migration
 
@@ -441,7 +441,7 @@ Dimension validation focuses on unique business keys, required descriptive attri
 
 Dimension Data Load Flow example.
 
-![Dimension Data Load Flow](img/dim_data_load_flow.jpg)
+![Dimension Data Load Flow](img/data_processing_Sales_Analytics_dim_data.png)
 
 #### Fact Data Load Flow
 
@@ -461,7 +461,7 @@ Fact reconciliation is performed at batch level using row counts, business keys,
 
 Fact Data Load Flow example.
 
-<img src="img/fact_data_load_flow.jpg" alt="Fact Data Load Flow" height="1200"/>
+![Dimension Data Load Flow](img/data_processing_Sales_Analytics_fact_data.png)
 
 ## Rerun and Recovery Strategy
 
