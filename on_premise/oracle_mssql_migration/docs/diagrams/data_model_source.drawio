@@ -1,6 +1,6 @@
 <mxfile host="Electron">
   <diagram name="Página-1" id="7mPY9IgTF5v4kI3P_Ib7">
-    <mxGraphModel dx="1212" dy="776" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="1250" dy="550" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -105,6 +105,9 @@
         </mxCell>
         <mxCell id="bGzYq2xaocZGrk2WDBp9-2" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" value="HUMANRESOURCES_EMPLOYEE" vertex="1">
           <mxGeometry height="40" width="200" x="318.25" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="y2xucCQ9B6sKll87YT1e-1" edge="1" parent="1" source="bGzYq2xaocZGrk2WDBp9-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=ERoneToMany;endFill=0;" target="57UfKS-p6jkbmIy2nKI7-20">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="bGzYq2xaocZGrk2WDBp9-3" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" value="PERSON_PERSON" vertex="1">
           <mxGeometry height="40" width="120" x="158.25" y="505" as="geometry" />
@@ -237,9 +240,6 @@
             <mxPoint x="488.25" y="610" as="sourcePoint" />
             <mxPoint x="578.25" y="455" as="targetPoint" />
           </mxGeometry>
-        </mxCell>
-        <mxCell id="y7ByMWYmGpwYcd7xmSkw-1" edge="1" parent="1" source="57UfKS-p6jkbmIy2nKI7-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="57UfKS-p6jkbmIy2nKI7-2">
-          <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="y7ByMWYmGpwYcd7xmSkw-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=10;" value="Zero to Many" vertex="1">
           <mxGeometry height="20" width="70" x="1030" y="700" as="geometry" />

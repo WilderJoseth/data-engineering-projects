@@ -58,8 +58,8 @@ The target solution uses three databases. Each database represents a different l
 ### Technical details
 
 - The target database engine is `SQL Server 2022`.
-- `Sales_Operational` and `Sales_Analytics` are designed to run on the same SQL Server instance because they belong to the same Sales migration solution.
-- `DataOps_Control` is designed as a reusable control database and may be deployed on a separate SQL Server instance to support multiple projects.
+- `Sales_Operational` and `Sales_Analytics` are designed to run on the same SQL Server environment because they belong to the same Sales migration solution.
+- `DataOps_Control` is designed as a reusable control database and may be deployed on a separate SQL Server environment to support multiple projects.
 - The database names use descriptive names with underscores to improve readability.
 
 ## Schema Organization
@@ -387,8 +387,8 @@ Reference data is loaded using the common table-level load pattern. Independent 
 | `SpecialOffer Load` | `SpecialOffer` | `SALES_SPECIALOFFER` | None | Independent table load; can run in parallel. |
 | `ShipMethod Load` | `ShipMethod` | `PURCHASING_SHIPMETHOD` | None | Independent table load; can run in parallel. |
 | `Geography Load` | `CountryRegion` | `PERSON_COUNTRYREGION` | None | Loaded first within the geography sequence. |
-| `Geography Load` | `StateProvince` | `PERSON_STATEPROVINCE` | `CountryRegion` | Loaded after `CountryRegion`. |
-| `Geography Load` | `SalesTerritory` | `SALES_SALESTERRITORY` | `CountryRegion`, `StateProvince` | Loaded after `CountryRegion` and `StateProvince`. |
+| `Geography Load` | `SalesTerritory` | `SALES_SALESTERRITORY` | `CountryRegion` | Loaded after `CountryRegion`. |
+| `Geography Load` | `StateProvince` | `PERSON_STATEPROVINCE` | `CountryRegion`, `SalesTerritory` | Loaded after `CountryRegion` and `StateProvince`. |
 | `Currency Load` | `Currency` | `SALES_CURRENCY` | None | Loaded first within the currency sequence. |
 | `Currency Load` | `CurrencyRate` | `SALES_CURRENCYRATE` | `Currency` | Loaded after `Currency`. |
 
