@@ -3,7 +3,7 @@ GO
 
 CREATE OR ALTER FUNCTION [reference].[ufn_get_status_code_id]
 (
-	@status_code VARCHAR(15)
+	@p_status_code VARCHAR(15)
 )
 RETURNS SMALLINT
 AS
@@ -12,7 +12,7 @@ BEGIN
 
 	SELECT @status_code_id = [id]
 	FROM [reference].[status_codes]
-	WHERE [code] = @status_code
+	WHERE [code] = @p_status_code
 	AND [is_active] = 1;
 
 	RETURN @status_code_id;
@@ -20,21 +20,20 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_start_execution_run]
-	@project_id SMALLINT,
-	@status_code VARCHAR(15) = 'STARTED'
+	@p_project_id SMALLINT,
+	@p_status_code VARCHAR(15) = 'STARTED'
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@status_code);
+	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
 
 	IF @status_code_id IS NULL
 	BEGIN
 		THROW 50001, 'Invalid or inactive status code.', 1;
 	END;
 
-	INSERT INTO [runtime].[execution_runs] ([status_code_id], [project_id])
-	VALUES (@status_code_id, @project_id);
+	INSERT INTO [runtime].[execution_runs] ([status_code_id], [project_id]) VALUES (@status_code_id, @p_project_id);
 
 	SELECT
 		er.[id],
@@ -50,13 +49,13 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_end_execution_run]
-	@execution_run_id INT,
-	@status_code VARCHAR(15) = 'COMPLETED'
+	@p_execution_run_id INT,
+	@p_status_code VARCHAR(15) = 'COMPLETED'
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@status_code);
+	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
 
 	IF @status_code_id IS NULL
 	BEGIN
@@ -67,7 +66,7 @@ BEGIN
 	SET
 		[end_run_date] = SYSUTCDATETIME(),
 		[status_code_id] = @status_code_id
-	WHERE [id] = @execution_run_id;
+	WHERE [id] = @p_execution_run_id;
 
 	SELECT
 		er.[id],
@@ -78,21 +77,21 @@ BEGIN
 		er.[created_by]
 	FROM [runtime].[execution_runs] er
 	INNER JOIN [reference].[status_codes] sc ON sc.[id] = er.[status_code_id]
-	WHERE er.[id] = @execution_run_id;
+	WHERE er.[id] = @p_execution_run_id;
 END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_start_execution_step]
-	@execution_run_id INT,
-	@project_process_id INT,
-	@project_table_id INT = NULL,
-	@project_table_batch_id INT = NULL,
-	@status_code VARCHAR(15) = 'STARTED'
+	@p_execution_run_id INT,
+	@p_project_process_id INT,
+	@p_project_table_id INT = NULL,
+	@p_project_table_batch_id INT = NULL,
+	@p_status_code VARCHAR(15) = 'STARTED'
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@status_code);
+	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
 
 	IF @status_code_id IS NULL
 	BEGIN
@@ -110,10 +109,10 @@ BEGIN
 	VALUES
 	(
 		@status_code_id,
-		@execution_run_id,
-		@project_process_id,
-		@project_table_id,
-		@project_table_batch_id
+		@p_execution_run_id,
+		@p_project_process_id,
+		@p_project_table_id,
+		@p_project_table_batch_id
 	);
 
 	SELECT
@@ -133,13 +132,13 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_end_execution_step]
-	@execution_step_id BIGINT,
-	@status_code VARCHAR(15) = 'COMPLETED'
+	@p_execution_step_id BIGINT,
+	@p_status_code VARCHAR(15) = 'COMPLETED'
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@status_code);
+	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
 
 	IF @status_code_id IS NULL
 	BEGIN
@@ -150,7 +149,7 @@ BEGIN
 	SET
 		[end_run_date] = SYSUTCDATETIME(),
 		[status_code_id] = @status_code_id
-	WHERE [id] = @execution_step_id;
+	WHERE [id] = @p_execution_step_id;
 
 	SELECT
 		es.[id],
@@ -164,13 +163,13 @@ BEGIN
 		es.[created_by]
 	FROM [runtime].[execution_steps] es
 	INNER JOIN [reference].[status_codes] sc ON sc.[id] = es.[status_code_id]
-	WHERE es.[id] = @execution_step_id;
+	WHERE es.[id] = @p_execution_step_id;
 END;
 GO
 
 CREATE OR ALTER FUNCTION [metadata].[ufn_list_project_databases]
 (
-	@project_id SMALLINT
+	@p_project_id SMALLINT
 )
 RETURNS TABLE
 AS
@@ -182,15 +181,15 @@ RETURN
 		d.[platform_type],
 		d.[database_role]
 	FROM [metadata].[project_databases] d
-	WHERE d.[project_id] = @project_id
+	WHERE d.[project_id] = @p_project_id
 	AND d.[is_active] = 1
 );
 GO
 
 CREATE OR ALTER FUNCTION [metadata].[ufn_list_tables]
 (
-	@project_id SMALLINT,
-	@database_name VARCHAR(50)
+	@p_project_id SMALLINT,
+	@p_database_name VARCHAR(50)
 )
 RETURNS TABLE
 AS
@@ -208,8 +207,8 @@ RETURN
 		t.[rerun_required]
 	FROM [metadata].[project_tables] t
 	INNER JOIN [metadata].[project_databases] d ON d.[id] = t.[database_id]
-	WHERE d.[project_id] = @project_id
-	AND d.[name] = @database_name
+	WHERE d.[project_id] = @p_project_id
+	AND d.[name] = @p_database_name
 	AND d.[is_active] = 1
 	AND t.[is_active] = 1
 );
@@ -217,8 +216,8 @@ GO
 
 CREATE OR ALTER FUNCTION [metadata].[ufn_list_columns_rules]
 (
-	@project_id SMALLINT,
-	@database_name VARCHAR(50)
+	@p_project_id SMALLINT,
+	@p_database_name VARCHAR(50)
 )
 RETURNS TABLE
 AS
@@ -242,8 +241,8 @@ RETURN
 	FROM [metadata].[project_databases] d
 	INNER JOIN [metadata].[project_tables] t ON t.[database_id] = d.[id]
 	INNER JOIN [metadata].[project_columns] c ON c.[table_id] = t.[id]
-	WHERE d.[project_id] = @project_id
-	AND d.[name] = @database_name
+	WHERE d.[project_id] = @p_project_id
+	AND d.[name] = @p_database_name
 	AND d.[is_active] = 1
 	AND t.[is_active] = 1
 	AND c.[is_active] = 1
@@ -252,9 +251,9 @@ GO
 
 CREATE OR ALTER FUNCTION [metadata].[ufn_list_table_batches]
 (
-	@project_id SMALLINT,
-	@database_name VARCHAR(50),
-	@table_name VARCHAR(50) = NULL
+	@p_project_id SMALLINT,
+	@p_database_name VARCHAR(50),
+	@p_table_name VARCHAR(50) = NULL
 )
 RETURNS TABLE
 AS
@@ -276,9 +275,9 @@ RETURN
 	FROM [metadata].[project_table_batches] b
 	INNER JOIN [metadata].[project_tables] t ON t.[id] = b.[table_id]
 	INNER JOIN [metadata].[project_databases] d ON d.[id] = t.[database_id]
-	WHERE d.[project_id] = @project_id
-	AND d.[name] = @database_name
-	AND (@table_name IS NULL OR t.[name] = @table_name)
+	WHERE d.[project_id] = @p_project_id
+	AND d.[name] = @p_database_name
+	AND (@p_table_name IS NULL OR t.[name] = @p_table_name)
 	AND d.[is_active] = 1
 	AND t.[is_active] = 1
 	AND b.[is_active] = 1
@@ -287,7 +286,7 @@ GO
 
 CREATE OR ALTER FUNCTION [metadata].[ufn_list_table_mappings]
 (
-	@project_id SMALLINT
+	@p_project_id SMALLINT
 )
 RETURNS TABLE
 AS
@@ -307,8 +306,8 @@ RETURN
 	INNER JOIN [metadata].[project_databases] sd ON sd.[id] = st.[database_id]
 	INNER JOIN [metadata].[project_tables] tt ON tt.[id] = m.[table_target_id]
 	INNER JOIN [metadata].[project_databases] td ON td.[id] = tt.[database_id]
-	WHERE sd.[project_id] = @project_id
-	AND td.[project_id] = @project_id
+	WHERE sd.[project_id] = @p_project_id
+	AND td.[project_id] = @p_project_id
 	AND sd.[is_active] = 1
 	AND td.[is_active] = 1
 	AND st.[is_active] = 1
@@ -317,9 +316,9 @@ RETURN
 GO
 
 CREATE OR ALTER PROCEDURE [observability].[usp_log_error]
-	@execution_step_id BIGINT,
-	@error_source VARCHAR(200),
-	@details VARCHAR(MAX)
+	@p_execution_step_id BIGINT,
+	@p_error_source VARCHAR(200),
+	@p_details VARCHAR(MAX)
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -332,9 +331,9 @@ BEGIN
 	)
 	VALUES
 	(
-		@error_source,
-		@details,
-		@execution_step_id
+		@p_error_source,
+		@p_details,
+		@p_execution_step_id
 	);
 
 	SELECT
@@ -349,12 +348,12 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [observability].[usp_record_reconciliation_result]
-	@execution_step_id BIGINT,
-	@metric_name VARCHAR(50),
-	@reconciliation_side VARCHAR(20),
-	@reconciliation_key VARCHAR(100) = NULL,
-	@metric_value_decimal DECIMAL(20, 4) = NULL,
-	@metric_value_bigint BIGINT = NULL
+	@p_execution_step_id BIGINT,
+	@p_metric_name VARCHAR(50),
+	@p_reconciliation_side VARCHAR(20),
+	@p_reconciliation_key VARCHAR(100) = NULL,
+	@p_metric_value_decimal DECIMAL(20, 4) = NULL,
+	@p_metric_value_bigint BIGINT = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -370,12 +369,12 @@ BEGIN
 	)
 	VALUES
 	(
-		@metric_name,
-		@reconciliation_key,
-		@reconciliation_side,
-		@metric_value_decimal,
-		@metric_value_bigint,
-		@execution_step_id
+		@p_metric_name,
+		@p_reconciliation_key,
+		@p_reconciliation_side,
+		@p_metric_value_decimal,
+		@p_metric_value_bigint,
+		@p_execution_step_id
 	);
 
 	SELECT
@@ -393,10 +392,10 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [observability].[usp_record_validation_result]
-	@execution_step_id BIGINT,
-	@validation_code VARCHAR(50),
-	@details VARCHAR(MAX),
-	@affected_row_count BIGINT
+	@p_execution_step_id BIGINT,
+	@p_validation_code VARCHAR(50),
+	@p_details VARCHAR(MAX),
+	@p_affected_row_count BIGINT
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -405,7 +404,7 @@ BEGIN
 
 	SELECT @validation_code_id = [id]
 	FROM [reference].[validation_codes]
-	WHERE [code] = @validation_code
+	WHERE [code] = @p_validation_code
 	AND [is_active] = 1;
 
 	IF @validation_code_id IS NULL
@@ -422,9 +421,9 @@ BEGIN
 	)
 	VALUES
 	(
-		@details,
-		@affected_row_count,
-		@execution_step_id,
+		@p_details,
+		@p_affected_row_count,
+		@p_execution_step_id,
 		@validation_code_id
 	);
 

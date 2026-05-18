@@ -102,3 +102,26 @@ INSERT INTO [prod].[project_table_mappings] ([table_source_id], [table_target_id
 INSERT INTO [prod].[project_table_mappings] ([table_source_id], [table_target_id]) VALUES (33, 41);
 INSERT INTO [prod].[project_table_mappings] ([table_source_id], [table_target_id]) VALUES (34, 41);
 -------------------------
+
+-------------------------
+INSERT INTO [reference].[status_codes] ([code], [description])
+VALUES
+    ('Pending', 'Execution is registered but has not started yet.'),
+    ('Running', 'Execution is currently in progress.'),
+    ('Success', 'Execution completed successfully.'),
+    ('Failed', 'Execution failed due to a technical, validation, or reconciliation issue.'),
+    ('Skipped', 'Execution was intentionally skipped.'),
+    ('RerunRequired', 'Object or process is marked for reprocessing.');
+
+INSERT INTO [reference].[validation_codes] ([code], [description], [severity])
+VALUES
+    ('NOT_NULL', 'Required column contains null values.', 'Error'),
+    ('DUPLICATE', 'Duplicate records were found based on expected key columns.', 'Error'),
+    ('FK_CHECK', 'Referenced value does not exist in the expected parent or lookup table.', 'Error'),
+    ('DATA_TYPE', 'Value does not match the expected data type or conversion rule.', 'Error'),
+    ('LENGTH_CHECK', 'Text value exceeds the expected length.', 'Error'),
+    ('DATE_RANGE', 'Date value is outside the expected range.', 'Warning'),
+    ('NEGATIVE_VALUE', 'Numeric value is negative where it may require review.', 'Warning'),
+    ('RECON_WARNING', 'Validation passed with reconciliation or tolerance warning.', 'Warning'),
+    ('INFO_CHECK', 'Informational validation result.', 'Info');
+-------------------------
