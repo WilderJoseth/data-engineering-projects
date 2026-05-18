@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36">
   <diagram name="Página-1" id="5MIjyoGo6HauBTCYYPa8">
-    <mxGraphModel dx="1576" dy="825" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1579" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -67,7 +67,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="E8YQE2dIr0k5dc_9rkEV-1" connectable="0" parent="PBrSsAkfCqms5uMvStl7-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=0;fontSize=14;" value="Read configuration&lt;div&gt;Registrer execution&lt;/div&gt;&lt;div&gt;Register logs&lt;/div&gt;" vertex="1">
+        <mxCell id="E8YQE2dIr0k5dc_9rkEV-1" connectable="0" parent="PBrSsAkfCqms5uMvStl7-47" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=0;fontSize=14;" value="Read configuration&lt;div&gt;Register execution&lt;/div&gt;&lt;div&gt;Register logs&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="0.0022" y="3" as="geometry">
             <mxPoint x="19" y="3" as="offset" />
           </mxGeometry>
@@ -172,7 +172,7 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="E8YQE2dIr0k5dc_9rkEV-2" connectable="0" parent="PBrSsAkfCqms5uMvStl7-48" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontStyle=0" value="&lt;span style=&quot;&quot;&gt;Read configuration&lt;/span&gt;&lt;div style=&quot;&quot;&gt;Registrer execution&lt;/div&gt;&lt;div style=&quot;&quot;&gt;Register logs&lt;/div&gt;" vertex="1">
+        <mxCell id="E8YQE2dIr0k5dc_9rkEV-2" connectable="0" parent="PBrSsAkfCqms5uMvStl7-48" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=14;fontStyle=0" value="&lt;span style=&quot;&quot;&gt;Read configuration&lt;/span&gt;&lt;div style=&quot;&quot;&gt;Register execution&lt;/div&gt;&lt;div style=&quot;&quot;&gt;Register logs&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="0.1505" y="-2" as="geometry">
             <mxPoint x="12" as="offset" />
           </mxGeometry>
