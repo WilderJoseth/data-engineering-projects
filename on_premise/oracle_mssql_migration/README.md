@@ -4,7 +4,7 @@
 
 This project presents a migration and modernization case study for moving a legacy Sales data domain from Oracle to SQL Server 2022.
 
-The objective is to design and document a phased migration solution using professional data engineering practices, from problem framing and target architecture to implementation-oriented design decisions.
+The objective is to design and document a phased migration solution using professional data engineering practices, from problem framing and target architecture to implementation.
 
 This case study is intended to:
 
@@ -19,7 +19,7 @@ The scenario assumes that a company has operated for more than 10 years with a l
 
 Over time, the company has accumulated transactional, historical, and reference data in Oracle while also relying on database-side logic to support operational processing and reporting. As the business evolves, a **new web platform** is introduced to modernize operational processes and improve maintainability. As a result, business data must be migrated to a new database platform hosted on SQL Server 2022.
 
-The company has chosen to execute the migration in phases defined by business domain. For that reason, the first migration scope is focused on the **Sales domain**, including the supporting entities required for customer, product, territory, and related sales processing. This means the project does not attempt to migrate the full legacy platform at once, but instead focuses on one domain with clear business value and strong dependency on surrounding master data.
+The company has chosen to execute the migration in phases defined by business domain. For that reason, the first migration scope is focused on the **Sales domain**, including the supporting entities required for customer, product, territory, and related sales processing. This means the project does not attempt to migrate the full legacy platform at once, but focuses on one domain with clear business value and strong dependency.
 
 ## Architecture Overview
 
@@ -47,7 +47,7 @@ From a migration perspective, the source cannot be treated as a uniform dataset.
 
 ## Related Documentation
 
-For the technical design and decision rationale, see:
+For the technical design, see:
 - [Solution Design](docs/solution_design.md)
 
 ## Project Scope
