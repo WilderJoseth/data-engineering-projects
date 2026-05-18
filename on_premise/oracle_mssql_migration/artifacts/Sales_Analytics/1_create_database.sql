@@ -1,0 +1,7 @@
+CREATE DATABASE Sales_Analytics;
+
+CREATE SCHEMA staging;
+
+CREATE SCHEMA work;
+
+CREATE SCHEMA prod;

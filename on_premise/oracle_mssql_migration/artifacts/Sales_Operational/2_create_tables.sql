@@ -1,0 +1,117 @@
+
+CREATE TABLE staging.Person (
+	Id INT IDENTITY(1, 1) NOT NULL,
+	BusinessEntityID INT NOT NULL,
+	Title VARCHAR(8) NULL,
+	FirstName VARCHAR(50) NOT NULL,
+	MiddleName VARCHAR(50) NULL,
+	LastName VARCHAR(50) NOT NULL,
+
+	CONSTRAINT pk_staging_Person PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
+
+CREATE TABLE staging.Customer (
+	Id INT IDENTITY(1, 1) NOT NULL,
+	CustomerID INT NOT NULL,
+	PersonID INT NULL,
+	AccountNumber VARCHAR(20) NULL,
+
+	CONSTRAINT pk_staging_Customer PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
+
+CREATE TABLE work.Customer (
+	Id INT IDENTITY(1, 1) NOT NULL,
+    CustomerIDOrigin INT NOT NULL,
+	Title VARCHAR(8) NULL,
+	FirstName VARCHAR(50) NULL,
+	MiddleName VARCHAR(50) NULL,
+	LastName VARCHAR(50) NULL,
+    AccountNumber VARCHAR(20) NULL,
+
+	CONSTRAINT pk_prod_Customer PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
+
+CREATE TABLE prod.Customer (
+	Id INT IDENTITY(1, 1) NOT NULL,
+    CustomerIDOrigin INT NOT NULL,
+	Title VARCHAR(8) NULL,
+	FirstName VARCHAR(50) NOT NULL,
+	MiddleName VARCHAR(50) NULL,
+	LastName VARCHAR(50) NOT NULL,
+    AccountNumber VARCHAR(20) NULL,
+	created_at DATETIME NOT NULL,
+    created_by VARCHAR(50) NOT NULL,
+    updated_at DATETIME NULL,
+    updated_by VARCHAR(50) NULL,
+    run_id INT NOT NULL,
+    is_active BIT NOT NULL,
+
+	CONSTRAINT pk_prod_Customer PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
+
+
+CREATE TABLE staging.SalesOrderHeader (
+	Id INT IDENTITY(1, 1) NOT NULL,
+	SalesOrderID INT NOT NULL,
+	RevisionNumber TINYINT NOT NULL,
+	OrderDate DATETIME NOT NULL,
+	DueDate DATETIME NOT NULL,
+	ShipDate DATETIME NULL,
+	Status TINYINT NOT NULL,
+	CustomerID INT NOT NULL,
+	SalesPersonID INT NULL,
+	CreditCardApprovalCode VARCHAR(15) NULL,
+	SubTotal DECIMAL(14, 4) NOT NULL,
+	TaxAmt DECIMAL(14, 4) NOT NULL,
+	Freight DECIMAL(14, 4) NOT NULL,
+	TotalDue DECIMAL(14, 4) NOT NULL,
+	Comment NVARCHAR(128) NULL,
+
+	CONSTRAINT pk_staging_SalesOrderHeader PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
+
+CREATE TABLE work.SalesOrderHeader (
+	Id INT IDENTITY(1, 1) NOT NULL,
+	SalesOrderID INT NOT NULL,
+	RevisionNumber TINYINT NOT NULL,
+	OrderDate DATETIME NOT NULL,
+	DueDate DATETIME NOT NULL,
+	ShipDate DATETIME NULL,
+	Status TINYINT NOT NULL,
+	CustomerID INT NOT NULL,
+	SalesPersonID INT NULL,
+	CreditCardApprovalCode VARCHAR(15) NULL,
+	SubTotal DECIMAL(14, 4) NOT NULL,
+	TaxAmt DECIMAL(14, 4) NOT NULL,
+	Freight DECIMAL(14, 4) NOT NULL,
+	TotalDue DECIMAL(14, 4) NOT NULL,
+	Comment NVARCHAR(128) NULL,
+
+	CONSTRAINT pk_work_SalesOrderHeader PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
+
+CREATE TABLE prod.SalesOrderHeader (
+	Id INT IDENTITY(1, 1) NOT NULL,
+	SalesOrderID INT NOT NULL,
+	RevisionNumber TINYINT NOT NULL,
+	OrderDate DATETIME NOT NULL,
+	DueDate DATETIME NOT NULL,
+	ShipDate DATETIME NULL,
+	Status TINYINT NOT NULL,
+	CustomerID INT NOT NULL,
+	SalesPersonID INT NULL,
+	CreditCardApprovalCode VARCHAR(15) NULL,
+	SubTotal DECIMAL(14, 4) NOT NULL,
+	TaxAmt DECIMAL(14, 4) NOT NULL,
+	Freight DECIMAL(14, 4) NOT NULL,
+	TotalDue DECIMAL(14, 4) NOT NULL,
+	Comment NVARCHAR(128) NULL,
+	created_at DATETIME NOT NULL,
+    created_by VARCHAR(50) NOT NULL,
+    updated_at DATETIME NULL,
+    updated_by VARCHAR(50) NULL,
+    run_id INT NOT NULL,
+    is_active BIT NOT NULL,
+
+	CONSTRAINT pk_prod_SalesOrderHeader PRIMARY KEY CLUSTERED (Id ASC)
+) ON [PRIMARY];
