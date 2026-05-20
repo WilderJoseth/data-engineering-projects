@@ -7,6 +7,17 @@ CREATE SCHEMA [runtime];
 CREATE SCHEMA [observability];
 CREATE SCHEMA [reference];
 
+CREATE TABLE [reference].[status_codes] (
+	[id] [smallint] IDENTITY(1, 1) NOT NULL,
+    [code] [varchar](15) NOT NULL,
+    [description] [varchar](100) NULL,
+    [is_active] [bit] NOT NULL CONSTRAINT [df_reference_status_codes_is_active] DEFAULT 1,
+	[created_at] [datetime2] NOT NULL CONSTRAINT [df_reference_status_codes_created_at] DEFAULT SYSUTCDATETIME(),
+
+    CONSTRAINT [pk_reference_status_codes] PRIMARY KEY CLUSTERED ([id] ASC),
+	CONSTRAINT [uk_reference_status_codes_code] UNIQUE ([code])
+) ON [PRIMARY];
+
 CREATE TABLE [metadata].[projects] (
 	[id] [smallint] NOT NULL,
 	[name] [varchar](100) NOT NULL,
@@ -16,7 +27,7 @@ CREATE TABLE [metadata].[projects] (
 	CONSTRAINT [pk_metadata_projects] PRIMARY KEY CLUSTERED ([id] ASC)
 ) ON [PRIMARY];
 
-CREATE TABLE [metadata].[project_databases](
+CREATE TABLE [metadata].[project_databases] (
 	[id] [smallint] NOT NULL,
 	[name] [varchar](50) NOT NULL,
 	[platform_type] [varchar](30) NOT NULL,
@@ -29,7 +40,7 @@ CREATE TABLE [metadata].[project_databases](
 	CONSTRAINT [fk_metadata_project_databases_project_id] FOREIGN KEY (project_id) REFERENCES [metadata].[projects]([id])
 ) ON [PRIMARY];
 
-CREATE TABLE [metadata].[project_database_mappings](
+CREATE TABLE [metadata].[project_database_mappings] (
 	[database_source_id] [smallint] NOT NULL,
 	[database_target_id] [smallint] NOT NULL,
 
@@ -41,25 +52,14 @@ CREATE TABLE [metadata].[project_database_mappings](
 CREATE TABLE [metadata].[project_processes](
 	[id] [int] NOT NULL,
 	[name] [varchar](50) NOT NULL,
-	[database_id] [smallint] NOT NULL,
+	[project_id] [smallint] NOT NULL,
 	[parent_process_id] [int] NULL,
 	[is_active] [bit] NOT NULL CONSTRAINT [df_metadata_project_processes_is_active] DEFAULT 1,
 	[created_at] [datetime2] NOT NULL CONSTRAINT [df_metadata_project_processes_created_at] DEFAULT SYSUTCDATETIME(),
 
 	CONSTRAINT [pk_metadata_project_processes] PRIMARY KEY CLUSTERED ([id] ASC),
-	CONSTRAINT [fk_metadata_project_processes_database_id] FOREIGN KEY ([database_id]) REFERENCES [metadata].[project_databases]([id]),
+	CONSTRAINT [fk_metadata_project_processes_project_id] FOREIGN KEY ([project_id]) REFERENCES [metadata].[projects]([id]),
 	CONSTRAINT [fk_metadata_project_processes_parent_process_id] FOREIGN KEY ([parent_process_id]) REFERENCES [metadata].[project_processes]([id])
-) ON [PRIMARY];
-
-CREATE TABLE [reference].[status_codes] (
-	[id] [smallint] IDENTITY(1, 1) NOT NULL,
-    [code] [varchar](15) NOT NULL,
-    [description] [varchar](100) NULL,
-    [is_active] [bit] NOT NULL CONSTRAINT [df_reference_status_codes_is_active] DEFAULT 1,
-	[created_at] [datetime2] NOT NULL CONSTRAINT [df_reference_status_codes_created_at] DEFAULT SYSUTCDATETIME(),
-
-    CONSTRAINT [pk_reference_status_codes] PRIMARY KEY CLUSTERED ([id] ASC),
-	CONSTRAINT [uk_reference_status_codes_code] UNIQUE ([code])
 ) ON [PRIMARY];
 
 CREATE TABLE [metadata].[project_tables] (
@@ -85,6 +85,15 @@ CREATE TABLE [metadata].[project_table_mappings](
 	CONSTRAINT [pk_metadata_project_table_mappings] PRIMARY KEY CLUSTERED ([table_source_id] ASC, [table_target_id] ASC),
 	CONSTRAINT [fk_metadata_project_table_mappings_table_source_id] FOREIGN KEY ([table_source_id]) REFERENCES [metadata].[project_tables]([id]),
 	CONSTRAINT [fk_metadata_project_table_mappings_table_target_id] FOREIGN KEY ([table_target_id]) REFERENCES [metadata].[project_tables]([id])
+) ON [PRIMARY];
+
+CREATE TABLE [metadata].[project_table_process_mappings](
+	[process_id] [int] NOT NULL,
+	[table_id] [int] NOT NULL,
+
+	CONSTRAINT [pk_metadata_project_table_process_mappings] PRIMARY KEY CLUSTERED ([process_id] ASC, [table_id] ASC),
+	CONSTRAINT [fk_metadata_project_table_process_mappings_process_id] FOREIGN KEY ([process_id]) REFERENCES [metadata].[project_processes]([id]),
+	CONSTRAINT [fk_metadata_project_table_process_mappings_table_id] FOREIGN KEY ([table_id]) REFERENCES [metadata].[project_tables]([id])
 ) ON [PRIMARY];
 
 CREATE TABLE [metadata].[project_columns](
@@ -142,14 +151,14 @@ CREATE TABLE [runtime].[execution_steps](
 	[status_code_id] [smallint] NOT NULL,
 	[execution_run_id] [int] NOT NULL,
 	[project_process_id] [int] NOT NULL,
-	[project_table_id] [int] NULL,
+	--[project_table_id] [int] NULL,
 	[project_table_batch_id] [int] NULL,
 	[created_by] [varchar](50) NOT NULL CONSTRAINT [df_runtime_execution_steps_created_by] DEFAULT USER_NAME(),
 
 	CONSTRAINT [pk_runtime_execution_steps] PRIMARY KEY CLUSTERED ([id] ASC),
 	CONSTRAINT [fk_runtime_execution_steps_execution_run_id] FOREIGN KEY ([execution_run_id]) REFERENCES [runtime].[execution_runs]([id]),
 	CONSTRAINT [fk_runtime_execution_steps_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
-	CONSTRAINT [fk_runtime_execution_steps_project_table_id] FOREIGN KEY ([project_table_id]) REFERENCES [metadata].[project_tables]([id]),
+	--CONSTRAINT [fk_runtime_execution_steps_project_table_id] FOREIGN KEY ([project_table_id]) REFERENCES [metadata].[project_tables]([id]),
 	CONSTRAINT [fk_runtime_execution_steps_project_table_batch_id] FOREIGN KEY ([project_table_batch_id]) REFERENCES [metadata].[project_table_batches]([id]),
 	CONSTRAINT [fk_runtime_execution_steps_status_code_id] FOREIGN KEY ([status_code_id]) REFERENCES [reference].[status_codes]([id])
 ) ON [PRIMARY];

@@ -20,64 +20,29 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_start_execution_run]
-	@p_project_id SMALLINT,
-	@p_status_code VARCHAR(15) = 'STARTED'
+	@p_project_id SMALLINT
 AS
 BEGIN
-	SET NOCOUNT ON;
-
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
-
-	IF @status_code_id IS NULL
-	BEGIN
-		THROW 50001, 'Invalid or inactive status code.', 1;
-	END;
-
-	INSERT INTO [runtime].[execution_runs] ([status_code_id], [project_id]) VALUES (@status_code_id, @p_project_id);
-
-	SELECT
-		er.[id],
-		er.[project_id],
-		sc.[code] AS [status_code],
-		er.[start_run_date],
-		er.[end_run_date],
-		er.[created_by]
-	FROM [runtime].[execution_runs] er
-	INNER JOIN [reference].[status_codes] sc ON sc.[id] = er.[status_code_id]
-	WHERE er.[id] = SCOPE_IDENTITY();
+SET NOCOUNT ON;
+	-- Status: Pending
+	INSERT INTO [runtime].[execution_runs] ([status_code_id], [project_id]) VALUES (2, @p_project_id);
+	SELECT SCOPE_IDENTITY() AS [Id];
+SET NOCOUNT OFF;
 END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_end_execution_run]
 	@p_execution_run_id INT,
-	@p_status_code VARCHAR(15) = 'COMPLETED'
+	@p_status_code_id SMALLINT -- Status: Success / Failed
 AS
 BEGIN
-	SET NOCOUNT ON;
-
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
-
-	IF @status_code_id IS NULL
-	BEGIN
-		THROW 50001, 'Invalid or inactive status code.', 1;
-	END;
-
+SET NOCOUNT ON;
 	UPDATE [runtime].[execution_runs]
 	SET
 		[end_run_date] = SYSUTCDATETIME(),
-		[status_code_id] = @status_code_id
+		[status_code_id] = @p_status_code_id
 	WHERE [id] = @p_execution_run_id;
-
-	SELECT
-		er.[id],
-		er.[project_id],
-		sc.[code] AS [status_code],
-		er.[start_run_date],
-		er.[end_run_date],
-		er.[created_by]
-	FROM [runtime].[execution_runs] er
-	INNER JOIN [reference].[status_codes] sc ON sc.[id] = er.[status_code_id]
-	WHERE er.[id] = @p_execution_run_id;
+SET NOCOUNT OFF;
 END;
 GO
 
@@ -85,19 +50,10 @@ CREATE OR ALTER PROCEDURE [runtime].[usp_start_execution_step]
 	@p_execution_run_id INT,
 	@p_project_process_id INT,
 	@p_project_table_id INT = NULL,
-	@p_project_table_batch_id INT = NULL,
-	@p_status_code VARCHAR(15) = 'STARTED'
+	@p_project_table_batch_id INT = NULL
 AS
 BEGIN
-	SET NOCOUNT ON;
-
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
-
-	IF @status_code_id IS NULL
-	BEGIN
-		THROW 50001, 'Invalid or inactive status code.', 1;
-	END;
-
+SET NOCOUNT ON;
 	INSERT INTO [runtime].[execution_steps]
 	(
 		[status_code_id],
@@ -108,88 +64,85 @@ BEGIN
 	)
 	VALUES
 	(
-		@status_code_id,
+		2, -- Status: Pending
 		@p_execution_run_id,
 		@p_project_process_id,
 		@p_project_table_id,
 		@p_project_table_batch_id
 	);
-
-	SELECT
-		es.[id],
-		es.[execution_run_id],
-		es.[project_process_id],
-		es.[project_table_id],
-		es.[project_table_batch_id],
-		sc.[code] AS [status_code],
-		es.[start_run_date],
-		es.[end_run_date],
-		es.[created_by]
-	FROM [runtime].[execution_steps] es
-	INNER JOIN [reference].[status_codes] sc ON sc.[id] = es.[status_code_id]
-	WHERE es.[id] = SCOPE_IDENTITY();
+SET NOCOUNT OFF;
 END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_end_execution_step]
 	@p_execution_step_id BIGINT,
-	@p_status_code VARCHAR(15) = 'COMPLETED'
+	@p_status_code_id SMALLINT -- Status: Success / Failed
 AS
 BEGIN
-	SET NOCOUNT ON;
-
-	DECLARE @status_code_id SMALLINT = [reference].[ufn_get_status_code_id](@p_status_code);
-
-	IF @status_code_id IS NULL
-	BEGIN
-		THROW 50001, 'Invalid or inactive status code.', 1;
-	END;
-
+SET NOCOUNT ON;
 	UPDATE [runtime].[execution_steps]
 	SET
 		[end_run_date] = SYSUTCDATETIME(),
-		[status_code_id] = @status_code_id
+		[status_code_id] = @p_status_code_id
 	WHERE [id] = @p_execution_step_id;
-
-	SELECT
-		es.[id],
-		es.[execution_run_id],
-		es.[project_process_id],
-		es.[project_table_id],
-		es.[project_table_batch_id],
-		sc.[code] AS [status_code],
-		es.[start_run_date],
-		es.[end_run_date],
-		es.[created_by]
-	FROM [runtime].[execution_steps] es
-	INNER JOIN [reference].[status_codes] sc ON sc.[id] = es.[status_code_id]
-	WHERE es.[id] = @p_execution_step_id;
+SET NOCOUNT OFF;
 END;
 GO
 
-CREATE OR ALTER FUNCTION [metadata].[ufn_list_project_databases]
+CREATE OR ALTER FUNCTION [metadata].[ufn_list_tables_to_process]
 (
-	@p_project_id SMALLINT
+	@p_project_id SMALLINT,
+	@p_process_id INT,
+	@p_batch_column_active BIT = 0
+)
+RETURNS TABLE
+AS
+RETURN
+(
+	SELECT 
+		p1.[name] AS [process_name], 
+		p2.[name] AS [process_child_name], 
+		t.[schema_name] AS [table_schema_name], 
+		t.[name] AS [table_name]
+	FROM [metadata].[project_processes] p1
+	LEFT JOIN [metadata].[project_processes] p2 ON p2.[parent_process_id] = p1.[id] AND p2.[is_active] = 1
+	LEFT JOIN [metadata].[project_table_process_mappings] tp2 ON tp2.[process_id] = p2.[id]
+	LEFT JOIN [metadata].[project_tables] t ON t.[id] = tp2.[table_id] AND t.[is_active] = 1 AND t.[batch_column_active] = @p_batch_column_active --AND t.[rerun_required] = 1
+	WHERE p1.[project_id] = @p_project_id
+	AND p1.[id] = @p_process_id
+	AND p1.[is_active] = 1
+);
+GO
+
+CREATE OR ALTER FUNCTION [metadata].[ufn_list_tables_batch_execution]
+(
+	@p_project_id SMALLINT,
+	@p_database_name VARCHAR(50)
 )
 RETURNS TABLE
 AS
 RETURN
 (
 	SELECT
-		d.[id] AS [database_id],
 		d.[name] AS [database_name],
-		d.[platform_type],
-		d.[database_role]
-	FROM [metadata].[project_databases] d
+		t.[schema_name],
+		t.[name] AS [table_name]
+	FROM [metadata].[project_tables] t
+	INNER JOIN [metadata].[project_databases] d ON d.[id] = t.[database_id]
 	WHERE d.[project_id] = @p_project_id
+	AND d.[name] = @p_database_name
 	AND d.[is_active] = 1
+	AND t.[is_active] = 1
+	AND t.[batch_column_active] = 1
+	AND t.[rerun_required] = 0
 );
 GO
 
-CREATE OR ALTER FUNCTION [metadata].[ufn_list_tables]
+CREATE OR ALTER FUNCTION [metadata].[ufn_list_table_batches]
 (
 	@p_project_id SMALLINT,
-	@p_database_name VARCHAR(50)
+	@p_database_name VARCHAR(50),
+	@p_table_name VARCHAR(50)
 )
 RETURNS TABLE
 AS
@@ -201,16 +154,21 @@ RETURN
 		t.[id] AS [table_id],
 		t.[schema_name],
 		t.[name] AS [table_name],
-		t.[is_fact_table],
-		t.[is_transactional_table],
-		t.[batch_column_active],
-		t.[rerun_required]
-	FROM [metadata].[project_tables] t
+		b.[batch_column_name],
+		b.[batch_value],
+		b.[batch_start_value],
+		b.[batch_end_value],
+		b.[column_type]
+	FROM [metadata].[project_table_batches] b
+	INNER JOIN [metadata].[project_tables] t ON t.[id] = b.[table_id]
 	INNER JOIN [metadata].[project_databases] d ON d.[id] = t.[database_id]
 	WHERE d.[project_id] = @p_project_id
 	AND d.[name] = @p_database_name
+	AND t.[name] = @p_table_name
 	AND d.[is_active] = 1
 	AND t.[is_active] = 1
+	AND b.[is_active] = 1
+	AND b.[rerun_required] = 0
 );
 GO
 
@@ -246,41 +204,6 @@ RETURN
 	AND d.[is_active] = 1
 	AND t.[is_active] = 1
 	AND c.[is_active] = 1
-);
-GO
-
-CREATE OR ALTER FUNCTION [metadata].[ufn_list_table_batches]
-(
-	@p_project_id SMALLINT,
-	@p_database_name VARCHAR(50),
-	@p_table_name VARCHAR(50) = NULL
-)
-RETURNS TABLE
-AS
-RETURN
-(
-	SELECT
-		d.[id] AS [database_id],
-		d.[name] AS [database_name],
-		t.[id] AS [table_id],
-		t.[schema_name],
-		t.[name] AS [table_name],
-		b.[id] AS [batch_id],
-		b.[batch_column_name],
-		b.[batch_value],
-		b.[batch_start_value],
-		b.[batch_end_value],
-		b.[column_type],
-		b.[rerun_required]
-	FROM [metadata].[project_table_batches] b
-	INNER JOIN [metadata].[project_tables] t ON t.[id] = b.[table_id]
-	INNER JOIN [metadata].[project_databases] d ON d.[id] = t.[database_id]
-	WHERE d.[project_id] = @p_project_id
-	AND d.[name] = @p_database_name
-	AND (@p_table_name IS NULL OR t.[name] = @p_table_name)
-	AND d.[is_active] = 1
-	AND t.[is_active] = 1
-	AND b.[is_active] = 1
 );
 GO
 
