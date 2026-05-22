@@ -1,5 +1,6 @@
 
 -------------------------
+SELECT * FROM [metadata].[projects];
 INSERT INTO [metadata].[projects] ([id], [name]) VALUES (1, 'Oracle to SQL Server Migration - Sales Domain');
 -------------------------
 
@@ -15,7 +16,42 @@ INSERT INTO [metadata].[project_database_mappings] ([database_source_id], [datab
 -------------------------
 
 -------------------------
-INSERT INTO [metadata].[project_processes] ([name], [database_id]) VALUES ('', 1);
+SELECT * FROM [metadata].[project_processes]
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id]) VALUES (1, 'Sales_Operational_Migration', 1);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id]) VALUES (2, 'Sales_Analytics_Migration', 1);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (3, 'PKG_OPERATIONAL_MIGRATION', 1, 1);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (4, 'PKG_REFERENCE_DATA', 1, 3);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (5, 'PKG_MASTER_DATA', 1, 3);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (6, 'PKG_TRANSACTIONAL_DATA', 1, 3);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (7, 'PKG_ANALYTICS_MIGRATION', 1, 2);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (8, 'PKG_DIMENSIONS', 1, 7);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (9, 'PKG_FACTS', 1, 7);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (10, 'AddressType Load', 1, 4);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (11, 'ProductCategory Load', 1, 4);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (12, 'SpecialOffer Load', 1, 4);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (13, 'ShipMethod Load', 1, 4);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (14, 'Geography Load', 1, 4);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (15, 'Currency Load', 1, 4);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (16, 'CreditCard Load', 1, 5);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (17, 'Address Load', 1, 5);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (18, 'Product Load', 1, 5);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (19, 'SalesPerson Load', 1, 5);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (20, 'Customer Load', 1, 5);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (21, 'Sales Load', 1, 6);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (22, 'DimCustomer Load', 1, 8);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (23, 'DimPaymentMethod Load', 1, 8);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (24, 'DimShipMethod Load', 1, 8);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (25, 'DimProduct Load', 1, 8);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (26, 'DimSalesTerritory Load', 1, 8);
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (27, 'DimSalesPerson Load', 1, 8);
+
+INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (28, 'FactSales Load', 1, 9);
 -------------------------
 
 -------------------------
@@ -107,116 +143,92 @@ INSERT INTO [metadata].[project_table_mappings] ([table_source_id], [table_targe
 -------------------------
 
 -------------------------
-INSERT INTO [metadata].[project_table_batches] ([batch_column_name], [batch_value], [batch_start_value], [batch_end_value], [column_type], [table_id]) VALUES ('OrderDate', '2011-05-31', '2011-05-01', '2014-06-30', 'DATE', 33);
-INSERT INTO [metadata].[project_table_batches] ([batch_column_name], [batch_value], [batch_start_value], [batch_end_value], [column_type], [table_id]) VALUES ('OrderDate', '201105', '201105', '201406', 'INT', 41);
--------------------------
-
--------------------------
-SELECT * FROM [metadata].[project_processes]
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id]) VALUES (1, 'Sales_Operational_Migration', 1);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id]) VALUES (2, 'Sales_Analytics_Migration', 1);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (3, 'PKG_OPERATIONAL_MIGRATION', 1, 1);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (4, 'PKG_REFERENCE_DATA', 1, 3);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (5, 'PKG_MASTER_DATA', 1, 3);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (6, 'PKG_TRANSACTIONAL_DATA', 1, 3);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (7, 'PKG_ANALYTICS_MIGRATION', 1, 2);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (8, 'PKG_DIMENSIONS', 1, 7);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (9, 'PKG_FACTS', 1, 7);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (10, 'AddressType Load', 1, 4);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (11, 'ProductCategory Load', 1, 4);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (12, 'SpecialOffer Load', 1, 4);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (13, 'ShipMethod Load', 1, 4);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (14, 'Geography Load', 1, 4);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (15, 'Currency Load', 1, 4);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (16, 'CreditCard Load', 1, 5);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (17, 'Address Load', 1, 5);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (18, 'Product Load', 1, 5);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (19, 'SalesPerson Load', 1, 5);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (20, 'Customer Load', 1, 5);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (21, 'Sales Load', 1, 6);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (22, 'DimCustomer Load', 1, 8);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (23, 'DimPaymentMethod Load', 1, 8);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (24, 'DimShipMethod Load', 1, 8);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (25, 'DimProduct Load', 1, 8);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (26, 'DimSalesTerritory Load', 1, 8);
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (27, 'DimSalesPerson Load', 1, 8);
-
-INSERT INTO [metadata].[project_processes] ([id], [name], [project_id], [parent_process_id]) VALUES (28, 'FactSales Load', 1, 9);
--------------------------
-
--------------------------
 SELECT * FROM [metadata].[project_tables]
 SELECT * FROM [metadata].[project_processes]
-SELECT * FROM [metadata].[project_table_process_mappings]
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (10, 19);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (11, 20);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (12, 21);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (13, 22);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (14, 23);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (14, 24);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (14, 25);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (15, 26);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (15, 27);
+SELECT * FROM [metadata].[project_process_tables]
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (10, 19);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (11, 20);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (12, 21);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (13, 22);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (14, 23);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (14, 24);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (14, 25);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (15, 26);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (15, 27);
 
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (16, 28);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (17, 29);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (18, 30);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (19, 31);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (20, 32);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (16, 28);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (17, 29);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (18, 30);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (19, 31);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (20, 32);
 
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (21, 33);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (21, 34);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (21, 33);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (21, 34);
 
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (22, 35);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (23, 36);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (24, 37);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (25, 38);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (26, 39);
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (27, 40);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (22, 35);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (23, 36);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (24, 37);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (25, 38);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (26, 39);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (27, 40);
 
-INSERT INTO [metadata].[project_table_process_mappings] ([process_id], [table_id]) VALUES (28, 41);
+INSERT INTO [metadata].[project_process_tables] ([process_id], [table_id]) VALUES (28, 41);
 -------------------------
 
 -------------------------
-INSERT INTO [reference].[status_codes] ([code], [description])
+INSERT INTO [reference].[status_codes] ([id], [code], [description], [is_active])
 VALUES
-    ('Pending', 'Execution is registered but has not started yet.'),
-    ('Running', 'Execution is currently in progress.'),
-    ('Success', 'Execution completed successfully.'),
-    ('Failed', 'Execution failed due to a technical, validation, or reconciliation issue.'),
-    ('Skipped', 'Execution was intentionally skipped.'),
-    ('RerunRequired', 'Object or process is marked for reprocessing.');
+    (1, 'Pending',       'Execution is registered but has not started yet.', 1),
+    (2, 'Running',       'Execution is currently in progress.', 1),
+    (3, 'Success',       'Execution completed successfully.', 1),
+    (4, 'Failed',        'Execution failed due to a technical, validation, or reconciliation issue.', 1),
+    (5, 'Skipped',       'Execution was intentionally skipped.', 1),
+    (6, 'RerunRequired', 'Object or process is marked for reprocessing.', 1);
+GO
 
-INSERT INTO [reference].[validation_codes] ([code], [description], [severity])
+INSERT INTO [reference].[validation_codes] ([id], [code], [description], [severity], [is_active])
 VALUES
-    ('NOT_NULL', 'Required column contains null values.', 'Error'),
-    ('DUPLICATE', 'Duplicate records were found based on expected key columns.', 'Error'),
-    ('FK_CHECK', 'Referenced value does not exist in the expected parent or lookup table.', 'Error'),
-    ('DATA_TYPE', 'Value does not match the expected data type or conversion rule.', 'Error'),
-    ('LENGTH_CHECK', 'Text value exceeds the expected length.', 'Error'),
-    ('DATE_RANGE', 'Date value is outside the expected range.', 'Warning'),
-    ('NEGATIVE_VALUE', 'Numeric value is negative where it may require review.', 'Warning'),
-    ('RECON_WARNING', 'Validation passed with reconciliation or tolerance warning.', 'Warning'),
-    ('INFO_CHECK', 'Informational validation result.', 'Info');
+    (1, 'NOT_NULL',       'Required column contains null values.', 'Error', 1),
+    (2, 'DUPLICATE',      'Duplicate records were found based on expected key columns.', 'Error', 1),
+    (3, 'FK_CHECK',       'Referenced value does not exist in the expected parent or lookup table.', 'Error', 1),
+    (4, 'DATA_TYPE',      'Value does not match the expected data type or conversion rule.', 'Error', 1),
+    (5, 'LENGTH_CHECK',   'Text value exceeds the expected length.', 'Error', 1),
+    (6, 'DATE_RANGE',     'Date value is outside the expected range.', 'Warning', 1),
+    (7, 'NEGATIVE_VALUE', 'Numeric value is negative where it may require review.', 'Warning', 1),
+    (8, 'RECON_WARNING',  'Validation passed with reconciliation or tolerance warning.', 'Warning', 1),
+    (9, 'INFO_CHECK',     'Informational validation result.', 'Info', 1);
+GO
+
+INSERT INTO [observability].[reconciliation_results]
+(
+    [metric_name],
+    [reconciliation_key],
+    [reconciliation_side],
+    [metric_value_decimal],
+    [metric_value_bigint],
+    [execution_step_id]
+)
+VALUES
+    ('ROW_COUNT', 'TOTAL', 'SOURCE', NULL, 6, 4),
+    ('ROW_COUNT', 'TOTAL', 'TARGET', NULL, 6, 4),
+    ('TOTAL_AMOUNT', 'TOTAL', 'SOURCE', 1250.7500, NULL, 4),
+    ('TOTAL_AMOUNT', 'TOTAL', 'TARGET', 1250.7500, NULL, 4);
 -------------------------
 
 -------------------------
 SELECT * FROM [metadata].[project_processes]
 
-SELECT p1.[id], p1.[name], p2.[id], p2.[name], t.[schema_name], t.[name], t.[rerun_required]
-FROM [metadata].[project_processes] p1
-LEFT JOIN [metadata].[project_processes] p2 ON p2.[parent_process_id] = p1.[id] AND p2.[is_active] = 1
-LEFT JOIN [metadata].[project_table_process_mappings] tp2 ON tp2.[process_id] = p2.[id]
-LEFT JOIN [metadata].[project_tables] t ON t.[id] = tp2.[table_id] AND t.[is_active] = 1 AND t.[batch_column_active] = 0
-WHERE p1.[project_id] = 1
-AND p1.[id] = 4
-AND p1.[is_active] = 1
-ORDER BY p2.[name], t.[name]
+SELECT * FROM [runtime].[execution_runs];
+
+SELECT * FROM [runtime].[execution_steps];
+
+SELECT * FROM [observability].[reconciliation_results];
+
+DELETE FROM [observability].[reconciliation_results];
+
+EXEC [runtime].[usp_start_execution_run] 1;
+
+EXEC [runtime].[usp_start_execution_step] 2, 10;
 -------------------------
 
+SELECT * FROM [observability].[ufn_get_reconciliation_status](4);
