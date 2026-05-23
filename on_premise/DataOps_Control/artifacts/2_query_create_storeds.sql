@@ -122,11 +122,11 @@ RETURN
 		t.[id] AS [table_id],
 		t.[schema_name] AS [table_schema_name], 
 		t.[name] AS [table_name],
-		t.[rerun_required]
+		t.[execution_required]
 	FROM [metadata].[project_processes] p1
-	LEFT JOIN [metadata].[project_processes] p2 ON p2.[parent_process_id] = p1.[id] AND p2.[is_active] = 1
-	LEFT JOIN [metadata].[project_process_tables] pt2 ON pt2.[process_id] = p2.[id]
-	LEFT JOIN [metadata].[project_tables] t ON t.[id] = pt2.[table_id] AND t.[is_active] = 1 AND t.[batch_column_active] = @p_batch_column_active
+	INNER JOIN [metadata].[project_processes] p2 ON p2.[parent_process_id] = p1.[id] AND p2.[is_active] = 1
+	INNER JOIN [metadata].[project_process_tables] pt2 ON pt2.[process_id] = p2.[id]
+	INNER JOIN [metadata].[project_tables] t ON t.[id] = pt2.[table_id] AND t.[is_active] = 1 AND t.[batch_column_active] = @p_batch_column_active
 	WHERE p1.[project_id] = @p_project_id
 	AND p1.[id] = @p_process_id
 	AND p1.[is_active] = 1
@@ -144,55 +144,3 @@ SET NOCOUNT ON;
 	VALUES (@p_error_source, @p_details, @p_execution_step_id);
 END;
 GO
-
-/*
-CREATE OR ALTER FUNCTION [observability].[ufn_get_reconciliation_status]
-(
-    @p_execution_step_id BIGINT
-)
-RETURNS TABLE
-AS
-RETURN
-(
-    WITH reconciliation_pairs AS
-    (
-        SELECT
-            [metric_name],
-            [reconciliation_key],
-            MAX(CASE WHEN [reconciliation_side] = 'SOURCE' THEN [metric_value_bigint] END) AS source_bigint_value,
-            MAX(CASE WHEN [reconciliation_side] = 'TARGET' THEN [metric_value_bigint] END) AS target_bigint_value,
-            MAX(CASE WHEN [reconciliation_side] = 'SOURCE' THEN [metric_value_decimal] END) AS source_decimal_value,
-            MAX(CASE WHEN [reconciliation_side] = 'TARGET' THEN [metric_value_decimal] END) AS target_decimal_value
-        FROM [observability].[reconciliation_results]
-        WHERE [execution_step_id] = @p_execution_step_id
-        GROUP BY [metric_name], [reconciliation_key]
-    ),
-    evaluation AS
-    (
-        SELECT
-            COUNT(*) AS metric_count,
-            SUM
-            (
-                CASE
-                    WHEN
-                        ISNULL(source_bigint_value, -9223372036854775808) <> ISNULL(target_bigint_value, -9223372036854775808)
-                        OR
-                        ISNULL(source_decimal_value, -9999999999999999.9999) <> ISNULL(target_decimal_value, -9999999999999999.9999)
-                    THEN 1
-                    ELSE 0
-                END
-            ) AS observed_count
-        FROM reconciliation_pairs
-    )
-    SELECT
-        CASE
-            WHEN metric_count = 0 THEN 7       -- Observed: reconciliation missing
-            WHEN observed_count > 0 THEN 7     -- Observed: mismatch found
-            ELSE 3                             -- Success
-        END AS status_code_id,
-        metric_count,
-        observed_count
-    FROM evaluation
-);
-GO
-*/

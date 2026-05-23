@@ -81,7 +81,7 @@ CREATE TABLE [metadata].[project_tables] (
 	[is_fact_table] [bit] NOT NULL CONSTRAINT [df_metadata_project_tables_is_fact_table] DEFAULT 0,
 	[is_transactional_table] [bit] NOT NULL CONSTRAINT [df_metadata_project_tables_is_transactional_table] DEFAULT 0,
 	[batch_column_active] [bit] NOT NULL CONSTRAINT [df_metadata_project_tables_batch_column_active] DEFAULT 0,
-	[rerun_required] [bit] NOT NULL CONSTRAINT [df_metadata_project_tables_rerun_required] DEFAULT 0,
+	[execution_required] [bit] NOT NULL CONSTRAINT [df_metadata_project_tables_execution_required] DEFAULT 0,
 	[database_id] [smallint] NOT NULL,
 	[is_active] [bit] NOT NULL CONSTRAINT [df_metadata_project_tables_is_active] DEFAULT 1,
 	[created_at] [datetime2] NOT NULL CONSTRAINT [df_metadata_project_tables_created_at] DEFAULT SYSUTCDATETIME(),
@@ -114,14 +114,14 @@ CREATE TABLE [metadata].[project_table_batches] (
 	[batch_value] [varchar](50) NOT NULL,
 	[batch_start_value] [varchar](50) NULL,
 	[batch_end_value] [varchar](50) NULL,
-	[column_type] [varchar](20) NOT NULL,
-	[rerun_required] [bit] NOT NULL CONSTRAINT [df_metadata_project_table_batches_rerun_required] DEFAULT 0,
-	[table_id] [int] NOT NULL,
+	[batch_column_type] [varchar](20) NOT NULL,
+	[execution_required] [bit] NOT NULL CONSTRAINT [df_metadata_project_table_batches_execution_required] DEFAULT 0,
+	[batch_source_table_id] [int] NOT NULL,
 	[is_active] [bit] NOT NULL CONSTRAINT [df_metadata_project_table_batches_is_active] DEFAULT 1,
 	[created_at] [datetime2] NOT NULL CONSTRAINT [df_metadata_project_table_batches_created_at] DEFAULT SYSUTCDATETIME(),
 
 	CONSTRAINT [pk_metadata_project_table_batches] PRIMARY KEY CLUSTERED ([id] ASC),
-	CONSTRAINT [fk_metadata_project_table_batches_table_id] FOREIGN KEY ([table_id]) REFERENCES [metadata].[project_tables]([id])
+	CONSTRAINT [fk_metadata_project_table_batches_batch_source_table_id] FOREIGN KEY ([batch_source_table_id]) REFERENCES [metadata].[project_tables]([id])
 ) ON [PRIMARY];
 
 CREATE TABLE [metadata].[project_columns] (

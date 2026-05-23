@@ -216,6 +216,8 @@ VALUES
 -------------------------
 
 -------------------------
+SELECT * FROM [metadata].[project_table_mappings]
+
 SELECT * FROM [metadata].[project_processes]
 
 SELECT * FROM [runtime].[execution_runs];
@@ -223,8 +225,6 @@ SELECT * FROM [runtime].[execution_runs];
 SELECT * FROM [runtime].[execution_steps];
 
 SELECT * FROM [observability].[reconciliation_results];
-
-DELETE FROM [observability].[reconciliation_results];
 
 EXEC [runtime].[usp_start_execution_run] 1;
 
