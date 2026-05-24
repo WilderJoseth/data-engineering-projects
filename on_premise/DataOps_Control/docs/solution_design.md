@@ -15,7 +15,9 @@ This document describes the technical design of `DataOps_Control`, a metadata-dr
 | `observability` | Stores validation results, reconciliation results, and technical error logs generated during execution. |
 | `reference` | Stores controlled code values used by the framework, such as statuses and validation types. |
 
-## Data Model
+## Entity Relationship Diagram
+
+![DataOps_Control Entity Relationship Diagram](img/entity_relationship_diagram.png)
 
 | Area | Main tables |
 |---|---|
@@ -23,10 +25,6 @@ This document describes the technical design of `DataOps_Control`, a metadata-dr
 | Runtime | `execution_runs`, `execution_steps` |
 | Observability | `error_logs`, `validation_results`, `reconciliation_results` |
 | Reference | `status_codes`, `validation_codes` |
-
-This model should be read from metadata to runtime. The `metadata` schema defines what can be executed, the `runtime` schema records what was executed, the `observability` schema stores execution evidence, and the `reference` schema standardizes controlled codes used by the framework.
-
-![DataOps_Control Data Model](img/data_model_DataOps_Control.png)
 
 ## Tables
 

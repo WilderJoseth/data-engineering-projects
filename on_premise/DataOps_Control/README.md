@@ -8,6 +8,12 @@ The objective is to design and document a solution using professional data engin
 
 `DataOps_Control` provides a centralized SQL Server control database designed to support pipeline execution tracking, source-to-target mappings, validation summaries, reconciliation results, error logging, batch control, and rerun/recovery logic.
 
+## Logical Data Model
+
+The following diagram provides a high-level view of the `DataOps_Control` model, including its main metadata, runtime, observability, and reference components.
+
+![DataOps_Control Logical Data Model](docs/img/logical_data_model_DataOps_Control.png)
+
 ## Problem Context
 
 Data engineering projects often start with simple ELT pipelines, but as they grow, they require stronger operational control.

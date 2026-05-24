@@ -49,8 +49,8 @@
         <mxCell id="57UfKS-p6jkbmIy2nKI7-33" parent="1" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;fillColor=#d5e8d4;strokeColor=#82b366;" value="execution_steps" vertex="1">
           <mxGeometry height="40" width="120" x="180" y="262" as="geometry" />
         </mxCell>
-        <mxCell id="57UfKS-p6jkbmIy2nKI7-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=17;fontStyle=1" value="DataOps_Control Data Model" vertex="1">
-          <mxGeometry height="30" width="294" x="266" y="10" as="geometry" />
+        <mxCell id="57UfKS-p6jkbmIy2nKI7-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=17;fontStyle=1" value="DataOps_Control - Logical Data Model" vertex="1">
+          <mxGeometry height="30" width="334" x="246" y="10" as="geometry" />
         </mxCell>
         <mxCell id="57UfKS-p6jkbmIy2nKI7-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="" vertex="1">
           <mxGeometry height="10" width="30" x="550" y="445" as="geometry" />
