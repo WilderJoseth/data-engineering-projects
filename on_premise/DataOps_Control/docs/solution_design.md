@@ -203,6 +203,7 @@ Common audit/control columns used across the model include:
 | `runtime.usp_end_execution_run` | Stored procedure | Ends an execution run and derives the final run status from its execution steps. |
 | `observability.usp_log_error` | Stored procedure | Inserts a technical error record for an execution step. |
 | `metadata.ufn_list_project_processes_tables` | Inline table-valued function | Lists active child processes and associated controlled tables for a parent process. |
+| `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists active child processes, target tables, source batch tables and batch definitions for a given parent process. |
 
 ## Framework Execution Model
 
