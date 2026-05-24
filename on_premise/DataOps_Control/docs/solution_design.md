@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document describes the technical design of `DataOps_Control`, a metadata-driven control framework for data engineering projects.
+This document describes the technical design of `DataOps_Control`, a reusable metadata-driven control framework for data engineering projects.
 
 ## Schema Organization
 
@@ -10,7 +10,7 @@ This document describes the technical design of `DataOps_Control`, a metadata-dr
 
 | Schema | Responsibility |
 |---|---|
-| `metadata` | Defines projects, databases, processes, controlled target tables, target columns, source-to-target mappings, process-to-table scope, and batch metadata managed by the framework. |
+| `metadata` | Defines projects, databases, processes, registered source/target tables, columns, source-to-target mappings, process-to-table execution scope, and batch metadata managed by the framework. |
 | `runtime` | Tracks execution runs and execution steps. |
 | `observability` | Stores validation results, reconciliation results, and technical error logs generated during execution. |
 | `reference` | Stores controlled code values used by the framework, such as statuses and validation types. |
@@ -43,7 +43,7 @@ This document describes the technical design of `DataOps_Control`, a metadata-dr
 #### Key and Identifier Column Guidelines
 
 - All tables should have a primary key constraint.
-- Metadata tables should avoid auto-incremental IDs to keep identifiers predictable.
+- Metadata tables use manually assigned identifiers where stable, predictable IDs are useful for seed scripts, testing, and reusable framework configuration.
 - Reference tables use manually assigned IDs because they are treated as framework constants.
 - Runtime and observability tables should use auto-incremental IDs.
 
@@ -169,7 +169,7 @@ Common audit/control columns used across the model include:
 | Table | Column | Description |
 |---|---|---|
 | `status_codes` | `id` | Stable manually assigned status identifier used by runtime tables. |
-| `status_codes` | `code` | Stores values such as `Pending`, `Running`, `Success`, `Failed`, `Skipped`, `RerunRequired`, or `Observed`. |
+| `status_codes` | `code` | Stores values such as `Pending`, `Running`, `Success`, `Failed`, `Skipped`, or `Observed`. |
 | `validation_codes` | `id` | Stable manually assigned validation identifier used by validation result records. |
 | `validation_codes` | `code` | Stores validation identifiers such as `NOT_NULL`, `FK_CHECK`, or `DUPLICATE`. |
 | `validation_codes` | `severity` | Classifies the validation impact, such as error, warning, or information. |
@@ -200,7 +200,7 @@ Common audit/control columns used across the model include:
 | `runtime.usp_end_execution_step` | Stored procedure | Updates an execution step with its final status and end date. |
 | `runtime.usp_end_execution_run` | Stored procedure | Ends an execution run and derives the final run status from its execution steps. |
 | `observability.usp_log_error` | Stored procedure | Inserts a technical error record for an execution step. |
-| `metadata.ufn_list_project_processes_tables` | Inline table-valued function | Lists active child processes and associated controlled tables for a parent process. |
+| `metadata.ufn_list_project_process_tables` | Inline table-valued function | Lists active child processes and associated controlled tables for a parent process. |
 | `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists active child processes, target tables, source batch tables and batch definitions for a given parent process. |
 
 ## Framework Execution Model
@@ -425,7 +425,6 @@ Execution statuses are controlled through `reference.status_codes`.
 | `Observed` | The execution completed technically, but validation or reconciliation results require review. |
 | `Failed` | The execution failed due to a technical error. |
 | `Skipped` | The execution was intentionally skipped. |
-| `RerunRequired` | The object or process is marked for reprocessing. |
 
 For execution runs, the final status is derived from the related execution steps:
 

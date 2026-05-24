@@ -31,8 +31,7 @@ VALUES
     (3, 'Success',       'Execution completed successfully without control issues.', 1),
     (4, 'Failed',        'Execution failed due to a technical error.', 1),
     (5, 'Skipped',       'Execution was intentionally skipped.', 1),
-    (6, 'RerunRequired', 'Object or process is marked for reprocessing.', 1),
-    (7, 'Observed',      'Execution completed technically, but validation or reconciliation results require review.', 1);
+    (6, 'Observed',      'Execution completed technically, but validation or reconciliation results require review.', 1);
 GO
 
 /*============================================================================

@@ -36,7 +36,7 @@ DECLARE @project_id SMALLINT = 1;
 DECLARE @parent_process_id INT = 6; -- PKG_TRANSACTIONAL_DATA
 
 DECLARE @status_success SMALLINT = 3;
-DECLARE @status_observed SMALLINT = 7;
+DECLARE @status_observed SMALLINT = 6;
 
 DECLARE @execution_run_id INT;
 

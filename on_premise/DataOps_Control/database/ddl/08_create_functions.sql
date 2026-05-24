@@ -1,7 +1,7 @@
 USE [DataOps_Control];
 GO
 
-CREATE OR ALTER FUNCTION [metadata].[ufn_list_project_processes_tables]
+CREATE OR ALTER FUNCTION [metadata].[ufn_list_project_process_tables]
 (
     @p_project_id SMALLINT,
     @p_process_id INT,

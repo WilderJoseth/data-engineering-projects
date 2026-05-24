@@ -21,7 +21,7 @@ Data engineering projects often start with simple ELT pipelines, but as they gro
 Common challenges include:
 
 - Knowing which pipelines, tables, or batches were executed.
-- Tracking whether an execution succeeded, failed, or requires rerun.
+- Tracking whether an execution succeeded, failed, or requires another execution.
 - Managing initial loads, incremental loads, and batch-based processing.
 - Keeping source-to-target mappings documented and reusable.
 - Capturing validation and reconciliation results in a consistent way.
@@ -33,7 +33,16 @@ Common challenges include:
 
 This project focuses on the design and implementation of the `DataOps_Control` database model as a reusable control framework for data engineering projects.
 
-The scope includes metadata management, source-to-target mappings, execution tracking, validation summaries, reconciliation results, technical error logging, batch control, and rerun/recovery support.
+The scope includes:
+
+- Metadata management.
+- Source-to-target database and table mappings.
+- Process-to-table execution scope.
+- Execution run and execution step tracking.
+- Validation and reconciliation result capture.
+- Technical error logging.
+- Batch control.
+- Execution, rerun, recovery, and backfill support.
 
 Detailed table structures, schema responsibilities, relationships, and implementation decisions are documented in the solution design.
 

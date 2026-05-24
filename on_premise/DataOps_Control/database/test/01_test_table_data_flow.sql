@@ -6,7 +6,7 @@ GO
 
     Goal:
     - Simulate the way SSIS will use DataOps_Control metadata.
-    - Get execution flags from metadata.ufn_list_project_processes_tables.
+    - Get execution flags from metadata.ufn_list_project_process_tables.
     - Run only tables marked as execution_required = 1.
     - Start and end execution steps.
     - Register reconciliation and validation results.
@@ -37,7 +37,7 @@ DECLARE @parent_process_id INT = 4; -- Reference Data Load / PKG_REFERENCE_DATA
 DECLARE @batch_column_active BIT = 0;
 
 DECLARE @status_success SMALLINT = 3;
-DECLARE @status_observed SMALLINT = 7;
+DECLARE @status_observed SMALLINT = 6;
 
 DECLARE @execution_run_id INT;
 
@@ -122,7 +122,7 @@ SELECT
     table_schema_name,
     table_name,
     execution_required
-FROM [metadata].[ufn_list_project_processes_tables]
+FROM [metadata].[ufn_list_project_process_tables]
 (
     @project_id,
     @parent_process_id,
