@@ -35,7 +35,7 @@ IF NOT EXISTS (
     SELECT 1
     FROM sys.database_principals
     WHERE [name] = 'DataOps_Admin'
-      AND [type] = 'R'
+    AND [type] = 'R'
 )
 BEGIN
     CREATE ROLE [DataOps_Admin];
@@ -46,7 +46,7 @@ IF NOT EXISTS (
     SELECT 1
     FROM sys.database_principals
     WHERE [name] = 'DataOps_Project_Executor'
-      AND [type] = 'R'
+    AND [type] = 'R'
 )
 BEGIN
     CREATE ROLE [DataOps_Project_Executor];

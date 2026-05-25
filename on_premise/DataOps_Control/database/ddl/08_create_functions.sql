@@ -89,19 +89,15 @@ RETURN
     SELECT
         p1.[id] AS [process_id],
         p1.[name] AS [process_name],
-
         p2.[id] AS [process_child_id],
         p2.[name] AS [process_child_name],
-
         tgt.[id] AS [target_table_id],
         tgt.[schema_name] AS [target_table_schema_name],
         tgt.[name] AS [target_table_name],
         tgt.[execution_required] AS [target_table_execution_required],
-
         src.[id] AS [batch_source_table_id],
         src.[schema_name] AS [batch_source_schema_name],
         src.[name] AS [batch_source_table_name],
-
         b.[id] AS [batch_id],
         b.[batch_column_name],
         b.[batch_value],

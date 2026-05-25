@@ -292,15 +292,12 @@ metadata.project_table_mappings
     source table → target table
 ```
 
-This separation keeps the runtime model centered on processes, while still allowing table-level context when a process represents a table load.
-
 ### Source and Target Table Interpretation
 
 | Concept | Description |
 |---|---|
 | Source table | Registered when needed for source-to-target mappings, batch filtering, validation, or reconciliation. |
 | Target table | Registered when controlled by execution, validation, reconciliation, or final model rules. |
-| Managed object | Registered when a non-table object needs to participate in execution control, validation, reconciliation, or documentation. |
 | Source-to-target mapping | Defined through `metadata.project_table_mappings`. |
 | Batch source table | Defined through `metadata.project_table_batches.batch_source_table_id` because batch filters are applied against the source table. |
 | Process-table batch scope | Defined through `metadata.project_process_table_batches` when a process-table relationship requires batch execution. |
@@ -444,8 +441,6 @@ Example process-table-batch scope:
 Sales Load
     ├── SalesOrderHeader → Batch 2011-05
     ├── SalesOrderHeader → Batch 2011-06
-    ├── SalesOrderDetail → Batch 2011-05
-    └── SalesOrderDetail → Batch 2011-06
 ```
 
 #### Source and target resolution

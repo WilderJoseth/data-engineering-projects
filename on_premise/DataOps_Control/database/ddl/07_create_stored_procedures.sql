@@ -213,10 +213,10 @@ BEGIN
 
     UPDATE [runtime].[execution_steps]
     SET
-        [end_run_date] = SYSUTCDATETIME(),
+        [end_step_date] = SYSUTCDATETIME(),
         [status_code_id] = @p_status_code_id
     WHERE [id] = @p_execution_step_id
-    AND [end_run_date] IS NULL;
+    AND [end_step_date] IS NULL;
 
     IF @@ROWCOUNT = 0
     BEGIN
@@ -249,14 +249,14 @@ BEGIN
         - 2 = Running
         - 3 = Success
         - 4 = Failed
-        - 7 = Observed
+        - 6 = Observed
     */
 
     DECLARE @status_pending SMALLINT = 1;
     DECLARE @status_running SMALLINT = 2;
     DECLARE @status_success SMALLINT = 3;
     DECLARE @status_failed SMALLINT = 4;
-    DECLARE @status_observed SMALLINT = 7;
+    DECLARE @status_observed SMALLINT = 6;
 
     DECLARE @final_status_code_id SMALLINT;
 
@@ -369,7 +369,7 @@ BEGIN
         [end_run_date] = SYSUTCDATETIME(),
         [status_code_id] = @final_status_code_id
     WHERE [id] = @p_execution_run_id
-      AND [end_run_date] IS NULL;
+    AND [end_run_date] IS NULL;
 
     IF @@ROWCOUNT = 0
     BEGIN

@@ -20,9 +20,8 @@ GO
     - Child process:
         Sales Load
 
-    - Target tables:
+    - Target table:
         SalesOrderHeader
-        SalesOrderDetail
 
     - Batch source table:
         SALES_SALESORDERHEADER
@@ -30,8 +29,6 @@ GO
     Expected result:
     - SalesOrderHeader / Batch 2011-05 = Success
     - SalesOrderHeader / Batch 2011-06 = Observed
-    - SalesOrderDetail / Batch 2011-05 = Success
-    - SalesOrderDetail / Batch 2011-06 = Success
     - Execution Run = Observed
 
     Design note:
@@ -59,7 +56,7 @@ DECLARE @execution_run_id INT;
 -- that table or batch.
 --
 -- For this test:
--- - SalesOrderHeader and SalesOrderDetail require execution.
+-- - SalesOrderHeader requires execution.
 -- - Two batches require execution: 2011-05 and 2011-06.
 -- - Batch assignments are controlled by:
 --     metadata.project_process_table_batches
@@ -73,11 +70,7 @@ SET [execution_required] = 0;
 
 UPDATE [metadata].[project_tables]
 SET [execution_required] = 1
-WHERE [id] IN
-(
-    33, -- SalesOrderHeader target table
-    34  -- SalesOrderDetail target table
-);
+WHERE [id] = 33; -- SalesOrderHeader target table
 
 UPDATE [metadata].[project_table_batches]
 SET [execution_required] = 1
@@ -112,21 +105,17 @@ AND [batch_source_table_id] = 17; -- SALES_SALESORDERHEADER source table
 DECLARE @batch_scope TABLE
 (
     row_id INT IDENTITY(1,1) PRIMARY KEY,
-
     process_id INT,
     process_name VARCHAR(50),
     process_child_id INT,
     process_child_name VARCHAR(50),
-
     target_table_id INT,
     target_table_schema_name VARCHAR(50),
     target_table_name VARCHAR(50),
     target_table_execution_required BIT,
-
     batch_source_table_id INT,
     batch_source_schema_name VARCHAR(50),
     batch_source_table_name VARCHAR(50),
-
     batch_id INT,
     batch_column_name VARCHAR(50),
     batch_value VARCHAR(50),
@@ -142,16 +131,13 @@ INSERT INTO @batch_scope
     process_name,
     process_child_id,
     process_child_name,
-
     target_table_id,
     target_table_schema_name,
     target_table_name,
     target_table_execution_required,
-
     batch_source_table_id,
     batch_source_schema_name,
     batch_source_table_name,
-
     batch_id,
     batch_column_name,
     batch_value,
@@ -165,16 +151,13 @@ SELECT
     process_name,
     process_child_id,
     process_child_name,
-
     target_table_id,
     target_table_schema_name,
     target_table_name,
     target_table_execution_required,
-
     batch_source_table_id,
     batch_source_schema_name,
     batch_source_table_name,
-
     batch_id,
     batch_column_name,
     batch_value,
@@ -188,7 +171,8 @@ FROM [metadata].[ufn_list_project_process_table_batches]
     @parent_process_id
 )
 WHERE [target_table_execution_required] = 1
-  AND [batch_execution_required] = 1;
+AND [batch_execution_required] = 1
+AND [target_table_name] = 'SalesOrderHeader';
 
 -- Review the batch execution scope returned by the function.
 SELECT *
@@ -245,25 +229,19 @@ FROM @execution_run_output;
 DECLARE
     @current_row_id INT = 1,
     @max_row_id INT,
-
     @current_process_child_id INT,
     @current_process_child_name VARCHAR(50),
-
     @current_target_table_id INT,
     @current_target_table_name VARCHAR(50),
-
     @current_batch_id INT,
     @current_batch_value VARCHAR(50),
-
     @current_execution_step_id BIGINT,
     @current_status_code_id SMALLINT,
-
     @source_row_count BIGINT,
     @target_row_count BIGINT,
     @source_amount DECIMAL(18,4),
     @target_amount DECIMAL(18,4),
     @reconciliation_key VARCHAR(200);
-
 SELECT @max_row_id = MAX(row_id)
 FROM @batch_scope;
 
@@ -329,21 +307,6 @@ BEGIN
         SET @target_amount = 947650.0000;
         SET @current_status_code_id = @status_observed;
     END;
-
-    IF @current_target_table_name = 'SalesOrderDetail'
-       AND @current_batch_value = '2011-05'
-    BEGIN
-        SET @source_row_count = 1211;
-        SET @target_row_count = 1211;
-    END;
-
-    IF @current_target_table_name = 'SalesOrderDetail'
-       AND @current_batch_value = '2011-06'
-    BEGIN
-        SET @source_row_count = 1430;
-        SET @target_row_count = 1430;
-    END;
-
     ---------------------------------------------------------------------
     -- 4.3 Register row-count reconciliation results.
     ---------------------------------------------------------------------
@@ -453,11 +416,9 @@ WHERE er.[id] = @execution_run_id;
 -- 7. Review execution step results
 --
 -- Expected:
---   Four execution steps:
+--   Two execution steps:
 --   - SalesOrderHeader / 2011-05 = Success
 --   - SalesOrderHeader / 2011-06 = Observed
---   - SalesOrderDetail / 2011-05 = Success
---   - SalesOrderDetail / 2011-06 = Success
 --
 -- Note:
 -- - All steps reference the Sales Load process.
@@ -468,8 +429,8 @@ SELECT
     es.[id] AS [execution_step_id],
     pp.[name] AS [process_name],
     ss.[code] AS [step_status],
-    es.[start_run_date],
-    es.[end_run_date]
+    es.[start_step_date],
+    es.[end_step_date]
 FROM [runtime].[execution_steps] es
 INNER JOIN [metadata].[project_processes] pp
     ON pp.[id] = es.[project_process_id]
@@ -482,7 +443,7 @@ ORDER BY es.[id];
 -- 8. Review reconciliation results
 --
 -- This query shows the row-count and amount evidence registered for each
--- process-table-batch execution step.
+-- SalesOrderHeader batch execution step.
 -------------------------------------------------------------------------
 
 SELECT
@@ -534,8 +495,8 @@ ORDER BY
 -------------------------------------------------------------------------
 -- 10. Review metadata scope used by the test
 --
--- This confirms that each target table and batch was selected through the
--- process-table-batch execution scope.
+-- This confirms that the SalesOrderHeader target table and its batches were
+-- selected through the process-table-batch execution scope.
 -------------------------------------------------------------------------
 
 SELECT

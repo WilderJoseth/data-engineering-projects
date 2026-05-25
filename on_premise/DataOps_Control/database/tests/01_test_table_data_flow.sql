@@ -589,8 +589,8 @@ SELECT
     es.[id] AS [execution_step_id],
     pp.[name] AS [process_name],
     ss.[code] AS [step_status],
-    es.[start_run_date],
-    es.[end_run_date]
+    es.[start_step_date],
+    es.[end_step_date]
 FROM [runtime].[execution_steps] es
 INNER JOIN [metadata].[project_processes] pp
     ON pp.[id] = es.[project_process_id]

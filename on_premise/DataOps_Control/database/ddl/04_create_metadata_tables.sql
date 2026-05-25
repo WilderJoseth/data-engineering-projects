@@ -41,6 +41,7 @@ GO
 
 CREATE TABLE [metadata].[project_processes] (
     [id] [int] NOT NULL,
+    [position] [smallint] NOT NULL,
     [name] [varchar](50) NOT NULL,
     [project_id] [smallint] NOT NULL,
     [parent_process_id] [int] NULL,
@@ -92,6 +93,7 @@ GO
 
 CREATE TABLE [metadata].[project_table_batches] (
     [id] [int] NOT NULL,
+    [position] [smallint] NOT NULL,
     [batch_column_name] [varchar](50) NOT NULL,
     [batch_value] [varchar](50) NOT NULL,
     [batch_start_value] [varchar](50) NULL,

@@ -66,54 +66,55 @@ GO
 INSERT INTO [metadata].[project_processes]
 (
     [id],
+    [position],
     [name],
     [project_id],
     [parent_process_id]
 )
 VALUES
     -- Migration roots
-    (1,  'Sales_Operational_Migration', 1, NULL),
-    (2,  'Sales_Analytics_Migration',   1, NULL),
+    (1,  1, 'Sales_Operational_Migration', 1, NULL),
+    (2,  2, 'Sales_Analytics_Migration',   1, NULL),
 
     -- Operational migration packages
-    (3,  'PKG_OPERATIONAL_MIGRATION', 1, 1),
-    (4,  'PKG_REFERENCE_DATA',        1, 3),
-    (5,  'PKG_MASTER_DATA',           1, 3),
-    (6,  'PKG_TRANSACTIONAL_DATA',    1, 3),
+    (3,  1, 'PKG_OPERATIONAL_MIGRATION', 1, 1),
+    (4,  1, 'PKG_REFERENCE_DATA',        1, 3),
+    (5,  2, 'PKG_MASTER_DATA',           1, 3),
+    (6,  3, 'PKG_TRANSACTIONAL_DATA',    1, 3),
 
     -- Analytics migration packages
-    (7,  'PKG_ANALYTICS_MIGRATION', 1, 2),
-    (8,  'PKG_DIMENSIONS',          1, 7),
-    (9,  'PKG_FACTS',               1, 7),
+    (7,  1, 'PKG_ANALYTICS_MIGRATION', 1, 2),
+    (8,  1, 'PKG_DIMENSIONS',          1, 7),
+    (9,  2, 'PKG_FACTS',               1, 7),
 
     -- Reference data loads
-    (10, 'AddressType Load',      1, 4),
-    (11, 'ProductCategory Load',  1, 4),
-    (12, 'SpecialOffer Load',     1, 4),
-    (13, 'ShipMethod Load',       1, 4),
-    (14, 'Geography Load',        1, 4),
-    (15, 'Currency Load',         1, 4),
+    (10, 1, 'AddressType Load',      1, 4),
+    (11, 2, 'ProductCategory Load',  1, 4),
+    (12, 3, 'SpecialOffer Load',     1, 4),
+    (13, 4, 'ShipMethod Load',       1, 4),
+    (14, 5, 'Geography Load',        1, 4),
+    (15, 6, 'Currency Load',         1, 4),
 
     -- Master data loads
-    (16, 'CreditCard Load',   1, 5),
-    (17, 'Address Load',      1, 5),
-    (18, 'Product Load',      1, 5),
-    (19, 'SalesPerson Load',  1, 5),
-    (20, 'Customer Load',     1, 5),
+    (16, 1, 'CreditCard Load',   1, 5),
+    (17, 2, 'Address Load',      1, 5),
+    (18, 3, 'Product Load',      1, 5),
+    (19, 4, 'SalesPerson Load',  1, 5),
+    (20, 5, 'Customer Load',     1, 5),
 
     -- Transactional data loads
-    (21, 'Sales Load',        1, 6),
+    (21, 1, 'Sales Load',        1, 6),
 
     -- Dimension loads
-    (22, 'DimCustomer Load',        1, 8),
-    (23, 'DimPaymentMethod Load',  1, 8),
-    (24, 'DimShipMethod Load',     1, 8),
-    (25, 'DimProduct Load',        1, 8),
-    (26, 'DimSalesTerritory Load', 1, 8),
-    (27, 'DimSalesPerson Load',    1, 8),
+    (22, 1, 'DimCustomer Load',        1, 8),
+    (23, 2, 'DimPaymentMethod Load',   1, 8),
+    (24, 3, 'DimShipMethod Load',      1, 8),
+    (25, 4, 'DimProduct Load',         1, 8),
+    (26, 5, 'DimSalesTerritory Load',  1, 8),
+    (27, 6, 'DimSalesPerson Load',     1, 8),
 
     -- Fact loads
-    (28, 'FactSales Load', 1, 9);
+    (28, 1, 'FactSales Load', 1, 9);
 GO
 
 /*============================================================================
@@ -282,8 +283,8 @@ VALUES
     (20, 32), -- Customer Load    -> Customer
 
     -- Transactional process scope
+    -- This first version tests the batch flow only for SalesOrderHeader.
     (21, 33), -- Sales Load -> SalesOrderHeader
-    (21, 34), -- Sales Load -> SalesOrderDetail
 
     -- Analytics dimension process scope
     (22, 35), -- DimCustomer Load       -> DimCustomer
@@ -309,9 +310,8 @@ GO
   Example:
   - Batch source table: ADVENTUREWORKS2022.SALES_SALESORDERHEADER
   - Batch column: OrderDate
-  - Controlled target tables:
+  - Controlled target table in this first batch-flow test:
       - Sales_Operational.prod.SalesOrderHeader
-      - Sales_Operational.prod.SalesOrderDetail
 ============================================================================*/
 
 -- Mark the source transactional table as batch-enabled because the batch filter
@@ -323,6 +323,7 @@ WHERE [id] = 17; -- SALES_SALESORDERHEADER
 INSERT INTO [metadata].[project_table_batches]
 (
     [id],
+    [position],
     [batch_column_name],
     [batch_value],
     [batch_start_value],
@@ -332,11 +333,11 @@ INSERT INTO [metadata].[project_table_batches]
     [batch_source_table_id]
 )
 VALUES
-    (1, 'OrderDate', '2011-05', '2011-05-01 00:00:00', '2011-05-31 23:59:59', 'DATETIME', 1, 17),
-    (2, 'OrderDate', '2011-06', '2011-06-01 00:00:00', '2011-06-30 23:59:59', 'DATETIME', 1, 17),
-    (3, 'OrderDate', '2011-07', '2011-07-01 00:00:00', '2011-07-31 23:59:59', 'DATETIME', 0, 17),
-    (4, 'OrderDate', '2011-08', '2011-08-01 00:00:00', '2011-08-31 23:59:59', 'DATETIME', 0, 17),
-    (5, 'OrderDate', '2011-09', '2011-09-01 00:00:00', '2011-09-30 23:59:59', 'DATETIME', 0, 17);
+    (1, 1, 'OrderDate', '2011-05', '2011-05-01 00:00:00', '2011-05-31 23:59:59', 'DATETIME', 1, 17),
+    (2, 2, 'OrderDate', '2011-06', '2011-06-01 00:00:00', '2011-06-30 23:59:59', 'DATETIME', 1, 17),
+    (3, 3, 'OrderDate', '2011-07', '2011-07-01 00:00:00', '2011-07-31 23:59:59', 'DATETIME', 0, 17),
+    (4, 4, 'OrderDate', '2011-08', '2011-08-01 00:00:00', '2011-08-31 23:59:59', 'DATETIME', 0, 17),
+    (5, 5, 'OrderDate', '2011-09', '2011-09-01 00:00:00', '2011-09-30 23:59:59', 'DATETIME', 0, 17);
 GO
 
 /*============================================================================
@@ -346,14 +347,12 @@ GO
   - Assigns batch definitions to a valid process-table execution scope.
   - Supports batch-oriented orchestration using the same pattern as
     metadata.project_process_tables.
-  - Allows one batch source table to control multiple target tables handled by
-    the same process.
 
   Notes:
-  - Sales Load controls both SalesOrderHeader and SalesOrderDetail.
+  - The first batch-flow implementation tests Sales Load for SalesOrderHeader only.
   - The batch filter is based on SALES_SALESORDERHEADER.OrderDate.
-  - SalesOrderDetail can still be executed by the same batch scope because its
-    load is normally filtered through its related SalesOrderHeader records.
+  - SalesOrderDetail is intentionally not assigned to the batch scope in this
+    version to keep the initial batch-flow test focused and unambiguous.
   - metadata.project_table_batches.execution_required determines which assigned
     batches currently require execution.
 ============================================================================*/
@@ -370,12 +369,5 @@ VALUES
     (21, 33, 2),
     (21, 33, 3),
     (21, 33, 4),
-    (21, 33, 5),
-
-    -- Sales Load -> SalesOrderDetail, controlled by SALES_SALESORDERHEADER monthly batches
-    (21, 34, 1),
-    (21, 34, 2),
-    (21, 34, 3),
-    (21, 34, 4),
-    (21, 34, 5);
+    (21, 33, 5);
 GO

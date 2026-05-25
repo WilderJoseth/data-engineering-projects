@@ -21,8 +21,8 @@ GO
 
 CREATE TABLE [runtime].[execution_steps] (
     [id] [bigint] IDENTITY(1,1) NOT NULL,
-    [start_run_date] [datetime2] NOT NULL CONSTRAINT [df_runtime_execution_steps_start_run_date] DEFAULT SYSUTCDATETIME(),
-    [end_run_date] [datetime2] NULL,
+    [start_step_date] [datetime2] NOT NULL CONSTRAINT [df_runtime_execution_steps_start_step_date] DEFAULT SYSUTCDATETIME(),
+    [end_step_date] [datetime2] NULL,
     [status_code_id] [smallint] NOT NULL,
     [execution_run_id] [int] NOT NULL,
     [project_process_id] [int] NOT NULL,
