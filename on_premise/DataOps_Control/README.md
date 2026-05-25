@@ -2,11 +2,9 @@
 
 ## Overview
 
-This project presents the creation of a reusable metadata-driven control framework for data engineering projects, called `DataOps_Control`.
+This project presents the design and implementation of `DataOps_Control`, a reusable metadata-driven control framework for data engineering projects.
 
-The objective is to design and document a solution using professional data engineering practices, from problem framing and target architecture to implementation.
-
-`DataOps_Control` provides a centralized SQL Server control database designed to support pipeline execution tracking, source-to-target mappings, validation summaries, reconciliation results, error logging, batch control, and rerun/recovery logic.
+`DataOps_Control` provides a centralized SQL Server control database designed to support metadata management, pipeline execution tracking, source-to-target mappings, validation summaries, reconciliation results, error logging, batch control, and rerun/recovery logic.
 
 ## Logical Data Model
 
@@ -16,7 +14,7 @@ The following diagram provides a high-level view of the `DataOps_Control` model,
 
 ## Problem Context
 
-Data engineering projects often start with simple ELT pipelines, but as they grow, they require stronger operational control.
+Data engineering projects often start with simple ETL/ELT pipelines, but as they grow, they require stronger operational control.
 
 Common challenges include:
 
@@ -31,10 +29,6 @@ Common challenges include:
 
 ## Project Scope
 
-This project focuses on the design and implementation of the `DataOps_Control` database model as a reusable control framework for data engineering projects.
-
-The scope includes:
-
 - Metadata management.
 - Source-to-target database and table mappings.
 - Process-to-table execution scope.
@@ -44,7 +38,29 @@ The scope includes:
 - Batch control.
 - Execution, rerun, recovery, and backfill support.
 
-Detailed table structures, schema responsibilities, relationships, and implementation decisions are documented in the solution design.
+## Out of Scope
+
+- Implementing full business-specific ETL/ELT pipelines.
+- Replacing orchestration tools such as SSIS, SQL Server Agent, Azure Data Factory, Fabric Data Pipelines, or Airflow.
+- Storing row-level rejected records centrally.
+- Owning business-specific validation or reconciliation decisions.
+- Implementing a full data quality engine.
+- Providing a user interface for monitoring or metadata management.
+- Implementing automated alerting or notification workflows.
+- Supporting every possible data platform integration in the first version.
+
+## Repository Structure
+
+```text
+database/
+├── ddl/        # Database, schema, table, procedure, and function scripts
+├── seed/       # Reference and sample domain metadata
+└── tests/      # Table-flow and batch-flow test scripts
+
+docs/
+├── img/        # Logical and Entity Relationship diagrams
+└── solution_design.md
+```
 
 ## Related Documentation
 

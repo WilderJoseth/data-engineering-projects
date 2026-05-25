@@ -107,6 +107,18 @@ CREATE TABLE [metadata].[project_table_batches] (
 ) ON [PRIMARY];
 GO
 
+CREATE TABLE [metadata].[project_process_table_batches] (
+    [process_id] [int] NOT NULL,
+    [table_id] [int] NOT NULL,
+    [batch_id] [int] NOT NULL,
+
+    CONSTRAINT [pk_metadata_project_process_table_batches] PRIMARY KEY CLUSTERED ([process_id] ASC, [table_id] ASC, [batch_id] ASC),
+    CONSTRAINT [fk_metadata_project_process_table_batches_process_id] FOREIGN KEY ([process_id]) REFERENCES [metadata].[project_processes]([id]),
+    CONSTRAINT [fk_metadata_project_process_table_batches_table_id] FOREIGN KEY ([table_id]) REFERENCES [metadata].[project_tables]([id]),
+    CONSTRAINT [fk_metadata_project_process_table_batches_batch_id] FOREIGN KEY ([batch_id]) REFERENCES [metadata].[project_table_batches]([id])
+) ON [PRIMARY];
+GO
+
 CREATE TABLE [metadata].[project_columns] (
     [id] [int] NOT NULL,
     [position] [smallint] NOT NULL,

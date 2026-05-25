@@ -72,8 +72,8 @@ RETURN
 (
     /*
         Purpose:
-        - Lists active child processes, target tables, source batch tables,
-          and batch definitions for a given parent process.
+        - Lists active child processes, controlled target tables, source batch tables,
+          and batch definitions explicitly assigned to a process-table execution scope.
 
         Usage:
         - Used by orchestration logic to identify which batch-enabled table
@@ -82,7 +82,8 @@ RETURN
 
         Important:
         - Batch definitions are attached to the source table used for filtering.
-        - Target table context is resolved through metadata.project_table_mappings.
+        - Target table context is resolved through metadata.project_process_tables.
+        - Batch execution scope is resolved through metadata.project_process_table_batches.
     */
 
     SELECT
@@ -111,6 +112,7 @@ RETURN
     FROM [metadata].[project_processes] p1
     INNER JOIN [metadata].[project_processes] p2
         ON p2.[parent_process_id] = p1.[id]
+        AND p2.[project_id] = p1.[project_id]
         AND p2.[is_active] = 1
     INNER JOIN [metadata].[project_process_tables] pt
         ON pt.[process_id] = p2.[id]
@@ -118,14 +120,15 @@ RETURN
         ON tgt.[id] = pt.[table_id]
         AND tgt.[is_active] = 1
         AND tgt.[batch_column_active] = 1
-    INNER JOIN [metadata].[project_table_mappings] tm
-        ON tm.[table_target_id] = tgt.[id]
-    INNER JOIN [metadata].[project_tables] src
-        ON src.[id] = tm.[table_source_id]
-        AND src.[is_active] = 1
+    INNER JOIN [metadata].[project_process_table_batches] ptb
+        ON ptb.[process_id] = pt.[process_id]
+        AND ptb.[table_id] = pt.[table_id]
     INNER JOIN [metadata].[project_table_batches] b
-        ON b.[batch_source_table_id] = src.[id]
+        ON b.[id] = ptb.[batch_id]
         AND b.[is_active] = 1
+    INNER JOIN [metadata].[project_tables] src
+        ON src.[id] = b.[batch_source_table_id]
+        AND src.[is_active] = 1
     WHERE p1.[project_id] = @p_project_id
       AND p1.[id] = @p_process_id
       AND p1.[is_active] = 1

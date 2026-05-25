@@ -5,10 +5,10 @@ GO
     Test Script: Batch Data Flow
 
     Goal:
-    - Simulate a batch-enabled table flow.
+    - Simulate a batch-enabled table flow using explicit process-table-batch scope.
     - Get batch execution scope from metadata.ufn_list_project_process_table_batches.
-    - Run only batches marked as execution_required = 1.
-    - Start one execution step per batch.
+    - Run only target tables and batches marked as execution_required = 1.
+    - Start one execution step per process-table-batch item.
     - Register reconciliation and validation results.
     - End each batch execution step.
     - End the execution run and validate final status.
@@ -20,16 +20,26 @@ GO
     - Child process:
         Sales Load
 
-    - Target table:
+    - Target tables:
         SalesOrderHeader
+        SalesOrderDetail
 
     - Batch source table:
         SALES_SALESORDERHEADER
 
     Expected result:
-    - Batch 2011-05 = Success
-    - Batch 2011-06 = Observed
+    - SalesOrderHeader / Batch 2011-05 = Success
+    - SalesOrderHeader / Batch 2011-06 = Observed
+    - SalesOrderDetail / Batch 2011-05 = Success
+    - SalesOrderDetail / Batch 2011-06 = Success
     - Execution Run = Observed
+
+    Design note:
+    - metadata.project_process_table_batches defines which batches are assigned
+      to each process-table execution scope.
+    - runtime.execution_steps remains process-based.
+    - Table and batch context is visible through metadata scope and
+      observability.reconciliation_key.
 */
 
 DECLARE @project_id SMALLINT = 1;
@@ -40,18 +50,6 @@ DECLARE @status_observed SMALLINT = 6;
 
 DECLARE @execution_run_id INT;
 
-DECLARE @SalesOrderHeaderProcessId INT;
-
-DECLARE @run_SalesOrderHeader_load INT = 0;
-DECLARE @run_Batch_2011_05 INT = 0;
-DECLARE @run_Batch_2011_06 INT = 0;
-
-DECLARE @Batch201105Id INT;
-DECLARE @Batch201106Id INT;
-
-DECLARE @Batch201105Value VARCHAR(50);
-DECLARE @Batch201106Value VARCHAR(50);
-
 -------------------------------------------------------------------------
 -- 1. Test setup
 --
@@ -61,8 +59,10 @@ DECLARE @Batch201106Value VARCHAR(50);
 -- that table or batch.
 --
 -- For this test:
--- - SalesOrderHeader requires execution.
+-- - SalesOrderHeader and SalesOrderDetail require execution.
 -- - Two batches require execution: 2011-05 and 2011-06.
+-- - Batch assignments are controlled by:
+--     metadata.project_process_table_batches
 -------------------------------------------------------------------------
 
 UPDATE [metadata].[project_tables]
@@ -73,7 +73,11 @@ SET [execution_required] = 0;
 
 UPDATE [metadata].[project_tables]
 SET [execution_required] = 1
-WHERE [id] = 33; -- SalesOrderHeader target table
+WHERE [id] IN
+(
+    33, -- SalesOrderHeader target table
+    34  -- SalesOrderDetail target table
+);
 
 UPDATE [metadata].[project_table_batches]
 SET [execution_required] = 1
@@ -94,12 +98,21 @@ AND [batch_source_table_id] = 17; -- SALES_SALESORDERHEADER source table
 -- - source table used for batch filtering
 -- - batch definition
 --
--- In SSIS, this metadata result would be used to decide whether the batch
--- container or Foreach iteration should run.
+-- The function should now resolve batch scope through:
+--
+-- metadata.project_processes
+--     -> metadata.project_process_tables
+--         -> metadata.project_process_table_batches
+--             -> metadata.project_table_batches
+--
+-- In SSIS, this metadata result would be used by a Foreach Loop or
+-- equivalent orchestration pattern.
 -------------------------------------------------------------------------
 
 DECLARE @batch_scope TABLE
 (
+    row_id INT IDENTITY(1,1) PRIMARY KEY,
+
     process_id INT,
     process_name VARCHAR(50),
     process_child_id INT,
@@ -173,89 +186,24 @@ FROM [metadata].[ufn_list_project_process_table_batches]
 (
     @project_id,
     @parent_process_id
-);
+)
+WHERE [target_table_execution_required] = 1
+  AND [batch_execution_required] = 1;
 
--- Review the full batch execution scope returned by the function.
+-- Review the batch execution scope returned by the function.
 SELECT *
 FROM @batch_scope
-ORDER BY target_table_name, batch_start_value;
+ORDER BY
+    target_table_name,
+    batch_start_value;
+
+IF NOT EXISTS (SELECT 1 FROM @batch_scope)
+BEGIN
+    THROW 51000, 'No batch execution scope was found. Validate metadata.project_process_table_batches and execution_required flags.', 1;
+END;
 
 -------------------------------------------------------------------------
--- 3. Resolve run flags and process IDs
---
--- This simulates the SSIS Execute SQL Task that loads package variables.
---
--- Example:
---   run_SalesOrderHeader_load = 1 -> SalesOrderHeader batch flow should run.
---   run_Batch_2011_05 = 1         -> Batch 2011-05 should run.
---   run_Batch_2011_06 = 1         -> Batch 2011-06 should run.
--------------------------------------------------------------------------
-
-SELECT
-    @run_SalesOrderHeader_load =
-        MAX(IIF(
-            [target_table_id] = 33
-            AND [target_table_execution_required] = 1
-            AND [batch_execution_required] = 1,
-            1,
-            0
-        )),
-
-    @SalesOrderHeaderProcessId =
-        MAX(IIF(
-            [target_table_id] = 33
-            AND [target_table_execution_required] = 1
-            AND [batch_execution_required] = 1,
-            [process_child_id],
-            NULL
-        )),
-
-    @run_Batch_2011_05 =
-        MAX(IIF(
-            [target_table_id] = 33
-            AND [batch_value] = '2011-05'
-            AND [batch_execution_required] = 1,
-            1,
-            0
-        )),
-
-    @Batch201105Id =
-        MAX(IIF([batch_value] = '2011-05', [batch_id], NULL)),
-
-    @Batch201105Value =
-        MAX(IIF([batch_value] = '2011-05', [batch_value], NULL)),
-
-    @run_Batch_2011_06 =
-        MAX(IIF(
-            [target_table_id] = 33
-            AND [batch_value] = '2011-06'
-            AND [batch_execution_required] = 1,
-            1,
-            0
-        )),
-
-    @Batch201106Id =
-        MAX(IIF([batch_value] = '2011-06', [batch_id], NULL)),
-
-    @Batch201106Value =
-        MAX(IIF([batch_value] = '2011-06', [batch_value], NULL))
-FROM @batch_scope;
-
--- Review the flags that would normally be mapped to SSIS variables.
-SELECT
-    @run_SalesOrderHeader_load AS [run_SalesOrderHeader_load],
-    @SalesOrderHeaderProcessId AS [SalesOrderHeaderProcessId],
-
-    @run_Batch_2011_05 AS [run_Batch_2011_05],
-    @Batch201105Id AS [Batch201105Id],
-    @Batch201105Value AS [Batch201105Value],
-
-    @run_Batch_2011_06 AS [run_Batch_2011_06],
-    @Batch201106Id AS [Batch201106Id],
-    @Batch201106Value AS [Batch201106Value];
-
--------------------------------------------------------------------------
--- 4. Start execution run
+-- 3. Start execution run
 --
 -- This represents the start of the transactional data execution.
 --
@@ -279,70 +227,145 @@ SELECT @execution_run_id = [execution_run_id]
 FROM @execution_run_output;
 
 -------------------------------------------------------------------------
--- 5. SalesOrderHeader batch flow
+-- 4. Execute process-table-batch scope
 --
--- In SSIS, this could be implemented as:
--- - A SalesOrderHeader Load container controlled by run_SalesOrderHeader_load.
--- - Inside it, a Foreach Loop or batch container per batch.
+-- This loop simulates an orchestration tool iterating over batch metadata.
 --
 -- Current runtime model:
--- - One execution step is created per batch.
--- - The batch identifier is stored in reconciliation_key.
+-- - One execution step is created per process-table-batch item.
+-- - The execution step references the process.
+-- - The table and batch context is registered in reconciliation_key.
 --
 -- Note:
--- - runtime.execution_steps does not currently store batch_id directly.
--- - This is acceptable for this test because batch context is registered
---   in observability.reconciliation_results.
+-- - runtime.execution_steps does not store table_id or batch_id directly.
+-- - The process-table-batch scope comes from metadata.
+-- - Observability records keep the execution evidence for each table/batch.
 -------------------------------------------------------------------------
 
-IF @run_SalesOrderHeader_load = 1
+DECLARE
+    @current_row_id INT = 1,
+    @max_row_id INT,
+
+    @current_process_child_id INT,
+    @current_process_child_name VARCHAR(50),
+
+    @current_target_table_id INT,
+    @current_target_table_name VARCHAR(50),
+
+    @current_batch_id INT,
+    @current_batch_value VARCHAR(50),
+
+    @current_execution_step_id BIGINT,
+    @current_status_code_id SMALLINT,
+
+    @source_row_count BIGINT,
+    @target_row_count BIGINT,
+    @source_amount DECIMAL(18,4),
+    @target_amount DECIMAL(18,4),
+    @reconciliation_key VARCHAR(200);
+
+SELECT @max_row_id = MAX(row_id)
+FROM @batch_scope;
+
+WHILE @current_row_id <= @max_row_id
 BEGIN
+    SELECT
+        @current_process_child_id = [process_child_id],
+        @current_process_child_name = [process_child_name],
+        @current_target_table_id = [target_table_id],
+        @current_target_table_name = [target_table_name],
+        @current_batch_id = [batch_id],
+        @current_batch_value = [batch_value]
+    FROM @batch_scope
+    WHERE [row_id] = @current_row_id;
+
+    SET @reconciliation_key = CONCAT('TABLE=', @current_target_table_name, ';BATCH=', @current_batch_value);
+
     ---------------------------------------------------------------------
-    -- 5.1 Batch 2011-05 - Success
+    -- 4.1 Start execution step.
+    ---------------------------------------------------------------------
+
+    DECLARE @execution_step_output TABLE
+    (
+        execution_step_id BIGINT
+    );
+
+    INSERT INTO @execution_step_output
+    EXEC [runtime].[usp_start_execution_step]
+        @p_execution_run_id = @execution_run_id,
+        @p_project_process_id = @current_process_child_id;
+
+    SELECT @current_execution_step_id = [execution_step_id]
+    FROM @execution_step_output;
+
+    ---------------------------------------------------------------------
+    -- 4.2 Simulate batch-level reconciliation values.
     --
-    -- Flow:
-    --   1. Check batch flag.
-    --   2. Start execution step.
-    --   3. Simulate batch load.
-    --   4. Register reconciliation results.
-    --   5. End execution step as Success.
+    -- These values represent test evidence only. In a real project, they
+    -- would come from source/target queries or project-specific procedures.
     ---------------------------------------------------------------------
 
-    IF @run_Batch_2011_05 = 1
+    SET @current_status_code_id = @status_success;
+    SET @source_row_count = NULL;
+    SET @target_row_count = NULL;
+    SET @source_amount = NULL;
+    SET @target_amount = NULL;
+
+    IF @current_target_table_name = 'SalesOrderHeader'
+       AND @current_batch_value = '2011-05'
     BEGIN
-        DECLARE @Batch201105Step TABLE (execution_step_id BIGINT);
-        DECLARE @Batch201105StepId BIGINT;
+        SET @source_row_count = 436;
+        SET @target_row_count = 436;
+        SET @source_amount = 815233.4200;
+        SET @target_amount = 815233.4200;
+    END;
 
-        -----------------------------------------------------------------
-        -- Start execution step for SalesOrderHeader Batch 2011-05.
-        -----------------------------------------------------------------
+    IF @current_target_table_name = 'SalesOrderHeader'
+       AND @current_batch_value = '2011-06'
+    BEGIN
+        SET @source_row_count = 500;
+        SET @target_row_count = 498;
+        SET @source_amount = 950120.0000;
+        SET @target_amount = 947650.0000;
+        SET @current_status_code_id = @status_observed;
+    END;
 
-        INSERT INTO @Batch201105Step
-        EXEC [runtime].[usp_start_execution_step]
-            @p_execution_run_id = @execution_run_id,
-            @p_project_process_id = @SalesOrderHeaderProcessId;
+    IF @current_target_table_name = 'SalesOrderDetail'
+       AND @current_batch_value = '2011-05'
+    BEGIN
+        SET @source_row_count = 1211;
+        SET @target_row_count = 1211;
+    END;
 
-        SELECT @Batch201105StepId = [execution_step_id]
-        FROM @Batch201105Step;
+    IF @current_target_table_name = 'SalesOrderDetail'
+       AND @current_batch_value = '2011-06'
+    BEGIN
+        SET @source_row_count = 1430;
+        SET @target_row_count = 1430;
+    END;
 
-        -----------------------------------------------------------------
-        -- Register reconciliation results.
-        --
-        -- This evidence shows that source and target match for the batch.
-        -----------------------------------------------------------------
+    ---------------------------------------------------------------------
+    -- 4.3 Register row-count reconciliation results.
+    ---------------------------------------------------------------------
 
-        INSERT INTO [observability].[reconciliation_results]
-        (
-            [metric_name],
-            [reconciliation_key],
-            [reconciliation_side],
-            [metric_value_bigint],
-            [execution_step_id]
-        )
-        VALUES
-            ('ROW_COUNT', CONCAT('TABLE=SalesOrderHeader;BATCH=', @Batch201105Value), 'SOURCE', 436, @Batch201105StepId),
-            ('ROW_COUNT', CONCAT('TABLE=SalesOrderHeader;BATCH=', @Batch201105Value), 'TARGET', 436, @Batch201105StepId);
+    INSERT INTO [observability].[reconciliation_results]
+    (
+        [metric_name],
+        [reconciliation_key],
+        [reconciliation_side],
+        [metric_value_bigint],
+        [execution_step_id]
+    )
+    VALUES
+        ('ROW_COUNT', @reconciliation_key, 'SOURCE', @source_row_count, @current_execution_step_id),
+        ('ROW_COUNT', @reconciliation_key, 'TARGET', @target_row_count, @current_execution_step_id);
 
+    ---------------------------------------------------------------------
+    -- 4.4 Register amount reconciliation results when applicable.
+    ---------------------------------------------------------------------
+
+    IF @source_amount IS NOT NULL
+    BEGIN
         INSERT INTO [observability].[reconciliation_results]
         (
             [metric_name],
@@ -352,70 +375,20 @@ BEGIN
             [execution_step_id]
         )
         VALUES
-            ('TOTAL_DUE', CONCAT('TABLE=SalesOrderHeader;BATCH=', @Batch201105Value), 'SOURCE', 815233.4200, @Batch201105StepId),
-            ('TOTAL_DUE', CONCAT('TABLE=SalesOrderHeader;BATCH=', @Batch201105Value), 'TARGET', 815233.4200, @Batch201105StepId);
-
-        -----------------------------------------------------------------
-        -- End execution step as Success.
-        -----------------------------------------------------------------
-
-        EXEC [runtime].[usp_end_execution_step]
-            @p_execution_step_id = @Batch201105StepId,
-            @p_status_code_id = @status_success;
+            ('TOTAL_DUE', @reconciliation_key, 'SOURCE', @source_amount, @current_execution_step_id),
+            ('TOTAL_DUE', @reconciliation_key, 'TARGET', @target_amount, @current_execution_step_id);
     END;
 
     ---------------------------------------------------------------------
-    -- 5.2 Batch 2011-06 - Observed
+    -- 4.5 Register validation result for the observed batch.
     --
-    -- Scenario:
-    -- - Source has 500 rows.
-    -- - Target has 498 rows.
-    -- - Validation explains why 2 source rows were excluded.
+    -- This is not a technical failure. The batch completed, but the
+    -- validation/reconciliation evidence requires review.
     ---------------------------------------------------------------------
 
-    IF @run_Batch_2011_06 = 1
+    IF @current_target_table_name = 'SalesOrderHeader'
+       AND @current_batch_value = '2011-06'
     BEGIN
-        DECLARE @Batch201106Step TABLE (execution_step_id BIGINT);
-        DECLARE @Batch201106StepId BIGINT;
-
-        -----------------------------------------------------------------
-        -- Start execution step for SalesOrderHeader Batch 2011-06.
-        -----------------------------------------------------------------
-
-        INSERT INTO @Batch201106Step
-        EXEC [runtime].[usp_start_execution_step]
-            @p_execution_run_id = @execution_run_id,
-            @p_project_process_id = @SalesOrderHeaderProcessId;
-
-        SELECT @Batch201106StepId = [execution_step_id]
-        FROM @Batch201106Step;
-
-        -----------------------------------------------------------------
-        -- Register reconciliation results.
-        --
-        -- This evidence shows the target has two rows less than the source.
-        -----------------------------------------------------------------
-
-        INSERT INTO [observability].[reconciliation_results]
-        (
-            [metric_name],
-            [reconciliation_key],
-            [reconciliation_side],
-            [metric_value_bigint],
-            [execution_step_id]
-        )
-        VALUES
-            ('ROW_COUNT', CONCAT('TABLE=SalesOrderHeader;BATCH=', @Batch201106Value), 'SOURCE', 500, @Batch201106StepId),
-            ('ROW_COUNT', CONCAT('TABLE=SalesOrderHeader;BATCH=', @Batch201106Value), 'TARGET', 498, @Batch201106StepId);
-
-        -----------------------------------------------------------------
-        -- Register validation result.
-        --
-        -- This explains why the target has fewer rows.
-        -- DataOps_Control stores the validation summary, not the rejected
-        -- business rows themselves.
-        -----------------------------------------------------------------
-
         INSERT INTO [observability].[validation_results]
         (
             [details],
@@ -425,27 +398,26 @@ BEGIN
         )
         VALUES
         (
-            CONCAT('2 source rows were excluded from SalesOrderHeader batch ', @Batch201106Value, ' because required customer references were not found.'),
+            CONCAT('2 source rows were excluded from ', @current_target_table_name, ' batch ', @current_batch_value, ' because required customer references were not found.'),
             2,
-            @Batch201106StepId,
+            @current_execution_step_id,
             3 -- FK_CHECK
         );
-
-        -----------------------------------------------------------------
-        -- End execution step as Observed.
-        --
-        -- This is not a technical failure. The batch completed, but the
-        -- validation/reconciliation evidence requires review.
-        -----------------------------------------------------------------
-
-        EXEC [runtime].[usp_end_execution_step]
-            @p_execution_step_id = @Batch201106StepId,
-            @p_status_code_id = @status_observed;
     END;
+
+    ---------------------------------------------------------------------
+    -- 4.6 End execution step.
+    ---------------------------------------------------------------------
+
+    EXEC [runtime].[usp_end_execution_step]
+        @p_execution_step_id = @current_execution_step_id,
+        @p_status_code_id = @current_status_code_id;
+
+    SET @current_row_id += 1;
 END;
 
 -------------------------------------------------------------------------
--- 6. End execution run
+-- 5. End execution run
 --
 -- runtime.usp_end_execution_run derives the final run status from all
 -- related execution steps.
@@ -454,14 +426,14 @@ END;
 --   Observed
 --
 -- Reason:
---   Batch 2011-06 ended as Observed.
+--   SalesOrderHeader / Batch 2011-06 ended as Observed.
 -------------------------------------------------------------------------
 
 EXEC [runtime].[usp_end_execution_run]
     @p_execution_run_id = @execution_run_id;
 
 -------------------------------------------------------------------------
--- 7. Review execution run result
+-- 6. Review execution run result
 --
 -- Expected:
 --   run_status = Observed
@@ -478,16 +450,18 @@ INNER JOIN [reference].[status_codes] rs
 WHERE er.[id] = @execution_run_id;
 
 -------------------------------------------------------------------------
--- 8. Review execution step results
+-- 7. Review execution step results
 --
 -- Expected:
---   Sales Load = Success
---   Sales Load = Observed
+--   Four execution steps:
+--   - SalesOrderHeader / 2011-05 = Success
+--   - SalesOrderHeader / 2011-06 = Observed
+--   - SalesOrderDetail / 2011-05 = Success
+--   - SalesOrderDetail / 2011-06 = Success
 --
 -- Note:
--- - Both steps reference the same process because both are batch executions
---   of the Sales Load process.
--- - Batch context is visible through reconciliation_key.
+-- - All steps reference the Sales Load process.
+-- - Table and batch context is visible through reconciliation_key.
 -------------------------------------------------------------------------
 
 SELECT
@@ -505,10 +479,10 @@ WHERE es.[execution_run_id] = @execution_run_id
 ORDER BY es.[id];
 
 -------------------------------------------------------------------------
--- 9. Review reconciliation results
+-- 8. Review reconciliation results
 --
 -- This query shows the row-count and amount evidence registered for each
--- batch execution step.
+-- process-table-batch execution step.
 -------------------------------------------------------------------------
 
 SELECT
@@ -532,10 +506,10 @@ ORDER BY
     rr.[reconciliation_side];
 
 -------------------------------------------------------------------------
--- 10. Review validation results
+-- 9. Review validation results
 --
 -- Expected:
--- - Batch 2011-06 has one FK_CHECK validation result.
+-- - SalesOrderHeader / Batch 2011-06 has one FK_CHECK validation result.
 -------------------------------------------------------------------------
 
 SELECT
@@ -556,3 +530,24 @@ WHERE es.[execution_run_id] = @execution_run_id
 ORDER BY
     vr.[execution_step_id],
     vc.[code];
+
+-------------------------------------------------------------------------
+-- 10. Review metadata scope used by the test
+--
+-- This confirms that each target table and batch was selected through the
+-- process-table-batch execution scope.
+-------------------------------------------------------------------------
+
+SELECT
+    [process_child_name],
+    [target_table_name],
+    [batch_source_table_name],
+    [batch_value],
+    [target_table_execution_required],
+    [batch_execution_required]
+FROM @batch_scope
+ORDER BY
+    [process_child_name],
+    [target_table_name],
+    [batch_value];
+GO

@@ -4,7 +4,7 @@
 
   Purpose:
   - Loads sample metadata for the Oracle to SQL Server Migration - Sales Domain.
-  - Supports testing table load, grouped table load, and later batch-oriented flows.
+  - Supports testing table load, grouped table load, and batch-oriented flows.
 
   Notes:
   - Metadata IDs are manually assigned to keep scripts predictable.
@@ -303,16 +303,19 @@ GO
   Purpose:
   - Defines sample batch slices for batch-based transactional processing.
   - Batch definitions reference the source table used for filtering.
-  - The target table is resolved through metadata.project_table_mappings.
+  - The process-table batch execution scope is defined separately in
+    metadata.project_process_table_batches.
 
   Example:
-  - Source table: ADVENTUREWORKS2022.SALES_SALESORDERHEADER
+  - Batch source table: ADVENTUREWORKS2022.SALES_SALESORDERHEADER
   - Batch column: OrderDate
-  - Target table: Sales_Operational.prod.SalesOrderHeader
+  - Controlled target tables:
+      - Sales_Operational.prod.SalesOrderHeader
+      - Sales_Operational.prod.SalesOrderDetail
 ============================================================================*/
 
--- Mark source transactional table as batch-enabled because the batch filter
--- is applied against the source table.
+-- Mark the source transactional table as batch-enabled because the batch filter
+-- is applied against this source table.
 UPDATE [metadata].[project_tables]
 SET [batch_column_active] = 1
 WHERE [id] = 17; -- SALES_SALESORDERHEADER
@@ -334,4 +337,45 @@ VALUES
     (3, 'OrderDate', '2011-07', '2011-07-01 00:00:00', '2011-07-31 23:59:59', 'DATETIME', 0, 17),
     (4, 'OrderDate', '2011-08', '2011-08-01 00:00:00', '2011-08-31 23:59:59', 'DATETIME', 0, 17),
     (5, 'OrderDate', '2011-09', '2011-09-01 00:00:00', '2011-09-30 23:59:59', 'DATETIME', 0, 17);
+GO
+
+/*============================================================================
+  9. Process-Table Batch Execution Scope
+
+  Purpose:
+  - Assigns batch definitions to a valid process-table execution scope.
+  - Supports batch-oriented orchestration using the same pattern as
+    metadata.project_process_tables.
+  - Allows one batch source table to control multiple target tables handled by
+    the same process.
+
+  Notes:
+  - Sales Load controls both SalesOrderHeader and SalesOrderDetail.
+  - The batch filter is based on SALES_SALESORDERHEADER.OrderDate.
+  - SalesOrderDetail can still be executed by the same batch scope because its
+    load is normally filtered through its related SalesOrderHeader records.
+  - metadata.project_table_batches.execution_required determines which assigned
+    batches currently require execution.
+============================================================================*/
+
+INSERT INTO [metadata].[project_process_table_batches]
+(
+    [process_id],
+    [table_id],
+    [batch_id]
+)
+VALUES
+    -- Sales Load -> SalesOrderHeader, controlled by SALES_SALESORDERHEADER monthly batches
+    (21, 33, 1),
+    (21, 33, 2),
+    (21, 33, 3),
+    (21, 33, 4),
+    (21, 33, 5),
+
+    -- Sales Load -> SalesOrderDetail, controlled by SALES_SALESORDERHEADER monthly batches
+    (21, 34, 1),
+    (21, 34, 2),
+    (21, 34, 3),
+    (21, 34, 4),
+    (21, 34, 5);
 GO

@@ -10,7 +10,7 @@ This document describes the technical design of `DataOps_Control`, a reusable me
 
 | Schema | Responsibility |
 |---|---|
-| `metadata` | Defines projects, databases, processes, registered source/target tables, columns, source-to-target mappings, process-to-table execution scope, and batch metadata managed by the framework. |
+| `metadata` | Defines projects, databases, processes, registered source/target tables, columns, source-to-target mappings, process-to-table execution scope, process-table batch execution scope, and batch metadata managed by the framework. |
 | `runtime` | Tracks execution runs and execution steps. |
 | `observability` | Stores validation results, reconciliation results, and technical error logs generated during execution. |
 | `reference` | Stores controlled code values used by the framework, such as statuses and validation types. |
@@ -21,7 +21,7 @@ This document describes the technical design of `DataOps_Control`, a reusable me
 
 | Area | Main tables |
 |---|---|
-| Metadata | `projects`, `project_databases`, `project_database_mappings`, `project_processes`, `project_tables`, `project_table_mappings`, `project_process_tables`, `project_columns`, `project_table_batches` |
+| Metadata | `projects`, `project_databases`, `project_database_mappings`, `project_processes`, `project_tables`, `project_table_mappings`, `project_process_tables`, `project_process_table_batches`, `project_columns`, `project_table_batches` |
 | Runtime | `execution_runs`, `execution_steps` |
 | Observability | `error_logs`, `validation_results`, `reconciliation_results` |
 | Reference | `status_codes`, `validation_codes` |
@@ -42,20 +42,23 @@ This document describes the technical design of `DataOps_Control`, a reusable me
 
 #### Key and Identifier Column Guidelines
 
-- All tables should have a primary key constraint.
-- Metadata tables use manually assigned identifiers where stable, predictable IDs are useful for seed scripts, testing, and reusable framework configuration.
-- Reference tables use manually assigned IDs because they are treated as framework constants.
-- Runtime and observability tables should use auto-incremental IDs.
+| Guideline | Description |
+|---|---|
+| Primary keys | All tables should have a primary key constraint. |
+| Metadata identifiers | Metadata tables use manually assigned identifiers where stable, predictable IDs are useful for seed scripts, testing, and reusable framework configuration. |
+| Reference identifiers | Reference tables use manually assigned IDs because they are treated as framework constants. |
+| Runtime and observability identifiers | Runtime and observability tables should use auto-incremental IDs. |
 
 #### Bridge Table Rules
 
 Bridge tables use composite primary keys when the relationship itself is the entity.
 
-Examples:
-
-- `metadata.project_database_mappings`
-- `metadata.project_table_mappings`
-- `metadata.project_process_tables`
+| Bridge table | Relationship represented |
+|---|---|
+| `metadata.project_database_mappings` | Source-to-target database relationship. |
+| `metadata.project_table_mappings` | Source-to-target table relationship. |
+| `metadata.project_process_tables` | Process-to-table execution scope. |
+| `metadata.project_process_table_batches` | Process-table-to-batch execution scope. |
 
 #### Audit Columns
 
@@ -82,6 +85,7 @@ Common audit/control columns used across the model include:
 | `project_tables` | Registers source tables, target tables, or managed objects when they are needed for mapping, execution control, batch filtering, validation, or reconciliation. |
 | `project_table_mappings` | Defines source-to-target table mappings. |
 | `project_process_tables` | Associates controlled tables with the processes responsible for executing them. |
+| `project_process_table_batches` | Associates configured batch slices with a specific process-table execution scope. |
 | `project_columns` | Stores column metadata for registered tables. |
 | `project_table_batches` | Defines batch slices for reloadable tables. |
 
@@ -93,7 +97,7 @@ Common audit/control columns used across the model include:
 | `project_databases` | `database_role` | Classifies the role of the database, such as source, target, operational, analytical, or control-related. |
 | `project_database_mappings` | `database_source_id`, `database_target_id` | Defines database-level source-to-target relationships. |
 | `project_processes` | `project_id` | Associates the process with a registered project. |
-| `project_processes` | `parent_process_id` | Supports process hierarchy, such as parent process, subprocess, table load, or batch process. |
+| `project_processes` | `parent_process_id` | Supports process hierarchy, such as parent process, subprocess, or table-level load. |
 | `project_tables` | `schema_name` | Stores the schema of the registered controlled object. For target tables, this usually represents the final target schema. |
 | `project_tables` | `is_fact_table` | Identifies analytical fact tables. |
 | `project_tables` | `is_transactional_table` | Identifies transactional tables that may require incremental or batch processing. |
@@ -101,6 +105,7 @@ Common audit/control columns used across the model include:
 | `project_tables` | `execution_required` | Marks a table as requiring execution. |
 | `project_table_mappings` | `table_source_id`, `table_target_id` | Defines table-level source-to-target relationships. |
 | `project_process_tables` | `process_id`, `table_id` | Defines which controlled table is handled by a registered process. |
+| `project_process_table_batches` | `process_id`, `table_id`, `batch_id` | Defines which batch slices are assigned to a specific process-table execution scope. |
 | `project_columns` | `is_nullable` | Supports metadata-driven not-null validation. |
 | `project_columns` | `is_watermark` | Identifies columns used for incremental load logic. |
 | `project_columns` | `is_reconciliation_column` | Identifies columns used in reconciliation metrics. |
@@ -117,7 +122,7 @@ Common audit/control columns used across the model include:
 | Table | Description |
 |---|---|
 | `execution_runs` | Tracks project-level execution runs. |
-| `execution_steps` | Tracks process-level execution steps. A process may represent a package, subprocess, table-level load, or batch-level activity. |
+| `execution_steps` | Tracks process-level execution steps. A process may represent a package, subprocess, or table-level load. Table and batch context is resolved through metadata relationships. |
 
 ##### Important columns
 
@@ -187,11 +192,13 @@ Common audit/control columns used across the model include:
 
 ### Naming Rules
 
-- Stored procedures should follow: `usp_[action]_[object_or_process]`.
-- User-defined functions should follow: `ufn_[action]_[object_or_process]`.
-- Exceptions may apply when a shorter or clearer name improves readability.
+| Object | Standard |
+|---|---|
+| Stored procedures | `usp_[action]_[object_or_process]` |
+| User-defined functions | `ufn_[action]_[object_or_process]` |
+| Exceptions | Exceptions may apply when a shorter or clearer name improves readability. |
 
-### Stored Procedure Catalog
+### Stored Procedure and Function Catalog
 
 | Object | Type | Purpose |
 |---|---|---|
@@ -201,13 +208,41 @@ Common audit/control columns used across the model include:
 | `runtime.usp_end_execution_run` | Stored procedure | Ends an execution run and derives the final run status from its execution steps. |
 | `observability.usp_log_error` | Stored procedure | Inserts a technical error record for an execution step. |
 | `metadata.ufn_list_project_process_tables` | Inline table-valued function | Lists active child processes and associated controlled tables for a parent process. |
-| `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists active child processes, target tables, source batch tables and batch definitions for a given parent process. |
+| `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists active child processes, target tables, source batch tables, and batch definitions for a given parent process. |
+
+## Security and Access Model
+
+### Role Permissions
+
+| Role | Permissions |
+|---|---|
+| `DataOps_Admin` | Can read and maintain `metadata`, `reference`, `runtime`, and `observability` objects. Can execute framework procedures. |
+| `DataOps_Project_Executor` | Can read `metadata` and `reference` objects, execute `runtime` and `observability` procedures, insert validation and reconciliation results, and read runtime/observability history for troubleshooting. |
+
+### Access Principles
+
+| Principle | Description |
+|---|---|
+| Project-specific access | Each consuming project should use its own SQL Server login or service account. |
+| Database user mapping | The project login or service account is mapped to a database user in `DataOps_Control`. |
+| Role assignment | The database user is added to the `DataOps_Project_Executor` role. |
+| Metadata protection | Project execution accounts should not directly modify framework metadata or reference values during normal pipeline execution. |
+
+Example access path:
+
+```text
+Project service account
+    → Database user in DataOps_Control
+        → DataOps_Project_Executor
+```
 
 ## Framework Execution Model
 
 `DataOps_Control` uses a process-based execution model. The framework separates configuration, runtime tracking, and execution evidence so that different projects can use the same control structure without embedding project-specific business rules in the control database.
 
 ### Main Execution Concepts
+
+#### Runtime levels
 
 The framework records execution at two runtime levels:
 
@@ -216,9 +251,9 @@ The framework records execution at two runtime levels:
 | Project run | `runtime.execution_runs` | Represents one execution of a registered project. |
 | Process step | `runtime.execution_steps` | Represents one executed process within the project run. |
 
-A project is registered in `metadata.projects`, and each project contains one or more processes registered in `metadata.project_processes`.
+#### Runtime metadata path
 
-The main runtime path is:
+A project is registered in `metadata.projects`, and each project contains one or more processes registered in `metadata.project_processes`.
 
 ```text
 metadata.projects
@@ -226,6 +261,8 @@ metadata.projects
     └── runs as → runtime.execution_runs
                     └── runtime.execution_steps → one metadata.project_process
 ```
+
+#### Table context path
 
 Table context is resolved through process metadata:
 
@@ -235,6 +272,19 @@ metadata.project_processes
         → metadata.project_tables
 ```
 
+#### Batch context path
+
+Batch context is resolved through the process-table batch scope:
+
+```text
+metadata.project_processes
+    → metadata.project_process_tables
+        → metadata.project_process_table_batches
+            → metadata.project_table_batches
+```
+
+#### Lineage path
+
 Source-to-target lineage is defined separately:
 
 ```text
@@ -242,17 +292,18 @@ metadata.project_table_mappings
     source table → target table
 ```
 
-This separation keeps the runtime model centered on processes, while still allowing table-level tracking when a process represents a table load.
+This separation keeps the runtime model centered on processes, while still allowing table-level context when a process represents a table load.
 
 ### Source and Target Table Interpretation
 
-`metadata.project_tables` can register source tables, target tables, or managed objects.
-
-Source tables are registered when they are needed for source-to-target mappings, batch filtering, validation, or reconciliation. Target tables are registered when they are controlled by execution, validation, reconciliation, or final model rules.
-
-Source-to-target relationships are defined through `metadata.project_table_mappings`.
-
-Batch definitions use `metadata.project_table_batches.batch_source_table_id` because batch filters are applied against the source table used to extract data.
+| Concept | Description |
+|---|---|
+| Source table | Registered when needed for source-to-target mappings, batch filtering, validation, or reconciliation. |
+| Target table | Registered when controlled by execution, validation, reconciliation, or final model rules. |
+| Managed object | Registered when a non-table object needs to participate in execution control, validation, reconciliation, or documentation. |
+| Source-to-target mapping | Defined through `metadata.project_table_mappings`. |
+| Batch source table | Defined through `metadata.project_table_batches.batch_source_table_id` because batch filters are applied against the source table. |
+| Process-table batch scope | Defined through `metadata.project_process_table_batches` when a process-table relationship requires batch execution. |
 
 ### Data Flow Types
 
@@ -266,6 +317,8 @@ The framework supports three common execution patterns:
 
 ### Table Load Flow
 
+#### Purpose
+
 A table load is used when a controlled table is loaded as a single execution unit.
 
 Examples:
@@ -275,9 +328,9 @@ Examples:
 - `Customer Load`
 - `DimCustomer Load`
 
-In this pattern, each table-level load should have a registered process.
+#### Metadata pattern
 
-Example metadata structure:
+In this pattern, each table-level load should have a registered process.
 
 ```text
 Project: Oracle to SQL Server Migration
@@ -291,6 +344,8 @@ Reference Data Load
 
 The parent process, `Reference Data Load`, is used for orchestration. The child processes represent table-level execution units.
 
+#### Runtime behavior
+
 At runtime, each child process creates its own execution step:
 
 | execution_step | project_process | controlled table |
@@ -302,6 +357,8 @@ At runtime, each child process creates its own execution step:
 
 Observability records are linked to the execution step.
 
+#### Reconciliation example
+
 Example reconciliation for `AddressType Load`:
 
 | metric_name | reconciliation_key | reconciliation_side | metric_value_bigint | execution_step_id |
@@ -311,9 +368,9 @@ Example reconciliation for `AddressType Load`:
 
 ### Grouped Table Load Flow
 
-A grouped table load is used when one parent process organizes multiple related table-level processes.
+#### Purpose
 
-Example:
+A grouped table load is used when one parent process organizes multiple related table-level processes.
 
 ```text
 Geography Load
@@ -322,12 +379,12 @@ Geography Load
     └── SalesTerritory Load
 ```
 
-Recommended pattern:
+#### Metadata pattern
 
-| Process type | Purpose | Table mapping |
+| Process type | Responsibility | Table mapping |
 |---|---|---|
-| Parent process | Orchestration or grouping | Usually no direct table mapping |
-| Child process | Table-level execution | Maps to one controlled table |
+| Parent process | Orchestration or grouping | Usually no direct table mapping. |
+| Child process | Table-level execution | Maps to one controlled table. |
 
 Example with table mapping:
 
@@ -338,9 +395,13 @@ Geography Load
     └── SalesTerritory Load → SalesTerritory
 ```
 
+#### Runtime behavior
+
 This pattern keeps observability clear. Technical errors, validation summaries, and reconciliation metrics can be linked to the specific table-level execution step instead of being attached only to the parent group.
 
 ### Batch Load Flow
+
+#### Purpose
 
 A batch load is used when a large or transactional table is processed in smaller slices.
 
@@ -351,7 +412,9 @@ Examples:
 - Date-range based fact loads.
 - Historical backfills.
 
-Batch definitions are stored in `metadata.project_table_batches`.
+#### Batch metadata
+
+Batch definitions are stored in `metadata.project_table_batches`. These records define the available source slices that can be used for batch filtering.
 
 The batch definition is based on the source table used for filtering, not necessarily the final target table.
 
@@ -362,26 +425,51 @@ Example batch metadata:
 | `SALES_SALESORDERHEADER` | `OrderDate` | `DATETIME` | `2011-05` | `2011-05-01` | `2011-05-31` |
 | `SALES_SALESORDERHEADER` | `OrderDate` | `DATETIME` | `2011-06` | `2011-06-01` | `2011-06-30` |
 
-The target table is resolved through `metadata.project_table_mappings`.
+#### Process-table-batch execution scope
 
-Example:
-
-```text
-metadata.project_table_batches.batch_source_table_id → SALES_SALESORDERHEADER
-metadata.project_table_mappings.table_source_id      → SALES_SALESORDERHEADER
-metadata.project_table_mappings.table_target_id      → SalesOrderHeader
-```
-
-A batch load process may be represented as:
+The batch execution scope is defined through `metadata.project_process_table_batches`. This bridge table assigns one or more batch definitions to a specific process-table relationship.
 
 ```text
-SalesOrderHeader Load
-    ├── Batch 2011-05
-    ├── Batch 2011-06
-    └── Batch 2011-07
+metadata.project_processes
+    → metadata.project_process_tables
+        → metadata.project_process_table_batches
+            → metadata.project_table_batches
 ```
 
-The table-level process controls the load, while batch metadata defines which source slice should be processed.
+This allows the same source batch definition to be reused by different process-table execution scopes when needed.
+
+Example process-table-batch scope:
+
+```text
+Sales Load
+    ├── SalesOrderHeader → Batch 2011-05
+    ├── SalesOrderHeader → Batch 2011-06
+    ├── SalesOrderDetail → Batch 2011-05
+    └── SalesOrderDetail → Batch 2011-06
+```
+
+#### Source and target resolution
+
+| Object | Responsibility |
+|---|---|
+| `metadata.project_process_tables` | Resolves the controlled target table for the process. |
+| `metadata.project_process_table_batches` | Assigns configured batch slices to the process-table execution scope. |
+| `metadata.project_table_batches` | Resolves the source batch table and batch filter values. |
+| `metadata.project_table_mappings` | Documents source-to-target lineage. |
+
+Example lineage context:
+
+```text
+metadata.project_process_tables.table_id              → SalesOrderHeader
+metadata.project_process_table_batches.batch_id       → Batch 2011-05
+metadata.project_table_batches.batch_source_table_id  → SALES_SALESORDERHEADER
+metadata.project_table_mappings.table_source_id       → SALES_SALESORDERHEADER
+metadata.project_table_mappings.table_target_id       → SalesOrderHeader
+```
+
+The table-level process controls the load, while process-table-batch metadata defines which source slices should be processed for that table execution scope.
+
+#### Reconciliation example
 
 For a batch execution, reconciliation metrics should include the batch context in `reconciliation_key`.
 
@@ -401,6 +489,8 @@ Example amount reconciliation:
 
 ### Observability and Status Behavior
 
+#### Observability responsibility
+
 Observability tables store execution evidence, not business ownership decisions.
 
 | Table | Purpose |
@@ -409,11 +499,17 @@ Observability tables store execution evidence, not business ownership decisions.
 | `observability.validation_results` | Stores summary-level validation findings. |
 | `observability.reconciliation_results` | Stores reconciliation metrics. |
 
-`DataOps_Control` does not store row-level rejected business records centrally.
+#### Design boundaries
 
-It also does not own business-specific reconciliation decisions. For example, source and target row counts may not match when the target is an aggregated table. In that case, the project-specific reconciliation procedure should register comparable metrics, such as `INVOICE_COUNT` or `TOTAL_AMOUNT`, instead of raw row counts.
+| Boundary | Description |
+|---|---|
+| Rejected records | `DataOps_Control` does not store row-level rejected business records centrally. |
+| Business reconciliation decisions | `DataOps_Control` does not own business-specific reconciliation decisions. |
+| Final step status | The process owner or project-specific procedure decides whether an execution step completed as `Success`, `Observed`, or `Failed`. |
 
-The process owner or project-specific procedure decides whether an execution step completed as `Success`, `Observed`, or `Failed`.
+For example, source and target row counts may not match when the target is an aggregated table. In that case, the project-specific reconciliation procedure should register comparable metrics, such as `INVOICE_COUNT` or `TOTAL_AMOUNT`, instead of raw row counts.
+
+#### Execution statuses
 
 Execution statuses are controlled through `reference.status_codes`.
 
@@ -426,6 +522,8 @@ Execution statuses are controlled through `reference.status_codes`.
 | `Failed` | The execution failed due to a technical error. |
 | `Skipped` | The execution was intentionally skipped. |
 
+#### Run status derivation
+
 For execution runs, the final status is derived from the related execution steps:
 
 | Step results | Final run status |
@@ -433,22 +531,3 @@ For execution runs, the final status is derived from the related execution steps
 | Any step is `Failed` | `Failed` |
 | No failed steps, but at least one step is `Observed` | `Observed` |
 | All completed steps are successful or skipped | `Success` |
-
-### End-to-End Example: AddressType Load
-
-This example shows how the main objects work together for a simple table load.
-
-| Step | What happens | Main objects involved |
-|---:|---|---|
-| 1 | The project run starts. | `runtime.usp_start_execution_run`, `runtime.execution_runs` |
-| 2 | The `AddressType Load` process starts. | `runtime.usp_start_execution_step`, `runtime.execution_steps`, `metadata.project_processes` |
-| 3 | The process table context is resolved. | `metadata.project_process_tables`, `metadata.project_tables` |
-| 4 | The table is loaded by the project-specific ETL logic. | Project-specific package or stored procedure |
-| 5 | Validation summaries and reconciliation metrics are inserted in bulk. | `observability.validation_results`, `observability.reconciliation_results` |
-| 6 | Technical errors, if any, are logged. | `observability.usp_log_error`, `observability.error_logs` |
-| 7 | The process-specific logic decides the final step status. | `Success`, `Observed`, or `Failed` |
-| 8 | The execution step is ended with the final status. | `runtime.usp_end_execution_step` |
-| 9 | The execution run is ended after all steps finish. | `runtime.usp_end_execution_run` |
-
-This keeps `DataOps_Control` generic. The framework records metadata, execution state, and observability evidence, while project-specific logic owns the actual business validation and reconciliation decisions.
-
