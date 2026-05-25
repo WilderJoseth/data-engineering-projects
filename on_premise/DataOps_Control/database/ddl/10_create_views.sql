@@ -4,10 +4,28 @@
 
     Purpose:
     - Creates reporting and troubleshooting views for runtime and observability data.
+    - These views simplify common monitoring queries by joining runtime,
+      metadata, reference, and observability tables.
+    - They are intended for review, troubleshooting, demos, and lightweight reporting.
 */
 
 USE [DataOps_Control];
 GO
+
+/*============================================================================
+    View: runtime.vw_execution_run_summary
+
+    Purpose:
+    - Provides one row per project execution run.
+    - Shows the project name, run status, start/end dates, and duration.
+    - Useful for quickly reviewing whether a project run completed successfully,
+      failed, or requires observation.
+
+    Main use cases:
+    - Review recent project executions.
+    - Check final run status.
+    - Compare run durations.
+============================================================================*/
 
 CREATE OR ALTER VIEW [runtime].[vw_execution_run_summary]
 AS
@@ -25,6 +43,22 @@ INNER JOIN [metadata].[projects] p
 INNER JOIN [reference].[status_codes] sc
     ON sc.[id] = er.[status_code_id];
 GO
+
+/*============================================================================
+    View: runtime.vw_execution_step_summary
+
+    Purpose:
+    - Provides one row per process execution step.
+    - Shows the project, process, parent process, step status, start/end dates,
+      and duration.
+    - Useful for identifying which specific process failed, was observed,
+      or took longer than expected.
+
+    Main use cases:
+    - Review process-level execution history.
+    - Troubleshoot failed or observed steps.
+    - Understand execution flow using parent-child process relationships.
+============================================================================*/
 
 CREATE OR ALTER VIEW [runtime].[vw_execution_step_summary]
 AS
@@ -53,6 +87,22 @@ LEFT JOIN [metadata].[project_processes] parent_pp
 INNER JOIN [reference].[status_codes] sc
     ON sc.[id] = es.[status_code_id];
 GO
+
+/*============================================================================
+    View: observability.vw_execution_observability_summary
+
+    Purpose:
+    - Provides one row per execution step with aggregated observability counts.
+    - Counts technical errors, validation results, and reconciliation results
+      linked to each step.
+    - Useful for quickly identifying which execution steps produced evidence
+      that may require review.
+
+    Main use cases:
+    - Check whether a step generated errors.
+    - Check whether validation or reconciliation records were published.
+    - Support operational review after a project execution run.
+============================================================================*/
 
 CREATE OR ALTER VIEW [observability].[vw_execution_observability_summary]
 AS

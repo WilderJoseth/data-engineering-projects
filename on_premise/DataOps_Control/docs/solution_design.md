@@ -210,6 +210,22 @@ Common audit/control columns used across the model include:
 | `metadata.ufn_list_project_process_tables` | Inline table-valued function | Lists active child processes and associated controlled tables for a parent process. |
 | `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists active child processes, target tables, source batch tables, and batch definitions for a given parent process. |
 
+## Views
+
+### Naming Rules
+
+| Object | Standard |
+|---|---|
+| Views | Use `snake_case`, for example `runtime.vw_[action]_[object_or_process]`. |
+
+### View Catalog
+
+| Table | Description |
+|---|---|
+| `runtime.vw_execution_run_summary` | Reviews whether a project run completed successfully, failed, or requires observation. |
+| `runtime.vw_execution_step_summary` | Identifies which specific process failed, was observed, or took longer than expected. |
+| `observability.vw_execution_observability_summary` | Identifies which execution steps produced evidence that may require review. |
+
 ## Security and Access Model
 
 ### Role Permissions
@@ -439,8 +455,8 @@ Example process-table-batch scope:
 
 ```text
 Sales Load
-    ├── SalesOrderHeader → Batch 2011-05
-    ├── SalesOrderHeader → Batch 2011-06
+    |-- SalesOrderHeader → Batch 2011-05
+    |-- SalesOrderHeader → Batch 2011-06
 ```
 
 #### Source and target resolution

@@ -53,15 +53,15 @@ Common challenges include:
 
 ```text
 database/
-├── ddl/        # Database, schema, table, procedure, function, role, permission, and view scripts
-├── seed/       # Reference and sample domain metadata
-├── tests/      # Smoke, table-flow, and batch-flow test scripts
-├── users/      # User creation scripts for admin and project execution access
-└── cleanup/    # Cleanup scripts for resetting seeded or test data
+|-- ddl/        # Database, schema, table, procedure, function, role, permission, and view scripts
+|-- seed/       # Reference and sample domain metadata
+|-- tests/      # Smoke, table-flow, and batch-flow test scripts
+|-- users/      # User creation scripts for admin and project execution access
+`-- cleanup/    # Cleanup scripts for resetting seeded or test data
 
 docs/
-├── img/        # Logical data model and Entity Relationship diagrams
-└── solution_design.md
+|-- img/        # Logical data model and Entity Relationship diagrams
+`-- solution_design.md
 ```
 
 ## Related Documentation
