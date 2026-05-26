@@ -116,7 +116,7 @@ BEGIN
     FROM @missing_objects
     ORDER BY object_type, object_name;
 
-    THROW 51000, 'Smoke test failed. One or more required DataOps_Control objects are missing.', 1;
+    ;THROW 51000, 'Smoke test failed. One or more required DataOps_Control objects are missing.', 1;
 END;
 
 SELECT

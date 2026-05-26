@@ -35,7 +35,7 @@ BEGIN
         AND [is_active] = 1
     )
     BEGIN
-        THROW 50001, 'Project was not found or is inactive.', 1;
+        ;THROW 50001, 'Project was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -51,7 +51,7 @@ BEGIN
         AND [is_active] = 1
     )
     BEGIN
-        THROW 50002, 'Status code Running was not found or is inactive.', 1;
+        ;THROW 50002, 'Status code Running was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -111,7 +111,7 @@ BEGIN
 
     IF @execution_run_project_id IS NULL
     BEGIN
-        THROW 50003, 'Execution run was not found or is already closed.', 1;
+        ;THROW 50003, 'Execution run was not found or is already closed.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -129,7 +129,7 @@ BEGIN
         AND [is_active] = 1
     )
     BEGIN
-        THROW 50004, 'Project process was not found, is inactive, or does not belong to the execution run project.', 1;
+        ;THROW 50004, 'Project process was not found, is inactive, or does not belong to the execution run project.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -144,7 +144,7 @@ BEGIN
         AND [is_active] = 1
     )
     BEGIN
-        THROW 50005, 'Status code Running was not found or is inactive.', 1;
+        ;THROW 50005, 'Status code Running was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -203,7 +203,7 @@ BEGIN
         AND [is_active] = 1
     )
     BEGIN
-        THROW 50006, 'Status code was not found or is inactive.', 1;
+        ;THROW 50006, 'Status code was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -220,7 +220,7 @@ BEGIN
 
     IF @@ROWCOUNT = 0
     BEGIN
-        THROW 50007, 'Execution step was not found or is already closed.', 1;
+        ;THROW 50007, 'Execution step was not found or is already closed.', 1;
     END;
 END;
 GO
@@ -270,10 +270,10 @@ BEGIN
         SELECT 1
         FROM [runtime].[execution_runs]
         WHERE [id] = @p_execution_run_id
-          AND [end_run_date] IS NULL
+        AND [end_run_date] IS NULL
     )
     BEGIN
-        THROW 50008, 'Execution run was not found or is already closed.', 1;
+        ;THROW 50008, 'Execution run was not found or is already closed.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -303,7 +303,7 @@ BEGIN
         AND [status_code_id] IN (@status_pending, @status_running)
     )
     BEGIN
-        THROW 50009, 'Execution run cannot be ended because one or more steps are still pending or running.', 1;
+        ;THROW 50009, 'Execution run cannot be ended because one or more steps are still pending or running.', 1;
     END
 
     -------------------------------------------------------------------------
@@ -357,7 +357,7 @@ BEGIN
         AND [is_active] = 1
     )
     BEGIN
-        THROW 50010, 'Derived final status code was not found or is inactive.', 1;
+        ;THROW 50010, 'Derived final status code was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -373,7 +373,7 @@ BEGIN
 
     IF @@ROWCOUNT = 0
     BEGIN
-        THROW 50011, 'Execution run was not found or is already closed.', 1;
+        ;THROW 50011, 'Execution run was not found or is already closed.', 1;
     END;
 END;
 GO
@@ -416,7 +416,7 @@ BEGIN
         WHERE [id] = @p_execution_step_id
     )
     BEGIN
-        THROW 50012, 'Execution step was not found.', 1;
+        ;THROW 50012, 'Execution step was not found.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -425,12 +425,12 @@ BEGIN
 
     IF NULLIF(LTRIM(RTRIM(@p_error_source)), '') IS NULL
     BEGIN
-        THROW 50013, 'Error source is required.', 1;
+        ;THROW 50013, 'Error source is required.', 1;
     END;
 
     IF NULLIF(LTRIM(RTRIM(@p_details)), '') IS NULL
     BEGIN
-        THROW 50014, 'Error details are required.', 1;
+        ;THROW 50014, 'Error details are required.', 1;
     END;
 
     -------------------------------------------------------------------------

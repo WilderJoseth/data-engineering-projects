@@ -56,8 +56,8 @@ RETURN
         AND t.[is_active] = 1
         AND t.[batch_column_active] = @p_batch_column_active
     WHERE p1.[project_id] = @p_project_id
-      AND p1.[id] = @p_process_id
-      AND p1.[is_active] = 1
+    AND p1.[id] = @p_process_id
+    AND p1.[is_active] = 1
 );
 GO
 
@@ -126,7 +126,7 @@ RETURN
         ON src.[id] = b.[batch_source_table_id]
         AND src.[is_active] = 1
     WHERE p1.[project_id] = @p_project_id
-      AND p1.[id] = @p_process_id
-      AND p1.[is_active] = 1
+    AND p1.[id] = @p_process_id
+    AND p1.[is_active] = 1
 );
 GO
