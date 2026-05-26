@@ -136,19 +136,28 @@ Key design decisions:
 
 ![DataOps_Control Data Model](img/data_model_DataOps_Control.png)
 
-The model is organized into three logical groups:
+`DataOps_Control` is implemented as a separate reusable SQL Server control database. The current framework version is maintained in the `on_premise/DataOps_Control` project and is consumed by this migration through metadata, runtime, observability, and reference schemas.
 
-| Group | Tables | Purpose |
+The model is organized into four responsibility-based schemas:
+
+| Schema | Main tables | Purpose |
 |---|---|---|
-| Project metadata | `projects`, `project_processes`, `project_databases`, `project_tables`, `project_columns`, `project_table_batches` | Defines projects, process hierarchy, databases, tables, columns, table-level load metadata, and batch-level load metadata. |
-| Execution tracking | `execution_runs`, `execution_steps` | Tracks full runs, hierarchical execution steps, and batch-level execution for large tables. |
-| Observability | `error_logs`, `validation_results`, `reconciliation_results` | Stores technical errors, validation outcomes, and reconciliation checks. |
+| `metadata` | `projects`, `project_databases`, `project_database_mappings`, `project_processes`, `project_tables`, `project_table_mappings`, `project_process_tables`, `project_process_table_batches`, `project_columns`, `project_table_batches` | Defines project registration, database mappings, process hierarchy, table inventory, source-to-target mappings, process-to-table execution scope, column metadata, and batch definitions. |
+| `runtime` | `execution_runs`, `execution_steps` | Tracks project-level execution runs and process-level execution steps. |
+| `observability` | `error_logs`, `validation_results`, `reconciliation_results` | Stores technical errors, validation summaries, and reconciliation metrics generated during execution. |
+| `reference` | `status_codes`, `validation_codes` | Stores controlled status and validation code values used by runtime and observability records. |
 
 #### Technical details
 
-- `project_processes` and `execution_steps` support self-relations to represent hierarchies such as ETL project, package, subprocess, table load, and child execution steps.
-- `project_tables` can store table-level control metadata such as `load_type`, `batch_enabled`, `batch_column_name`, `rerun_required`, `last_load_status`, and `last_successful_run_id`.
-- `project_table_batches` supports large transactional tables split by period or key range. For this project, transactional batches use monthly `yyyyMM` periods based on `SalesOrderHeader.OrderDate`.
+- `metadata.project_processes` supports parent-child hierarchy for ETL projects, packages, grouped loads, table-level loads, and batch-oriented loads.
+- `runtime.execution_runs` represents one execution of the registered migration project.
+- `runtime.execution_steps` represents one executed process within a run and links back to `metadata.project_processes`.
+- `metadata.project_table_mappings` records source-to-target lineage, including Oracle-to-operational and operational-to-analytics mappings.
+- `metadata.project_process_tables` defines which controlled target table is handled by each process.
+- `metadata.project_table_batches` defines reusable source batch slices. For this project, transactional batches are monthly ranges based on `SALES_SALESORDERHEADER.OrderDate`.
+- `metadata.project_process_table_batches` assigns batch definitions to a process-table execution scope.
+- `observability.reconciliation_results` stores comparable metrics such as `ROW_COUNT`, `TOTAL_DUE`, or `SALES_AMOUNT` with a `reconciliation_side` such as `SOURCE`, `STAGING`, `WORK`, `TARGET`, or `FINAL`.
+- `observability.validation_results` stores summary-level findings using controlled validation codes such as `NOT_NULL`, `DUPLICATE`, `FK_CHECK`, `DATA_TYPE`, `LENGTH_CHECK`, `DATE_RANGE`, `NEGATIVE_VALUE`, `RECON_WARNING`, and `INFO_CHECK`.
 
 ## Table Implementation Standards
 
@@ -235,13 +244,14 @@ Final load procedures should use the strategy appropriate to the load type.
 
 ### Reconciliation Procedure Pattern
 
-Reconciliation procedures should register results in `control.reconciliation_results` before publishing them to `DataOps_Control`.
+Project-specific reconciliation procedures should register comparable metrics in `DataOps_Control.observability.reconciliation_results`. The control framework stores the evidence; the migration-specific procedure decides which metrics are meaningful and whether the execution step should end as `Success`, `Observed`, or `Failed`.
 
 Common reconciliation checks include:
 
 - Source-to-staging row counts.
 - Work-to-final row counts.
 - Financial totals for transactional and fact loads.
+- Batch-level row counts and amount totals using a `reconciliation_key` such as `BATCH=2011-05`.
 
 ## SSIS Implementation Guidelines
 
@@ -260,46 +270,45 @@ Data movement is implemented through two controlled flows:
 - Reference and master data are loaded before transactional data.
 - Large transactional tables use batch-based processing by `SalesOrderHeader.OrderDate` period in `yyyyMM` format.
 - Analytical loading uses `Sales_Operational.prod` as the curated source.
-- Execution status, validation results, reconciliation results, errors, and batch checkpoints are published to `DataOps_Control`.
+- Execution status is registered in `DataOps_Control.runtime`.
+- Validation results, reconciliation results, and technical errors are published to `DataOps_Control.observability`.
+- Table scope, batch scope, and source-to-target lineage are resolved from `DataOps_Control.metadata`.
 - `staging`, `work`, and `control` tables are managed through controlled cleanup rules.
 
 #### Common Table-Level Load Pattern
 
 This pattern applies to reference, master, and dimension loads where records are processed at table level and final tables are loaded using `MERGE` or UPSERT logic.
 
-1. Register the process or table load start in `DataOps_Control.execution_steps`.
-2. Identify the tables to load or rerun using metadata from `DataOps_Control.project_tables`.
-3. Clean the related `staging`, `work`, and `control` tables.
-4. Extract source data into `staging`.
-5. Validate staged data using SQL Server stored procedures.
-6. Store validation results in the local `control.validation_results` table.
-7. Publish validation results to `DataOps_Control.validation_results`.
+1. Register the project run or package start with `DataOps_Control.runtime.usp_start_execution_run` when needed.
+2. Register the process or table load start with `DataOps_Control.runtime.usp_start_execution_step`.
+3. Identify active child processes and controlled tables using `DataOps_Control.metadata.ufn_list_project_process_tables`.
+4. Clean the related `staging`, `work`, and local `control` tables.
+5. Extract source data into `staging`.
+6. Validate staged data using SQL Server stored procedures.
+7. Publish validation summaries to `DataOps_Control.observability.validation_results`.
 8. Load valid records into `work`.
 9. Load final records using `MERGE` or UPSERT logic.
-10. Register reconciliation results in the local `control.reconciliation_results` table.
-11. Publish reconciliation results to `DataOps_Control.reconciliation_results`.
-12. Update table load status in `DataOps_Control.project_tables`.
-13. Register the process end in `DataOps_Control.execution_steps`.
+10. Publish reconciliation metrics to `DataOps_Control.observability.reconciliation_results`.
+11. Decide the final process status based on technical errors, validation results, and reconciliation outcomes.
+12. End the process step with `DataOps_Control.runtime.usp_end_execution_step`.
 
 #### Common Batch-Level Load Pattern
 
 This pattern applies to transactional and fact loads where data is processed by reloadable business periods instead of by full table.
 
-1. Register the process or batch load start in `DataOps_Control.execution_steps`.
-2. Identify the batches to load or rerun using metadata from `DataOps_Control.project_table_batches`.
+1. Register the process or batch load start with `DataOps_Control.runtime.usp_start_execution_step`.
+2. Identify active child processes, controlled target tables, source batch tables, and batch slices using `DataOps_Control.metadata.ufn_list_project_process_table_batches`.
 3. Validate required reference and master data dependencies before processing the batch.
 4. Clean the related `staging`, `work` and `control` tables.
 5. Extract source data for the current batch into `staging`.
 6. Validate staged data using SQL Server stored procedures.
-7. Store validation results in the local `control.validation_results` table.
-8. Publish validation results to `DataOps_Control.validation_results`.
+7. Publish validation summaries to `DataOps_Control.observability.validation_results`.
 9. Load valid records into `work`.
 10. Delete existing final records for the current batch period.
 11. Load final records for the current batch period.
-12. Register reconciliation results in the local `control.reconciliation_results` table.
-13. Publish reconciliation results to `DataOps_Control.reconciliation_results`.
-14. Update batch load status in `DataOps_Control.project_table_batches`.
-15. Register the process end in `DataOps_Control.execution_steps`.
+12. Publish batch-scoped reconciliation metrics to `DataOps_Control.observability.reconciliation_results`.
+13. Decide the final process status based on technical errors, validation results, and reconciliation outcomes.
+14. End the process step with `DataOps_Control.runtime.usp_end_execution_step`.
 
 ### Database Communication Strategy
 
@@ -326,9 +335,10 @@ Common package-level parameters may include:
 |---|---|
 | `p_execution_run_id` | Identifies the current execution run. |
 | `p_execution_step_id` | Identifies the current execution step. |
-| `p_project_table_id` | Identifies the table being processed. |
-| `p_batch_period_yyyymm` | Identifies the current batch period when batching is used. |
-| `p_rerun_required` | Indicates whether the object is being reprocessed. |
+| `p_project_process_id` | Identifies the registered process being executed. |
+| `p_project_table_id` | Identifies the controlled table being processed. |
+| `p_batch_id` | Identifies the `DataOps_Control.metadata.project_table_batches` record being processed. |
+| `p_batch_value` | Identifies the current batch value, such as `2011-05`, when batching is used. |
 
 ### Package Variables
 
@@ -480,20 +490,20 @@ Rerun and recovery behavior is metadata-driven. The framework uses `DataOps_Cont
 
 | Status | Meaning |
 |---|---|
-| `Pending` | Object is waiting to run. |
-| `Running` | Object is currently executing. |
-| `Success` | Object completed successfully. |
-| `Failed` | Object failed due to a technical, validation, or reconciliation issue. |
-| `Skipped` | Object was intentionally skipped. |
-| `RerunRequired` | Object is marked for reprocessing. |
+| `Pending` | Execution is registered but has not started. |
+| `Running` | Execution is currently in progress. |
+| `Success` | Execution completed and expected control checks passed. |
+| `Observed` | Execution completed technically, but validation or reconciliation results require review. |
+| `Failed` | Execution failed due to a technical error. |
+| `Skipped` | Execution was intentionally skipped. |
 
 ### Table-Level Rerun Rules
 
 A table may be included in a rerun when:
 
 - It is active.
-- The previous load failed.
-- It is explicitly marked as rerun required.
+- Its execution metadata marks it as requiring execution.
+- The previous process step failed or ended as observed.
 - A parent dependency was reprocessed.
 - The table is included in a selected recovery scope.
 
@@ -501,9 +511,9 @@ A table may be included in a rerun when:
 
 A batch may be included in a rerun when:
 
-- The batch failed.
-- Reconciliation failed.
-- The batch is explicitly marked as rerun required.
+- Its batch metadata marks it as requiring execution.
+- Its previous process step failed or ended as observed.
+- Reconciliation results require review or correction.
 - The batch belongs to a selected recovery period.
 
 ## Assumptions and Scope Boundaries
