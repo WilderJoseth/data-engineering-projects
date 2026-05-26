@@ -2,6 +2,9 @@
   DataOps_Control
   Cleanup Script: Reference Data
 
+  Important execution order:
+  - Run this script only after 01_cleanup_sales_domain_metadata.sql.
+
   Purpose:
   - Removes reference data from reference.status_codes
     or reference.validation_codes.
