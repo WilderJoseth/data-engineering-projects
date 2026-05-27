@@ -3,11 +3,12 @@
         01_create_database_and_schemas.sql
 
     Purpose
-        Creates the Sales_Analytics database and final analytical schemas.
+        Creates the Sales_Analytics database and the schemas required by the
+        analytical migration pipeline.
 
     Scope
-        Only dim and fact schemas are created here. Staging, work, and local
-        control schemas are intentionally deferred.
+        Creates staging, work, dim, and fact schemas. Local control objects are
+        intentionally deferred to a later implementation step.
 */
 
 CREATE DATABASE [Sales_Analytics];
@@ -20,4 +21,10 @@ CREATE SCHEMA [dim];
 GO
 
 CREATE SCHEMA [fact];
+GO
+
+CREATE SCHEMA [staging];
+GO
+
+CREATE SCHEMA [work];
 GO

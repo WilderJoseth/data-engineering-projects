@@ -10,7 +10,8 @@
         - Only business-relevant columns are modeled.
         - Source identifiers are preserved for traceability and reconciliation.
         - Oracle technical columns such as ROWGUID and MODIFIEDDATE are excluded.
-        - ETL audit columns are deferred until the load framework is implemented.
+        - Final tables include standard audit columns from the solution design.
+        - created_run_id must be supplied by the migration process.
 */
 
 USE [Sales_Operational];
@@ -20,6 +21,12 @@ CREATE TABLE [prod].[AddressType] (
     [AddressTypeKey] INT IDENTITY(1,1) NOT NULL,
     [SourceAddressTypeID] INT NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_AddressType_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_AddressType_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_AddressType_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_AddressType] PRIMARY KEY CLUSTERED ([AddressTypeKey] ASC),
     CONSTRAINT [uk_prod_AddressType_SourceAddressTypeID] UNIQUE ([SourceAddressTypeID])
@@ -30,6 +37,12 @@ CREATE TABLE [prod].[CountryRegion] (
     [CountryRegionKey] INT IDENTITY(1,1) NOT NULL,
     [SourceCountryRegionCode] VARCHAR(3) NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_CountryRegion_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_CountryRegion_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_CountryRegion_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_CountryRegion] PRIMARY KEY CLUSTERED ([CountryRegionKey] ASC),
     CONSTRAINT [uk_prod_CountryRegion_SourceCountryRegionCode] UNIQUE ([SourceCountryRegionCode])
@@ -42,6 +55,12 @@ CREATE TABLE [prod].[SalesTerritory] (
     [Name] VARCHAR(50) NOT NULL,
     [TerritoryGroup] VARCHAR(50) NOT NULL,
     [CountryRegionKey] INT NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SalesTerritory_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SalesTerritory_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesTerritory_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_SalesTerritory] PRIMARY KEY CLUSTERED ([SalesTerritoryKey] ASC),
     CONSTRAINT [uk_prod_SalesTerritory_SourceTerritoryID] UNIQUE ([SourceTerritoryID]),
@@ -56,6 +75,12 @@ CREATE TABLE [prod].[StateProvince] (
     [Name] VARCHAR(50) NOT NULL,
     [CountryRegionKey] INT NOT NULL,
     [SalesTerritoryKey] INT NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_StateProvince_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_StateProvince_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_StateProvince_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_StateProvince] PRIMARY KEY CLUSTERED ([StateProvinceKey] ASC),
     CONSTRAINT [uk_prod_StateProvince_SourceStateProvinceID] UNIQUE ([SourceStateProvinceID]),
@@ -69,6 +94,12 @@ CREATE TABLE [prod].[ProductCategory] (
     [SourceProductSubcategoryID] INT NOT NULL,
     [SourceProductCategoryID] INT NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_ProductCategory_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_ProductCategory_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_ProductCategory_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_ProductCategory] PRIMARY KEY CLUSTERED ([ProductCategoryKey] ASC),
     CONSTRAINT [uk_prod_ProductCategory_SourceProductSubcategoryID] UNIQUE ([SourceProductSubcategoryID])
@@ -86,6 +117,12 @@ CREATE TABLE [prod].[SpecialOffer] (
     [EndDate] DATE NOT NULL,
     [MinQty] INT NOT NULL,
     [MaxQty] INT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SpecialOffer_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SpecialOffer_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SpecialOffer_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_SpecialOffer] PRIMARY KEY CLUSTERED ([SpecialOfferKey] ASC),
     CONSTRAINT [uk_prod_SpecialOffer_SourceSpecialOfferID] UNIQUE ([SourceSpecialOfferID])
@@ -98,6 +135,12 @@ CREATE TABLE [prod].[ShipMethod] (
     [Name] VARCHAR(50) NOT NULL,
     [ShipBase] DECIMAL(19,4) NOT NULL,
     [ShipRate] DECIMAL(19,4) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_ShipMethod_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_ShipMethod_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_ShipMethod_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_ShipMethod] PRIMARY KEY CLUSTERED ([ShipMethodKey] ASC),
     CONSTRAINT [uk_prod_ShipMethod_SourceShipMethodID] UNIQUE ([SourceShipMethodID])
@@ -108,6 +151,12 @@ CREATE TABLE [prod].[Currency] (
     [CurrencyKey] INT IDENTITY(1,1) NOT NULL,
     [SourceCurrencyCode] CHAR(3) NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_Currency_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_Currency_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_Currency_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_Currency] PRIMARY KEY CLUSTERED ([CurrencyKey] ASC),
     CONSTRAINT [uk_prod_Currency_SourceCurrencyCode] UNIQUE ([SourceCurrencyCode])
@@ -122,6 +171,12 @@ CREATE TABLE [prod].[CurrencyRate] (
     [ToCurrencyKey] INT NOT NULL,
     [AverageRate] DECIMAL(19,4) NOT NULL,
     [EndOfDayRate] DECIMAL(19,4) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_CurrencyRate_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_CurrencyRate_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_CurrencyRate_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_CurrencyRate] PRIMARY KEY CLUSTERED ([CurrencyRateKey] ASC),
     CONSTRAINT [uk_prod_CurrencyRate_SourceCurrencyRateID] UNIQUE ([SourceCurrencyRateID]),
@@ -137,6 +192,12 @@ CREATE TABLE [prod].[CreditCard] (
     [CardNumberLast4] CHAR(4) NOT NULL,
     [ExpMonth] TINYINT NOT NULL,
     [ExpYear] SMALLINT NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_CreditCard_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_CreditCard_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_CreditCard_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_CreditCard] PRIMARY KEY CLUSTERED ([CreditCardKey] ASC),
     CONSTRAINT [uk_prod_CreditCard_SourceCreditCardID] UNIQUE ([SourceCreditCardID])
@@ -152,6 +213,12 @@ CREATE TABLE [prod].[Address] (
     [StateProvinceKey] INT NOT NULL,
     [PostalCode] VARCHAR(15) NOT NULL,
     [AddressTypeKey] INT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_Address_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_Address_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_Address_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_Address] PRIMARY KEY CLUSTERED ([AddressKey] ASC),
     CONSTRAINT [uk_prod_Address_SourceAddressID] UNIQUE ([SourceAddressID]),
@@ -176,6 +243,12 @@ CREATE TABLE [prod].[Product] (
     [SellStartDate] DATE NOT NULL,
     [SellEndDate] DATE NULL,
     [DiscontinuedDate] DATE NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_Product_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_Product_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_Product_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_Product] PRIMARY KEY CLUSTERED ([ProductKey] ASC),
     CONSTRAINT [uk_prod_Product_SourceProductID] UNIQUE ([SourceProductID]),
@@ -199,6 +272,12 @@ CREATE TABLE [prod].[SalesPerson] (
     [CommissionPct] DECIMAL(10,4) NOT NULL,
     [SalesYTD] DECIMAL(19,4) NOT NULL,
     [SalesLastYear] DECIMAL(19,4) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SalesPerson_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SalesPerson_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesPerson_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_SalesPerson] PRIMARY KEY CLUSTERED ([SalesPersonKey] ASC),
     CONSTRAINT [uk_prod_SalesPerson_SourceBusinessEntityID] UNIQUE ([SourceBusinessEntityID]),
@@ -217,6 +296,12 @@ CREATE TABLE [prod].[Customer] (
     [MiddleName] VARCHAR(50) NULL,
     [LastName] VARCHAR(50) NULL,
     [AccountNumber] VARCHAR(20) NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_Customer_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_Customer_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_Customer_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_Customer] PRIMARY KEY CLUSTERED ([CustomerKey] ASC),
     CONSTRAINT [uk_prod_Customer_SourceCustomerID] UNIQUE ([SourceCustomerID]),
@@ -248,6 +333,12 @@ CREATE TABLE [prod].[SalesOrderHeader] (
     [Freight] DECIMAL(19,4) NOT NULL,
     [TotalDue] DECIMAL(19,4) NOT NULL,
     [Comment] NVARCHAR(128) NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SalesOrderHeader_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SalesOrderHeader_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesOrderHeader_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_SalesOrderHeader] PRIMARY KEY CLUSTERED ([SalesOrderHeaderKey] ASC),
     CONSTRAINT [uk_prod_SalesOrderHeader_SourceSalesOrderID] UNIQUE ([SourceSalesOrderID]),
@@ -274,6 +365,12 @@ CREATE TABLE [prod].[SalesOrderDetail] (
     [UnitPrice] DECIMAL(19,4) NOT NULL,
     [UnitPriceDiscount] DECIMAL(19,4) NOT NULL,
     [LineTotal] DECIMAL(19,4) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SalesOrderDetail_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SalesOrderDetail_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_run_id] INT NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesOrderDetail_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_SalesOrderDetail] PRIMARY KEY CLUSTERED ([SalesOrderDetailKey] ASC),
     CONSTRAINT [uk_prod_SalesOrderDetail_SourceOrderDetail] UNIQUE ([SourceSalesOrderID], [SourceSalesOrderDetailID]),

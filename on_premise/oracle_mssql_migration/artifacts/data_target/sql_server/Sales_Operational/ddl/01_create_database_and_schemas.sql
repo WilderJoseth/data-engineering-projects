@@ -3,12 +3,12 @@
         01_create_database_and_schemas.sql
 
     Purpose
-        Creates the Sales_Operational database and the final business schema
-        required by the first implementation phase.
+        Creates the Sales_Operational database and the schemas required by the
+        migration pipeline.
 
     Scope
-        Only the prod schema is created here. Staging, work, and local control
-        schemas are intentionally deferred.
+        Creates staging, work, and prod schemas. Local control objects are
+        intentionally deferred to a later implementation step.
 */
 
 CREATE DATABASE [Sales_Operational];
@@ -18,4 +18,10 @@ USE [Sales_Operational];
 GO
 
 CREATE SCHEMA [prod];
+GO
+
+CREATE SCHEMA [staging];
+GO
+
+CREATE SCHEMA [work];
 GO
