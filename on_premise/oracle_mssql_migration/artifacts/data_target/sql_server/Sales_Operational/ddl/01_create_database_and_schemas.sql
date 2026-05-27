@@ -7,8 +7,7 @@
         migration pipeline.
 
     Scope
-        Creates staging, work, and prod schemas. Local control objects are
-        intentionally deferred to a later implementation step.
+        Creates staging, work, prod, and control schemas.
 */
 
 CREATE DATABASE [Sales_Operational];
@@ -24,4 +23,7 @@ CREATE SCHEMA [staging];
 GO
 
 CREATE SCHEMA [work];
+GO
+
+CREATE SCHEMA [control];
 GO

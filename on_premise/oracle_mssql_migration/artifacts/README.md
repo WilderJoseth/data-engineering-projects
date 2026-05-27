@@ -39,6 +39,8 @@ data_target/sql_server/Sales_Operational/ddl/01_create_database_and_schemas.sql
 data_target/sql_server/Sales_Operational/ddl/02_create_prod_tables.sql
 data_target/sql_server/Sales_Operational/ddl/03_create_staging_tables.sql
 data_target/sql_server/Sales_Operational/ddl/04_create_work_tables.sql
+data_target/sql_server/Sales_Operational/ddl/05_create_control_tables.sql
+data_target/sql_server/Sales_Operational/ddl/06_create_work_stored_procedures.sql
 ```
 
 Create the SQL Server analytical target:

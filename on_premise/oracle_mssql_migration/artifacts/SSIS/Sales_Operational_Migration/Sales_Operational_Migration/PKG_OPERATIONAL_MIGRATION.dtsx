@@ -11,11 +11,30 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_OPERATIONAL_MIGRATION"
   DTS:PackageType="5"
-  DTS:VersionBuild="15"
-  DTS:VersionGUID="{1250E68E-1826-4408-B872-11CBB11766D1}">
+  DTS:VersionBuild="34"
+  DTS:VersionGUID="{80957F27-1875-4ED2-8B6A-C3F5C001FF7F}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
-  <DTS:Variables />
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6E7FF55D-0846-4C8B-AB38-3B63E97273C3}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_execution_run_id">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{1CCC25FD-0C7C-43CC-A34A-F2C2DC1DB880}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_execution_step_id_operational">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
       DTS:refId="Package\End Process"
@@ -31,30 +50,21 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\Get Load Configuration"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{EDDB3C8B-17AA-444D-94ED-3EE4AE326EDF}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="Get Load Configuration"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="EXEC [runtime].[usp_end_execution_run] ?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_execution_run_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Load Master Data"
       DTS:CreationName="Microsoft.ExecutePackageTask"
       DTS:Description="Tarea Ejecutar paquete"
+      DTS:Disabled="True"
       DTS:DTSID="{66c6115e-8674-4273-afcd-e7cd4d7f5618}"
       DTS:ExecutableType="Microsoft.ExecutePackageTask"
       DTS:LocaleID="-1"
@@ -82,6 +92,10 @@
         <ExecutePackageTask>
           <UseProjectReference>True</UseProjectReference>
           <PackageName>PKG_REFERENCE_DATA.dtsx</PackageName>
+          <ParameterAssignment>
+            <ParameterName>p_execution_run_id</ParameterName>
+            <BindedVariableOrParameterName>User::v_execution_run_id</BindedVariableOrParameterName>
+          </ParameterAssignment>
         </ExecutePackageTask>
       </DTS:ObjectData>
     </DTS:Executable>
@@ -89,6 +103,7 @@
       DTS:refId="Package\Load Transactional Data"
       DTS:CreationName="Microsoft.ExecutePackageTask"
       DTS:Description="Tarea Ejecutar paquete"
+      DTS:Disabled="True"
       DTS:DTSID="{66bc6986-b9f2-4650-b5d1-68b9f216f1cc}"
       DTS:ExecutableType="Microsoft.ExecutePackageTask"
       DTS:LocaleID="-1"
@@ -116,7 +131,52 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="EXEC [runtime].[usp_start_execution_run] ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="execution_run_id"
+            SQLTask:DtsVariableName="User::v_execution_run_id" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="$Project::p_project_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="2"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Start Sub Process"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{43024949-fde1-4620-adaa-21a796cfabcd}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Start Sub Process"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="EXEC [runtime].[usp_start_execution_step] ?, ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="execution_step_id"
+            SQLTask:DtsVariableName="User::v_execution_step_id_operational" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_execution_run_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="$Project::p_project_process_id_operational"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
@@ -124,16 +184,16 @@
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
-      DTS:DTSID="{772B14B2-16C2-427E-958E-5736512BA8E1}"
+      DTS:DTSID="{A9E9E744-C598-4956-B02B-8DE4D9D625C4}"
       DTS:From="Package\Start Process"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
-      DTS:To="Package\Get Load Configuration" />
+      DTS:To="Package\Start Sub Process" />
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
       DTS:CreationName=""
-      DTS:DTSID="{D103BD9E-1798-4509-A0E3-94FCD60999DF}"
-      DTS:From="Package\Get Load Configuration"
+      DTS:DTSID="{EA04CCAE-DEDE-43D4-9A04-610BB6E28A1C}"
+      DTS:From="Package\Start Sub Process"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
       DTS:To="Package\Load Reference Data" />
@@ -177,41 +237,41 @@
         <NodeLayout
           Size="137.6,41.6"
           Id="Package\End Process"
-          TopLeft="177.499990301828,467.599996854067" />
-        <NodeLayout
-          Size="185.6,41.6"
-          Id="Package\Get Load Configuration"
-          TopLeft="145.833325365351,136.599999150236" />
+          TopLeft="174.722212675821,510.933329886066" />
         <NodeLayout
           Size="160.8,41.6"
           Id="Package\Load Master Data"
-          TopLeft="160.53029753757,296.284846841753" />
+          TopLeft="157.752519911563,339.618179873752" />
         <NodeLayout
           Size="176.8,41.6"
           Id="Package\Load Reference Data"
-          TopLeft="154.999994809429,215.369695889276" />
+          TopLeft="152.222217183422,258.703028921275" />
         <NodeLayout
           Size="191.2,41.6"
           Id="Package\Load Transactional Data"
-          TopLeft="151.666658379966,380.93333079007" />
+          TopLeft="148.888880753959,424.266663822069" />
         <NodeLayout
           Size="140.8,41.6"
           Id="Package\Start Process"
-          TopLeft="173.257569569454,55.6666666968001" />
+          TopLeft="170.479791943447,92.499999773999" />
+        <NodeLayout
+          Size="161.6,41.6"
+          Id="Package\Start Sub Process"
+          TopLeft="163.194435527894,169.277777180131" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="241.145447467403,97.2666666968001">
+          TopLeft="242.437113735671,134.099999773999">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,39.3333324534359"
+              EndConnector="0,35.177777406132"
               Start="0,0"
-              End="0,31.8333324534359">
+              End="0,27.677777406132">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,31.8333324534359" />
+                    End="0,27.677777406132" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -222,18 +282,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="241.01666008739,178.199999150236">
+          TopLeft="242.308326355658,210.877777180131">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,37.1696967390399"
+              EndConnector="0,47.825251741144"
               Start="0,0"
-              End="0,29.6696967390399">
+              End="0,40.325251741144">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,29.6696967390399" />
+                    End="0,40.325251741144" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -244,18 +304,18 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="242.165146173499,256.969695889276">
+          TopLeft="239.387368547493,300.303028921275">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,39.3151509524777"
+              EndConnector="0,39.315150952477"
               Start="0,0"
-              End="0,31.8151509524777">
+              End="0,31.815150952477">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,31.8151509524777" />
+                    End="0,31.815150952477" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -266,7 +326,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 3]"
-          TopLeft="244.098477958768,337.884846841753">
+          TopLeft="241.320700332761,381.218179873752">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -288,7 +348,7 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 5]"
-          TopLeft="246.783324340897,422.53333079007">
+          TopLeft="244.00554671489,465.866663822069">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"

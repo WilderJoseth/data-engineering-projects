@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="Sales_Operational"
+  DTS:DTSID="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
+  DTS:CreationName="OLEDB">
+  <DTS:PropertyExpression
+    DTS:Name="InitialCatalog">@[$Project::p_Sales_Operational_database]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="Password">@[$Project::p_Sales_Operational_password]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="ServerName">@[$Project::p_Sales_Operational_server]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="UserName">@[$Project::p_Sales_Operational_username]</DTS:PropertyExpression>
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=LocalHost;User ID=login_sales_operational_etl;Initial Catalog=Sales_Operational;Provider=SQLOLEDB.1;Application Name=SSIS-Sales_Operational_Migration-{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}LocalHost.Sales_Operational.login_sales_operational_etl;Auto Translate=False;">
+      <DTS:Password
+        DTS:Name="Password"
+        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAAClPvVbv+MfANUyVttJsFNpltQ3OWE+A660uR33nDyg2QAAAAAOgAAAAAIAACAAAAD1Vu0TglLio9kdVVavOIfeQu02l5aRJIYH59X6qnxZEZAAAAAIBG/2uvv4cJ9NFpw2G7zfOhsPw8wcu+n0X7Svx4N7BPlpwfBhtl7qNVA1EDgXS3liq8ixde8m3gE038wcj7NJRdCJJQuO7x0leYt/TfoW8noojmZs0L8KgdS2iUkZNlqdXyEHVRGlodVoedlF9vv6hStFrMBBVDD8LAhIAcgLSF071VYZAGgsBN8+rWRGyDxAAAAAsOR2UbiUnql8yKdj9eu6D/xBGhoLksK9HjxWCAgd/4u6EOgVXvujmpAVX81hmzi4L7YMXNvGi19Wk8u971hHsg==</DTS:Password>
+    </DTS:ConnectionManager>
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

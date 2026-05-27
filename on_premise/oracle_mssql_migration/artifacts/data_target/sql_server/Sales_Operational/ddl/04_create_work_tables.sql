@@ -6,7 +6,8 @@
         Creates transformed work tables for the Sales_Operational migration.
 
     Design rules
-        - Work tables store validated and transformed rows before final load.
+        - Work tables store validated/transformed rows and row-level validation
+          flags before final load.
         - Table names use PascalCase under the lower-case work schema.
         - Resolved prod surrogate keys are stored where final loads require
           foreign-key relationships.
@@ -18,10 +19,16 @@ USE [Sales_Operational];
 GO
 
 CREATE TABLE [work].[AddressType] (
-    [SourceAddressTypeID] INT NOT NULL,
-    [Name] VARCHAR(50) NOT NULL,
+    [WorkAddressTypeKey] BIGINT IDENTITY(1,1) NOT NULL,
+    [StagingAddressTypeKey] BIGINT NOT NULL,
+    [SourceAddressTypeID] INT NULL,
+    [Name] VARCHAR(4000) NULL,
+    [flag_valid_source_address_type_id] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_source_address_type_id] DEFAULT ((0)),
+    [flag_valid_name_required] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_name_required] DEFAULT ((0)),
+    [flag_valid_name_length] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_name_length] DEFAULT ((0)),
+    [flag_valid_source_address_type_id_unique] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_source_address_type_id_unique] DEFAULT ((0)),
 
-    CONSTRAINT [pk_work_AddressType_SourceAddressTypeID] PRIMARY KEY CLUSTERED ([SourceAddressTypeID] ASC)
+    CONSTRAINT [pk_work_AddressType_WorkAddressTypeKey] PRIMARY KEY CLUSTERED ([WorkAddressTypeKey] ASC)
 );
 GO
 

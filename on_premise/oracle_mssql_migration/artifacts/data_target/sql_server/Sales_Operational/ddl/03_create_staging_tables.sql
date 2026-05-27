@@ -17,10 +17,11 @@ USE [Sales_Operational];
 GO
 
 CREATE TABLE [staging].[AddressType] (
-    [SourceAddressTypeID] INT NOT NULL,
-    [Name] VARCHAR(50) NOT NULL,
+    [StagingAddressTypeKey] BIGINT IDENTITY(1,1) NOT NULL,
+    [SourceAddressTypeID] INT NULL,
+    [Name] VARCHAR(4000) NULL,
 
-    CONSTRAINT [pk_staging_AddressType_SourceAddressTypeID] PRIMARY KEY CLUSTERED ([SourceAddressTypeID] ASC)
+    CONSTRAINT [pk_staging_AddressType_StagingAddressTypeKey] PRIMARY KEY CLUSTERED ([StagingAddressTypeKey] ASC)
 );
 GO
 
