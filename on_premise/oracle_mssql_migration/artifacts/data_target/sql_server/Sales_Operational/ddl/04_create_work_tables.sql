@@ -21,20 +21,20 @@ GO
 CREATE TABLE [work].[AddressType] (
     [WorkAddressTypeKey] BIGINT IDENTITY(1,1) NOT NULL,
     [StagingAddressTypeKey] BIGINT NOT NULL,
-    [SourceAddressTypeID] INT NULL,
-    [Name] VARCHAR(4000) NULL,
-    [flag_valid_source_address_type_id] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_source_address_type_id] DEFAULT ((0)),
-    [flag_valid_name_required] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_name_required] DEFAULT ((0)),
-    [flag_valid_name_length] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_name_length] DEFAULT ((0)),
-    [flag_valid_source_address_type_id_unique] BIT NOT NULL CONSTRAINT [df_work_AddressType_flag_valid_source_address_type_id_unique] DEFAULT ((0)),
+    [SourceAddressTypeID] INT NOT NULL,
+    [Name] VARCHAR(50) NOT NULL,
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_AddressType_IsNameNotBlank] DEFAULT ((0)),
 
-    CONSTRAINT [pk_work_AddressType_WorkAddressTypeKey] PRIMARY KEY CLUSTERED ([WorkAddressTypeKey] ASC)
+    CONSTRAINT [pk_work_AddressType_WorkAddressTypeKey] PRIMARY KEY CLUSTERED ([WorkAddressTypeKey] ASC),
+    CONSTRAINT [uk_work_AddressType_SourceAddressTypeID] UNIQUE ([SourceAddressTypeID])
 );
 GO
 
 CREATE TABLE [work].[CountryRegion] (
     [SourceCountryRegionCode] VARCHAR(3) NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [IsCountryRegionCodeNotBlank] BIT NOT NULL CONSTRAINT [df_work_CountryRegion_IsCountryRegionCodeNotBlank] DEFAULT ((0)),
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_CountryRegion_IsNameNotBlank] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_CountryRegion_SourceCountryRegionCode] PRIMARY KEY CLUSTERED ([SourceCountryRegionCode] ASC)
 );
@@ -44,7 +44,10 @@ CREATE TABLE [work].[SalesTerritory] (
     [SourceTerritoryID] INT NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
     [TerritoryGroup] VARCHAR(50) NOT NULL,
-    [CountryRegionKey] INT NOT NULL,
+    [SourceCountryRegionCode] VARCHAR(3) NOT NULL,
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesTerritory_IsNameNotBlank] DEFAULT ((0)),
+    [IsTerritoryGroupNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesTerritory_IsTerritoryGroupNotBlank] DEFAULT ((0)),
+    [IsCountryRegionValid] BIT NOT NULL CONSTRAINT [df_work_SalesTerritory_IsCountryRegionValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_SalesTerritory_SourceTerritoryID] PRIMARY KEY CLUSTERED ([SourceTerritoryID] ASC)
 );
@@ -54,8 +57,12 @@ CREATE TABLE [work].[StateProvince] (
     [SourceStateProvinceID] INT NOT NULL,
     [StateProvinceCode] CHAR(3) NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
-    [CountryRegionKey] INT NOT NULL,
-    [SalesTerritoryKey] INT NOT NULL,
+    [SourceCountryRegionCode] VARCHAR(3) NOT NULL,
+    [SourceTerritoryID] INT NOT NULL,
+    [IsStateProvinceCodeNotBlank] BIT NOT NULL CONSTRAINT [df_work_StateProvince_IsStateProvinceCodeNotBlank] DEFAULT ((0)),
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_StateProvince_IsNameNotBlank] DEFAULT ((0)),
+    [IsCountryRegionValid] BIT NOT NULL CONSTRAINT [df_work_StateProvince_IsCountryRegionValid] DEFAULT ((0)),
+    [IsSalesTerritoryValid] BIT NOT NULL CONSTRAINT [df_work_StateProvince_IsSalesTerritoryValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_StateProvince_SourceStateProvinceID] PRIMARY KEY CLUSTERED ([SourceStateProvinceID] ASC)
 );
@@ -65,6 +72,7 @@ CREATE TABLE [work].[ProductCategory] (
     [SourceProductSubcategoryID] INT NOT NULL,
     [SourceProductCategoryID] INT NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_ProductCategory_IsNameNotBlank] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_ProductCategory_SourceProductSubcategoryID] PRIMARY KEY CLUSTERED ([SourceProductSubcategoryID] ASC)
 );
@@ -80,6 +88,9 @@ CREATE TABLE [work].[SpecialOffer] (
     [EndDate] DATE NOT NULL,
     [MinQty] INT NOT NULL,
     [MaxQty] INT NULL,
+    [IsDescriptionNotBlank] BIT NOT NULL CONSTRAINT [df_work_SpecialOffer_IsDescriptionNotBlank] DEFAULT ((0)),
+    [IsOfferTypeNotBlank] BIT NOT NULL CONSTRAINT [df_work_SpecialOffer_IsOfferTypeNotBlank] DEFAULT ((0)),
+    [IsCategoryNotBlank] BIT NOT NULL CONSTRAINT [df_work_SpecialOffer_IsCategoryNotBlank] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_SpecialOffer_SourceSpecialOfferID] PRIMARY KEY CLUSTERED ([SourceSpecialOfferID] ASC)
 );
@@ -90,6 +101,7 @@ CREATE TABLE [work].[ShipMethod] (
     [Name] VARCHAR(50) NOT NULL,
     [ShipBase] DECIMAL(19,4) NOT NULL,
     [ShipRate] DECIMAL(19,4) NOT NULL,
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_ShipMethod_IsNameNotBlank] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_ShipMethod_SourceShipMethodID] PRIMARY KEY CLUSTERED ([SourceShipMethodID] ASC)
 );
@@ -98,6 +110,8 @@ GO
 CREATE TABLE [work].[Currency] (
     [SourceCurrencyCode] CHAR(3) NOT NULL,
     [Name] VARCHAR(50) NOT NULL,
+    [IsCurrencyCodeNotBlank] BIT NOT NULL CONSTRAINT [df_work_Currency_IsCurrencyCodeNotBlank] DEFAULT ((0)),
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_Currency_IsNameNotBlank] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_Currency_SourceCurrencyCode] PRIMARY KEY CLUSTERED ([SourceCurrencyCode] ASC)
 );
@@ -106,10 +120,12 @@ GO
 CREATE TABLE [work].[CurrencyRate] (
     [SourceCurrencyRateID] INT NOT NULL,
     [CurrencyRateDate] DATETIME2(7) NOT NULL,
-    [FromCurrencyKey] INT NOT NULL,
-    [ToCurrencyKey] INT NOT NULL,
+    [FromCurrencyCode] CHAR(3) NOT NULL,
+    [ToCurrencyCode] CHAR(3) NOT NULL,
     [AverageRate] DECIMAL(19,4) NOT NULL,
     [EndOfDayRate] DECIMAL(19,4) NOT NULL,
+    [IsFromCurrencyValid] BIT NOT NULL CONSTRAINT [df_work_CurrencyRate_IsFromCurrencyValid] DEFAULT ((0)),
+    [IsToCurrencyValid] BIT NOT NULL CONSTRAINT [df_work_CurrencyRate_IsToCurrencyValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_CurrencyRate_SourceCurrencyRateID] PRIMARY KEY CLUSTERED ([SourceCurrencyRateID] ASC)
 );
@@ -121,6 +137,8 @@ CREATE TABLE [work].[CreditCard] (
     [CardNumberLast4] CHAR(4) NOT NULL,
     [ExpMonth] TINYINT NOT NULL,
     [ExpYear] SMALLINT NOT NULL,
+    [IsCardTypeNotBlank] BIT NOT NULL CONSTRAINT [df_work_CreditCard_IsCardTypeNotBlank] DEFAULT ((0)),
+    [IsCardNumberUsable] BIT NOT NULL CONSTRAINT [df_work_CreditCard_IsCardNumberUsable] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_CreditCard_SourceCreditCardID] PRIMARY KEY CLUSTERED ([SourceCreditCardID] ASC)
 );
@@ -131,9 +149,14 @@ CREATE TABLE [work].[Address] (
     [AddressLine1] VARCHAR(60) NOT NULL,
     [AddressLine2] VARCHAR(60) NULL,
     [City] VARCHAR(30) NOT NULL,
-    [StateProvinceKey] INT NOT NULL,
+    [SourceStateProvinceID] INT NOT NULL,
     [PostalCode] VARCHAR(15) NOT NULL,
-    [AddressTypeKey] INT NULL,
+    [SourceAddressTypeID] INT NULL,
+    [IsAddressLine1NotBlank] BIT NOT NULL CONSTRAINT [df_work_Address_IsAddressLine1NotBlank] DEFAULT ((0)),
+    [IsCityNotBlank] BIT NOT NULL CONSTRAINT [df_work_Address_IsCityNotBlank] DEFAULT ((0)),
+    [IsPostalCodeNotBlank] BIT NOT NULL CONSTRAINT [df_work_Address_IsPostalCodeNotBlank] DEFAULT ((0)),
+    [IsStateProvinceValid] BIT NOT NULL CONSTRAINT [df_work_Address_IsStateProvinceValid] DEFAULT ((0)),
+    [IsAddressTypeValid] BIT NOT NULL CONSTRAINT [df_work_Address_IsAddressTypeValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_Address_SourceAddressID] PRIMARY KEY CLUSTERED ([SourceAddressID] ASC)
 );
@@ -150,10 +173,13 @@ CREATE TABLE [work].[Product] (
     [ListPrice] DECIMAL(19,4) NOT NULL,
     [Size] VARCHAR(5) NULL,
     [Weight] DECIMAL(8,2) NULL,
-    [ProductCategoryKey] INT NULL,
+    [SourceProductSubcategoryID] INT NULL,
     [SellStartDate] DATE NOT NULL,
     [SellEndDate] DATE NULL,
     [DiscontinuedDate] DATE NULL,
+    [IsProductNumberNotBlank] BIT NOT NULL CONSTRAINT [df_work_Product_IsProductNumberNotBlank] DEFAULT ((0)),
+    [IsNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_Product_IsNameNotBlank] DEFAULT ((0)),
+    [IsProductCategoryValid] BIT NOT NULL CONSTRAINT [df_work_Product_IsProductCategoryValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_Product_SourceProductID] PRIMARY KEY CLUSTERED ([SourceProductID] ASC)
 );
@@ -161,7 +187,7 @@ GO
 
 CREATE TABLE [work].[SalesPerson] (
     [SourceBusinessEntityID] INT NOT NULL,
-    [SalesTerritoryKey] INT NULL,
+    [SourceTerritoryID] INT NULL,
     [Title] VARCHAR(8) NULL,
     [FirstName] VARCHAR(50) NOT NULL,
     [MiddleName] VARCHAR(50) NULL,
@@ -174,6 +200,11 @@ CREATE TABLE [work].[SalesPerson] (
     [CommissionPct] DECIMAL(10,4) NOT NULL,
     [SalesYTD] DECIMAL(19,4) NOT NULL,
     [SalesLastYear] DECIMAL(19,4) NOT NULL,
+    [IsFirstNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsFirstNameNotBlank] DEFAULT ((0)),
+    [IsLastNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsLastNameNotBlank] DEFAULT ((0)),
+    [IsJobTitleNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsJobTitleNotBlank] DEFAULT ((0)),
+    [IsGenderNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsGenderNotBlank] DEFAULT ((0)),
+    [IsSalesTerritoryValid] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsSalesTerritoryValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_SalesPerson_SourceBusinessEntityID] PRIMARY KEY CLUSTERED ([SourceBusinessEntityID] ASC)
 );
@@ -182,13 +213,15 @@ GO
 CREATE TABLE [work].[Customer] (
     [SourceCustomerID] INT NOT NULL,
     [SourcePersonID] INT NULL,
-    [SalesTerritoryKey] INT NULL,
+    [SourceTerritoryID] INT NULL,
     [PersonType] CHAR(2) NULL,
     [Title] VARCHAR(8) NULL,
     [FirstName] VARCHAR(50) NULL,
     [MiddleName] VARCHAR(50) NULL,
     [LastName] VARCHAR(50) NULL,
     [AccountNumber] VARCHAR(20) NULL,
+    [IsPersonNameValid] BIT NOT NULL CONSTRAINT [df_work_Customer_IsPersonNameValid] DEFAULT ((0)),
+    [IsSalesTerritoryValid] BIT NOT NULL CONSTRAINT [df_work_Customer_IsSalesTerritoryValid] DEFAULT ((0)),
 
     CONSTRAINT [pk_work_Customer_SourceCustomerID] PRIMARY KEY CLUSTERED ([SourceCustomerID] ASC)
 );

@@ -40,7 +40,10 @@ data_target/sql_server/Sales_Operational/ddl/02_create_prod_tables.sql
 data_target/sql_server/Sales_Operational/ddl/03_create_staging_tables.sql
 data_target/sql_server/Sales_Operational/ddl/04_create_work_tables.sql
 data_target/sql_server/Sales_Operational/ddl/05_create_control_tables.sql
-data_target/sql_server/Sales_Operational/ddl/06_create_work_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/06_create_work_reference_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/07_create_work_master_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/08_create_prod_reference_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/09_create_prod_master_stored_procedures.sql
 ```
 
 Create the SQL Server analytical target:
@@ -56,6 +59,7 @@ data_target/sql_server/Sales_Analytics/ddl/04_create_work_tables.sql
 
 - Final target tables include the standard audit columns defined in the solution design.
 - Staging and work tables intentionally exclude audit columns because they store temporary ETL data.
-- Local control objects, stored procedures, and SSIS packages are intentionally deferred.
+- Local control objects support reconciliation and validation results that can be published to DataOps_Control.
+- Stored procedures are split by load area: reference data and master data.
 - The source seed script is a self-contained Sales-domain dataset with configurable high-volume transactional data.
 - `legacy_outdated/` contains previous draft artifacts and should not be used as the implementation baseline.
