@@ -2,6 +2,25 @@
 USE [Sales_Operational];
 GO
 
+CREATE TABLE [control].[status_codes] (
+    [id] [smallint] NOT NULL,
+    [code] [varchar](50) NOT NULL,
+
+    CONSTRAINT [pk_control_status_codes] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [uk_control_status_codes_code] UNIQUE ([code])
+) ON [PRIMARY];
+GO
+
+CREATE TABLE [control].[validation_codes] (
+    [id] [smallint] NOT NULL,
+    [code] [varchar](50) NOT NULL,
+    [severity] [varchar](15) NOT NULL,
+
+    CONSTRAINT [pk_control_validation_codes] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [uk_control_validation_codes_code] UNIQUE ([code])
+) ON [PRIMARY];
+GO
+
 CREATE TABLE [control].[reconciliation_results] (
     [id] [int] IDENTITY(1,1) NOT NULL,
     [metric_name] [varchar](50) NOT NULL,
@@ -21,6 +40,7 @@ CREATE TABLE [control].[validation_results] (
     [affected_row_count] [bigint] NOT NULL,
     [execution_step_id] [bigint] NOT NULL,
     [validation_code_id] [smallint] NOT NULL,
+
     CONSTRAINT [pk_control_validation_results] PRIMARY KEY CLUSTERED ([id] ASC)
 ) ON [PRIMARY];
 GO

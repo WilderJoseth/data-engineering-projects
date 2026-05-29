@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_OPERATIONAL_MIGRATION"
   DTS:PackageType="5"
-  DTS:VersionBuild="34"
-  DTS:VersionGUID="{80957F27-1875-4ED2-8B6A-C3F5C001FF7F}">
+  DTS:VersionBuild="36"
+  DTS:VersionGUID="{A95B9C94-1E84-409D-A3C6-7A67258AC1C5}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
@@ -91,7 +91,7 @@
       <DTS:ObjectData>
         <ExecutePackageTask>
           <UseProjectReference>True</UseProjectReference>
-          <PackageName>PKG_REFERENCE_DATA.dtsx</PackageName>
+          <PackageName>PKG_REFERENCE_DATA2.dtsx</PackageName>
           <ParameterAssignment>
             <ParameterName>p_execution_run_id</ParameterName>
             <BindedVariableOrParameterName>User::v_execution_run_id</BindedVariableOrParameterName>

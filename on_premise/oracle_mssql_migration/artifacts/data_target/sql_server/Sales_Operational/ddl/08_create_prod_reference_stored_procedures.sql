@@ -8,8 +8,9 @@
 
 USE [Sales_Operational];
 GO
+
 CREATE OR ALTER PROCEDURE [prod].[usp_load_AddressType]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -28,6 +29,7 @@ BEGIN
         tgt.[Name] = src.[Name],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[AddressType] AS tgt
     INNER JOIN [work].[AddressType] AS src
@@ -37,12 +39,12 @@ BEGIN
     INSERT INTO [prod].[AddressType] (
         [SourceAddressTypeID],
         [Name],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceAddressTypeID],
         src.[Name],
-        @created_run_id
+        @execution_step_id
     FROM [work].[AddressType] AS src
     WHERE src.[IsNameNotBlank] = 1
       AND NOT EXISTS (
@@ -56,7 +58,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_ProductCategory]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -70,6 +72,7 @@ BEGIN
         tgt.[Name] = src.[Name],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[ProductCategory] AS tgt
     INNER JOIN [work].[ProductCategory] AS src
@@ -80,13 +83,13 @@ BEGIN
         [SourceProductSubcategoryID],
         [SourceProductCategoryID],
         [Name],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceProductSubcategoryID],
         src.[SourceProductCategoryID],
         src.[Name],
-        @created_run_id
+        @execution_step_id
     FROM [work].[ProductCategory] AS src
     WHERE src.[IsNameNotBlank] = 1
       AND NOT EXISTS (
@@ -100,7 +103,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_ShipMethod]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -115,6 +118,7 @@ BEGIN
         tgt.[ShipRate] = src.[ShipRate],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[ShipMethod] AS tgt
     INNER JOIN [work].[ShipMethod] AS src
@@ -126,14 +130,14 @@ BEGIN
         [Name],
         [ShipBase],
         [ShipRate],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceShipMethodID],
         src.[Name],
         src.[ShipBase],
         src.[ShipRate],
-        @created_run_id
+        @execution_step_id
     FROM [work].[ShipMethod] AS src
     WHERE src.[IsNameNotBlank] = 1
       AND NOT EXISTS (
@@ -147,7 +151,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_SpecialOffer]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -167,6 +171,7 @@ BEGIN
         tgt.[MaxQty] = src.[MaxQty],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[SpecialOffer] AS tgt
     INNER JOIN [work].[SpecialOffer] AS src
@@ -185,7 +190,7 @@ BEGIN
         [EndDate],
         [MinQty],
         [MaxQty],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceSpecialOfferID],
@@ -197,7 +202,7 @@ BEGIN
         src.[EndDate],
         src.[MinQty],
         src.[MaxQty],
-        @created_run_id
+        @execution_step_id
     FROM [work].[SpecialOffer] AS src
     WHERE src.[IsDescriptionNotBlank] = 1
       AND src.[IsOfferTypeNotBlank] = 1
@@ -213,7 +218,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_Geography]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -226,6 +231,7 @@ BEGIN
         tgt.[Name] = src.[Name],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[CountryRegion] AS tgt
     INNER JOIN [work].[CountryRegion] AS src
@@ -236,12 +242,12 @@ BEGIN
     INSERT INTO [prod].[CountryRegion] (
         [SourceCountryRegionCode],
         [Name],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceCountryRegionCode],
         src.[Name],
-        @created_run_id
+        @execution_step_id
     FROM [work].[CountryRegion] AS src
     WHERE src.[IsCountryRegionCodeNotBlank] = 1
       AND src.[IsNameNotBlank] = 1
@@ -258,6 +264,7 @@ BEGIN
         tgt.[CountryRegionKey] = cr.[CountryRegionKey],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[SalesTerritory] AS tgt
     INNER JOIN [work].[SalesTerritory] AS src
@@ -273,14 +280,14 @@ BEGIN
         [Name],
         [TerritoryGroup],
         [CountryRegionKey],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceTerritoryID],
         src.[Name],
         src.[TerritoryGroup],
         cr.[CountryRegionKey],
-        @created_run_id
+        @execution_step_id
     FROM [work].[SalesTerritory] AS src
     INNER JOIN [prod].[CountryRegion] AS cr
         ON cr.[SourceCountryRegionCode] = src.[SourceCountryRegionCode]
@@ -301,6 +308,7 @@ BEGIN
         tgt.[SalesTerritoryKey] = st.[SalesTerritoryKey],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[StateProvince] AS tgt
     INNER JOIN [work].[StateProvince] AS src
@@ -320,7 +328,7 @@ BEGIN
         [Name],
         [CountryRegionKey],
         [SalesTerritoryKey],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceStateProvinceID],
@@ -328,7 +336,7 @@ BEGIN
         src.[Name],
         cr.[CountryRegionKey],
         st.[SalesTerritoryKey],
-        @created_run_id
+        @execution_step_id
     FROM [work].[StateProvince] AS src
     INNER JOIN [prod].[CountryRegion] AS cr
         ON cr.[SourceCountryRegionCode] = src.[SourceCountryRegionCode]
@@ -349,7 +357,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_Currency]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -362,6 +370,7 @@ BEGIN
         tgt.[Name] = src.[Name],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[Currency] AS tgt
     INNER JOIN [work].[Currency] AS src
@@ -372,12 +381,12 @@ BEGIN
     INSERT INTO [prod].[Currency] (
         [SourceCurrencyCode],
         [Name],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceCurrencyCode],
         src.[Name],
-        @created_run_id
+        @execution_step_id
     FROM [work].[Currency] AS src
     WHERE src.[IsCurrencyCodeNotBlank] = 1
       AND src.[IsNameNotBlank] = 1
@@ -396,6 +405,7 @@ BEGIN
         tgt.[EndOfDayRate] = src.[EndOfDayRate],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[CurrencyRate] AS tgt
     INNER JOIN [work].[CurrencyRate] AS src
@@ -414,7 +424,7 @@ BEGIN
         [ToCurrencyKey],
         [AverageRate],
         [EndOfDayRate],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceCurrencyRateID],
@@ -423,7 +433,7 @@ BEGIN
         to_currency.[CurrencyKey],
         src.[AverageRate],
         src.[EndOfDayRate],
-        @created_run_id
+        @execution_step_id
     FROM [work].[CurrencyRate] AS src
     INNER JOIN [prod].[Currency] AS from_currency
         ON from_currency.[SourceCurrencyCode] = src.[FromCurrencyCode]
@@ -440,4 +450,6 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
+
+
 

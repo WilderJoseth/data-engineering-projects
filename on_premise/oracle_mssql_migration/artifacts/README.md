@@ -15,7 +15,8 @@ artifacts/
 |-- data_target/
 |   `-- sql_server/
 |       |-- Sales_Operational/
-|       |   `-- ddl/ # Operational target schemas, final, staging, and work objects
+|       |   |-- ddl/  # Operational target schemas, tables, and stored procedures
+|       |   `-- seed/ # Operational target staging test data
 |       `-- Sales_Analytics/
 |           `-- ddl/ # Analytical target schemas, final, staging, and work objects
 `-- legacy_outdated/
@@ -44,7 +45,27 @@ data_target/sql_server/Sales_Operational/ddl/06_create_work_reference_stored_pro
 data_target/sql_server/Sales_Operational/ddl/07_create_work_master_stored_procedures.sql
 data_target/sql_server/Sales_Operational/ddl/08_create_prod_reference_stored_procedures.sql
 data_target/sql_server/Sales_Operational/ddl/09_create_prod_master_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/10_create_control_reference_reconciliation_objects.sql
+data_target/sql_server/Sales_Operational/ddl/11_create_control_master_reconciliation_objects.sql
+data_target/sql_server/Sales_Operational/ddl/12_create_control_process_status_objects.sql
 ```
+
+Optional operational prod-table reset script:
+
+```text
+data_target/sql_server/Sales_Operational/ddl/99_drop_prod_tables.sql
+```
+
+Load operational staging test data for reference and master validation tests:
+
+```text
+data_target/sql_server/Sales_Operational/seed/01_seed_reference_master_staging_test_data.sql
+```
+
+When testing master validation procedures, execute the reference validation and
+reference prod load first. Master tables such as `Address`, `Product`,
+`SalesPerson`, and `Customer` validate dependencies against prod reference
+tables.
 
 Create the SQL Server analytical target:
 

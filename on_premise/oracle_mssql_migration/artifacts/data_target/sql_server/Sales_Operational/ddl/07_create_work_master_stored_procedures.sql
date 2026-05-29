@@ -9,13 +9,36 @@
 USE [Sales_Operational];
 GO
 CREATE OR ALTER PROCEDURE [work].[usp_validate_CreditCard]
-    @execution_step_id BIGINT,
-    @blank_value_validation_code_id SMALLINT
+    @execution_step_id BIGINT
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    DECLARE @not_null_validation_code_id SMALLINT;
+    DECLARE @fk_validation_code_id SMALLINT;
+    DECLARE @length_validation_code_id SMALLINT;
+
+    SELECT @not_null_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'NOT_NULL';
+
+    SELECT @fk_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'FK_CHECK';
+
+    SELECT @length_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'LENGTH_CHECK';
+
+    IF @not_null_validation_code_id IS NULL
+        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
+
+    IF @fk_validation_code_id IS NULL
+        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
+
+    IF @length_validation_code_id IS NULL
+        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[CreditCard] (
@@ -38,13 +61,13 @@ BEGIN
     FROM [staging].[CreditCard];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'CreditCard Load - CardType must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'CreditCard Load - CardType must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[CreditCard]
     WHERE [IsCardTypeNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'CreditCard Load - CardNumber must contain at least four nonblank characters.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'CreditCard Load - CardNumber must contain at least four nonblank characters.', COUNT_BIG(*), @execution_step_id, @length_validation_code_id
     FROM [work].[CreditCard]
     WHERE [IsCardNumberUsable] = 0
     HAVING COUNT_BIG(*) > 0;
@@ -54,14 +77,36 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [work].[usp_validate_Address]
-    @execution_step_id BIGINT,
-    @blank_value_validation_code_id SMALLINT,
-    @fk_validation_code_id SMALLINT
+    @execution_step_id BIGINT
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    DECLARE @not_null_validation_code_id SMALLINT;
+    DECLARE @fk_validation_code_id SMALLINT;
+    DECLARE @length_validation_code_id SMALLINT;
+
+    SELECT @not_null_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'NOT_NULL';
+
+    SELECT @fk_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'FK_CHECK';
+
+    SELECT @length_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'LENGTH_CHECK';
+
+    IF @not_null_validation_code_id IS NULL
+        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
+
+    IF @fk_validation_code_id IS NULL
+        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
+
+    IF @length_validation_code_id IS NULL
+        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[Address] (
@@ -98,19 +143,19 @@ BEGIN
         ON atp.[SourceAddressTypeID] = a.[SourceAddressTypeID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Address Load - AddressLine1 must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'Address Load - AddressLine1 must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Address]
     WHERE [IsAddressLine1NotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Address Load - City must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'Address Load - City must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Address]
     WHERE [IsCityNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Address Load - PostalCode must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'Address Load - PostalCode must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Address]
     WHERE [IsPostalCodeNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
@@ -132,14 +177,36 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [work].[usp_validate_Product]
-    @execution_step_id BIGINT,
-    @blank_value_validation_code_id SMALLINT,
-    @fk_validation_code_id SMALLINT
+    @execution_step_id BIGINT
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    DECLARE @not_null_validation_code_id SMALLINT;
+    DECLARE @fk_validation_code_id SMALLINT;
+    DECLARE @length_validation_code_id SMALLINT;
+
+    SELECT @not_null_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'NOT_NULL';
+
+    SELECT @fk_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'FK_CHECK';
+
+    SELECT @length_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'LENGTH_CHECK';
+
+    IF @not_null_validation_code_id IS NULL
+        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
+
+    IF @fk_validation_code_id IS NULL
+        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
+
+    IF @length_validation_code_id IS NULL
+        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[Product] (
@@ -184,13 +251,13 @@ BEGIN
         ON pc.[SourceProductSubcategoryID] = p.[SourceProductSubcategoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Product Load - ProductNumber must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'Product Load - ProductNumber must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Product]
     WHERE [IsProductNumberNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Product Load - Name must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'Product Load - Name must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Product]
     WHERE [IsNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
@@ -206,14 +273,36 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [work].[usp_validate_SalesPerson]
-    @execution_step_id BIGINT,
-    @blank_value_validation_code_id SMALLINT,
-    @fk_validation_code_id SMALLINT
+    @execution_step_id BIGINT
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    DECLARE @not_null_validation_code_id SMALLINT;
+    DECLARE @fk_validation_code_id SMALLINT;
+    DECLARE @length_validation_code_id SMALLINT;
+
+    SELECT @not_null_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'NOT_NULL';
+
+    SELECT @fk_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'FK_CHECK';
+
+    SELECT @length_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'LENGTH_CHECK';
+
+    IF @not_null_validation_code_id IS NULL
+        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
+
+    IF @fk_validation_code_id IS NULL
+        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
+
+    IF @length_validation_code_id IS NULL
+        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[SalesPerson] (
@@ -262,25 +351,25 @@ BEGIN
         ON st.[SourceTerritoryID] = sp.[SourceTerritoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - FirstName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'SalesPerson Load - FirstName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[SalesPerson]
     WHERE [IsFirstNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - LastName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'SalesPerson Load - LastName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[SalesPerson]
     WHERE [IsLastNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - JobTitle must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'SalesPerson Load - JobTitle must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[SalesPerson]
     WHERE [IsJobTitleNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - Gender must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'SalesPerson Load - Gender must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[SalesPerson]
     WHERE [IsGenderNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
@@ -296,14 +385,36 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [work].[usp_validate_Customer]
-    @execution_step_id BIGINT,
-    @blank_value_validation_code_id SMALLINT,
-    @fk_validation_code_id SMALLINT
+    @execution_step_id BIGINT
 AS
 BEGIN
     SET NOCOUNT ON;
     SET XACT_ABORT ON;
 
+    DECLARE @not_null_validation_code_id SMALLINT;
+    DECLARE @fk_validation_code_id SMALLINT;
+    DECLARE @length_validation_code_id SMALLINT;
+
+    SELECT @not_null_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'NOT_NULL';
+
+    SELECT @fk_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'FK_CHECK';
+
+    SELECT @length_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'LENGTH_CHECK';
+
+    IF @not_null_validation_code_id IS NULL
+        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
+
+    IF @fk_validation_code_id IS NULL
+        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
+
+    IF @length_validation_code_id IS NULL
+        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[Customer] (
@@ -336,7 +447,7 @@ BEGIN
         ON st.[SourceTerritoryID] = c.[SourceTerritoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Customer Load - FirstName and LastName must not be blank when SourcePersonID is provided.', COUNT_BIG(*), @execution_step_id, @blank_value_validation_code_id
+    SELECT 'Customer Load - FirstName and LastName must not be blank when SourcePersonID is provided.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Customer]
     WHERE [IsPersonNameValid] = 0
     HAVING COUNT_BIG(*) > 0;
@@ -350,4 +461,7 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
+
+
+
 

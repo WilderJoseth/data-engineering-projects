@@ -201,7 +201,8 @@ Final business tables may include audit/technical columns when required.
 | `created_by` | User or process that inserted the record. | VARCHAR(50) | No | USER_NAME() |
 | `updated_at` | When the record was last updated. | DATETIME2 | Yes | |
 | `updated_by` | User or process that last updated the record. | VARCHAR(50) | Yes | |
-| `created_run_id` | Execution run that inserted the record. | INT | No | |
+| `created_execution_step_id` | Execution step that inserted the record. | INT | No | |
+| `last_updated_execution_step_id` | Execution step that last updated the record. | INT | Yes | |
 | `is_active` | Indicates whether the record is active in the target model. | BIT | No | 1 |
 
 ### Constraint Rules

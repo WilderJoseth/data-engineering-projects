@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">WILDER-LOQ</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAADq3nFOdIYMOXca8hykDvDvuyKm9AxOpR32seMREy/QtgAAAAAOgAAAAAIAACAAAAAgn2I+mSlqSjKWKUBQkpTIAjs+37SUuTgO5oHnkDDhVZAAAABC1O0N0wa/KGhDzW7JuhCebxR2qzG754wj2945/7yRHhKMwaIOadB8g8j5z5jnsi0GcEKzvJQQR03dOD+b7jAqGdCxAyYMdwx0dSHmROuugkucG14CIh75LqwZ6l5vCG12Fx/JHMwap8FslA3lLOs9I3zG1wOMei15aocP6Ddkc4TYAhnd4llBsrnfuBXmcwNAAAAAsX/dnCep6IrU6wZH8IrpEe7By+AacQpqRqJLWfG9GHianQxAyImPzE57tvIJTsqIqWEys7jU5z9cc5YyPzb89A==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAACBb3M4Z1JybExsCj6P+I6H17xM2sMAVCoWVtL9Xc/slQAAAAAOgAAAAAIAACAAAADUjdgB0Wq6ARGNaag/mqSbktQSrQGHGdZltDHimTHOv5AAAAD/0EeimHlyUILacwKfch/ZDfeFxG7TfpGUYPaqsXOOrZNKtO416eVo9UZKGSOlFNtNwNCSI/slEuXk0WKoFzxa4kFpfdy2FkOu5KlkmFPWcG1EvyWch+o7hsk7Bjyp029cRt04tvClDRFciur8Us+kJYgcNYDsU36DkUrksnzTYNH/5qL0x/DyG1J3WHSt325AAAAAHgGA0+RgTddQpROhDfFMTE2kggLVdYfCetECkWcJfrvcabI8fZfd7qoh2aZkt/YKAzwIpvlNSgLZbcQ9Fbe0Ow==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -34,6 +34,7 @@
           <SSIS:Package SSIS:Name="PKG_REFERENCE_DATA.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="PKG_TRANSACTIONAL_DATA.dtsx" SSIS:EntryPoint="1" />
           <SSIS:Package SSIS:Name="PKG_OPERATIONAL_MIGRATION.dtsx" SSIS:EntryPoint="1" />
+          <SSIS:Package SSIS:Name="PKG_REFERENCE_DATA2.dtsx" SSIS:EntryPoint="1" />
         </SSIS:Packages>
         <SSIS:ConnectionManagers>
           <SSIS:ConnectionManager SSIS:Name="DataOps_Control.conmgr" />
@@ -246,10 +247,10 @@
                 <SSIS:Property SSIS:Name="Name">PKG_REFERENCE_DATA</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">130</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">176</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{1AA4D49F-0EC5-40D2-AEE0-FEA665785BBD}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{3EA6EF4D-A5A1-4D5D-BF0B-8D15F661F456}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -295,16 +296,48 @@
                 <SSIS:Property SSIS:Name="Name">PKG_OPERATIONAL_MIGRATION</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">34</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">36</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{80957F27-1875-4ED2-8B6A-C3F5C001FF7F}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{A95B9C94-1E84-409D-A3C6-7A67258AC1C5}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
                 <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
               </SSIS:Properties>
               <SSIS:Parameters />
+            </SSIS:PackageMetaData>
+            <SSIS:PackageMetaData SSIS:Name="PKG_REFERENCE_DATA2.dtsx">
+              <SSIS:Properties>
+                <SSIS:Property SSIS:Name="ID">{A3CED397-2D4B-44E1-BA5E-D040712F7140}</SSIS:Property>
+                <SSIS:Property SSIS:Name="Name">PKG_REFERENCE_DATA2</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">16</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionComments">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{9FAC4866-E92F-4BDF-BE21-7FA804C16BF0}</SSIS:Property>
+                <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
+                <SSIS:Property SSIS:Name="Description">
+                </SSIS:Property>
+                <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
+              </SSIS:Properties>
+              <SSIS:Parameters>
+                <SSIS:Parameter SSIS:Name="p_execution_run_id">
+                  <SSIS:Properties>
+                    <SSIS:Property SSIS:Name="ID">{7050F0B9-200A-4A00-A4AA-4B2B92D6A747}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="CreationName">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="Description">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
+                  </SSIS:Properties>
+                </SSIS:Parameter>
+              </SSIS:Parameters>
             </SSIS:PackageMetaData>
           </SSIS:PackageInfo>
         </SSIS:DeploymentInfo>

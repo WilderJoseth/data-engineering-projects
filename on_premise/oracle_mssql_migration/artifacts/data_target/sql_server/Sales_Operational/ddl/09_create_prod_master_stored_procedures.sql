@@ -9,7 +9,7 @@
 USE [Sales_Operational];
 GO
 CREATE OR ALTER PROCEDURE [prod].[usp_load_CreditCard]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -25,6 +25,7 @@ BEGIN
         tgt.[ExpYear] = src.[ExpYear],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[CreditCard] AS tgt
     INNER JOIN [work].[CreditCard] AS src
@@ -38,7 +39,7 @@ BEGIN
         [CardNumberLast4],
         [ExpMonth],
         [ExpYear],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceCreditCardID],
@@ -46,7 +47,7 @@ BEGIN
         src.[CardNumberLast4],
         src.[ExpMonth],
         src.[ExpYear],
-        @created_run_id
+        @execution_step_id
     FROM [work].[CreditCard] AS src
     WHERE src.[IsCardTypeNotBlank] = 1
       AND src.[IsCardNumberUsable] = 1
@@ -61,7 +62,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_Address]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -79,6 +80,7 @@ BEGIN
         tgt.[AddressTypeKey] = address_type.[AddressTypeKey],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[Address] AS tgt
     INNER JOIN [work].[Address] AS src
@@ -101,7 +103,7 @@ BEGIN
         [StateProvinceKey],
         [PostalCode],
         [AddressTypeKey],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceAddressID],
@@ -111,7 +113,7 @@ BEGIN
         state_province.[StateProvinceKey],
         src.[PostalCode],
         address_type.[AddressTypeKey],
-        @created_run_id
+        @execution_step_id
     FROM [work].[Address] AS src
     INNER JOIN [prod].[StateProvince] AS state_province
         ON state_province.[SourceStateProvinceID] = src.[SourceStateProvinceID]
@@ -133,7 +135,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_Product]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -158,6 +160,7 @@ BEGIN
         tgt.[DiscontinuedDate] = src.[DiscontinuedDate],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[Product] AS tgt
     INNER JOIN [work].[Product] AS src
@@ -183,7 +186,7 @@ BEGIN
         [SellStartDate],
         [SellEndDate],
         [DiscontinuedDate],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceProductID],
@@ -200,7 +203,7 @@ BEGIN
         src.[SellStartDate],
         src.[SellEndDate],
         src.[DiscontinuedDate],
-        @created_run_id
+        @execution_step_id
     FROM [work].[Product] AS src
     LEFT JOIN [prod].[ProductCategory] AS product_category
         ON product_category.[SourceProductSubcategoryID] = src.[SourceProductSubcategoryID]
@@ -218,7 +221,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_SalesPerson]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -243,6 +246,7 @@ BEGIN
         tgt.[SalesLastYear] = src.[SalesLastYear],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[SalesPerson] AS tgt
     INNER JOIN [work].[SalesPerson] AS src
@@ -270,7 +274,7 @@ BEGIN
         [CommissionPct],
         [SalesYTD],
         [SalesLastYear],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceBusinessEntityID],
@@ -287,7 +291,7 @@ BEGIN
         src.[CommissionPct],
         src.[SalesYTD],
         src.[SalesLastYear],
-        @created_run_id
+        @execution_step_id
     FROM [work].[SalesPerson] AS src
     LEFT JOIN [prod].[SalesTerritory] AS sales_territory
         ON sales_territory.[SourceTerritoryID] = src.[SourceTerritoryID]
@@ -307,7 +311,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [prod].[usp_load_Customer]
-    @created_run_id INT
+    @execution_step_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -327,6 +331,7 @@ BEGIN
         tgt.[AccountNumber] = src.[AccountNumber],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
     FROM [prod].[Customer] AS tgt
     INNER JOIN [work].[Customer] AS src
@@ -346,7 +351,7 @@ BEGIN
         [MiddleName],
         [LastName],
         [AccountNumber],
-        [created_run_id]
+        [created_execution_step_id]
     )
     SELECT
         src.[SourceCustomerID],
@@ -358,7 +363,7 @@ BEGIN
         src.[MiddleName],
         src.[LastName],
         src.[AccountNumber],
-        @created_run_id
+        @execution_step_id
     FROM [work].[Customer] AS src
     LEFT JOIN [prod].[SalesTerritory] AS sales_territory
         ON sales_territory.[SourceTerritoryID] = src.[SourceTerritoryID]
@@ -373,4 +378,6 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
+
+
 
