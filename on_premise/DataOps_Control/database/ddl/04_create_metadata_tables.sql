@@ -41,7 +41,6 @@ GO
 
 CREATE TABLE [metadata].[project_processes] (
     [id] [int] NOT NULL,
-    [position] [smallint] NOT NULL,
     [name] [varchar](50) NOT NULL,
     [project_id] [smallint] NOT NULL,
     [parent_process_id] [int] NULL,
@@ -140,3 +139,38 @@ CREATE TABLE [metadata].[project_columns] (
     CONSTRAINT [fk_metadata_project_columns_table_id] FOREIGN KEY ([table_id]) REFERENCES [metadata].[project_tables]([id])
 ) ON [PRIMARY];
 GO
+
+---------------------- V2 ----------------------
+CREATE TABLE [metadata].[project_process_actions]
+(
+    [id] INT NOT NULL,
+    [project_process_id] INT NOT NULL,
+    [position] SMALLINT NOT NULL,
+    [action_name] VARCHAR(100) NOT NULL,
+    [action_type] VARCHAR(30) NOT NULL,
+    [execution_database_id] SMALLINT NULL,
+    [schema_name] VARCHAR(50) NOT NULL,
+    [object_name] VARCHAR(128) NOT NULL,
+    [parameter_template] VARCHAR(30) NULL,
+    [is_required] BIT NOT NULL CONSTRAINT [df_metadata_project_process_actions_is_required] DEFAULT (1),
+    [is_active] BIT NOT NULL CONSTRAINT [df_metadata_project_process_actions_is_active] DEFAULT (1),
+    [created_at] DATETIME2 NOT NULL CONSTRAINT [df_metadata_project_process_actions_created_at] DEFAULT SYSUTCDATETIME(),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_metadata_project_process_actions_created_by] DEFAULT USER_NAME(),
+
+    CONSTRAINT [pk_metadata_project_process_actions] PRIMARY KEY ([id]),
+    CONSTRAINT [fk_metadata_project_process_actions_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
+    CONSTRAINT [fk_metadata_project_process_actions_execution_database_id] FOREIGN KEY ([execution_database_id]) REFERENCES [metadata].[project_databases]([id]),
+    CONSTRAINT [uk_metadata_project_process_actions_process_position] UNIQUE ([project_process_id], [position])
+) ON [PRIMARY];
+GO
+
+CREATE TABLE [metadata].[project_process_dependencies]
+(
+    [project_process_id] INT NOT NULL,
+    [dependency_project_process_id] INT NOT NULL,
+
+    CONSTRAINT [pk_metadata_project_process_dependencies] PRIMARY KEY ([project_process_id], [dependency_project_process_id]),
+    CONSTRAINT [fk_metadata_project_process_dependencies_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
+    CONSTRAINT [fk_metadata_project_process_dependencies_dependency_project_process_id] FOREIGN KEY ([dependency_project_process_id]) REFERENCES [metadata].[project_processes]([id]),
+    CONSTRAINT [ck_metadata_project_process_dependencies_no_self_dependency] CHECK ([project_process_id] <> [dependency_project_process_id])
+);
