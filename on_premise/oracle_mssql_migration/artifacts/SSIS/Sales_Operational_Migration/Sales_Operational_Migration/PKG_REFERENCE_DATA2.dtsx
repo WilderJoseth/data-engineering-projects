@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_REFERENCE_DATA2"
   DTS:PackageType="5"
-  DTS:VersionBuild="52"
-  DTS:VersionGUID="{58A5D61C-CCCC-493E-AAC7-F41241310D91}">
+  DTS:VersionBuild="95"
+  DTS:VersionGUID="{DBDDA872-5E1A-4128-B694-C0B6F7986326}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -29,10 +29,150 @@
   <DTS:Variables>
     <DTS:Variable
       DTS:CreationName=""
+      DTS:DTSID="{49CD6366-9EFD-4CF8-A6F0-478FC80ED6ED}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_1">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_start_execution_step] {1}, {2}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E23DE51F-27BA-4390-ABE3-90F1F81014ED}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(@[User::v_action_1], &quot;{1}&quot;, (DT_WSTR, 10) @[$Package::p_execution_run_id] ), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_process_child_id] )"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_1_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_start_execution_step] 0, 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{926F9D0B-28B0-449D-ADC8-AA303F493F77}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_2">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_AddressType_reconciliation_results]({1}, {2})</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{039D996B-4B62-4F83-AD71-8DD2D14ADBC3}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(@[User::v_action_2], &quot;{1}&quot;, &quot;'SOURCE'&quot;), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_process_child_execution_step_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_2_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_AddressType_reconciliation_results]('SOURCE', 1)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{A8672D38-8E67-46C6-83C4-E06F08049DF1}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_3">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[work].[usp_validate_AddressType] {1}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C01DAE76-03DF-4B16-A6AC-1E93CD52D13F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(@[User::v_action_3], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_process_child_execution_step_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_3_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[work].[usp_validate_AddressType] 1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8D60C418-20E7-4B3B-8401-5097169F2AB4}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_4">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[prod].[usp_load_AddressType] {1}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{DFA236DD-37DD-4413-95AB-BEBBAE5A6F4E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(@[User::v_action_4], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_process_child_execution_step_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_4_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[prod].[usp_load_AddressType] 1</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B395DC07-DB9F-4369-B489-93526433AABC}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_5">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_AddressType_reconciliation_results]({1}, {2})</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9FC8FA66-2C83-4932-B04C-9294995A0CAB}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(@[User::v_action_5], &quot;{1}&quot;, &quot;'TARGET'&quot;), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_process_child_execution_step_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_5_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_AddressType_reconciliation_results]('TARGET', 1)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F0259793-8753-46C6-889C-08BBE7E0CC76}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_6">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT [Sales_Operational].[control].[ufn_get_AddressType_load_status_code]({1}) AS [result_value]</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{EDC106C8-D45E-4DD3-82D1-9F07FDE0A30E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(@[User::v_action_6], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_process_child_execution_step_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_6_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT [Sales_Operational].[control].[ufn_get_AddressType_load_status_code](1) AS [result_value]</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{AF2C2930-E7E8-445A-A775-90EDFD61FDD7}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_7">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_end_execution_step] {1}, {2}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4D10FF51-0968-44C8-B4B5-8AFA39641080}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE( @[User::v_action_7], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_process_child_execution_step_id]), &quot;{2}&quot;,  (DT_WSTR, 10)@[User::v_process_child_status_code_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_7_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_end_execution_step] 1, 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
       DTS:DTSID="{F047D6E4-12E5-4B6C-8C66-E8AF6F90C42A}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="v_list_project_process_tables">
+      DTS:ObjectName="v_list_project_process_children">
       <DTS:VariableValue
         DTS:DataSubType="ManagedSerializable"
         DTS:DataType="13">
@@ -47,66 +187,46 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{C1861EB0-16B8-4360-84F7-649D1A25219B}"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_process_flow_type">
-      <DTS:VariableValue
-        DTS:DataType="8"
-        xml:space="preserve"></DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{CA5232C8-8846-42DD-B6F7-6C923B42F2B0}"
-      DTS:IncludeInDebugDump="6789"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_process_load_execution_required">
-      <DTS:VariableValue
-        DTS:DataType="11">0</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
       DTS:DTSID="{7BFEEFC5-A438-4921-B24D-E77BA9954CA2}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="v_process_load_execution_step_id">
+      DTS:ObjectName="v_process_child_execution_step_id">
       <DTS:VariableValue
-        DTS:DataType="20">0</DTS:VariableValue>
+        DTS:DataType="20">1</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
       DTS:DTSID="{D3896660-DB54-45BD-8B81-1547ED0A580B}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="v_process_load_id">
+      DTS:ObjectName="v_process_child_id">
       <DTS:VariableValue
         DTS:DataType="3">0</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{B53A0204-785A-4BDD-9568-5FC9D6955FC4}"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_process_load_name">
-      <DTS:VariableValue
-        DTS:DataType="8"
-        xml:space="preserve"></DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
       DTS:DTSID="{62D111F3-DDF9-496D-A3AF-BA545F050448}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="v_process_status_code_id">
+      DTS:ObjectName="v_process_child_status_code_id">
       <DTS:VariableValue
         DTS:DataType="2">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C1861EB0-16B8-4360-84F7-649D1A25219B}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_process_child_table_count">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
       DTS:DTSID="{FA7363BB-111C-45B4-9218-9B63FDBD8677}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="v_reference_data_execution_step_id">
+      DTS:ObjectName="v_process_root_execution_step_id">
       <DTS:VariableValue
         DTS:DataType="3">0</DTS:VariableValue>
     </DTS:Variable>
@@ -115,73 +235,9 @@
       DTS:DTSID="{FE0CE369-39B2-449B-9944-5DA3F405BCE9}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="v_reference_data_load_id">
+      DTS:ObjectName="v_process_root_id">
       <DTS:VariableValue
         DTS:DataType="3">4</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{120992DF-A6A7-47A8-BF85-FAF8FF041D36}"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_table_name">
-      <DTS:VariableValue
-        DTS:DataType="8">AddressType</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{6AF7573C-525D-44C7-A9EB-7AB0CDDC8C89}"
-      DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;SELECT [control].[ufn_get_&quot; + @[User::v_table_name]  + &quot;_load_status_code](&quot; + (DT_WSTR, 20) @[User::v_process_load_execution_step_id] + &quot;) AS status_code_id;&quot;"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_ufn_get_load_status_code">
-      <DTS:VariableValue
-        DTS:DataType="8">SELECT [control].[ufn_get_AddressType_load_status_code](0) AS status_code_id;</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{39F90EF6-8B34-4B56-BB19-00868B829413}"
-      DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;SELECT * FROM [control].[ufn_get_&quot; + @[User::v_table_name]  + &quot;_reconciliation_results]('SOURCE', &quot; + (DT_WSTR, 20) @[User::v_process_load_execution_step_id]  + &quot;)&quot;"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_ufn_get_reconciliation_results_SOURCE">
-      <DTS:VariableValue
-        DTS:DataType="8">SELECT * FROM [control].[ufn_get_AddressType_reconciliation_results]('SOURCE', 0)</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{2298BF68-5086-4C59-9140-A86F92C35F31}"
-      DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;SELECT * FROM [control].[ufn_get_&quot; + @[User::v_table_name]  + &quot;_reconciliation_results]('TARGET', &quot; + (DT_WSTR, 20) @[User::v_process_load_execution_step_id]  + &quot;)&quot;"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_ufn_get_reconciliation_results_TARGET">
-      <DTS:VariableValue
-        DTS:DataType="8">SELECT * FROM [control].[ufn_get_AddressType_reconciliation_results]('TARGET', 0)</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{3940B1E7-44A5-41D9-B249-97F5F17094CA}"
-      DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;EXEC [prod].[usp_load_&quot; + @[User::v_table_name]  + &quot;] &quot; + (DT_WSTR, 20) @[User::v_process_load_execution_step_id]  + &quot;;&quot;"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_usp_load_prod">
-      <DTS:VariableValue
-        DTS:DataType="8">EXEC [prod].[usp_load_AddressType] 0;</DTS:VariableValue>
-    </DTS:Variable>
-    <DTS:Variable
-      DTS:CreationName=""
-      DTS:DTSID="{373595CF-5FB8-4696-8C09-589ADAF9F97A}"
-      DTS:EvaluateAsExpression="True"
-      DTS:Expression="&quot;EXEC [work].[usp_validate_&quot; + @[User::v_table_name]  + &quot;] &quot; + (DT_WSTR, 20) @[User::v_process_load_execution_step_id]  + &quot;;&quot;"
-      DTS:IncludeInDebugDump="2345"
-      DTS:Namespace="User"
-      DTS:ObjectName="v_usp_validate_work">
-      <DTS:VariableValue
-        DTS:DataType="8">EXEC [work].[usp_validate_AddressType] 0;</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -217,19 +273,77 @@
         <DTS:ObjectData>
           <FEEADO
             EnumType="EnumerateRowsInFirstTable"
-            VarName="User::v_list_project_process_tables" />
+            VarName="User::v_list_project_process_children" />
         </DTS:ObjectData>
       </DTS:ForEachEnumerator>
       <DTS:Variables />
       <DTS:Executables>
         <DTS:Executable
-          DTS:refId="Package\Foreach Loop Container\Get Load Status"
+          DTS:refId="Package\Foreach Loop Container\End execution step"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{8961a3da-1315-48b3-b5da-d77a45c63afe}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="End execution step"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_7_paremeter_value" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Get actions"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{C3CDD5C8-154C-4AC2-8FC2-B002E2CA6566}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Get actions"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT&#xA;    MAX(CASE WHEN [action_position] = 1 THEN [execution_command_template] END) AS [action_1],&#xA;    MAX(CASE WHEN [action_position] = 2 THEN [execution_command_template] END) AS [action_2],&#xA;    MAX(CASE WHEN [action_position] = 3 THEN [execution_command_template] END) AS [action_3],&#xA;    MAX(CASE WHEN [action_position] = 4 THEN [execution_command_template] END) AS [action_4],&#xA;    MAX(CASE WHEN [action_position] = 5 THEN [execution_command_template] END) AS [action_5],&#xA;    MAX(CASE WHEN [action_position] = 6 THEN [execution_command_template] END) AS [action_6],&#xA;    MAX(CASE WHEN [action_position] = 7 THEN [execution_command_template] END) AS [action_7]&#xA;FROM [metadata].[ufn_list_process_actions](?)&#xA;GROUP BY [process_id], [process_name];"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_1"
+                SQLTask:DtsVariableName="User::v_action_1" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_3"
+                SQLTask:DtsVariableName="User::v_action_3" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_4"
+                SQLTask:DtsVariableName="User::v_action_4" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_6"
+                SQLTask:DtsVariableName="User::v_action_6" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_7"
+                SQLTask:DtsVariableName="User::v_action_7" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_process_child_id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Get load status code"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{5f4a162a-5bde-4ee4-91b8-9e2605d07095}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Get Load Status"
+          DTS:ObjectName="Get load status code"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
@@ -237,22 +351,22 @@
             <SQLTask:SqlTaskData
               SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
               SQLTask:SqlStmtSourceType="Variable"
-              SQLTask:SqlStatementSource="User::v_ufn_get_load_status_code"
+              SQLTask:SqlStatementSource="User::v_action_6_paremeter_value"
               SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ResultBinding
-                SQLTask:ResultName="status_code_id"
-                SQLTask:DtsVariableName="User::v_process_status_code_id" />
+                SQLTask:ResultName="result_value"
+                SQLTask:DtsVariableName="User::v_process_child_status_code_id" />
             </SQLTask:SqlTaskData>
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\Foreach Loop Container\Load Prod"
+          DTS:refId="Package\Foreach Loop Container\Load final table"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{d001854e-edba-41b0-aa27-f4d69ad487e2}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Load Prod"
+          DTS:ObjectName="Load final table"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
@@ -260,7 +374,7 @@
             <SQLTask:SqlTaskData
               SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
               SQLTask:SqlStmtSourceType="Variable"
-              SQLTask:SqlStatementSource="User::v_usp_load_prod" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStatementSource="User::v_action_4_paremeter_value" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
@@ -494,7 +608,7 @@
                     <property
                       dataType="System.String"
                       description="Variable que contiene el comando SQL para ejecutar."
-                      name="SqlCommandVariable">User::v_ufn_get_reconciliation_results_TARGET</property>
+                      name="SqlCommandVariable">User::v_action_5_paremeter_value</property>
                     <property
                       dataType="System.Int32"
                       description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
@@ -927,7 +1041,7 @@
                     <property
                       dataType="System.String"
                       description="Variable que contiene el comando SQL para ejecutar."
-                      name="SqlCommandVariable">User::v_ufn_get_reconciliation_results_SOURCE</property>
+                      name="SqlCommandVariable">User::v_action_2_paremeter_value</property>
                     <property
                       dataType="System.Int32"
                       description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
@@ -1130,77 +1244,36 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\Foreach Loop Container\Register Load End"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{8961a3da-1315-48b3-b5da-d77a45c63afe}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Register Load End"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="EXEC [runtime].[usp_end_execution_step] ?, ?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
-              <SQLTask:ParameterBinding
-                SQLTask:ParameterName="0"
-                SQLTask:DtsVariableName="User::v_reference_data_execution_step_id"
-                SQLTask:ParameterDirection="Input"
-                SQLTask:DataType="3"
-                SQLTask:ParameterSize="-1" />
-              <SQLTask:ParameterBinding
-                SQLTask:ParameterName="1"
-                SQLTask:DtsVariableName="User::v_process_status_code_id"
-                SQLTask:ParameterDirection="Input"
-                SQLTask:DataType="3"
-                SQLTask:ParameterSize="-1" />
-            </SQLTask:SqlTaskData>
-          </DTS:ObjectData>
-        </DTS:Executable>
-        <DTS:Executable
-          DTS:refId="Package\Foreach Loop Container\Register Load Start"
+          DTS:refId="Package\Foreach Loop Container\Start execution step"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{c541eea3-9a1c-4afb-8c57-fbc708f5bb01}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Register Load Start"
+          DTS:ObjectName="Start execution step"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="EXEC [runtime].[usp_start_execution_step] ?, ?"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_1_paremeter_value"
               SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
               <SQLTask:ResultBinding
                 SQLTask:ResultName="execution_step_id"
-                SQLTask:DtsVariableName="User::v_process_load_execution_step_id" />
-              <SQLTask:ParameterBinding
-                SQLTask:ParameterName="0"
-                SQLTask:DtsVariableName="$Package::p_execution_run_id"
-                SQLTask:ParameterDirection="Input"
-                SQLTask:DataType="3"
-                SQLTask:ParameterSize="-1" />
-              <SQLTask:ParameterBinding
-                SQLTask:ParameterName="1"
-                SQLTask:DtsVariableName="User::v_process_load_id"
-                SQLTask:ParameterDirection="Input"
-                SQLTask:DataType="3"
-                SQLTask:ParameterSize="-1" />
+                SQLTask:DtsVariableName="User::v_process_child_execution_step_id" />
             </SQLTask:SqlTaskData>
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\Foreach Loop Container\Validate and Load to Work"
+          DTS:refId="Package\Foreach Loop Container\Validate work data"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
           DTS:DTSID="{0fd1b08d-3827-453a-b201-a482c08f9823}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Validate and Load to Work"
+          DTS:ObjectName="Validate work data"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
@@ -1208,7 +1281,7 @@
             <SQLTask:SqlTaskData
               SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
               SQLTask:SqlStmtSourceType="Variable"
-              SQLTask:SqlStatementSource="User::v_usp_validate_work" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStatementSource="User::v_action_3_paremeter_value" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
       </DTS:Executables>
@@ -1217,7 +1290,7 @@
           DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
           DTS:DTSID="{89D18104-E840-46CE-B46A-0FCF8E0F0391}"
-          DTS:From="Package\Foreach Loop Container\Register Load Start"
+          DTS:From="Package\Foreach Loop Container\Start execution step"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
           DTS:To="Package\Foreach Loop Container\Publish Initial Reconciliation Results" />
@@ -1228,20 +1301,20 @@
           DTS:From="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 1"
-          DTS:To="Package\Foreach Loop Container\Validate and Load to Work" />
+          DTS:To="Package\Foreach Loop Container\Validate work data" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
           DTS:CreationName=""
           DTS:DTSID="{349BE878-B9E3-4F3E-AE76-FA807A208AB3}"
-          DTS:From="Package\Foreach Loop Container\Validate and Load to Work"
+          DTS:From="Package\Foreach Loop Container\Validate work data"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 2"
-          DTS:To="Package\Foreach Loop Container\Load Prod" />
+          DTS:To="Package\Foreach Loop Container\Load final table" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
           DTS:DTSID="{5B3A7D1C-A636-4561-98C8-94E7122DAD33}"
-          DTS:From="Package\Foreach Loop Container\Load Prod"
+          DTS:From="Package\Foreach Loop Container\Load final table"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
           DTS:To="Package\Foreach Loop Container\Publish Final Reconciliation Results" />
@@ -1252,41 +1325,37 @@
           DTS:From="Package\Foreach Loop Container\Publish Final Reconciliation Results"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 4"
-          DTS:To="Package\Foreach Loop Container\Get Load Status" />
+          DTS:To="Package\Foreach Loop Container\Get load status code" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 5]"
           DTS:CreationName=""
           DTS:DTSID="{A815BA1F-5FC9-4006-915F-D374CC939A1E}"
-          DTS:From="Package\Foreach Loop Container\Get Load Status"
+          DTS:From="Package\Foreach Loop Container\Get load status code"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 5"
-          DTS:To="Package\Foreach Loop Container\Register Load End" />
+          DTS:To="Package\Foreach Loop Container\End execution step" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
+          DTS:CreationName=""
+          DTS:DTSID="{05DF69D7-6CC1-4A16-9504-9231C469B636}"
+          DTS:From="Package\Foreach Loop Container\Get actions"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 6"
+          DTS:To="Package\Foreach Loop Container\Start execution step" />
       </DTS:PrecedenceConstraints>
       <DTS:ForEachVariableMappings>
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{62050B88-44ED-422B-88A9-9FDBCA9426B0}"
-          DTS:ObjectName="{62050B88-44ED-422B-88A9-9FDBCA9426B0}"
+          DTS:DTSID="{E29D9988-3645-44F9-A7C5-E9968C06E2B8}"
+          DTS:ObjectName="{E29D9988-3645-44F9-A7C5-E9968C06E2B8}"
           DTS:ValueIndex="0"
-          DTS:VariableName="User::v_process_load_id" />
+          DTS:VariableName="User::v_process_child_id" />
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{8519CD9E-50D1-4DF6-9A15-9C46F29B3D17}"
-          DTS:ObjectName="{8519CD9E-50D1-4DF6-9A15-9C46F29B3D17}"
+          DTS:DTSID="{BBDBC98A-98B4-471D-B7EC-0C07B430312B}"
+          DTS:ObjectName="{BBDBC98A-98B4-471D-B7EC-0C07B430312B}"
           DTS:ValueIndex="1"
-          DTS:VariableName="User::v_process_load_name" />
-        <DTS:ForEachVariableMapping
-          DTS:CreationName=""
-          DTS:DTSID="{ACFD00CC-4BA1-4AAC-8724-4BC0DFB1147B}"
-          DTS:ObjectName="{ACFD00CC-4BA1-4AAC-8724-4BC0DFB1147B}"
-          DTS:ValueIndex="2"
-          DTS:VariableName="User::v_process_load_execution_required" />
-        <DTS:ForEachVariableMapping
-          DTS:CreationName=""
-          DTS:DTSID="{FDB8284D-E3CB-4F1F-9E16-6032B2206091}"
-          DTS:ObjectName="{FDB8284D-E3CB-4F1F-9E16-6032B2206091}"
-          DTS:ValueIndex="3"
-          DTS:VariableName="User::v_process_flow_type" />
+          DTS:VariableName="User::v_process_child_table_count" />
       </DTS:ForEachVariableMappings>
     </DTS:Executable>
     <DTS:Executable
@@ -1303,22 +1372,16 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT&#xA;&#x9;[process_id] AS [process_load_id], &#xA;&#x9;[process_name] AS [process_load_name], &#xA;&#x9;[execution_required] AS [execution_required],&#xA;    [process_flow_type]&#xA;FROM [metadata].[ufn_list_project_child_processes](1, 4, 0)&#xA;WHERE [execution_required] = 1&#xA;ORDER BY [process_id];"
+          SQLTask:SqlStatementSource="SELECT&#xA;&#x9;[project_process_id],&#xA;                     [table_count]&#xA;FROM [metadata].[ufn_list_process_children](?)&#xA;WHERE [execution_required] = 1&#xA;ORDER BY [project_process_id];"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
-            SQLTask:DtsVariableName="User::v_list_project_process_tables" />
+            SQLTask:DtsVariableName="User::v_list_project_process_children" />
           <SQLTask:ParameterBinding
             SQLTask:ParameterName="0"
-            SQLTask:DtsVariableName="$Project::p_project_id"
+            SQLTask:DtsVariableName="User::v_process_root_id"
             SQLTask:ParameterDirection="Input"
             SQLTask:DataType="2"
-            SQLTask:ParameterSize="-1" />
-          <SQLTask:ParameterBinding
-            SQLTask:ParameterName="1"
-            SQLTask:DtsVariableName="User::v_reference_data_load_id"
-            SQLTask:ParameterDirection="Input"
-            SQLTask:DataType="3"
             SQLTask:ParameterSize="-1" />
         </SQLTask:SqlTaskData>
       </DTS:ObjectData>
@@ -1341,7 +1404,7 @@
           SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="execution_step_id"
-            SQLTask:DtsVariableName="User::v_reference_data_execution_step_id" />
+            SQLTask:DtsVariableName="User::v_process_root_execution_step_id" />
           <SQLTask:ParameterBinding
             SQLTask:ParameterName="0"
             SQLTask:DtsVariableName="$Package::p_execution_run_id"
@@ -1350,7 +1413,7 @@
             SQLTask:ParameterSize="-1" />
           <SQLTask:ParameterBinding
             SQLTask:ParameterName="1"
-            SQLTask:DtsVariableName="User::v_reference_data_load_id"
+            SQLTask:DtsVariableName="User::v_process_root_id"
             SQLTask:ParameterDirection="Input"
             SQLTask:DataType="3"
             SQLTask:ParameterSize="-1" />
@@ -1397,161 +1460,51 @@
       <GraphLayout
         Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="236.8,41.6"
-          Id="Package\Get Reference Load Configuration"
-          TopLeft="284.978106894625,116.646079034938" />
-        <NodeLayout
-          Size="233.6,41.6"
-          Id="Package\Start Reference Data Subprocess"
-          TopLeft="287.112778925649,34.666666425599" />
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="403.645442910137,76.266666425599">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,40.3794126093386"
-              Start="0,0"
-              End="0,32.8794126093386">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,32.8794126093386" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
           Size="322.4,41.6"
           Id="Package\Clean Up Reference Staging and Work Tables - Start"
           TopLeft="239.999986886979,194.602307449069" />
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="402.289046890802,158.246079034938">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,36.3562284141312"
-              Start="0,0"
-              End="0,28.8562284141312">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,28.8562284141312" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
         <NodeLayout
-          Size="168,41.6"
-          Id="Package\Foreach Loop Container\Register Load Start"
-          TopLeft="88.2908922029272,37.1636339967902" />
+          Size="173.6,41.6"
+          Id="Package\Foreach Loop Container\Get load status code"
+          TopLeft="82.1545289018397,535.157574400474" />
         <NodeLayout
-          Size="244.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
-          TopLeft="51.9272578261123,117.175755017153" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
-          TopLeft="173.30907501452,78.7636339967902">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,38.4121210203628"
-              Start="0,0"
-              End="0,30.9121210203628">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,30.9121210203628" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="200.8,41.6"
-          Id="Package\Foreach Loop Container\Validate and Load to Work"
-          TopLeft="71.2454385887954,200.515151133278" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
-          TopLeft="172.986348207454,158.775755017152">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,41.7393961161258"
-              Start="0,0"
-              End="0,34.2393961161258">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,34.2393961161258" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="126.4,41.6"
-          Id="Package\Foreach Loop Container\Load Prod"
-          TopLeft="112.912102978896,285.606059632475" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
-          TopLeft="173.878770783846,242.115151133278">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,43.4909084991971"
-              Start="0,0"
-              End="0,35.9909084991971">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,35.9909084991971" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+          Size="148.8,41.6"
+          Id="Package\Foreach Loop Container\Load final table"
+          TopLeft="98.7454370862619,366.206059071993" />
         <NodeLayout
           Size="243.2,41.6"
           Id="Package\Foreach Loop Container\Publish Final Reconciliation Results"
-          TopLeft="53.4424092584796,373.812120331676" />
+          TopLeft="53.4424092584796,450.945453128634" />
+        <NodeLayout
+          Size="244.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
+          TopLeft="51.9272578261123,194.309087814111" />
+        <NodeLayout
+          Size="166.4,41.6"
+          Id="Package\Foreach Loop Container\End execution step"
+          TopLeft="88.0599121469216,621.538715698798" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Foreach Loop Container\Start execution step"
+          TopLeft="88.2908922029272,114.296966793748" />
+        <NodeLayout
+          Size="164,41.6"
+          Id="Package\Foreach Loop Container\Validate work data"
+          TopLeft="89.5787709204395,276.781817269595" />
         <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
-          TopLeft="175.577256118688,327.206059632475">
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          TopLeft="173.90907501452,155.896966793748">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,46.6060606992004"
+              EndConnector="0,38.4121210203625"
               Start="0,0"
-              End="0,39.1060606992004">
+              End="0,30.9121210203625">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,39.1060606992004" />
+                    End="0,30.9121210203625" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1560,28 +1513,86 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="164,41.6"
-          Id="Package\Foreach Loop Container\Register Load End"
-          TopLeft="88.0599121469216,544.40538290184" />
-        <NodeLayout
-          Size="153.6,41.6"
-          Id="Package\Foreach Loop Container\Get Load Status"
-          TopLeft="95.4878615066718,457.157574942876" />
         <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 4]"
-          TopLeft="173.665135382576,415.412120331676">
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
+          TopLeft="172.953014373276,235.909087814111">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,41.7454546112004"
+              EndConnector="0,40.8727294554849"
               Start="0,0"
-              End="0,34.2454546112004">
+              End="0,33.3727294554849">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,34.2454546112004" />
+                    End="0,33.3727294554849" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
+          TopLeft="172.362104003351,318.381817269595">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47.8242418023971"
+              Start="0,0"
+              End="0,40.3242418023971">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,40.3242418023971" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
+          TopLeft="174.093923172371,407.806059071993">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.1393940566411"
+              Start="0,0"
+              End="0,35.6393940566411">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.6393940566411" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 4]"
+          TopLeft="171.99846908016,492.545453128634">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.6121212718399"
+              Start="0,0"
+              End="0,35.1121212718399">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.1121212718399" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1592,18 +1603,44 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 5]"
-          TopLeft="171.173886826797,498.757574942876">
+          TopLeft="170.107220524381,576.757574400474">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,45.6478079589638"
+              EndConnector="0,44.781141298324"
               Start="0,0"
-              End="0,38.1478079589638">
+              End="0,37.281141298324">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,38.1478079589638" />
+                    End="0,37.281141298324" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="131.2,41.6"
+          Id="Package\Foreach Loop Container\Get actions"
+          TopLeft="108.366648681794,28.7999995660783" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
+          TopLeft="173.72877044236,70.3999995660783">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.8969672276698"
+              Start="0,0"
+              End="0,36.3969672276698">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.3969672276698" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1619,20 +1656,72 @@
           Size="368.8,756.8"
           Id="Package\Foreach Loop Container"
           TopLeft="220.833321267533,283.399998029272" />
+        <NodeLayout
+          Size="236.8,41.6"
+          Id="Package\Get Reference Load Configuration"
+          TopLeft="284.978106894625,116.646079034938" />
+        <NodeLayout
+          Size="233.6,41.6"
+          Id="Package\Start Reference Data Subprocess"
+          TopLeft="287.112778925649,34.666666425599" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="403.645442910137,76.266666425599">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.379412609339"
+              Start="0,0"
+              End="0,32.879412609339">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.879412609339" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="402.289046890802,158.246079034938">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.356228414131"
+              Start="0,0"
+              End="0,28.856228414131">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.856228414131" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
           TopLeft="403.216654077256,236.202307449069">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,47.1976905802033"
+              EndConnector="0,47.1976905802031"
               Start="0,0"
-              End="0,39.6976905802033">
+              End="0,39.6976905802031">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,39.6976905802033" />
+                    End="0,39.6976905802031" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1645,64 +1734,18 @@
     </LayoutInfo>
   </Package>
   <TaskHost
-    design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="168.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB"
-          TopLeft="639.999965031943,190.666665340794" />
-        <NodeLayout
-          Size="164.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB"
-          TopLeft="637.499965168537,85.7999994033575" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results.Paths[Salida de origen de OLE DB]"
-          TopLeft="722.14996510024,127.399999403357">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,63.2666659374367"
-              Start="0,0"
-              End="0,55.7666659374367">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,55.7666659374367" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
     design-time-name="Package\Foreach Loop Container\Publish Final Reconciliation Results">
     <LayoutInfo>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="168.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB"
-          TopLeft="639.999965031943,190.666665340794" />
-        <NodeLayout
           Size="164.8,41.6"
           Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB"
           TopLeft="637.499965168537,85.7999994033575" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB"
+          TopLeft="639.999965031943,190.666665340794" />
         <EdgeLayout
           Id="Package\Foreach Loop Container\Publish Final Reconciliation Results.Paths[Salida de origen de OLE DB]"
           TopLeft="722.14996510024,127.399999403357">
@@ -1730,6 +1773,52 @@
   </TaskHost>
   <PipelineComponentMetadata
     design-time-name="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="164.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB"
+          TopLeft="637.499965168537,85.7999994033575" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB"
+          TopLeft="639.999965031943,190.666665340794" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results.Paths[Salida de origen de OLE DB]"
+          TopLeft="722.14996510024,127.399999403357">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,63.2666659374367"
+              Start="0,0"
+              End="0,55.7666659374367">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,55.7666659374367" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>

@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_OPERATIONAL_MIGRATION"
   DTS:PackageType="5"
-  DTS:VersionBuild="36"
-  DTS:VersionGUID="{A95B9C94-1E84-409D-A3C6-7A67258AC1C5}">
+  DTS:VersionBuild="37"
+  DTS:VersionGUID="{09467584-705C-4612-B6AC-FB6152695D86}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
