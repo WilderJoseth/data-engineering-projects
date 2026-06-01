@@ -19,7 +19,7 @@ GO
 CREATE TABLE [staging].[AddressType] (
     [StagingAddressTypeKey] BIGINT IDENTITY(1,1) NOT NULL,
     [SourceAddressTypeID] INT NOT NULL,
-    [Name] VARCHAR(50) NOT NULL,
+    [Name] NVARCHAR(50) NOT NULL,
 
     CONSTRAINT [pk_staging_AddressType_StagingAddressTypeKey] PRIMARY KEY CLUSTERED ([StagingAddressTypeKey] ASC),
     CONSTRAINT [uk_staging_AddressType_SourceAddressTypeID] UNIQUE ([SourceAddressTypeID])

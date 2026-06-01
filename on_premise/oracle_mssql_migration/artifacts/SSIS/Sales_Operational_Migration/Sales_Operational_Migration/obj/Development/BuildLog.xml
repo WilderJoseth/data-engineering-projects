@@ -2,7 +2,7 @@
 <BuildLog xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ProjectInfo>
     <Name>Sales_Operational_Migration</Name>
-    <LastWriteTime>2026-06-01T14:41:08.1956298Z</LastWriteTime>
+    <LastWriteTime>2026-06-01T21:31:12.6944269Z</LastWriteTime>
     <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
   </ProjectInfo>
   <LastBuildInfos>
@@ -28,7 +28,7 @@
     </ProjectBuildItemInfo>
     <ProjectBuildItemInfo>
       <Name>PKG_REFERENCE_DATA2.dtsx</Name>
-      <LastWriteTime>2026-06-01T18:46:41.5489483Z</LastWriteTime>
+      <LastWriteTime>2026-06-01T22:08:03.8770133Z</LastWriteTime>
       <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
     </ProjectBuildItemInfo>
   </LastBuildInfos>
