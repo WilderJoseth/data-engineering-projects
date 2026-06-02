@@ -4,20 +4,13 @@
 
 This document describes the technical design of `DataOps_Control`, a reusable metadata-driven control framework for data engineering projects.
 
-## Design Evolution
-
-The design has evolved from a table-driven orchestration model to a process-based orchestration model. In the initial approach, table-level execution flags were used to decide which table flows or SSIS containers should run.
-
-The current design uses project processes as the primary orchestration unit. Table and batch metadata still provide important execution context, but they no longer need to be the only driver of orchestration. This allows the framework to support both table-driven projects, such as database migrations, and process-driven projects where a process may execute actions without being directly tied to a table.
-
-
 ## Schema Organization
 
 `DataOps_Control` is organized into four responsibility-based schemas:
 
 | Schema | Responsibility |
 |---|---|
-| `metadata` | Defines projects, databases, processes, process dependencies, process actions, registered source/target tables, columns, source-to-target mappings, process-to-table execution scope, process-table batch execution scope, and batch metadata managed by the framework. |
+| `metadata` | Defines projects, databases, processes, registered source/target tables, columns, source-to-target mappings, process-to-table execution scope, process-table batch execution scope, and batch metadata managed by the framework. |
 | `runtime` | Tracks execution runs and execution steps. |
 | `observability` | Stores validation results, reconciliation results, and technical error logs generated during execution. |
 | `reference` | Stores controlled code values used by the framework, such as statuses and validation types. |
@@ -28,7 +21,7 @@ The current design uses project processes as the primary orchestration unit. Tab
 
 | Area | Main tables |
 |---|---|
-| Metadata | `projects`, `project_databases`, `project_database_mappings`, `project_processes`, `project_process_dependencies`, `project_process_actions`, `project_tables`, `project_table_mappings`, `project_process_tables`, `project_process_table_batches`, `project_columns`, `project_table_batches` |
+| Metadata | `projects`, `project_databases`, `project_database_mappings`, `project_processes`, `project_tables`, `project_table_mappings`, `project_process_tables`, `project_process_table_batches`, `project_columns`, `project_table_batches` |
 | Runtime | `execution_runs`, `execution_steps` |
 | Observability | `error_logs`, `validation_results`, `reconciliation_results` |
 | Reference | `status_codes`, `validation_codes` |
@@ -64,7 +57,6 @@ Bridge tables use composite primary keys when the relationship itself is the ent
 |---|---|
 | `metadata.project_database_mappings` | Source-to-target database relationship. |
 | `metadata.project_table_mappings` | Source-to-target table relationship. |
-| `metadata.project_process_dependencies` | Process-to-process execution dependency. |
 | `metadata.project_process_tables` | Process-to-table execution scope. |
 | `metadata.project_process_table_batches` | Process-table-to-batch execution scope. |
 
@@ -89,10 +81,8 @@ Common audit/control columns used across the model include:
 | `projects` | Registers data engineering projects managed by the framework. |
 | `project_databases` | Registers databases, platforms, or logical data stores associated with each project. |
 | `project_database_mappings` | Defines source-to-target database mappings. |
-| `project_processes` | Defines logical processes, process hierarchy, and process-level execution control. |
-| `project_process_dependencies` | Defines execution prerequisites between project processes. |
-| `project_process_actions` | Defines ordered executable actions configured for a project process. |
-| `project_tables` | Registers source tables, target tables, or managed objects when they are needed for mapping, table execution control, batch filtering, validation, or reconciliation. |
+| `project_processes` | Defines logical processes and process hierarchy. |
+| `project_tables` | Registers source tables, target tables, or managed objects when they are needed for mapping, execution control, batch filtering, validation, or reconciliation. |
 | `project_table_mappings` | Defines source-to-target table mappings. |
 | `project_process_tables` | Associates controlled tables with the processes responsible for executing them. |
 | `project_process_table_batches` | Associates configured batch slices with a specific process-table execution scope. |
@@ -108,12 +98,6 @@ Common audit/control columns used across the model include:
 | `project_database_mappings` | `database_source_id`, `database_target_id` | Defines database-level source-to-target relationships. |
 | `project_processes` | `project_id` | Associates the process with a registered project. |
 | `project_processes` | `parent_process_id` | Supports process hierarchy, such as parent process, subprocess, or table-level load. |
-| `project_processes` | `execution_required` | Marks a process as requiring evaluation/execution by the orchestration layer. |
-| `project_process_dependencies` | `project_process_id`, `dependency_project_process_id` | Defines which project process must complete before another project process can run. |
-| `project_process_actions` | `project_process_id`, `position` | Assigns ordered executable actions to a project process. |
-| `project_process_actions` | `action_type` | Identifies the executable action type, such as `STORED_PROCEDURE`, `TABLE_VALUED_FUNCTION`, or `SCALAR_FUNCTION`. |
-| `project_process_actions` | `execution_database_id` | Identifies the registered database where the executable action is located. |
-| `project_process_actions` | `parameter_template` | Stores ETL placeholder tokens, such as `{1}` or `{1}, {2}`, to be replaced by the orchestration layer. |
 | `project_tables` | `schema_name` | Stores the schema of the registered controlled object. For target tables, this usually represents the final target schema. |
 | `project_tables` | `is_fact_table` | Identifies analytical fact tables. |
 | `project_tables` | `is_transactional_table` | Identifies transactional tables that may require incremental or batch processing. |
@@ -223,9 +207,8 @@ Common audit/control columns used across the model include:
 | `runtime.usp_end_execution_step` | Stored procedure | Updates an execution step with its final status and end date. |
 | `runtime.usp_end_execution_run` | Stored procedure | Ends an execution run and derives the final run status from its execution steps. |
 | `observability.usp_log_error` | Stored procedure | Inserts a technical error record for an execution step. |
-| `metadata.ufn_list_project_process_children` | Inline table-valued function | Lists active immediate child project processes for a selected parent process. |
-| `metadata.ufn_list_project_process_actions` | Inline table-valued function | Lists required executable action templates for one selected project process. |
-| `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists executable batch slices assigned through process-table batch scope for one selected project process. |
+| `metadata.ufn_list_project_process_tables` | Inline table-valued function | Lists active child processes and associated controlled tables for a parent process. |
+| `metadata.ufn_list_project_process_table_batches` | Inline table-valued function | Lists active child processes, target tables, source batch tables, and batch definitions for a given parent process. |
 
 ## Views
 
@@ -275,13 +258,6 @@ Project service account
 
 ### Main Execution Concepts
 
-
-#### Process-level execution control
-
-`metadata.project_processes.execution_required` controls whether a process should be considered by the orchestration layer. This process-level flag allows the framework to support both table-driven projects and process-driven projects.
-
-Table-level and batch-level `execution_required` flags still exist, but they provide execution context after a process has been selected.
-
 #### Runtime levels
 
 The framework records execution at two runtime levels:
@@ -311,30 +287,6 @@ metadata.project_processes
     → metadata.project_process_tables
         → metadata.project_tables
 ```
-
-#### Process dependency path
-
-Execution dependencies are resolved separately from hierarchy:
-
-```text
-metadata.project_processes
-    → metadata.project_process_dependencies
-        → dependency project process
-```
-
-`parent_process_id` defines where a process belongs. `project_process_dependencies` defines what must complete before a process can run.
-
-#### Process action path
-
-Executable actions are resolved after a process has been selected for execution:
-
-```text
-metadata.project_processes
-    → metadata.project_process_actions
-        → execution database / schema / object
-```
-
-Actions may represent stored procedures, table-valued functions, scalar functions, or project-specific executable objects.
 
 #### Batch context path
 
@@ -368,48 +320,13 @@ metadata.project_table_mappings
 
 ### Data Flow Types
 
-The framework supports common execution patterns that can be combined depending on the project:
+The framework supports three common execution patterns:
 
 | Flow type | When it is used |
 |---|---|
-| Process action flow | A selected process executes ordered actions defined in `metadata.project_process_actions`. |
-| Table load flow | A controlled table is loaded as part of a selected process. |
-| Grouped process flow | A parent process organizes related child processes. |
-| Batch load flow | A large or transactional source table is processed in smaller slices through process-table batch scope. |
-
-
-### Process Action Flow
-
-#### Purpose
-
-A process action flow is used when a selected project process executes an ordered list of technical actions.
-
-Examples of actions include:
-
-- Starting an execution step.
-- Calling a project-specific validation procedure.
-- Retrieving reconciliation result sets.
-- Loading a final table.
-- Returning a scalar status value.
-- Ending an execution step.
-
-#### Metadata pattern
-
-```text
-metadata.project_processes
-    → metadata.project_process_actions
-        → executable database object
-```
-
-Each action stores the executable object location and a parameter template. The orchestration layer replaces placeholder tokens, such as `{1}` or `{1}, {2}`, before execution.
-
-#### Supported action types
-
-| Action type | Command pattern |
-|---|---|
-| `STORED_PROCEDURE` | `EXEC [database].[schema].[procedure] {1}, {2}` |
-| `TABLE_VALUED_FUNCTION` | `SELECT * FROM [database].[schema].[function]({1}, {2})` |
-| `SCALAR_FUNCTION` | `SELECT [database].[schema].[function]({1}) AS [result_value]` |
+| Table load flow | A controlled table is loaded as a single execution unit. |
+| Grouped table load flow | A parent process groups multiple related table-level processes. |
+| Batch load flow | A large or transactional source table is processed in smaller slices. |
 
 ### Table Load Flow
 
@@ -462,11 +379,11 @@ Example reconciliation for `AddressType Load`:
 | `ROW_COUNT` | `TOTAL` | `SOURCE` | 6 | 4 |
 | `ROW_COUNT` | `TOTAL` | `TARGET` | 6 | 4 |
 
-### Grouped Process Flow
+### Grouped Table Load Flow
 
 #### Purpose
 
-A grouped process flow is used when one parent process organizes multiple related child processes.
+A grouped table load is used when one parent process organizes multiple related table-level processes.
 
 ```text
 Geography Load
@@ -580,13 +497,6 @@ Example amount reconciliation:
 |---|---|---|---:|---:|
 | `TOTAL_DUE` | `BATCH=2011-05` | `SOURCE` | 815233.4200 | 25 |
 | `TOTAL_DUE` | `BATCH=2011-05` | `TARGET` | 815233.4200 | 25 |
-
-
-### SSIS Implementation Considerations
-
-SSIS control flow can use metadata to decide which process and action should run. However, SSIS Data Flow tasks are normally designed at package design time and are not fully generated dynamically at runtime.
-
-For this reason, the framework should use metadata to orchestrate process actions while allowing project-specific packages or predefined data flow tasks to implement the actual movement of data where needed.
 
 ### Observability and Status Behavior
 

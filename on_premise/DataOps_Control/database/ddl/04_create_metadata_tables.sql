@@ -44,6 +44,7 @@ CREATE TABLE [metadata].[project_processes] (
     [name] [varchar](50) NOT NULL,
     [project_id] [smallint] NOT NULL,
     [parent_process_id] [int] NULL,
+    [execution_required] [bit] NOT NULL CONSTRAINT [df_metadata_project_processes_execution_required] DEFAULT 0,
     [is_active] [bit] NOT NULL CONSTRAINT [df_metadata_project_processes_is_active] DEFAULT 1,
     [created_at] [datetime2] NOT NULL CONSTRAINT [df_metadata_project_processes_created_at] DEFAULT SYSUTCDATETIME(),
 

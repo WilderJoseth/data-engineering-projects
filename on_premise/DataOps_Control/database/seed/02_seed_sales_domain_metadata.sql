@@ -4,13 +4,10 @@
 
   Purpose:
   - Loads sample metadata for the Oracle to SQL Server Migration - Sales Domain.
-  - Supports testing table load, grouped table load, batch-oriented flows,
-    process dependencies, and v2 process-action metadata.
+  - Supports testing table load, grouped table load, and batch-oriented flows.
 
   Notes:
   - Metadata IDs are manually assigned to keep scripts predictable.
-  - Process IDs 3 and 7 are intentionally not used in v2 because the previous
-    intermediate package layer was redundant.
   - This script assumes a clean database or empty metadata tables.
 ============================================================================*/
 
@@ -66,11 +63,11 @@ GO
   4. Project Processes
 
   Notes:
-  - parent_process_id defines hierarchy/grouping.
-  - Sales_Operational_Migration and Sales_Analytics_Migration are root
-    orchestration processes.
-  - Required execution order is defined separately in
-    metadata.project_process_dependencies.
+  - parent_process_id defines process hierarchy/grouping.
+  - execution_required defines whether the process should be considered for
+    execution by the orchestration layer.
+  - Process IDs 3 and 7 are intentionally not used in v2 because the previous
+    intermediate package layer was redundant.
 ============================================================================*/
 
 INSERT INTO [metadata].[project_processes]
@@ -78,128 +75,51 @@ INSERT INTO [metadata].[project_processes]
     [id],
     [name],
     [project_id],
-    [parent_process_id]
+    [parent_process_id],
+    [execution_required]
 )
 VALUES
     -- Migration roots
-    (1,  'Sales_Operational_Migration', 1, NULL),
-    (2,  'Sales_Analytics_Migration',   1, NULL),
+    (1,  'Sales_Operational_Migration', 1, NULL, 1),
+    (2,  'Sales_Analytics_Migration',   1, NULL, 1),
 
     -- Operational migration process groups
-    (4,  'PKG_REFERENCE_DATA',        1, 1),
-    (5,  'PKG_MASTER_DATA',           1, 1),
-    (6,  'PKG_TRANSACTIONAL_DATA',    1, 1),
+    (4,  'Reference Data Load',      1, 1, 1),
+    (5,  'Master Data Load',         1, 1, 1),
+    (6,  'Transactional Data Load',  1, 1, 1),
 
     -- Analytics migration process groups
-    (8,  'PKG_DIMENSIONS',          1, 2),
-    (9,  'PKG_FACTS',               1, 2),
+    (8,  'Dimensions Data Load', 1, 2, 1),
+    (9,  'Facts Data Load',      1, 2, 1),
 
     -- Reference data loads
-    (10, 'AddressType Load',      1, 4),
-    (11, 'ProductCategory Load',  1, 4),
-    (12, 'SpecialOffer Load',     1, 4),
-    (13, 'ShipMethod Load',       1, 4),
-    (14, 'Geography Load',        1, 4),
-    (15, 'Currency Load',         1, 4),
+    (10, 'AddressType Load',      1, 4, 1),
+    (11, 'ProductCategory Load',  1, 4, 1),
+    (12, 'SpecialOffer Load',     1, 4, 1),
+    (13, 'ShipMethod Load',       1, 4, 1),
+    (14, 'Geography Load',        1, 4, 1),
+    (15, 'Currency Load',         1, 4, 1),
 
     -- Master data loads
-    (16, 'CreditCard Load',   1, 5),
-    (17, 'Address Load',      1, 5),
-    (18, 'Product Load',      1, 5),
-    (19, 'SalesPerson Load',  1, 5),
-    (20, 'Customer Load',     1, 5),
+    (16, 'CreditCard Load',   1, 5, 1),
+    (17, 'Address Load',      1, 5, 1),
+    (18, 'Product Load',      1, 5, 1),
+    (19, 'SalesPerson Load',  1, 5, 1),
+    (20, 'Customer Load',     1, 5, 1),
 
     -- Transactional data loads
-    (21, 'Sales Load',        1, 6),
+    (21, 'Sales Load', 1, 6, 1),
 
     -- Dimension loads
-    (22, 'DimCustomer Load',        1, 8),
-    (23, 'DimPaymentMethod Load',   1, 8),
-    (24, 'DimShipMethod Load',      1, 8),
-    (25, 'DimProduct Load',         1, 8),
-    (26, 'DimSalesTerritory Load',  1, 8),
-    (27, 'DimSalesPerson Load',     1, 8),
+    (22, 'DimCustomer Load',        1, 8, 1),
+    (23, 'DimPaymentMethod Load',   1, 8, 1),
+    (24, 'DimShipMethod Load',      1, 8, 1),
+    (25, 'DimProduct Load',         1, 8, 1),
+    (26, 'DimSalesTerritory Load',  1, 8, 1),
+    (27, 'DimSalesPerson Load',     1, 8, 1),
 
     -- Fact loads
-    (28, 'FactSales Load', 1, 9);
-GO
-
-/*============================================================================
-  4A. Project Process Dependencies
-
-  Purpose:
-  - Defines required execution dependencies between registered processes.
-  - Supports same-parent, parent-level, and cross-parent dependency scenarios.
-
-  Relationship direction:
-  - project_process_id = process that depends on another process.
-  - dependency_project_process_id = process that must complete first.
-
-  Notes:
-  - parent_process_id defines hierarchy/grouping only.
-  - Dependencies define required execution order.
-  - This table intentionally does not use position/display order.
-  - Sales_Operational_Migration and Sales_Analytics_Migration are root
-    orchestration processes; the previous intermediate package layer was removed
-    because it was redundant.
-============================================================================*/
-
-INSERT INTO [metadata].[project_process_dependencies]
-(
-    [project_process_id],
-    [dependency_project_process_id]
-)
-VALUES
-    /*========================================================================
-      Root and parent/group-level dependencies
-    ========================================================================*/
-
-    -- Analytics migration depends on completed operational migration.
-    (2,  1), -- Sales_Analytics_Migration depends on Sales_Operational_Migration
-
-    -- Operational process group sequence
-    (5,  4), -- PKG_MASTER_DATA depends on PKG_REFERENCE_DATA
-    (6,  5), -- PKG_TRANSACTIONAL_DATA depends on PKG_MASTER_DATA
-
-    -- Analytics process group sequence
-    (9,  8), -- PKG_FACTS depends on PKG_DIMENSIONS
-
-    /*========================================================================
-      Cross-parent and child-process dependencies
-    ========================================================================*/
-
-    -- Master data dependencies on reference data
-    (17, 14), -- Address Load depends on Geography Load
-    (18, 11), -- Product Load depends on ProductCategory Load
-    (19, 14), -- SalesPerson Load depends on Geography Load
-    (20, 14), -- Customer Load depends on Geography Load
-
-    -- Transactional data dependencies
-    (21, 12), -- Sales Load depends on SpecialOffer Load
-    (21, 13), -- Sales Load depends on ShipMethod Load
-    (21, 15), -- Sales Load depends on Currency Load
-    (21, 16), -- Sales Load depends on CreditCard Load
-    (21, 17), -- Sales Load depends on Address Load
-    (21, 19), -- Sales Load depends on SalesPerson Load
-    (21, 20), -- Sales Load depends on Customer Load
-
-    -- Dimension dependencies
-    (22, 20), -- DimCustomer Load depends on Customer Load
-    (23, 16), -- DimPaymentMethod Load depends on CreditCard Load
-    (24, 13), -- DimShipMethod Load depends on ShipMethod Load
-    (25, 11), -- DimProduct Load depends on ProductCategory Load
-    (25, 18), -- DimProduct Load depends on Product Load
-    (26, 14), -- DimSalesTerritory Load depends on Geography Load
-    (27, 19), -- DimSalesPerson Load depends on SalesPerson Load
-
-    -- Fact dependencies
-    (28, 21), -- FactSales Load depends on Sales Load
-    (28, 22), -- FactSales Load depends on DimCustomer Load
-    (28, 23), -- FactSales Load depends on DimPaymentMethod Load
-    (28, 24), -- FactSales Load depends on DimShipMethod Load
-    (28, 25), -- FactSales Load depends on DimProduct Load
-    (28, 26), -- FactSales Load depends on DimSalesTerritory Load
-    (28, 27); -- FactSales Load depends on DimSalesPerson Load
+    (28, 'FactSales Load', 1, 9, 1);
 GO
 
 /*============================================================================
@@ -456,179 +376,3 @@ VALUES
     (21, 33, 4),
     (21, 33, 5);
 GO
-/*============================================================================
-  10. Process Actions
-
-  Purpose:
-  - Defines ordered executable actions for each registered process.
-  - Supports the v2 process-based orchestration pattern:
-      parent process -> child process loop -> ordered process actions.
-
-  Notes:
-  - metadata.project_process_tables remains the source of truth for the
-    controlled table scope of each process.
-  - metadata.project_process_actions defines the technical actions executed
-    inside the process.
-  - execution_database_id identifies where the executable object is located.
-  - parameter_template stores a lightweight placeholder pattern for runtime
-    parameters. It does not store real parameter values.
-  - The executable objects listed here are metadata examples used to test
-    action lookup. They do not need to exist unless an ETL pipeline attempts
-    to execute them dynamically.
-
-  execution_database_id:
-  - 2 = Sales_Operational
-  - 3 = Sales_Analytics
-============================================================================*/
-
-INSERT INTO [metadata].[project_process_actions]
-(
-    [id],
-    [project_process_id],
-    [position],
-    [action_name],
-    [action_type],
-    [execution_database_id],
-    [schema_name],
-    [object_name],
-    [parameter_template],
-    [is_required]
-)
-VALUES
-    /*========================================================================
-      Reference Data Loads - Sales_Operational
-    ========================================================================*/
-
-    -- AddressType Load -> AddressType
-    (1001, 10, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_address_type_staging', '?, ?', 1),
-    (1002, 10, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_address_type_work', '?, ?', 1),
-    (1003, 10, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_address_type', '?, ?', 1),
-    (1004, 10, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_address_type', '?, ?', 1),
-
-    -- ProductCategory Load -> ProductCategory
-    (1011, 11, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_product_category_staging', '?, ?', 1),
-    (1012, 11, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_product_category_work', '?, ?', 1),
-    (1013, 11, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_product_category', '?, ?', 1),
-    (1014, 11, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_product_category', '?, ?', 1),
-
-    -- SpecialOffer Load -> SpecialOffer
-    (1021, 12, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_special_offer_staging', '?, ?', 1),
-    (1022, 12, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_special_offer_work', '?, ?', 1),
-    (1023, 12, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_special_offer', '?, ?', 1),
-    (1024, 12, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_special_offer', '?, ?', 1),
-
-    -- ShipMethod Load -> ShipMethod
-    (1031, 13, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_ship_method_staging', '?, ?', 1),
-    (1032, 13, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_ship_method_work', '?, ?', 1),
-    (1033, 13, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_ship_method', '?, ?', 1),
-    (1034, 13, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_ship_method', '?, ?', 1),
-
-    -- Geography Load -> CountryRegion, StateProvince, SalesTerritory
-    -- Grouped process: one process step, multiple internal ordered actions.
-    (1041, 14, 1, 'Load CountryRegion', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_country_region', '?, ?', 1),
-    (1042, 14, 2, 'Load StateProvince', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_state_province', '?, ?', 1),
-    (1043, 14, 3, 'Load SalesTerritory', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_sales_territory', '?, ?', 1),
-    (1044, 14, 4, 'Register geography reconciliation', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_geography', '?, ?', 1),
-
-    -- Currency Load -> Currency, CurrencyRate
-    -- Grouped process: one process step, multiple internal ordered actions.
-    (1051, 15, 1, 'Load Currency', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_currency', '?, ?', 1),
-    (1052, 15, 2, 'Load CurrencyRate', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_currency_rate', '?, ?', 1),
-    (1053, 15, 3, 'Register currency reconciliation', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_currency', '?, ?', 1),
-
-    /*========================================================================
-      Master Data Loads - Sales_Operational
-    ========================================================================*/
-
-    -- CreditCard Load -> CreditCard
-    (1061, 16, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_credit_card_staging', '?, ?', 1),
-    (1062, 16, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_credit_card_work', '?, ?', 1),
-    (1063, 16, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_credit_card', '?, ?', 1),
-    (1064, 16, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_credit_card', '?, ?', 1),
-
-    -- Address Load -> Address
-    (1071, 17, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_address_staging', '?, ?', 1),
-    (1072, 17, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_address_work', '?, ?', 1),
-    (1073, 17, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_address', '?, ?', 1),
-    (1074, 17, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_address', '?, ?', 1),
-
-    -- Product Load -> Product
-    (1081, 18, 1, 'Load staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_product_staging', '?, ?', 1),
-    (1082, 18, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_product_work', '?, ?', 1),
-    (1083, 18, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_product', '?, ?', 1),
-    (1084, 18, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_product', '?, ?', 1),
-
-    -- SalesPerson Load -> SalesPerson
-    (1091, 19, 1, 'Load staging tables', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_sales_person_staging', '?, ?', 1),
-    (1092, 19, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_sales_person_work', '?, ?', 1),
-    (1093, 19, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_sales_person', '?, ?', 1),
-    (1094, 19, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_sales_person', '?, ?', 1),
-
-    -- Customer Load -> Customer
-    (1101, 20, 1, 'Load staging tables', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_customer_staging', '?, ?', 1),
-    (1102, 20, 2, 'Validate and load work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_customer_work', '?, ?', 1),
-    (1103, 20, 3, 'Register reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_customer', '?, ?', 1),
-    (1104, 20, 4, 'Load final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_customer', '?, ?', 1),
-
-    /*========================================================================
-      Transactional Data Loads - Sales_Operational
-    ========================================================================*/
-
-    -- Sales Load -> SalesOrderHeader
-    -- Batch-specific filtering remains resolved through project_process_table_batches.
-    (1111, 21, 1, 'Load batch staging table', 'STORED_PROCEDURE', 2, 'staging', 'usp_load_sales_order_header_batch_staging', '?, ?, ?', 1),
-    (1112, 21, 2, 'Validate and load batch work table', 'STORED_PROCEDURE', 2, 'work', 'usp_validate_load_sales_order_header_batch_work', '?, ?, ?', 1),
-    (1113, 21, 3, 'Register batch reconciliation results', 'STORED_PROCEDURE', 2, 'control', 'usp_reconcile_sales_order_header_batch', '?, ?, ?', 1),
-    (1114, 21, 4, 'Load batch final table', 'STORED_PROCEDURE', 2, 'prod', 'usp_load_sales_order_header_batch', '?, ?, ?', 1),
-
-    /*========================================================================
-      Dimension Loads - Sales_Analytics
-    ========================================================================*/
-
-    -- DimCustomer Load -> DimCustomer
-    (1121, 22, 1, 'Load dimension staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_dim_customer_staging', '?, ?', 1),
-    (1122, 22, 2, 'Validate and load dimension work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_dim_customer_work', '?, ?', 1),
-    (1123, 22, 3, 'Register dimension reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_dim_customer', '?, ?', 1),
-    (1124, 22, 4, 'Load dimension table', 'STORED_PROCEDURE', 3, 'dim', 'usp_load_dim_customer', '?, ?', 1),
-
-    -- DimPaymentMethod Load -> DimPaymentMethod
-    (1131, 23, 1, 'Load dimension staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_dim_payment_method_staging', '?, ?', 1),
-    (1132, 23, 2, 'Validate and load dimension work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_dim_payment_method_work', '?, ?', 1),
-    (1133, 23, 3, 'Register dimension reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_dim_payment_method', '?, ?', 1),
-    (1134, 23, 4, 'Load dimension table', 'STORED_PROCEDURE', 3, 'dim', 'usp_load_dim_payment_method', '?, ?', 1),
-
-    -- DimShipMethod Load -> DimShipMethod
-    (1141, 24, 1, 'Load dimension staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_dim_ship_method_staging', '?, ?', 1),
-    (1142, 24, 2, 'Validate and load dimension work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_dim_ship_method_work', '?, ?', 1),
-    (1143, 24, 3, 'Register dimension reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_dim_ship_method', '?, ?', 1),
-    (1144, 24, 4, 'Load dimension table', 'STORED_PROCEDURE', 3, 'dim', 'usp_load_dim_ship_method', '?, ?', 1),
-
-    -- DimProduct Load -> DimProduct
-    (1151, 25, 1, 'Load dimension staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_dim_product_staging', '?, ?', 1),
-    (1152, 25, 2, 'Validate and load dimension work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_dim_product_work', '?, ?', 1),
-    (1153, 25, 3, 'Register dimension reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_dim_product', '?, ?', 1),
-    (1154, 25, 4, 'Load dimension table', 'STORED_PROCEDURE', 3, 'dim', 'usp_load_dim_product', '?, ?', 1),
-
-    -- DimSalesTerritory Load -> DimSalesTerritory
-    (1161, 26, 1, 'Load dimension staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_dim_sales_territory_staging', '?, ?', 1),
-    (1162, 26, 2, 'Validate and load dimension work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_dim_sales_territory_work', '?, ?', 1),
-    (1163, 26, 3, 'Register dimension reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_dim_sales_territory', '?, ?', 1),
-    (1164, 26, 4, 'Load dimension table', 'STORED_PROCEDURE', 3, 'dim', 'usp_load_dim_sales_territory', '?, ?', 1),
-
-    -- DimSalesPerson Load -> DimSalesPerson
-    (1171, 27, 1, 'Load dimension staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_dim_sales_person_staging', '?, ?', 1),
-    (1172, 27, 2, 'Validate and load dimension work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_dim_sales_person_work', '?, ?', 1),
-    (1173, 27, 3, 'Register dimension reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_dim_sales_person', '?, ?', 1),
-    (1174, 27, 4, 'Load dimension table', 'STORED_PROCEDURE', 3, 'dim', 'usp_load_dim_sales_person', '?, ?', 1),
-
-    /*========================================================================
-      Fact Loads - Sales_Analytics
-    ========================================================================*/
-
-    -- FactSales Load -> FactSales
-    (1181, 28, 1, 'Load fact staging table', 'STORED_PROCEDURE', 3, 'staging', 'usp_load_fact_sales_staging', '?, ?', 1),
-    (1182, 28, 2, 'Validate and load fact work table', 'STORED_PROCEDURE', 3, 'work', 'usp_validate_load_fact_sales_work', '?, ?', 1),
-    (1183, 28, 3, 'Register fact reconciliation', 'STORED_PROCEDURE', 3, 'control', 'usp_reconcile_fact_sales', '?, ?', 1),
-    (1184, 28, 4, 'Load fact table', 'STORED_PROCEDURE', 3, 'fact', 'usp_load_fact_sales', '?, ?', 1);
-GO
-
