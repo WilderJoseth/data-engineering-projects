@@ -8,6 +8,87 @@
 
 USE [Sales_Operational];
 GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_CreditCard]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[CreditCard];
+    TRUNCATE TABLE [staging].[CreditCard];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Address]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[Address];
+    TRUNCATE TABLE [staging].[Address];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Product]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[Product];
+    TRUNCATE TABLE [staging].[Product];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_SalesPerson]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[SalesPerson];
+    TRUNCATE TABLE [staging].[SalesPerson];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Customer]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[Customer];
+    TRUNCATE TABLE [staging].[Customer];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE [work].[usp_validate_CreditCard]
     @execution_step_id BIGINT
 AS

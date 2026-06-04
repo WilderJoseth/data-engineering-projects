@@ -9,20 +9,107 @@
 USE [Sales_Operational];
 GO
 
-CREATE OR ALTER PROCEDURE [work].[usp_cleanup_tables]
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_AddressType]
+WITH EXECUTE AS OWNER
 AS
 BEGIN
     SET NOCOUNT ON;
+    SET XACT_ABORT ON;
 
-    DELETE FROM [work].[AddressType];
-    DELETE FROM [work].[CountryRegion];
-    DELETE FROM [work].[SalesTerritory];
-    DELETE FROM [work].[StateProvince];
-    DELETE FROM [work].[ProductCategory];
-    DELETE FROM [work].[SpecialOffer];
-    DELETE FROM [work].[ShipMethod];
-    DELETE FROM [work].[Currency];
-    DELETE FROM [work].[CurrencyRate];
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[AddressType];
+    TRUNCATE TABLE [staging].[AddressType];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_ProductCategory]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[ProductCategory];
+    TRUNCATE TABLE [staging].[ProductCategory];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_ShipMethod]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[ShipMethod];
+    TRUNCATE TABLE [staging].[ShipMethod];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_SpecialOffer]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[SpecialOffer];
+    TRUNCATE TABLE [staging].[SpecialOffer];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Geography]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[StateProvince];
+    TRUNCATE TABLE [work].[SalesTerritory];
+    TRUNCATE TABLE [work].[CountryRegion];
+
+    TRUNCATE TABLE [staging].[StateProvince];
+    TRUNCATE TABLE [staging].[SalesTerritory];
+    TRUNCATE TABLE [staging].[CountryRegion];
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Currency]
+WITH EXECUTE AS OWNER
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    TRUNCATE TABLE [work].[CurrencyRate];
+    TRUNCATE TABLE [work].[Currency];
+
+    TRUNCATE TABLE [staging].[CurrencyRate];
+    TRUNCATE TABLE [staging].[Currency];
+
+    COMMIT TRANSACTION;
 END;
 GO
 
@@ -62,8 +149,8 @@ BEGIN
         PERSON_ADDRESSTYPE.ADDRESSTYPEID NUMBER(10) NOT NULL
         PERSON_ADDRESSTYPE.NAME VARCHAR2(50) NOT NULL
 
-        SQL Server staging enforces those structural rules with NOT NULL,
-        VARCHAR(50), and a unique SourceAddressTypeID constraint.
+        SQL Server staging enforces only basic nullability and length. Source
+        key uniqueness is intentionally left to validation.
 
         The only business validation handled here is whether Name remains
         meaningful after trimming whitespace. Oracle allows blank strings made
