@@ -48,6 +48,10 @@ data_target/sql_server/Sales_Operational/ddl/09_create_prod_master_stored_proced
 data_target/sql_server/Sales_Operational/ddl/10_create_control_reference_reconciliation_objects.sql
 data_target/sql_server/Sales_Operational/ddl/11_create_control_master_reconciliation_objects.sql
 data_target/sql_server/Sales_Operational/ddl/12_create_control_process_status_objects.sql
+data_target/sql_server/Sales_Operational/ddl/13_create_work_transactional_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/14_create_prod_transactional_stored_procedures.sql
+data_target/sql_server/Sales_Operational/ddl/15_create_control_transactional_reconciliation_objects.sql
+data_target/sql_server/Sales_Operational/ddl/16_create_control_transactional_status_objects.sql
 ```
 
 Optional operational prod-table reset script:
@@ -81,6 +85,6 @@ data_target/sql_server/Sales_Analytics/ddl/04_create_work_tables.sql
 - Final target tables include the standard audit columns defined in the solution design.
 - Staging and work tables intentionally exclude audit columns because they store temporary ETL data.
 - Local control objects support reconciliation and validation results that can be published to DataOps_Control.
-- Stored procedures are split by load area: reference data and master data.
+- Stored procedures are split by load area: reference data, master data, and transactional data.
 - The source seed script is a self-contained Sales-domain dataset with configurable high-volume transactional data.
 - `legacy_outdated/` contains previous draft artifacts and should not be used as the implementation baseline.

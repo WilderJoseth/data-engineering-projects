@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS [prod].[SalesOrderDetail];
 DROP TABLE IF EXISTS [prod].[SalesOrderHeader];
 
 DROP TABLE IF EXISTS [prod].[Customer];
-DROP TABLE IF EXISTS [prod].[Employee];
+DROP TABLE IF EXISTS [prod].[SalesPerson];
 DROP TABLE IF EXISTS [prod].[Product];
 DROP TABLE IF EXISTS [prod].[Address];
 DROP TABLE IF EXISTS [prod].[CreditCard];

@@ -313,7 +313,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER FUNCTION [control].[ufn_get_Employee_load_status_code] (
+CREATE OR ALTER FUNCTION [control].[ufn_get_SalesPerson_load_status_code] (
     @execution_step_id BIGINT
 )
 RETURNS SMALLINT
@@ -323,12 +323,12 @@ BEGIN
 
     IF (
         SELECT [metric_value_bigint]
-        FROM [control].[ufn_get_Employee_reconciliation_results]('SOURCE', @execution_step_id)
-        WHERE [reconciliation_key] = 'TABLE=Employee'
+        FROM [control].[ufn_get_SalesPerson_reconciliation_results]('SOURCE', @execution_step_id)
+        WHERE [reconciliation_key] = 'TABLE=SalesPerson'
     ) <> (
         SELECT [metric_value_bigint]
-        FROM [control].[ufn_get_Employee_reconciliation_results]('TARGET', @execution_step_id)
-        WHERE [reconciliation_key] = 'TABLE=Employee'
+        FROM [control].[ufn_get_SalesPerson_reconciliation_results]('TARGET', @execution_step_id)
+        WHERE [reconciliation_key] = 'TABLE=SalesPerson'
     )
     BEGIN
         SET @has_reconciliation_mismatch = 1;

@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_REFERENCE_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="156"
-  DTS:VersionGUID="{8CE1FE2E-F801-4694-87A7-EAF8234AEBF8}">
+  DTS:VersionBuild="162"
+  DTS:VersionGUID="{3399A689-31C9-489C-942C-55CDE6CDD054}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -2414,7 +2414,6 @@ FROM ADVENTUREWORKS2022.PERSON_STATEPROVINCE;</property>
                       name="SqlCommand"
                       UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT 
     "PRODUCTSUBCATEGORYID",
-    "PRODUCTCATEGORYID",
     "NAME"
 FROM ADVENTUREWORKS2022.PRODUCTION_PRODUCTSUBCATEGORY;</property>
                     <property
@@ -2464,16 +2463,6 @@ FROM ADVENTUREWORKS2022.PRODUCTION_PRODUCTSUBCATEGORY;</property>
                           precision="10"
                           truncationRowDisposition="FailComponent" />
                         <outputColumn
-                          refId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].Columns[PRODUCTCATEGORYID]"
-                          dataType="numeric"
-                          errorOrTruncationOperation="Conversion"
-                          errorRowDisposition="FailComponent"
-                          externalMetadataColumnId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].ExternalColumns[PRODUCTCATEGORYID]"
-                          lineageId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].Columns[PRODUCTCATEGORYID]"
-                          name="PRODUCTCATEGORYID"
-                          precision="10"
-                          truncationRowDisposition="FailComponent" />
-                        <outputColumn
                           refId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].Columns[NAME]"
                           dataType="wstr"
                           errorOrTruncationOperation="Conversion"
@@ -2492,11 +2481,6 @@ FROM ADVENTUREWORKS2022.PRODUCTION_PRODUCTSUBCATEGORY;</property>
                           name="PRODUCTSUBCATEGORYID"
                           precision="10" />
                         <externalMetadataColumn
-                          refId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].ExternalColumns[PRODUCTCATEGORYID]"
-                          dataType="numeric"
-                          name="PRODUCTCATEGORYID"
-                          precision="10" />
-                        <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].ExternalColumns[NAME]"
                           dataType="wstr"
                           length="50"
@@ -2513,12 +2497,6 @@ FROM ADVENTUREWORKS2022.PRODUCTION_PRODUCTSUBCATEGORY;</property>
                           dataType="numeric"
                           lineageId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Error Output].Columns[PRODUCTSUBCATEGORYID]"
                           name="PRODUCTSUBCATEGORYID"
-                          precision="10" />
-                        <outputColumn
-                          refId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Error Output].Columns[PRODUCTCATEGORYID]"
-                          dataType="numeric"
-                          lineageId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Error Output].Columns[PRODUCTCATEGORYID]"
-                          name="PRODUCTCATEGORYID"
                           precision="10" />
                         <outputColumn
                           refId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Error Output].Columns[NAME]"
@@ -2629,13 +2607,6 @@ FROM ADVENTUREWORKS2022.PRODUCTION_PRODUCTSUBCATEGORY;</property>
                           cachedPrecision="10"
                           externalMetadataColumnId="Package\Foreach Loop Container\Extract ProductCategory\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceProductSubcategoryID]"
                           lineageId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].Columns[PRODUCTSUBCATEGORYID]" />
-                        <inputColumn
-                          refId="Package\Foreach Loop Container\Extract ProductCategory\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[PRODUCTCATEGORYID]"
-                          cachedDataType="numeric"
-                          cachedName="PRODUCTCATEGORYID"
-                          cachedPrecision="10"
-                          externalMetadataColumnId="Package\Foreach Loop Container\Extract ProductCategory\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceProductCategoryID]"
-                          lineageId="Package\Foreach Loop Container\Extract ProductCategory\ADO NET Source.Outputs[ADO NET Source Output].Columns[PRODUCTCATEGORYID]" />
                       </inputColumns>
                       <externalMetadataColumns
                         isUsed="True">
@@ -5372,14 +5343,14 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,35.9929287533575"
+              EndConnector="0,35.9929287533579"
               Start="0,0"
-              End="0,28.4929287533575">
+              End="0,28.4929287533579">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,28.4929287533575" />
+                    End="0,28.4929287533579" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5394,14 +5365,14 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,33.7505052330414"
+              EndConnector="0,33.7505052330411"
               Start="0,0"
-              End="0,26.2505052330414">
+              End="0,26.2505052330411">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,26.2505052330414" />
+                    End="0,26.2505052330411" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5625,14 +5596,14 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54.211062344804"
+              EndConnector="0,54.2110623448039"
               Start="0,0"
-              End="0,46.711062344804">
+              End="0,46.7110623448039">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.711062344804" />
+                    End="0,46.7110623448039" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5648,7 +5619,7 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
     design-time-name="Package\Foreach Loop Container\Extract AddressType">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
           Size="168.8,41.6"
           Id="Package\Foreach Loop Container\Extract AddressType\Destino de OLE DB"
@@ -5676,7 +5647,9 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <EdgeLabelCollection />
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6060,7 +6033,7 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
     design-time-name="Package\Foreach Loop Container\Extract ProductCategory">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="168.8,41.6"
           Id="Package\Foreach Loop Container\Extract ProductCategory\Destino de OLE DB"
@@ -6088,9 +6061,7 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>

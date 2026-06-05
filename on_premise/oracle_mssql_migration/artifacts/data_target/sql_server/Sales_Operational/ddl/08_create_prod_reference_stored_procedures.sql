@@ -68,7 +68,6 @@ BEGIN
 
     UPDATE tgt
     SET
-        tgt.[SourceProductCategoryID] = src.[SourceProductCategoryID],
         tgt.[Name] = src.[Name],
         tgt.[updated_at] = SYSUTCDATETIME(),
         tgt.[updated_by] = USER_NAME(),
@@ -76,17 +75,15 @@ BEGIN
         tgt.[is_active] = 1
     FROM [prod].[ProductCategory] AS tgt
     INNER JOIN [work].[ProductCategory] AS src
-        ON src.[SourceProductSubcategoryID] = tgt.[SourceProductSubcategoryID]
+        ON src.[SourceProductCategoryID] = tgt.[SourceProductCategoryID]
     WHERE src.[IsNameNotBlank] = 1;
 
     INSERT INTO [prod].[ProductCategory] (
-        [SourceProductSubcategoryID],
         [SourceProductCategoryID],
         [Name],
         [created_execution_step_id]
     )
     SELECT
-        src.[SourceProductSubcategoryID],
         src.[SourceProductCategoryID],
         src.[Name],
         @execution_step_id
@@ -95,55 +92,7 @@ BEGIN
       AND NOT EXISTS (
             SELECT 1
             FROM [prod].[ProductCategory] AS tgt
-            WHERE tgt.[SourceProductSubcategoryID] = src.[SourceProductSubcategoryID]
-        );
-
-    COMMIT TRANSACTION;
-END;
-GO
-
-CREATE OR ALTER PROCEDURE [prod].[usp_load_ShipMethod]
-    @execution_step_id INT
-AS
-BEGIN
-    SET NOCOUNT ON;
-    SET XACT_ABORT ON;
-
-    BEGIN TRANSACTION;
-
-    UPDATE tgt
-    SET
-        tgt.[Name] = src.[Name],
-        tgt.[ShipBase] = src.[ShipBase],
-        tgt.[ShipRate] = src.[ShipRate],
-        tgt.[updated_at] = SYSUTCDATETIME(),
-        tgt.[updated_by] = USER_NAME(),
-        tgt.[last_updated_execution_step_id] = @execution_step_id,
-        tgt.[is_active] = 1
-    FROM [prod].[ShipMethod] AS tgt
-    INNER JOIN [work].[ShipMethod] AS src
-        ON src.[SourceShipMethodID] = tgt.[SourceShipMethodID]
-    WHERE src.[IsNameNotBlank] = 1;
-
-    INSERT INTO [prod].[ShipMethod] (
-        [SourceShipMethodID],
-        [Name],
-        [ShipBase],
-        [ShipRate],
-        [created_execution_step_id]
-    )
-    SELECT
-        src.[SourceShipMethodID],
-        src.[Name],
-        src.[ShipBase],
-        src.[ShipRate],
-        @execution_step_id
-    FROM [work].[ShipMethod] AS src
-    WHERE src.[IsNameNotBlank] = 1
-      AND NOT EXISTS (
-            SELECT 1
-            FROM [prod].[ShipMethod] AS tgt
-            WHERE tgt.[SourceShipMethodID] = src.[SourceShipMethodID]
+            WHERE tgt.[SourceProductCategoryID] = src.[SourceProductCategoryID]
         );
 
     COMMIT TRANSACTION;
@@ -211,6 +160,54 @@ BEGIN
             SELECT 1
             FROM [prod].[SpecialOffer] AS tgt
             WHERE tgt.[SourceSpecialOfferID] = src.[SourceSpecialOfferID]
+        );
+
+    COMMIT TRANSACTION;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE [prod].[usp_load_ShipMethod]
+    @execution_step_id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRANSACTION;
+
+    UPDATE tgt
+    SET
+        tgt.[Name] = src.[Name],
+        tgt.[ShipBase] = src.[ShipBase],
+        tgt.[ShipRate] = src.[ShipRate],
+        tgt.[updated_at] = SYSUTCDATETIME(),
+        tgt.[updated_by] = USER_NAME(),
+        tgt.[last_updated_execution_step_id] = @execution_step_id,
+        tgt.[is_active] = 1
+    FROM [prod].[ShipMethod] AS tgt
+    INNER JOIN [work].[ShipMethod] AS src
+        ON src.[SourceShipMethodID] = tgt.[SourceShipMethodID]
+    WHERE src.[IsNameNotBlank] = 1;
+
+    INSERT INTO [prod].[ShipMethod] (
+        [SourceShipMethodID],
+        [Name],
+        [ShipBase],
+        [ShipRate],
+        [created_execution_step_id]
+    )
+    SELECT
+        src.[SourceShipMethodID],
+        src.[Name],
+        src.[ShipBase],
+        src.[ShipRate],
+        @execution_step_id
+    FROM [work].[ShipMethod] AS src
+    WHERE src.[IsNameNotBlank] = 1
+      AND NOT EXISTS (
+            SELECT 1
+            FROM [prod].[ShipMethod] AS tgt
+            WHERE tgt.[SourceShipMethodID] = src.[SourceShipMethodID]
         );
 
     COMMIT TRANSACTION;

@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_TRANSACTIONAL_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="82"
-  DTS:VersionGUID="{92BD6865-7CB5-4556-94AA-FE4771281E2C}">
+  DTS:VersionBuild="95"
+  DTS:VersionGUID="{BD031B94-88F5-475A-9D21-43990ED82FEB}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -54,7 +54,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="v_action_2">
       <DTS:VariableValue
-        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrderHeader_reconciliation_results]({1}, {2})</DTS:VariableValue>
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrder_reconciliation_results]({1}, {2})</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -65,7 +65,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="v_action_2_paremeter_value">
       <DTS:VariableValue
-        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrderHeader_reconciliation_results]('SOURCE', 0)</DTS:VariableValue>
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrder_reconciliation_results]('SOURCE', 0)</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -106,6 +106,26 @@
       DTS:ObjectName="v_action_4_paremeter_value">
       <DTS:VariableValue
         DTS:DataType="8">EXEC [Sales_Operational].[prod].[usp_load_SalesOrderHeader] 0 EXEC [Sales_Operational].[prod].[usp_load_SalesOrderHeader] 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{2623845F-D833-482F-BCAE-5E50D69E3AA7}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_5">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrder_reconciliation_results]({1}, {2})</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{B6F06CC7-7D7C-4F79-B7DA-5D088F72A4AB}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(@[User::v_action_2], &quot;{1}&quot;, &quot;'TARGET'&quot;), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_child_execution_step_id] )"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_5_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrder_reconciliation_results]('TARGET', 0)</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -158,13 +178,22 @@
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
+      DTS:DTSID="{60AF281B-3D92-487F-BEB5-66977AA11AFD}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_batch_column_type">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
       DTS:DTSID="{56CABBC4-ACA6-40DB-896F-1A4F83CB33B7}"
       DTS:IncludeInDebugDump="2345"
       DTS:Namespace="User"
       DTS:ObjectName="v_batch_end_value">
       <DTS:VariableValue
-        DTS:DataType="8"
-        xml:space="preserve"></DTS:VariableValue>
+        DTS:DataType="8">2011-05-31 23:59:59</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -173,8 +202,7 @@
       DTS:Namespace="User"
       DTS:ObjectName="v_batch_start_value">
       <DTS:VariableValue
-        DTS:DataType="8"
-        xml:space="preserve"></DTS:VariableValue>
+        DTS:DataType="8">2011-05-01 00:00:00</DTS:VariableValue>
     </DTS:Variable>
     <DTS:Variable
       DTS:CreationName=""
@@ -238,6 +266,44 @@
       DTS:ObjectName="v_parent_project_process_id">
       <DTS:VariableValue
         DTS:DataType="3">6</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{E8B874AD-AFF8-47B4-8B37-A7ABD43861D7}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(&quot;SELECT&#xA;    SALESORDERID,&#xA;    REVISIONNUMBER,&#xA;    ORDERDATE,&#xA;    DUEDATE,&#xA;    SHIPDATE,&#xA;    STATUS,&#xA;    ONLINEORDERFLAG,&#xA;    SALESORDERNUMBER,&#xA;    PURCHASEORDERNUMBER,&#xA;    ACCOUNTNUMBER,&#xA;    CUSTOMERID,&#xA;    SALESPERSONID,&#xA;    TERRITORYID,&#xA;    BILLTOADDRESSID,&#xA;    SHIPTOADDRESSID,&#xA;    SHIPMETHODID,&#xA;    CREDITCARDID,&#xA;    CREDITCARDAPPROVALCODE,&#xA;    CURRENCYRATEID,&#xA;    SUBTOTAL,&#xA;    TAXAMT,&#xA;    FREIGHT,&#xA;    TOTALDUE,&#xA;    COMMENT&#xA;FROM ADVENTUREWORKS2022.SALES_SALESORDERHEADER&#xA;WHERE ORDERDATE &gt;= TO_DATE({1}, 'YYYY-MM-DD HH24:MI:SS') &#xA;AND ORDERDATE &lt; TO_DATE({2}, 'YYYY-MM-DD HH24:MI:SS');&quot;, &quot;{1}&quot;, @[User::v_batch_start_value] ), &quot;{2}&quot;,  @[User::v_batch_end_value])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_query_SALES_SALESORDERHEADER">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT
+    SALESORDERID,
+    REVISIONNUMBER,
+    ORDERDATE,
+    DUEDATE,
+    SHIPDATE,
+    STATUS,
+    ONLINEORDERFLAG,
+    SALESORDERNUMBER,
+    PURCHASEORDERNUMBER,
+    ACCOUNTNUMBER,
+    CUSTOMERID,
+    SALESPERSONID,
+    TERRITORYID,
+    BILLTOADDRESSID,
+    SHIPTOADDRESSID,
+    SHIPMETHODID,
+    CREDITCARDID,
+    CREDITCARDAPPROVALCODE,
+    CURRENCYRATEID,
+    SUBTOTAL,
+    TAXAMT,
+    FREIGHT,
+    TOTALDUE,
+    COMMENT
+FROM ADVENTUREWORKS2022.SALES_SALESORDERHEADER
+WHERE ORDERDATE &gt;= TO_DATE(2011-05-01 00:00:00, 'YYYY-MM-DD HH24:MI:SS') 
+AND ORDERDATE &lt; TO_DATE(2011-05-31 23:59:59, 'YYYY-MM-DD HH24:MI:SS');</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
@@ -385,7 +451,6 @@
           DTS:refId="Package\Foreach Loop Container\Publish Final Reconciliation Results"
           DTS:CreationName="Microsoft.Pipeline"
           DTS:Description="Tarea Flujo de datos"
-          DTS:Disabled="True"
           DTS:DTSID="{37de6946-cfb7-4520-be92-8a9ef42ec8e5}"
           DTS:ExecutableType="Microsoft.Pipeline"
           DTS:LocaleID="-1"
@@ -819,7 +884,6 @@
           DTS:refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
           DTS:CreationName="Microsoft.Pipeline"
           DTS:Description="Tarea Flujo de datos"
-          DTS:Disabled="True"
           DTS:DTSID="{8fae3a9f-7c5b-4cd9-84c5-412fd3d7a32a}"
           DTS:ExecutableType="Microsoft.Pipeline"
           DTS:LocaleID="-1"
@@ -1250,6 +1314,263 @@
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Sequence Container"
+          DTS:CreationName="STOCK:SEQUENCE"
+          DTS:Description="Sequence Container"
+          DTS:DTSID="{81DD243A-A2DC-4F12-925D-0056B8B00CE0}"
+          DTS:ExecutableType="STOCK:SEQUENCE"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Sequence Container">
+          <DTS:Variables />
+          <DTS:Executables>
+            <DTS:Executable
+              DTS:refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderDetail"
+              DTS:CreationName="Microsoft.Pipeline"
+              DTS:Description="Tarea Flujo de datos"
+              DTS:DTSID="{203EBECB-A591-4A92-AD34-60CFE1B6936B}"
+              DTS:ExecutableType="Microsoft.Pipeline"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Extract SalesOrderDetail"
+              DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <pipeline
+                  version="1" />
+              </DTS:ObjectData>
+            </DTS:Executable>
+            <DTS:Executable
+              DTS:refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader"
+              DTS:CreationName="Microsoft.Pipeline"
+              DTS:Description="Tarea Flujo de datos"
+              DTS:DTSID="{A43447F9-0CBE-466E-AF1E-21704AD7C620}"
+              DTS:ExecutableType="Microsoft.Pipeline"
+              DTS:LocaleID="-1"
+              DTS:ObjectName="Extract SalesOrderHeader"
+              DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+              <DTS:Variables />
+              <DTS:ObjectData>
+                <pipeline
+                  version="1">
+                  <components>
+                    <component
+                      refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB"
+                      componentClassID="Microsoft.OLEDBDestination"
+                      contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+                      description="Destino de OLE DB"
+                      name="Destino de OLE DB"
+                      usesDispositions="true"
+                      version="4">
+                      <properties>
+                        <property
+                          dataType="System.Int32"
+                          description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                          name="CommandTimeout">0</property>
+                        <property
+                          dataType="System.String"
+                          description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                          name="OpenRowset"></property>
+                        <property
+                          dataType="System.String"
+                          description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                          name="OpenRowsetVariable"></property>
+                        <property
+                          dataType="System.String"
+                          description="Comando SQL para ejecutar."
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                        <property
+                          dataType="System.Int32"
+                          description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                          name="DefaultCodePage">1252</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                          name="AlwaysUseDefaultCodePage">false</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                          name="AccessMode"
+                          typeConverter="AccessMode">0</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                          name="FastLoadKeepIdentity">false</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                          name="FastLoadKeepNulls">false</property>
+                        <property
+                          dataType="System.String"
+                          description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                          name="FastLoadOptions"></property>
+                        <property
+                          dataType="System.Int32"
+                          description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                          name="FastLoadMaxInsertCommitSize">2147483647</property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Connections[OleDbConnection]"
+                          description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                          name="OleDbConnection" />
+                      </connections>
+                      <inputs>
+                        <input
+                          refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                          errorOrTruncationOperation="Insertar"
+                          errorRowDisposition="FailComponent"
+                          hasSideEffects="true"
+                          name="Entrada de destino de OLE DB">
+                          <externalMetadataColumns
+                            isUsed="True" />
+                        </input>
+                      </inputs>
+                      <outputs>
+                        <output
+                          refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                          exclusionGroup="1"
+                          isErrorOut="true"
+                          name="Salida de error de destino de OLE DB"
+                          synchronousInputId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                    <component
+                      refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC"
+                      componentClassID="Microsoft.SSISODBCSrc"
+                      contactInfo="Origen ODBC;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;1"
+                      description="Origen ODBC"
+                      name="Origen ODBC"
+                      usesDispositions="true"
+                      version="1">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Nombre de la tabla que debe recuperarse."
+                          expressionType="Notify"
+                          name="TableName"></property>
+                        <property
+                          dataType="System.String"
+                          description="Comando SQL para ejecutar."
+                          expressionType="Notify"
+                          name="SqlCommand"
+                          UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=17.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                        <property
+                          dataType="System.Int32"
+                          description="Especifique el número de filas recuperadas por lote."
+                          expressionType="Notify"
+                          name="BatchSize">1000</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Determina la asignación del tamaño de los fragmentos de las columnas LOB"
+                          expressionType="Notify"
+                          name="LobChunkSize">32768</property>
+                        <property
+                          dataType="System.Boolean"
+                          description="Determina la manera en la que el componente expone las columnas CHAR. Si es False, las columnas CHAR se exponen como cadenas byte o multibyte (DT_STR); si es True, las columnas CHAR se exponen como cadenas de tipo ancho (DT_WSTR)."
+                          expressionType="Notify"
+                          name="ExposeCharColumnsAsUnicode">false</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Número de segundos que se debe esperar para que una instrucción SQL se ejecute antes de volver a la aplicación."
+                          expressionType="Notify"
+                          name="StatementTimeout">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Página de códigos que se usará cuando la información de la página de códigos no esté disponible en el origen de datos."
+                          expressionType="Notify"
+                          name="DefaultCodePage">1252</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Método usado para recuperar datos."
+                          expressionType="Notify"
+                          name="FetchMethod">1</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Tipo de datos ODBC C para el enlace de datos numéricos."
+                          expressionType="Notify"
+                          name="BindNumericAs">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Determina la manera en la que el componente enlazará columnas de tipos de cadena byte o multibyte (es decir, SQL_CHAR, SQL_VARCHAR, SQL_LONGVARCHAR). Las opciones son Unicode (SQL_C_WCHAR) y ANSI (SQL_C_CHAR)."
+                          expressionType="Notify"
+                          name="BindCharColumnsAs">0</property>
+                        <property
+                          dataType="System.Int32"
+                          description="Modo usado para obtener acceso a la base de datos."
+                          expressionType="Notify"
+                          name="AccessMode"
+                          typeConverter="AccessMode">0</property>
+                      </properties>
+                      <connections>
+                        <connection
+                          refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Connections[ODBCConnection]"
+                          description="Conexión de runtime de ODBC usada para acceder a la base de datos."
+                          name="ODBCConnection" />
+                      </connections>
+                      <outputs>
+                        <output
+                          refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Outputs[Salida de origen de ODBC]"
+                          errorRowDisposition="FailComponent"
+                          name="Salida de origen de ODBC"
+                          truncationRowDisposition="FailComponent">
+                          <externalMetadataColumns
+                            isUsed="True" />
+                        </output>
+                        <output
+                          refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Outputs[Salida de error de origen de ODBC]"
+                          isErrorOut="true"
+                          name="Salida de error de origen de ODBC">
+                          <outputColumns>
+                            <outputColumn
+                              refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Outputs[Salida de error de origen de ODBC].Columns[ErrorCode]"
+                              dataType="i4"
+                              lineageId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Outputs[Salida de error de origen de ODBC].Columns[ErrorCode]"
+                              name="ErrorCode"
+                              specialFlags="1" />
+                            <outputColumn
+                              refId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Outputs[Salida de error de origen de ODBC].Columns[ErrorColumn]"
+                              dataType="i4"
+                              lineageId="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC.Outputs[Salida de error de origen de ODBC].Columns[ErrorColumn]"
+                              name="ErrorColumn"
+                              specialFlags="2" />
+                          </outputColumns>
+                          <externalMetadataColumns />
+                        </output>
+                      </outputs>
+                    </component>
+                  </components>
+                </pipeline>
+              </DTS:ObjectData>
+            </DTS:Executable>
+          </DTS:Executables>
+          <DTS:PrecedenceConstraints>
+            <DTS:PrecedenceConstraint
+              DTS:refId="Package\Foreach Loop Container\Sequence Container.PrecedenceConstraints[Constraint]"
+              DTS:CreationName=""
+              DTS:DTSID="{5D52F579-CD84-4258-AEAF-648075BA0B6F}"
+              DTS:From="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader"
+              DTS:LogicalAnd="True"
+              DTS:ObjectName="Constraint"
+              DTS:To="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderDetail" />
+          </DTS:PrecedenceConstraints>
+        </DTS:Executable>
+        <DTS:Executable
           DTS:refId="Package\Foreach Loop Container\Start clean up staging and work tables"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
@@ -1329,11 +1650,11 @@
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
           DTS:CreationName=""
-          DTS:DTSID="{C40BF33D-DF4F-4431-97D4-92C4698646A8}"
+          DTS:DTSID="{0625CA84-7936-4F24-98D2-FE7244253B3E}"
           DTS:From="Package\Foreach Loop Container\Start clean up staging and work tables"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 2"
-          DTS:To="Package\Foreach Loop Container\Publish Initial Reconciliation Results" />
+          DTS:To="Package\Foreach Loop Container\Sequence Container" />
         <DTS:PrecedenceConstraint
           DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
@@ -1382,20 +1703,34 @@
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 8"
           DTS:To="Package\Foreach Loop Container\Get load status code" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 9]"
+          DTS:CreationName=""
+          DTS:DTSID="{D0D13770-C333-42A9-97D7-9CB899AD4CBD}"
+          DTS:From="Package\Foreach Loop Container\Sequence Container"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 9"
+          DTS:To="Package\Foreach Loop Container\Publish Initial Reconciliation Results" />
       </DTS:PrecedenceConstraints>
       <DTS:ForEachVariableMappings>
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{5012F4DB-6B1B-4F32-812B-ECA13E88BB78}"
-          DTS:ObjectName="{5012F4DB-6B1B-4F32-812B-ECA13E88BB78}"
+          DTS:DTSID="{6A2D9789-F44D-4CA7-B2E9-5B2812D5C3B5}"
+          DTS:ObjectName="{6A2D9789-F44D-4CA7-B2E9-5B2812D5C3B5}"
           DTS:ValueIndex="0"
           DTS:VariableName="User::v_batch_start_value" />
         <DTS:ForEachVariableMapping
           DTS:CreationName=""
-          DTS:DTSID="{44522E61-BD92-4E53-A241-8C7CB95A32BF}"
-          DTS:ObjectName="{44522E61-BD92-4E53-A241-8C7CB95A32BF}"
+          DTS:DTSID="{C8619B62-14BE-433E-AE08-D0F134D991EF}"
+          DTS:ObjectName="{C8619B62-14BE-433E-AE08-D0F134D991EF}"
           DTS:ValueIndex="1"
           DTS:VariableName="User::v_batch_end_value" />
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{EC6BA721-3E53-40D8-8FCD-78ABCC63A67E}"
+          DTS:ObjectName="{EC6BA721-3E53-40D8-8FCD-78ABCC63A67E}"
+          DTS:ValueIndex="2"
+          DTS:VariableName="User::v_batch_column_type" />
       </DTS:ForEachVariableMappings>
     </DTS:Executable>
     <DTS:Executable
@@ -1412,7 +1747,7 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT&#xA;&#x9;[batch_column_type],&#xA;&#x9;[batch_value],&#xA;&#x9;[batch_start_value],&#xA;&#x9;[batch_end_value]&#xA;FROM [metadata].[ufn_list_project_process_table_batches](?);"
+          SQLTask:SqlStatementSource="SELECT&#xA;&#x9;[batch_start_value],&#xA;&#x9;[batch_end_value],&#xA;&#x9;[batch_column_type]&#xA;FROM [metadata].[ufn_list_project_process_table_batches](?);"
           SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
           <SQLTask:ResultBinding
             SQLTask:ResultName="0"
@@ -1528,31 +1863,335 @@
       <GraphLayout
         Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="162.4,41.6"
-          Id="Package\Get Sales Periods"
-          TopLeft="314.090891929738,270.066664849345" />
+          Size="250.4,41.6"
+          Id="Package\Foreach Loop Container\End clean up staging and work tables"
+          TopLeft="58.1719588988158,1055.36500728407" />
         <NodeLayout
-          Size="248,41.6"
-          Id="Package\Start Transactional Data Subprocess"
-          TopLeft="268.560591387102,105.424244405928" />
+          Size="166.4,41.6"
+          Id="Package\Foreach Loop Container\End execution step"
+          TopLeft="94.0593927671698,971.126665882781" />
         <NodeLayout
-          Size="251.2,41.6"
-          Id="Package\Get Transactional Load Configuration"
-          TopLeft="269.772712532995,186.006064402329" />
+          Size="131.2,41.6"
+          Id="Package\Foreach Loop Container\Get actions"
+          TopLeft="104.13331566718,15.9999989151955" />
+        <NodeLayout
+          Size="173.6,41.6"
+          Id="Package\Foreach Loop Container\Get load status code"
+          TopLeft="89.8585548835017,894.228208501195" />
+        <NodeLayout
+          Size="148.8,41.6"
+          Id="Package\Foreach Loop Container\Load final table"
+          TopLeft="103.72128861381,731.85172920203" />
+        <NodeLayout
+          Size="243.2,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results"
+          TopLeft="54.1027848313387,812.154615353016" />
+        <NodeLayout
+          Size="244.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
+          TopLeft="55.1038670277237,574.257571697503" />
+        <NodeLayout
+          Size="254.4,41.6"
+          Id="Package\Foreach Loop Container\Start clean up staging and work tables"
+          TopLeft="45.1055411145373,177.622220291672" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Foreach Loop Container\Start execution step"
+          TopLeft="91.6333163501496,97.4666650153532" />
+        <NodeLayout
+          Size="164,41.6"
+          Id="Package\Foreach Loop Container\Validate work data"
+          TopLeft="95.447479542061,656.425467100272" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="393.966651960049,147.024244405928">
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          TopLeft="173.283316008665,57.5999989151955">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,38.981819996401"
+              EndConnector="0,39.8666661001577"
               Start="0,0"
-              End="0,31.481819996401">
+              End="0,32.3666661001577">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,31.481819996401" />
+                    End="0,32.3666661001577" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
+          TopLeft="174.569428732343,139.066665015353">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.5555552763186"
+              Start="0,0"
+              End="0,31.0555552763186">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0555552763186" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
+          TopLeft="177.475673284893,615.857571697503">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.5678954027701"
+              Start="0,0"
+              End="0,33.0678954027701">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.0678954027701" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 4]"
+          TopLeft="177.784384077936,698.025467100272">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33.8262621017579"
+              Start="0,0"
+              End="0,26.3262621017579">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.3262621017579" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 5]"
+          TopLeft="176.912036722575,773.451729202031">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.7028861509853"
+              Start="0,0"
+              End="0,31.2028861509853">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.2028861509853" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
+          TopLeft="176.958973825336,935.828208501196">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35.2984573815852"
+              Start="0,0"
+              End="0,27.7984573815852">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.7984573815852" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 7]"
+          TopLeft="180.315675832993,1012.72666588278">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.6383414012903"
+              Start="0,0"
+              End="0,35.1383414012903">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.1383414012903" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 8]"
+          TopLeft="176.18066985742,853.754615353016">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.4735931481803"
+              Start="0,0"
+              End="0,32.9735931481803">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.9735931481803" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="200,41.6"
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader"
+          TopLeft="35.8740577333878,25.5407397496845" />
+        <NodeLayout
+          Size="192.8,41.6"
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderDetail"
+          TopLeft="34.0222059827168,120.207405733326" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Sequence Container.PrecedenceConstraints[Constraint]"
+          TopLeft="133.148131858052,67.1407397496845">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53.0666659836416"
+              Start="0,0"
+              End="0,45.5666659836416">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.5666659836416" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="263.2,218.4"
+          Size="263.2,261.6"
+          Id="Package\Foreach Loop Container\Sequence Container"
+          TopLeft="42.9629485953006,273.096294903461" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
+          TopLeft="173.434244854919,219.222220291672">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53.8740746117886"
+              Start="0,0"
+              End="0,46.3740746117886">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.3740746117886" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 9]"
+          TopLeft="176.033407811512,534.696294903461">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.5612767940423"
+              Start="0,0"
+              End="0,32.0612767940423">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.0612767940423" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="351.2,1172"
+          Size="351.2,1215.2"
+          Id="Package\Foreach Loop Container"
+          TopLeft="217.222210353724,358.204711313804" />
+        <NodeLayout
+          Size="162.4,41.6"
+          Id="Package\Get Sales Periods"
+          TopLeft="314.090891929738,270.066664849345" />
+        <NodeLayout
+          Size="251.2,41.6"
+          Id="Package\Get Transactional Load Configuration"
+          TopLeft="269.772712532995,186.006064402329" />
+        <NodeLayout
+          Size="248,41.6"
+          Id="Package\Start Transactional Data Subprocess"
+          TopLeft="268.560591387102,105.424244405928" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="394.056551141731,311.666664849345">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.5380464644585"
+              Start="0,0"
+              End="0,39.0380464644585">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.0380464644585" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1583,265 +2222,20 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="131.2,41.6"
-          Id="Package\Foreach Loop Container\Get actions"
-          TopLeft="104.13331566718,15.9999989151955" />
-        <NodeLayout
-          Size="170.4,41.6"
-          Id="Package\Foreach Loop Container\Start execution step"
-          TopLeft="91.6333163501496,97.4666650153532" />
         <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
-          TopLeft="173.283316008665,57.5999989151955">
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="393.966651960049,147.024244405928">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,39.8666661001577"
+              EndConnector="0,38.981819996401"
               Start="0,0"
-              End="0,32.3666661001577">
+              End="0,31.481819996401">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,32.3666661001577" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="254.4,41.6"
-          Id="Package\Foreach Loop Container\Start clean up staging and work tables"
-          TopLeft="45.1055411145373,177.622220291672" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
-          TopLeft="174.569428732343,139.066665015353">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,38.5555552763186"
-              Start="0,0"
-              End="0,31.0555552763186">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,31.0555552763186" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="244.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
-          TopLeft="43.992756523697,262.257573867112" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
-          TopLeft="169.349148819117,219.222220291672">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,43.0353535754399"
-              Start="0,0"
-              End="0,35.5353535754399">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,35.5353535754399" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="164,41.6"
-          Id="Package\Foreach Loop Container\Validate work data"
-          TopLeft="84.3363690380343,344.425469269882" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
-          TopLeft="166.364562780866,303.857573867112">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,40.5678954027701"
-              Start="0,0"
-              End="0,33.0678954027701">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,33.0678954027701" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="148.8,41.6"
-          Id="Package\Foreach Loop Container\Load final table"
-          TopLeft="92.6101781097834,419.85173137164" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 4]"
-          TopLeft="166.673273573909,386.025469269882">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,33.8262621017579"
-              Start="0,0"
-              End="0,26.3262621017579">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,26.3262621017579" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="173.6,41.6"
-          Id="Package\Foreach Loop Container\Get load status code"
-          TopLeft="78.7474443794749,582.228210670805" />
-        <NodeLayout
-          Size="166.4,41.6"
-          Id="Package\Foreach Loop Container\End execution step"
-          TopLeft="82.9482822631431,659.12666805239" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
-          TopLeft="165.847863321309,623.828210670805">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,35.2984573815853"
-              Start="0,0"
-              End="0,27.7984573815853">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,27.7984573815853" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="250.4,41.6"
-          Id="Package\Foreach Loop Container\End clean up staging and work tables"
-          TopLeft="47.0608483947891,743.365009453681" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 7]"
-          TopLeft="169.204565328966,700.72666805239">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,42.6383414012903"
-              Start="0,0"
-              End="0,35.1383414012903">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,35.1383414012903" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="243.2,41.6"
-          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results"
-          TopLeft="42.991674327312,500.154617522625" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 5]"
-          TopLeft="165.800926218548,461.45173137164">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,38.7028861509851"
-              Start="0,0"
-              End="0,31.2028861509851">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,31.2028861509851" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 8]"
-          TopLeft="165.069559353393,541.754617522625">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,40.4735931481803"
-              Start="0,0"
-              End="0,32.9735931481803">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,32.9735931481803" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="342.4,840"
-          Size="342.4,883.2"
-          Id="Package\Foreach Loop Container"
-          TopLeft="219.166654691929,356.27878540127" />
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="392.828773310833,311.666664849345">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,44.6121205519248"
-              Start="0,0"
-              End="0,37.1121205519248">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,37.1121205519248" />
+                    End="0,31.481819996401" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1854,18 +2248,64 @@
     </LayoutInfo>
   </Package>
   <TaskHost
+    design-time-name="Package\Foreach Loop Container\Publish Final Reconciliation Results">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="164.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB"
+          TopLeft="637.499965168537,85.7999994033575" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB"
+          TopLeft="639.999965031943,190.666665340794" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results.Paths[Salida de origen de OLE DB]"
+          TopLeft="722.14996510024,127.399999403357">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,63.2666659374367"
+              Start="0,0"
+              End="0,55.7666659374367">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,55.7666659374367" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
     design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results">
     <LayoutInfo>
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="168.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB"
-          TopLeft="639.999965031943,190.666665340794" />
-        <NodeLayout
           Size="164.8,41.6"
           Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB"
           TopLeft="637.499965168537,85.7999994033575" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB"
+          TopLeft="639.999965031943,190.666665340794" />
         <EdgeLayout
           Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results.Paths[Salida de origen de OLE DB]"
           TopLeft="722.14996510024,127.399999403357">
@@ -1891,43 +2331,27 @@
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <TaskHost
-    design-time-name="Package\Foreach Loop Container\Publish Final Reconciliation Results">
+    design-time-name="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
           Size="168.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB"
-          TopLeft="639.999965031943,190.666665340794" />
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB"
+          TopLeft="474.999992921948,250.999996259809" />
         <NodeLayout
-          Size="164.8,41.6"
-          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB"
-          TopLeft="637.499965168537,85.7999994033575" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results.Paths[Salida de origen de OLE DB]"
-          TopLeft="722.14996510024,127.399999403357">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,63.2666659374367"
-              Start="0,0"
-              End="0,55.7666659374367">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,55.7666659374367" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+          Size="142.4,41.6"
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC"
+          TopLeft="491.999992668629,119.999998211861" />
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>

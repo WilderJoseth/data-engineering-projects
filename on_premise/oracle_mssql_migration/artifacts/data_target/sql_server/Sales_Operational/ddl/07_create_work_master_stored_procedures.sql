@@ -57,7 +57,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Employee]
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_SalesPerson]
 WITH EXECUTE AS OWNER
 AS
 BEGIN
@@ -66,7 +66,8 @@ BEGIN
 
     BEGIN TRANSACTION;
 
-    TRUNCATE TABLE [work].[Employee];
+    TRUNCATE TABLE [work].[SalesPerson];
+
     DELETE p
     FROM [staging].[Person] AS p
     WHERE EXISTS (
@@ -74,6 +75,7 @@ BEGIN
         FROM [staging].[SalesPerson] AS sp
         WHERE sp.[SourceBusinessEntityID] = p.[SourceBusinessEntityID]
     );
+
     TRUNCATE TABLE [staging].[SalesPerson];
     TRUNCATE TABLE [staging].[Employee];
 
@@ -112,16 +114,11 @@ BEGIN
     SET XACT_ABORT ON;
 
     DECLARE @not_null_validation_code_id SMALLINT;
-    DECLARE @fk_validation_code_id SMALLINT;
     DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
     WHERE [code] = 'NOT_NULL';
-
-    SELECT @fk_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'FK_CHECK';
 
     SELECT @length_validation_code_id = [id]
     FROM [control].[validation_codes]
@@ -130,17 +127,15 @@ BEGIN
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
 
-    IF @fk_validation_code_id IS NULL
-        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
-
     IF @length_validation_code_id IS NULL
         THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
+
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[CreditCard] (
         [SourceCreditCardID],
         [CardType],
-        [CardNumberLast4],
+        [CardNumber],
         [ExpMonth],
         [ExpYear],
         [IsCardTypeNotBlank],
@@ -149,7 +144,7 @@ BEGIN
     SELECT
         [SourceCreditCardID],
         TRIM([CardType]) AS [CardType],
-        RIGHT(TRIM([CardNumber]), 4) AS [CardNumberLast4],
+        TRIM([CardNumber]) AS [CardNumber],
         [ExpMonth],
         [ExpYear],
         IIF(LEN(TRIM([CardType])) > 0, 1, 0) AS [IsCardTypeNotBlank],
@@ -181,7 +176,6 @@ BEGIN
 
     DECLARE @not_null_validation_code_id SMALLINT;
     DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
@@ -191,18 +185,12 @@ BEGIN
     FROM [control].[validation_codes]
     WHERE [code] = 'FK_CHECK';
 
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
 
     IF @fk_validation_code_id IS NULL
         THROW 51002, 'Missing validation code: FK_CHECK.', 1;
 
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[Address] (
@@ -316,7 +304,7 @@ BEGIN
         [ListPrice],
         [Size],
         [Weight],
-        [SourceProductSubcategoryID],
+        [SourceProductCategoryID],
         [SellStartDate],
         [SellEndDate],
         [DiscontinuedDate],
@@ -335,16 +323,16 @@ BEGIN
         p.[ListPrice],
         NULLIF(TRIM(p.[Size]), '') AS [Size],
         p.[Weight],
-        p.[SourceProductSubcategoryID],
+        p.[SourceProductSubcategoryID] AS [SourceProductCategoryID],
         p.[SellStartDate],
         p.[SellEndDate],
         p.[DiscontinuedDate],
         IIF(LEN(TRIM(p.[ProductNumber])) > 0, 1, 0) AS [IsProductNumberNotBlank],
         IIF(LEN(TRIM(p.[Name])) > 0, 1, 0) AS [IsNameNotBlank],
-        IIF(p.[SourceProductSubcategoryID] IS NULL OR pc.[ProductCategoryKey] IS NOT NULL, 1, 0) AS [IsProductCategoryValid]
+        IIF(pc.[ProductCategoryKey] IS NOT NULL, 1, 0) AS [IsProductCategoryValid]
     FROM [staging].[Product] AS p
     LEFT JOIN [prod].[ProductCategory] AS pc
-        ON pc.[SourceProductSubcategoryID] = p.[SourceProductSubcategoryID];
+        ON pc.[SourceProductCategoryID] = p.[SourceProductSubcategoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
     SELECT 'Product Load - ProductNumber must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
@@ -368,7 +356,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [work].[usp_validate_Employee]
+CREATE OR ALTER PROCEDURE [work].[usp_validate_SalesPerson]
     @execution_step_id BIGINT
 AS
 BEGIN
@@ -401,8 +389,8 @@ BEGIN
         THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
-    INSERT INTO [work].[Employee] (
-        [SourceBusinessEntityID],
+    INSERT INTO [work].[SalesPerson] (
+        [SourceSalesPersonID],
         [SourceTerritoryID],
         [Title],
         [FirstName],
@@ -423,7 +411,7 @@ BEGIN
         [IsSalesTerritoryValid]
     )
     SELECT
-        sp.[SourceBusinessEntityID],
+        sp.[SourceBusinessEntityID] AS [SourceSalesPersonID],
         sp.[SourceTerritoryID],
         NULLIF(TRIM(p.[Title]), '') AS [Title],
         TRIM(p.[FirstName]) AS [FirstName],
@@ -451,32 +439,32 @@ BEGIN
         ON st.[SourceTerritoryID] = sp.[SourceTerritoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Employee Load - FirstName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[Employee]
+    SELECT 'SalesPerson Load - FirstName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[SalesPerson]
     WHERE [IsFirstNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Employee Load - LastName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[Employee]
+    SELECT 'SalesPerson Load - LastName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[SalesPerson]
     WHERE [IsLastNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Employee Load - JobTitle must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[Employee]
+    SELECT 'SalesPerson Load - JobTitle must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[SalesPerson]
     WHERE [IsJobTitleNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Employee Load - Gender must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[Employee]
+    SELECT 'SalesPerson Load - Gender must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[SalesPerson]
     WHERE [IsGenderNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Employee Load - SourceTerritoryID must reference a valid SalesTerritory when provided.', COUNT_BIG(*), @execution_step_id, @fk_validation_code_id
-    FROM [work].[Employee]
+    SELECT 'SalesPerson Load - SourceTerritoryID must reference a valid SalesTerritory when provided.', COUNT_BIG(*), @execution_step_id, @fk_validation_code_id
+    FROM [work].[SalesPerson]
     WHERE [IsSalesTerritoryValid] = 0
     HAVING COUNT_BIG(*) > 0;
 
@@ -519,7 +507,6 @@ BEGIN
 
     INSERT INTO [work].[Customer] (
         [SourceCustomerID],
-        [SourcePersonID],
         [SourceTerritoryID],
         [PersonType],
         [Title],
@@ -532,7 +519,6 @@ BEGIN
     )
     SELECT
         c.[SourceCustomerID],
-        c.[SourcePersonID],
         c.[SourceTerritoryID],
         NULLIF(TRIM(p.[PersonType]), '') AS [PersonType],
         NULLIF(TRIM(p.[Title]), '') AS [Title],

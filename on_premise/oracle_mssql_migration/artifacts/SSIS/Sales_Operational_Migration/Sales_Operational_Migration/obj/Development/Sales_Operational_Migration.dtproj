@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">WILDER-LOQ</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAAAZ+eOWhZyPoqlAlwaj7C51gj6th+RI5axn2W1lq70lwgAAAAAOgAAAAAIAACAAAADdIdSVBw63VaAF1z4OynoeYNOVXe62u251gmYUk5l7+pAAAADciNiae5yxtErpznwA/+UxExCAhhcZRwVKfspkfilL/FJPV/ZAN1WBvYrhPKyQT1Cz9ovvSeJdbJIb4q7TJpx/suCufSyC5W/ofzOMf4rgy+hubi3kD8+wygXiwpXoCu12fIrtrOQPKWE8LZ9/UDK6UqZm8CX7EA4XC9Jo48RGXz56WpfM3nIL1u3FWo8jXaNAAAAA57TnN8hgD5F8mtDPMpE6gqzyJ0XqyV6WzbVVIj3699xGl5FwPfBVemc1QgM50SaDYSnApNnoKQDj0hzWiWXs8Q==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAADGZ+9QqG4NufoFz3JMK/N/T8ESnawW4wOcpYCF+3mu6wAAAAAOgAAAAAIAACAAAAAfu0HeO24cmUo2HIRzVIQv4mMKyitbyl1/7zScl0rTiZAAAAAxeg0WUIFivr+86IEKsO07SC5GaJP33q9UJ2a0ivUjeGgmxwkpcDY3ssymWSwkA5OtvhoGiUYzynqZX03cfW0+OVKcdEmNW56hceG8tRnXgsn66JhbBjPhC/vHVxPbCZblUbe+wWMUL/FPW/dgF9H70ByfQ/R783bM5PGHnCstfVHtfJkaJ/LTuvTfRiA9rkZAAAAASpaWRn9C/QrjVjR/nRb+RvoIIelwWIPVHI1eM7uUrmJQz4Yg1MLBphoNk/QtrCoeA0/Vs5I9XpFSxHvHFqkzyQ==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -347,10 +347,10 @@
                 <SSIS:Property SSIS:Name="Name">PKG_MASTER_DATA</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">109</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">112</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{43A1FD27-D8A2-4C62-AF67-0026B16573B7}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{535E40E2-8AFA-462F-A888-207FF062ACD1}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -379,10 +379,10 @@
                 <SSIS:Property SSIS:Name="Name">PKG_TRANSACTIONAL_DATA</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">82</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">95</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{92BD6865-7CB5-4556-94AA-FE4771281E2C}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{BD031B94-88F5-475A-9D21-43990ED82FEB}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -411,10 +411,10 @@
                 <SSIS:Property SSIS:Name="Name">PKG_OPERATIONAL_MIGRATION</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">41</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">47</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{61C76A25-BA65-4E33-9BD6-2A0FFAC465E8}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{391CF61C-2D0F-4779-814A-9B17B3591F6F}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -428,10 +428,10 @@
                 <SSIS:Property SSIS:Name="Name">PKG_REFERENCE_DATA</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">156</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">162</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{8CE1FE2E-F801-4694-87A7-EAF8234AEBF8}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{3399A689-31C9-489C-942C-55CDE6CDD054}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>

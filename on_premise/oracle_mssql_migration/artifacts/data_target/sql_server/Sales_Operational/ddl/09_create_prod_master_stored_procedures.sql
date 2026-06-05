@@ -8,6 +8,7 @@
 
 USE [Sales_Operational];
 GO
+
 CREATE OR ALTER PROCEDURE [prod].[usp_load_CreditCard]
     @execution_step_id INT
 AS
@@ -20,7 +21,7 @@ BEGIN
     UPDATE tgt
     SET
         tgt.[CardType] = src.[CardType],
-        tgt.[CardNumberLast4] = src.[CardNumberLast4],
+        tgt.[CardNumber] = src.[CardNumber],
         tgt.[ExpMonth] = src.[ExpMonth],
         tgt.[ExpYear] = src.[ExpYear],
         tgt.[updated_at] = SYSUTCDATETIME(),
@@ -36,7 +37,7 @@ BEGIN
     INSERT INTO [prod].[CreditCard] (
         [SourceCreditCardID],
         [CardType],
-        [CardNumberLast4],
+        [CardNumber],
         [ExpMonth],
         [ExpYear],
         [created_execution_step_id]
@@ -44,7 +45,7 @@ BEGIN
     SELECT
         src.[SourceCreditCardID],
         src.[CardType],
-        src.[CardNumberLast4],
+        src.[CardNumber],
         src.[ExpMonth],
         src.[ExpYear],
         @execution_step_id
@@ -166,7 +167,7 @@ BEGIN
     INNER JOIN [work].[Product] AS src
         ON src.[SourceProductID] = tgt.[SourceProductID]
     LEFT JOIN [prod].[ProductCategory] AS product_category
-        ON product_category.[SourceProductSubcategoryID] = src.[SourceProductSubcategoryID]
+        ON product_category.[SourceProductCategoryID] = src.[SourceProductCategoryID]
     WHERE src.[IsProductNumberNotBlank] = 1
       AND src.[IsNameNotBlank] = 1
       AND src.[IsProductCategoryValid] = 1;
@@ -206,7 +207,7 @@ BEGIN
         @execution_step_id
     FROM [work].[Product] AS src
     LEFT JOIN [prod].[ProductCategory] AS product_category
-        ON product_category.[SourceProductSubcategoryID] = src.[SourceProductSubcategoryID]
+        ON product_category.[SourceProductCategoryID] = src.[SourceProductCategoryID]
     WHERE src.[IsProductNumberNotBlank] = 1
       AND src.[IsNameNotBlank] = 1
       AND src.[IsProductCategoryValid] = 1
@@ -220,7 +221,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [prod].[usp_load_Employee]
+CREATE OR ALTER PROCEDURE [prod].[usp_load_SalesPerson]
     @execution_step_id INT
 AS
 BEGIN
@@ -248,9 +249,9 @@ BEGIN
         tgt.[updated_by] = USER_NAME(),
         tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
-    FROM [prod].[Employee] AS tgt
-    INNER JOIN [work].[Employee] AS src
-        ON src.[SourceBusinessEntityID] = tgt.[SourceBusinessEntityID]
+    FROM [prod].[SalesPerson] AS tgt
+    INNER JOIN [work].[SalesPerson] AS src
+        ON src.[SourceSalesPersonID] = tgt.[SourceSalesPersonID]
     LEFT JOIN [prod].[SalesTerritory] AS sales_territory
         ON sales_territory.[SourceTerritoryID] = src.[SourceTerritoryID]
     WHERE src.[IsFirstNameNotBlank] = 1
@@ -259,8 +260,8 @@ BEGIN
       AND src.[IsGenderNotBlank] = 1
       AND src.[IsSalesTerritoryValid] = 1;
 
-    INSERT INTO [prod].[Employee] (
-        [SourceBusinessEntityID],
+    INSERT INTO [prod].[SalesPerson] (
+        [SourceSalesPersonID],
         [SalesTerritoryKey],
         [Title],
         [FirstName],
@@ -277,7 +278,7 @@ BEGIN
         [created_execution_step_id]
     )
     SELECT
-        src.[SourceBusinessEntityID],
+        src.[SourceSalesPersonID],
         sales_territory.[SalesTerritoryKey],
         src.[Title],
         src.[FirstName],
@@ -292,7 +293,7 @@ BEGIN
         src.[SalesYTD],
         src.[SalesLastYear],
         @execution_step_id
-    FROM [work].[Employee] AS src
+    FROM [work].[SalesPerson] AS src
     LEFT JOIN [prod].[SalesTerritory] AS sales_territory
         ON sales_territory.[SourceTerritoryID] = src.[SourceTerritoryID]
     WHERE src.[IsFirstNameNotBlank] = 1
@@ -302,8 +303,8 @@ BEGIN
       AND src.[IsSalesTerritoryValid] = 1
       AND NOT EXISTS (
             SELECT 1
-            FROM [prod].[Employee] AS tgt
-            WHERE tgt.[SourceBusinessEntityID] = src.[SourceBusinessEntityID]
+            FROM [prod].[SalesPerson] AS tgt
+            WHERE tgt.[SourceSalesPersonID] = src.[SourceSalesPersonID]
         );
 
     COMMIT TRANSACTION;
@@ -321,7 +322,6 @@ BEGIN
 
     UPDATE tgt
     SET
-        tgt.[SourcePersonID] = src.[SourcePersonID],
         tgt.[SalesTerritoryKey] = sales_territory.[SalesTerritoryKey],
         tgt.[PersonType] = src.[PersonType],
         tgt.[Title] = src.[Title],
@@ -343,7 +343,6 @@ BEGIN
 
     INSERT INTO [prod].[Customer] (
         [SourceCustomerID],
-        [SourcePersonID],
         [SalesTerritoryKey],
         [PersonType],
         [Title],
@@ -355,7 +354,6 @@ BEGIN
     )
     SELECT
         src.[SourceCustomerID],
-        src.[SourcePersonID],
         sales_territory.[SalesTerritoryKey],
         src.[PersonType],
         src.[Title],

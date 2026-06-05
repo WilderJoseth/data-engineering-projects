@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_MASTER_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="109"
-  DTS:VersionGUID="{43A1FD27-D8A2-4C62-AF67-0026B16573B7}">
+  DTS:VersionBuild="112"
+  DTS:VersionGUID="{535E40E2-8AFA-462F-A888-207FF062ACD1}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -697,7 +697,7 @@ FROM ADVENTUREWORKS2022.PERSON_ADDRESS;</property>
                         isUsed="True">
                         <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract Address\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingAddressKey]"
-                          dataType="i8"
+                          dataType="i4"
                           name="StagingAddressKey" />
                         <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract Address\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceAddressID]"
@@ -1085,7 +1085,7 @@ FROM ADVENTUREWORKS2022.SALES_CREDITCARD;</property>
                         isUsed="True">
                         <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract CreditCard\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingCreditCardKey]"
-                          dataType="i8"
+                          dataType="i4"
                           name="StagingCreditCardKey" />
                         <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract CreditCard\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceCreditCardID]"
@@ -1473,7 +1473,7 @@ FROM ADVENTUREWORKS2022.SALES_CUSTOMER;</property>
                             isUsed="True">
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Customer\Extract Customer\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingCustomerKey]"
-                              dataType="i8"
+                              dataType="i4"
                               name="StagingCustomerKey" />
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Customer\Extract Customer\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceCustomerID]"
@@ -1880,7 +1880,7 @@ WHERE EXISTS(SELECT 1 FROM ADVENTUREWORKS2022.SALES_CUSTOMER c WHERE c."PERSONID
                             isUsed="True">
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Customer\Extract Person\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingPersonKey]"
-                              dataType="i8"
+                              dataType="i4"
                               name="StagingPersonKey" />
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Customer\Extract Person\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceBusinessEntityID]"
@@ -2736,7 +2736,7 @@ FROM ADVENTUREWORKS2022.PRODUCTION_PRODUCT;</property>
                         isUsed="True">
                         <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract Product\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingProductKey]"
-                          dataType="i8"
+                          dataType="i4"
                           name="StagingProductKey" />
                         <externalMetadataColumn
                           refId="Package\Foreach Loop Container\Extract Product\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceProductID]"
@@ -3138,7 +3138,7 @@ FROM ADVENTUREWORKS2022.HUMANRESOURCES_EMPLOYEE;</property>
                             isUsed="True">
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Sales Person\Extract Employee\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingEmployeeKey]"
-                              dataType="i8"
+                              dataType="i4"
                               name="StagingEmployeeKey" />
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Sales Person\Extract Employee\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceBusinessEntityID]"
@@ -3543,7 +3543,7 @@ WHERE EXISTS(SELECT 1 FROM ADVENTUREWORKS2022.HUMANRESOURCES_EMPLOYEE e WHERE e.
                             isUsed="True">
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Sales Person\Extract Person\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingPersonKey]"
-                              dataType="i8"
+                              dataType="i4"
                               name="StagingPersonKey" />
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Sales Person\Extract Person\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceBusinessEntityID]"
@@ -4006,7 +4006,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
                             isUsed="True">
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Sales Person\Extract SalesPerson\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[StagingSalesPersonKey]"
-                              dataType="i8"
+                              dataType="i4"
                               name="StagingSalesPersonKey" />
                             <externalMetadataColumn
                               refId="Package\Foreach Loop Container\Extract Sales Person\Extract SalesPerson\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[SourceBusinessEntityID]"
@@ -5640,9 +5640,9 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="-86.2999711786709,63.058585963414"
+              EndConnector="-86.2999711786711,63.058585963414"
               Start="0,0"
-              End="-86.2999711786709,55.558585963414">
+              End="-86.2999711786711,55.558585963414">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
@@ -5653,20 +5653,20 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
                     Point2="0,31.529292981707"
                     Point3="-4,31.529292981707" />
                   <mssgle:LineSegment
-                    End="-82.2999711786709,31.529292981707" />
+                    End="-82.2999711786711,31.529292981707" />
                   <mssgle:CubicBezierSegment
-                    Point1="-82.2999711786709,31.529292981707"
-                    Point2="-86.2999711786709,31.529292981707"
-                    Point3="-86.2999711786709,35.529292981707" />
+                    Point1="-82.2999711786711,31.529292981707"
+                    Point2="-86.2999711786711,31.529292981707"
+                    Point3="-86.2999711786711,35.529292981707" />
                   <mssgle:LineSegment
-                    End="-86.2999711786709,55.558585963414" />
+                    End="-86.2999711786711,55.558585963414" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
             <mssgm:EdgeLabel
-              BoundingBox="-51.1499855893354,36.529292981707,16,16"
+              BoundingBox="-51.1499855893356,36.529292981707,16,16"
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
@@ -5676,26 +5676,26 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="60.280245386414,315.236503265104"
+              EndConnector="79.3961848572621,315.236503265104"
               Start="0,0"
-              End="60.280245386414,307.736503265104">
+              End="79.3961848572621,307.736503265104">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,170.497774962232" />
+                    End="0,153.618251632552" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,170.497774962232"
-                    Point2="0,174.497774962232"
-                    Point3="4,174.497774962232" />
+                    Point1="0,153.618251632552"
+                    Point2="0,157.618251632552"
+                    Point3="4,157.618251632552" />
                   <mssgle:LineSegment
-                    End="56.280245386414,174.497774962232" />
+                    End="75.3961848572621,157.618251632552" />
                   <mssgle:CubicBezierSegment
-                    Point1="56.280245386414,174.497774962232"
-                    Point2="60.280245386414,174.497774962232"
-                    Point3="60.280245386414,178.497774962232" />
+                    Point1="75.3961848572621,157.618251632552"
+                    Point2="79.3961848572621,157.618251632552"
+                    Point3="79.3961848572621,161.618251632552" />
                   <mssgle:LineSegment
-                    End="60.280245386414,307.736503265104" />
+                    End="79.3961848572621,307.736503265104" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -6112,7 +6112,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Address">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="160,41.6"
           Id="Package\Foreach Loop Container\Extract Address\ADO NET Source"
@@ -6152,9 +6152,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6185,7 +6183,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract CreditCard">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="160,41.6"
           Id="Package\Foreach Loop Container\Extract CreditCard\ADO NET Source"
@@ -6213,9 +6211,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6246,7 +6242,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Customer\Extract Customer">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="160,41.6"
           Id="Package\Foreach Loop Container\Extract Customer\Extract Customer\ADO NET Source"
@@ -6286,9 +6282,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6319,7 +6313,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Customer\Extract Person">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="168.8,41.6"
           Id="Package\Foreach Loop Container\Extract Customer\Extract Person\Destino de OLE DB"
@@ -6359,9 +6353,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6392,7 +6384,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Product">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="168.8,41.6"
           Id="Package\Foreach Loop Container\Extract Product\Destino de OLE DB"
@@ -6420,9 +6412,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6453,7 +6443,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Sales Person\Extract Employee">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="168.8,41.6"
           Id="Package\Foreach Loop Container\Extract Sales Person\Extract Employee\Destino de OLE DB"
@@ -6493,9 +6483,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6526,7 +6514,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Sales Person\Extract Person">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="168.8,41.6"
           Id="Package\Foreach Loop Container\Extract Sales Person\Extract Person\Destino de OLE DB"
@@ -6566,9 +6554,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>
@@ -6599,7 +6585,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
     design-time-name="Package\Foreach Loop Container\Extract Sales Person\Extract SalesPerson">
     <LayoutInfo>
       <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="160,41.6"
           Id="Package\Foreach Loop Container\Extract Sales Person\Extract SalesPerson\ADO NET Source"
@@ -6639,9 +6625,7 @@ FROM ADVENTUREWORKS2022.SALES_SALESPERSON;</property>
             </mssgle:Curve>
           </EdgeLayout.Curve>
           <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="0,0,0,0"
-              RelativePosition="Any" />
+            <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
       </GraphLayout>

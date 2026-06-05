@@ -34,6 +34,42 @@ CREATE TABLE [prod].[AddressType] (
 );
 GO
 
+CREATE TABLE [prod].[ProductCategory] (
+    [ProductCategoryKey] INT IDENTITY(1,1) NOT NULL,
+    [SourceProductCategoryID] INT NOT NULL,
+    [Name] VARCHAR(50) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_ProductCategory_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_ProductCategory_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_execution_step_id] INT NOT NULL,
+    [last_updated_execution_step_id] INT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_ProductCategory_is_active] DEFAULT ((1)),
+
+    CONSTRAINT [pk_prod_ProductCategory] PRIMARY KEY CLUSTERED ([ProductCategoryKey] ASC),
+    CONSTRAINT [uk_prod_ProductCategory_SourceProductCategoryID] UNIQUE ([SourceProductCategoryID])
+);
+GO
+
+CREATE TABLE [prod].[ShipMethod] (
+    [ShipMethodKey] INT IDENTITY(1,1) NOT NULL,
+    [SourceShipMethodID] INT NOT NULL,
+    [Name] VARCHAR(50) NOT NULL,
+    [ShipBase] DECIMAL(19,4) NOT NULL,
+    [ShipRate] DECIMAL(19,4) NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_ShipMethod_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_ShipMethod_created_by] DEFAULT (USER_NAME()),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+    [created_execution_step_id] INT NOT NULL,
+    [last_updated_execution_step_id] INT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_ShipMethod_is_active] DEFAULT ((1)),
+
+    CONSTRAINT [pk_prod_ShipMethod] PRIMARY KEY CLUSTERED ([ShipMethodKey] ASC),
+    CONSTRAINT [uk_prod_ShipMethod_SourceShipMethodID] UNIQUE ([SourceShipMethodID])
+);
+GO
+
 CREATE TABLE [prod].[CountryRegion] (
     [CountryRegionKey] INT IDENTITY(1,1) NOT NULL,
     [SourceCountryRegionCode] VARCHAR(3) NOT NULL,
@@ -93,24 +129,6 @@ CREATE TABLE [prod].[StateProvince] (
 );
 GO
 
-CREATE TABLE [prod].[ProductCategory] (
-    [ProductCategoryKey] INT IDENTITY(1,1) NOT NULL,
-    [SourceProductSubcategoryID] INT NOT NULL,
-    [SourceProductCategoryID] INT NOT NULL,
-    [Name] VARCHAR(50) NOT NULL,
-    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_ProductCategory_created_at] DEFAULT (SYSUTCDATETIME()),
-    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_ProductCategory_created_by] DEFAULT (USER_NAME()),
-    [updated_at] DATETIME2(7) NULL,
-    [updated_by] VARCHAR(50) NULL,
-    [created_execution_step_id] INT NOT NULL,
-    [last_updated_execution_step_id] INT NULL,
-    [is_active] BIT NOT NULL CONSTRAINT [df_prod_ProductCategory_is_active] DEFAULT ((1)),
-
-    CONSTRAINT [pk_prod_ProductCategory] PRIMARY KEY CLUSTERED ([ProductCategoryKey] ASC),
-    CONSTRAINT [uk_prod_ProductCategory_SourceProductSubcategoryID] UNIQUE ([SourceProductSubcategoryID])
-);
-GO
-
 CREATE TABLE [prod].[SpecialOffer] (
     [SpecialOfferKey] INT IDENTITY(1,1) NOT NULL,
     [SourceSpecialOfferID] INT NOT NULL,
@@ -132,25 +150,6 @@ CREATE TABLE [prod].[SpecialOffer] (
 
     CONSTRAINT [pk_prod_SpecialOffer] PRIMARY KEY CLUSTERED ([SpecialOfferKey] ASC),
     CONSTRAINT [uk_prod_SpecialOffer_SourceSpecialOfferID] UNIQUE ([SourceSpecialOfferID])
-);
-GO
-
-CREATE TABLE [prod].[ShipMethod] (
-    [ShipMethodKey] INT IDENTITY(1,1) NOT NULL,
-    [SourceShipMethodID] INT NOT NULL,
-    [Name] VARCHAR(50) NOT NULL,
-    [ShipBase] DECIMAL(19,4) NOT NULL,
-    [ShipRate] DECIMAL(19,4) NOT NULL,
-    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_ShipMethod_created_at] DEFAULT (SYSUTCDATETIME()),
-    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_ShipMethod_created_by] DEFAULT (USER_NAME()),
-    [updated_at] DATETIME2(7) NULL,
-    [updated_by] VARCHAR(50) NULL,
-    [created_execution_step_id] INT NOT NULL,
-    [last_updated_execution_step_id] INT NULL,
-    [is_active] BIT NOT NULL CONSTRAINT [df_prod_ShipMethod_is_active] DEFAULT ((1)),
-
-    CONSTRAINT [pk_prod_ShipMethod] PRIMARY KEY CLUSTERED ([ShipMethodKey] ASC),
-    CONSTRAINT [uk_prod_ShipMethod_SourceShipMethodID] UNIQUE ([SourceShipMethodID])
 );
 GO
 
@@ -198,7 +197,7 @@ CREATE TABLE [prod].[CreditCard] (
     [CreditCardKey] INT IDENTITY(1,1) NOT NULL,
     [SourceCreditCardID] INT NOT NULL,
     [CardType] VARCHAR(50) NOT NULL,
-    [CardNumberLast4] CHAR(4) NOT NULL,
+    [CardNumber] VARCHAR(25) NOT NULL,
     [ExpMonth] TINYINT NOT NULL,
     [ExpYear] SMALLINT NOT NULL,
     [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_CreditCard_created_at] DEFAULT (SYSUTCDATETIME()),
@@ -268,9 +267,9 @@ CREATE TABLE [prod].[Product] (
 );
 GO
 
-CREATE TABLE [prod].[Employee] (
-    [EmployeeKey] INT IDENTITY(1,1) NOT NULL,
-    [SourceBusinessEntityID] INT NOT NULL,
+CREATE TABLE [prod].[SalesPerson] (
+    [SalesPersonKey] INT IDENTITY(1,1) NOT NULL,
+    [SourceSalesPersonID] INT NOT NULL,
     [SalesTerritoryKey] INT NULL,
     [Title] VARCHAR(8) NULL,
     [FirstName] VARCHAR(50) NOT NULL,
@@ -284,24 +283,23 @@ CREATE TABLE [prod].[Employee] (
     [CommissionPct] DECIMAL(10,4) NOT NULL,
     [SalesYTD] DECIMAL(19,4) NOT NULL,
     [SalesLastYear] DECIMAL(19,4) NOT NULL,
-    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_Employee_created_at] DEFAULT (SYSUTCDATETIME()),
-    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_Employee_created_by] DEFAULT (USER_NAME()),
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SalesPerson_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SalesPerson_created_by] DEFAULT (USER_NAME()),
     [updated_at] DATETIME2(7) NULL,
     [updated_by] VARCHAR(50) NULL,
     [created_execution_step_id] INT NOT NULL,
     [last_updated_execution_step_id] INT NULL,
-    [is_active] BIT NOT NULL CONSTRAINT [df_prod_Employee_is_active] DEFAULT ((1)),
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesPerson_is_active] DEFAULT ((1)),
 
-    CONSTRAINT [pk_prod_Employee] PRIMARY KEY CLUSTERED ([EmployeeKey] ASC),
-    CONSTRAINT [uk_prod_Employee_SourceBusinessEntityID] UNIQUE ([SourceBusinessEntityID]),
-    CONSTRAINT [fk_prod_Employee_SalesTerritoryKey] FOREIGN KEY ([SalesTerritoryKey]) REFERENCES [prod].[SalesTerritory]([SalesTerritoryKey])
+    CONSTRAINT [pk_prod_SalesPerson] PRIMARY KEY CLUSTERED ([SalesPersonKey] ASC),
+    CONSTRAINT [uk_prod_SalesPerson_SourceSalesPersonID] UNIQUE ([SourceSalesPersonID]),
+    CONSTRAINT [fk_prod_SalesPerson_SalesTerritoryKey] FOREIGN KEY ([SalesTerritoryKey]) REFERENCES [prod].[SalesTerritory]([SalesTerritoryKey])
 );
 GO
 
 CREATE TABLE [prod].[Customer] (
     [CustomerKey] INT IDENTITY(1,1) NOT NULL,
     [SourceCustomerID] INT NOT NULL,
-    [SourcePersonID] INT NULL,
     [SalesTerritoryKey] INT NULL,
     [PersonType] CHAR(2) NULL,
     [Title] VARCHAR(8) NULL,
@@ -324,8 +322,8 @@ CREATE TABLE [prod].[Customer] (
 GO
 
 CREATE TABLE [prod].[SalesOrderHeader] (
-    [SalesOrderHeaderKey] INT IDENTITY(1,1) NOT NULL,
-    [SourceSalesOrderID] INT NOT NULL,
+    [SalesOrderHeaderKey] BIGINT IDENTITY(1,1) NOT NULL,
+    [SourceSalesOrderID] BIGINT NOT NULL,
     [RevisionNumber] TINYINT NOT NULL,
     [OrderDate] DATETIME2 NOT NULL,
     [DueDate] DATETIME2 NOT NULL,
@@ -335,7 +333,7 @@ CREATE TABLE [prod].[SalesOrderHeader] (
     [PurchaseOrderNumber] VARCHAR(25) NULL,
     [AccountNumber] VARCHAR(20) NULL,
     [CustomerKey] INT NOT NULL,
-    [EmployeeKey] INT NULL,
+    [SalesPersonKey] INT NULL,
     [SalesTerritoryKey] INT NULL,
     [BillToAddressKey] INT NOT NULL,
     [ShipToAddressKey] INT NOT NULL,
@@ -358,7 +356,7 @@ CREATE TABLE [prod].[SalesOrderHeader] (
     CONSTRAINT [pk_prod_SalesOrderHeader] PRIMARY KEY CLUSTERED ([SalesOrderHeaderKey] ASC),
     CONSTRAINT [uk_prod_SalesOrderHeader_SourceSalesOrderID] UNIQUE ([SourceSalesOrderID]),
     CONSTRAINT [fk_prod_SalesOrderHeader_CustomerKey] FOREIGN KEY ([CustomerKey]) REFERENCES [prod].[Customer]([CustomerKey]),
-    CONSTRAINT [fk_prod_SalesOrderHeader_EmployeeKey] FOREIGN KEY ([EmployeeKey]) REFERENCES [prod].[Employee]([EmployeeKey]),
+    CONSTRAINT [fk_prod_SalesOrderHeader_SalesPersonKey] FOREIGN KEY ([SalesPersonKey]) REFERENCES [prod].[SalesPerson]([SalesPersonKey]),
     CONSTRAINT [fk_prod_SalesOrderHeader_SalesTerritoryKey] FOREIGN KEY ([SalesTerritoryKey]) REFERENCES [prod].[SalesTerritory]([SalesTerritoryKey]),
     CONSTRAINT [fk_prod_SalesOrderHeader_BillToAddressKey] FOREIGN KEY ([BillToAddressKey]) REFERENCES [prod].[Address]([AddressKey]),
     CONSTRAINT [fk_prod_SalesOrderHeader_ShipToAddressKey] FOREIGN KEY ([ShipToAddressKey]) REFERENCES [prod].[Address]([AddressKey]),
@@ -369,10 +367,10 @@ CREATE TABLE [prod].[SalesOrderHeader] (
 GO
 
 CREATE TABLE [prod].[SalesOrderDetail] (
-    [SalesOrderDetailKey] INT IDENTITY(1,1) NOT NULL,
-    [SourceSalesOrderID] INT NOT NULL,
-    [SourceSalesOrderDetailID] INT NOT NULL,
-    [SalesOrderHeaderKey] INT NOT NULL,
+    [SalesOrderDetailKey] BIGINT IDENTITY(1,1) NOT NULL,
+    [SalesOrderHeaderKey] BIGINT NOT NULL,
+    [SourceSalesOrderID] BIGINT NOT NULL,
+    [SourceSalesOrderDetailID] BIGINT NOT NULL,
     [ProductKey] INT NOT NULL,
     [SpecialOfferKey] INT NOT NULL,
     [CarrierTrackingNumber] VARCHAR(25) NULL,
@@ -389,7 +387,6 @@ CREATE TABLE [prod].[SalesOrderDetail] (
     [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesOrderDetail_is_active] DEFAULT ((1)),
 
     CONSTRAINT [pk_prod_SalesOrderDetail] PRIMARY KEY CLUSTERED ([SalesOrderDetailKey] ASC),
-    CONSTRAINT [uk_prod_SalesOrderDetail_SourceOrderDetail] UNIQUE ([SourceSalesOrderID], [SourceSalesOrderDetailID]),
     CONSTRAINT [fk_prod_SalesOrderDetail_SalesOrderHeaderKey] FOREIGN KEY ([SalesOrderHeaderKey]) REFERENCES [prod].[SalesOrderHeader]([SalesOrderHeaderKey]),
     CONSTRAINT [fk_prod_SalesOrderDetail_ProductKey] FOREIGN KEY ([ProductKey]) REFERENCES [prod].[Product]([ProductKey]),
     CONSTRAINT [fk_prod_SalesOrderDetail_SpecialOfferKey] FOREIGN KEY ([SpecialOfferKey]) REFERENCES [prod].[SpecialOffer]([SpecialOfferKey])

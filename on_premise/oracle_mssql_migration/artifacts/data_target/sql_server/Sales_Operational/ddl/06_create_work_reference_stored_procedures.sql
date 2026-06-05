@@ -121,52 +121,22 @@ BEGIN
     SET XACT_ABORT ON;
 
     DECLARE @not_null_validation_code_id SMALLINT;
-    DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
     WHERE [code] = 'NOT_NULL';
 
-    SELECT @fk_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'FK_CHECK';
-
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
-
-    IF @fk_validation_code_id IS NULL
-        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
-
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
-    /*
-        AddressType work columns are based on the Oracle source contract:
-        PERSON_ADDRESSTYPE.ADDRESSTYPEID NUMBER(10) NOT NULL
-        PERSON_ADDRESSTYPE.NAME VARCHAR2(50) NOT NULL
-
-        SQL Server staging enforces only basic nullability and length. Source
-        key uniqueness is intentionally left to validation.
-
-        The only business validation handled here is whether Name remains
-        meaningful after trimming whitespace. Oracle allows blank strings made
-        of spaces, even when the column is NOT NULL.
-    */
 
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[AddressType] (
-        [StagingAddressTypeKey],
         [SourceAddressTypeID],
         [Name],
         [IsNameNotBlank]
     )
     SELECT
-        [StagingAddressTypeKey],
         [SourceAddressTypeID],
         TRIM([Name]) AS [Name],
         IIF(LEN(TRIM([Name])) > 0, 1, 0) AS [IsNameNotBlank]
@@ -199,40 +169,23 @@ BEGIN
     SET XACT_ABORT ON;
 
     DECLARE @not_null_validation_code_id SMALLINT;
-    DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
     WHERE [code] = 'NOT_NULL';
 
-    SELECT @fk_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'FK_CHECK';
-
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
 
-    IF @fk_validation_code_id IS NULL
-        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
-
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[ProductCategory] (
-        [SourceProductSubcategoryID],
         [SourceProductCategoryID],
         [Name],
         [IsNameNotBlank]
     )
     SELECT
         [SourceProductSubcategoryID],
-        [SourceProductCategoryID],
         TRIM([Name]) AS [Name],
         IIF(LEN(TRIM([Name])) > 0, 1, 0) AS [IsNameNotBlank]
     FROM [staging].[ProductCategory];
@@ -256,73 +209,6 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [work].[usp_validate_ShipMethod]
-    @execution_step_id BIGINT
-AS
-BEGIN
-    SET NOCOUNT ON;
-    SET XACT_ABORT ON;
-
-    DECLARE @not_null_validation_code_id SMALLINT;
-    DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
-
-    SELECT @not_null_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'NOT_NULL';
-
-    SELECT @fk_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'FK_CHECK';
-
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
-    IF @not_null_validation_code_id IS NULL
-        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
-
-    IF @fk_validation_code_id IS NULL
-        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
-
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
-    BEGIN TRANSACTION;
-
-    INSERT INTO [work].[ShipMethod] (
-        [SourceShipMethodID],
-        [Name],
-        [ShipBase],
-        [ShipRate],
-        [IsNameNotBlank]
-    )
-    SELECT
-        [SourceShipMethodID],
-        TRIM([Name]) AS [Name],
-        [ShipBase],
-        [ShipRate],
-        IIF(LEN(TRIM([Name])) > 0, 1, 0) AS [IsNameNotBlank]
-    FROM [staging].[ShipMethod];
-
-    INSERT INTO [control].[validation_results] (
-        [details],
-        [affected_row_count],
-        [execution_step_id],
-        [validation_code_id]
-    )
-    SELECT
-        'ShipMethod Load - Name must not be blank after trimming.' AS [details],
-        COUNT_BIG(*) AS [affected_row_count],
-        @execution_step_id AS [execution_step_id],
-        @not_null_validation_code_id AS [validation_code_id]
-    FROM [work].[ShipMethod]
-    WHERE [IsNameNotBlank] = 0
-    HAVING COUNT_BIG(*) > 0;
-
-    COMMIT TRANSACTION;
-END;
-GO
-
 CREATE OR ALTER PROCEDURE [work].[usp_validate_SpecialOffer]
     @execution_step_id BIGINT
 AS
@@ -331,29 +217,14 @@ BEGIN
     SET XACT_ABORT ON;
 
     DECLARE @not_null_validation_code_id SMALLINT;
-    DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
     WHERE [code] = 'NOT_NULL';
 
-    SELECT @fk_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'FK_CHECK';
-
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
 
-    IF @fk_validation_code_id IS NULL
-        THROW 51002, 'Missing validation code: FK_CHECK.', 1;
-
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[SpecialOffer] (
@@ -434,6 +305,58 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE [work].[usp_validate_ShipMethod]
+    @execution_step_id BIGINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    DECLARE @not_null_validation_code_id SMALLINT;
+
+    SELECT @not_null_validation_code_id = [id]
+    FROM [control].[validation_codes]
+    WHERE [code] = 'NOT_NULL';
+
+    IF @not_null_validation_code_id IS NULL
+        THROW 51001, 'Missing validation code: NOT_NULL.', 1;
+
+    BEGIN TRANSACTION;
+
+    INSERT INTO [work].[ShipMethod] (
+        [SourceShipMethodID],
+        [Name],
+        [ShipBase],
+        [ShipRate],
+        [IsNameNotBlank]
+    )
+    SELECT
+        [SourceShipMethodID],
+        TRIM([Name]) AS [Name],
+        [ShipBase],
+        [ShipRate],
+        IIF(LEN(TRIM([Name])) > 0, 1, 0) AS [IsNameNotBlank]
+    FROM [staging].[ShipMethod];
+
+    INSERT INTO [control].[validation_results] (
+        [details],
+        [affected_row_count],
+        [execution_step_id],
+        [validation_code_id]
+    )
+    SELECT
+        'ShipMethod Load - Name must not be blank after trimming.' AS [details],
+        COUNT_BIG(*) AS [affected_row_count],
+        @execution_step_id AS [execution_step_id],
+        @not_null_validation_code_id AS [validation_code_id]
+    FROM [work].[ShipMethod]
+    WHERE [IsNameNotBlank] = 0
+    HAVING COUNT_BIG(*) > 0;
+
+    COMMIT TRANSACTION;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE [work].[usp_validate_Geography]
     @execution_step_id BIGINT
 AS
@@ -443,7 +366,6 @@ BEGIN
 
     DECLARE @not_null_validation_code_id SMALLINT;
     DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
@@ -453,18 +375,12 @@ BEGIN
     FROM [control].[validation_codes]
     WHERE [code] = 'FK_CHECK';
 
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
 
     IF @fk_validation_code_id IS NULL
         THROW 51002, 'Missing validation code: FK_CHECK.', 1;
 
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[CountryRegion] (
@@ -602,7 +518,6 @@ BEGIN
 
     DECLARE @not_null_validation_code_id SMALLINT;
     DECLARE @fk_validation_code_id SMALLINT;
-    DECLARE @length_validation_code_id SMALLINT;
 
     SELECT @not_null_validation_code_id = [id]
     FROM [control].[validation_codes]
@@ -612,18 +527,12 @@ BEGIN
     FROM [control].[validation_codes]
     WHERE [code] = 'FK_CHECK';
 
-    SELECT @length_validation_code_id = [id]
-    FROM [control].[validation_codes]
-    WHERE [code] = 'LENGTH_CHECK';
-
     IF @not_null_validation_code_id IS NULL
         THROW 51001, 'Missing validation code: NOT_NULL.', 1;
 
     IF @fk_validation_code_id IS NULL
         THROW 51002, 'Missing validation code: FK_CHECK.', 1;
 
-    IF @length_validation_code_id IS NULL
-        THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
     INSERT INTO [work].[Currency] (
@@ -695,7 +604,4 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
-
-
-
 
