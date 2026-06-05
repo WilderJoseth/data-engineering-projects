@@ -26,7 +26,7 @@
           <SSIS:Property SSIS:Name="CreatorComputerName">WILDER-LOQ</SSIS:Property>
           <SSIS:Property SSIS:Name="Description">
           </SSIS:Property>
-          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAAAd1sF6BQLi0DIKTSgO3mbuxgUyU/+67jXwq2SqxxZqAAAAAAAOgAAAAAIAACAAAADvRGkHS3PX+y71ljkbme/a8wX85Z4aqLUSZfG5VyVIaJAAAAAiZUcYmMJ38uNY9MD2qibedHdi9J31oxJz4ulmiLpSXdvQwMLPf88XSTqvGzNYCQjUGzHtiHkF5AtfRlkS9CyD7PHXpTzBmeqPLoV6SI169VMhPRyStzxkwtAMTFqOG0a2XaOrEuo/8jlCu7zJ3OEM/YrJ4qPpUygxtLDe9MzCUOHfUEMrtDZ8Iq1XeWOygeRAAAAAVRWcrYQxyecpiYpiPW6dDPc5k4KHV9jDuUL8UY7w0/UeoGbzGMOhcy7txn25I+aVm6YUyJMk+7k5bUt0lpAKYQ==</SSIS:Property>
+          <SSIS:Property SSIS:Name="PasswordVerifier" SSIS:Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAACDDL3iaIBXqRMnGxSAh65244n0wnOonY18M/MhWmPU/gAAAAAOgAAAAAIAACAAAAC/Mnk6LOZAK6m6AwAIeZkbOLW5MAJJpDBY8ZZ67RxNqJAAAAAV2zFbvHHvDAXZrktl50BeUR2YdZeOK1eUbYb/YFkF6/UjLOuke6JM6ufOk18qnrth27w4RIDS3po/Wk3dm+Brdqv7i/5TtrjU5VcqSPoDI9YedMF7F00U8p1AaVJ7EVzGcZozj8KqOniRr97gn/k1jC8/C5SKZE1QOHKgOaadpHdDHSHc8n20rag74xncFG1AAAAAYSFeKRdjy5PGmkWLdaBJ2yE2ZP5WXoWg6JDaJozNHGMzzxv6vTlIALsJzSxZVkFdRVv8nnn6atH/8rhNHLrCPQ==</SSIS:Property>
           <SSIS:Property SSIS:Name="FormatVersion">1</SSIS:Property>
         </SSIS:Properties>
         <SSIS:Packages>
@@ -347,10 +347,10 @@
                 <SSIS:Property SSIS:Name="Name">PKG_MASTER_DATA</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">56</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">105</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{2664C473-B55D-4A7C-8999-FB5923AE0FAE}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{B6D94A95-1434-499E-876C-46A173636C93}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
@@ -379,16 +379,31 @@
                 <SSIS:Property SSIS:Name="Name">PKG_TRANSACTIONAL_DATA</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMajor">1</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionMinor">0</SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionBuild">29</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionBuild">37</SSIS:Property>
                 <SSIS:Property SSIS:Name="VersionComments">
                 </SSIS:Property>
-                <SSIS:Property SSIS:Name="VersionGUID">{B7FFC9DC-1401-4502-8E4A-D873116B840C}</SSIS:Property>
+                <SSIS:Property SSIS:Name="VersionGUID">{375F24F9-7B26-4537-B16A-9FC888D990B0}</SSIS:Property>
                 <SSIS:Property SSIS:Name="PackageFormatVersion">8</SSIS:Property>
                 <SSIS:Property SSIS:Name="Description">
                 </SSIS:Property>
                 <SSIS:Property SSIS:Name="ProtectionLevel">1</SSIS:Property>
               </SSIS:Properties>
-              <SSIS:Parameters />
+              <SSIS:Parameters>
+                <SSIS:Parameter SSIS:Name="p_execution_run_id">
+                  <SSIS:Properties>
+                    <SSIS:Property SSIS:Name="ID">{EDCE5106-B75A-4951-B479-A6196D423290}</SSIS:Property>
+                    <SSIS:Property SSIS:Name="CreationName">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="Description">
+                    </SSIS:Property>
+                    <SSIS:Property SSIS:Name="IncludeInDebugDump">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Required">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Sensitive">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="Value">0</SSIS:Property>
+                    <SSIS:Property SSIS:Name="DataType">9</SSIS:Property>
+                  </SSIS:Properties>
+                </SSIS:Parameter>
+              </SSIS:Parameters>
             </SSIS:PackageMetaData>
             <SSIS:PackageMetaData SSIS:Name="PKG_OPERATIONAL_MIGRATION.dtsx">
               <SSIS:Properties>

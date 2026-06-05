@@ -1,4 +1,4 @@
-﻿/*
+/*
     Script name
         07_create_work_master_stored_procedures.sql
 
@@ -57,7 +57,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [control].[usp_cleanup_SalesPerson]
+CREATE OR ALTER PROCEDURE [control].[usp_cleanup_Employee]
 WITH EXECUTE AS OWNER
 AS
 BEGIN
@@ -66,8 +66,16 @@ BEGIN
 
     BEGIN TRANSACTION;
 
-    TRUNCATE TABLE [work].[SalesPerson];
+    TRUNCATE TABLE [work].[Employee];
+    DELETE p
+    FROM [staging].[Person] AS p
+    WHERE EXISTS (
+        SELECT 1
+        FROM [staging].[SalesPerson] AS sp
+        WHERE sp.[SourceBusinessEntityID] = p.[SourceBusinessEntityID]
+    );
     TRUNCATE TABLE [staging].[SalesPerson];
+    TRUNCATE TABLE [staging].[Employee];
 
     COMMIT TRANSACTION;
 END;
@@ -83,6 +91,13 @@ BEGIN
     BEGIN TRANSACTION;
 
     TRUNCATE TABLE [work].[Customer];
+    DELETE p
+    FROM [staging].[Person] AS p
+    WHERE EXISTS (
+        SELECT 1
+        FROM [staging].[Customer] AS c
+        WHERE c.[SourcePersonID] = p.[SourceBusinessEntityID]
+    );
     TRUNCATE TABLE [staging].[Customer];
 
     COMMIT TRANSACTION;
@@ -353,7 +368,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [work].[usp_validate_SalesPerson]
+CREATE OR ALTER PROCEDURE [work].[usp_validate_Employee]
     @execution_step_id BIGINT
 AS
 BEGIN
@@ -386,7 +401,7 @@ BEGIN
         THROW 51003, 'Missing validation code: LENGTH_CHECK.', 1;
     BEGIN TRANSACTION;
 
-    INSERT INTO [work].[SalesPerson] (
+    INSERT INTO [work].[Employee] (
         [SourceBusinessEntityID],
         [SourceTerritoryID],
         [Title],
@@ -410,54 +425,58 @@ BEGIN
     SELECT
         sp.[SourceBusinessEntityID],
         sp.[SourceTerritoryID],
-        NULLIF(TRIM(sp.[Title]), '') AS [Title],
-        TRIM(sp.[FirstName]) AS [FirstName],
-        NULLIF(TRIM(sp.[MiddleName]), '') AS [MiddleName],
-        TRIM(sp.[LastName]) AS [LastName],
-        TRIM(sp.[JobTitle]) AS [JobTitle],
-        TRIM(sp.[Gender]) AS [Gender],
-        sp.[HireDate],
+        NULLIF(TRIM(p.[Title]), '') AS [Title],
+        TRIM(p.[FirstName]) AS [FirstName],
+        NULLIF(TRIM(p.[MiddleName]), '') AS [MiddleName],
+        TRIM(p.[LastName]) AS [LastName],
+        TRIM(e.[JobTitle]) AS [JobTitle],
+        TRIM(e.[Gender]) AS [Gender],
+        e.[HireDate],
         sp.[SalesQuota],
         sp.[Bonus],
         sp.[CommissionPct],
         sp.[SalesYTD],
         sp.[SalesLastYear],
-        IIF(LEN(TRIM(sp.[FirstName])) > 0, 1, 0) AS [IsFirstNameNotBlank],
-        IIF(LEN(TRIM(sp.[LastName])) > 0, 1, 0) AS [IsLastNameNotBlank],
-        IIF(LEN(TRIM(sp.[JobTitle])) > 0, 1, 0) AS [IsJobTitleNotBlank],
-        IIF(LEN(TRIM(sp.[Gender])) > 0, 1, 0) AS [IsGenderNotBlank],
+        IIF(LEN(TRIM(p.[FirstName])) > 0, 1, 0) AS [IsFirstNameNotBlank],
+        IIF(LEN(TRIM(p.[LastName])) > 0, 1, 0) AS [IsLastNameNotBlank],
+        IIF(LEN(TRIM(e.[JobTitle])) > 0, 1, 0) AS [IsJobTitleNotBlank],
+        IIF(LEN(TRIM(e.[Gender])) > 0, 1, 0) AS [IsGenderNotBlank],
         IIF(sp.[SourceTerritoryID] IS NULL OR st.[SalesTerritoryKey] IS NOT NULL, 1, 0) AS [IsSalesTerritoryValid]
     FROM [staging].[SalesPerson] AS sp
+    INNER JOIN [staging].[Person] AS p
+        ON p.[SourceBusinessEntityID] = sp.[SourceBusinessEntityID]
+    INNER JOIN [staging].[Employee] AS e
+        ON e.[SourceBusinessEntityID] = sp.[SourceBusinessEntityID]
     LEFT JOIN [prod].[SalesTerritory] AS st
         ON st.[SourceTerritoryID] = sp.[SourceTerritoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - FirstName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[SalesPerson]
+    SELECT 'Employee Load - FirstName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[Employee]
     WHERE [IsFirstNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - LastName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[SalesPerson]
+    SELECT 'Employee Load - LastName must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[Employee]
     WHERE [IsLastNameNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - JobTitle must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[SalesPerson]
+    SELECT 'Employee Load - JobTitle must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[Employee]
     WHERE [IsJobTitleNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - Gender must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
-    FROM [work].[SalesPerson]
+    SELECT 'Employee Load - Gender must not be blank after trimming.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    FROM [work].[Employee]
     WHERE [IsGenderNotBlank] = 0
     HAVING COUNT_BIG(*) > 0;
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'SalesPerson Load - SourceTerritoryID must reference a valid SalesTerritory when provided.', COUNT_BIG(*), @execution_step_id, @fk_validation_code_id
-    FROM [work].[SalesPerson]
+    SELECT 'Employee Load - SourceTerritoryID must reference a valid SalesTerritory when provided.', COUNT_BIG(*), @execution_step_id, @fk_validation_code_id
+    FROM [work].[Employee]
     WHERE [IsSalesTerritoryValid] = 0
     HAVING COUNT_BIG(*) > 0;
 
@@ -515,20 +534,22 @@ BEGIN
         c.[SourceCustomerID],
         c.[SourcePersonID],
         c.[SourceTerritoryID],
-        NULLIF(TRIM(c.[PersonType]), '') AS [PersonType],
-        NULLIF(TRIM(c.[Title]), '') AS [Title],
-        NULLIF(TRIM(c.[FirstName]), '') AS [FirstName],
-        NULLIF(TRIM(c.[MiddleName]), '') AS [MiddleName],
-        NULLIF(TRIM(c.[LastName]), '') AS [LastName],
+        NULLIF(TRIM(p.[PersonType]), '') AS [PersonType],
+        NULLIF(TRIM(p.[Title]), '') AS [Title],
+        NULLIF(TRIM(p.[FirstName]), '') AS [FirstName],
+        NULLIF(TRIM(p.[MiddleName]), '') AS [MiddleName],
+        NULLIF(TRIM(p.[LastName]), '') AS [LastName],
         NULLIF(TRIM(c.[AccountNumber]), '') AS [AccountNumber],
-        IIF(c.[SourcePersonID] IS NULL OR (LEN(TRIM(c.[FirstName])) > 0 AND LEN(TRIM(c.[LastName])) > 0), 1, 0) AS [IsPersonNameValid],
+        IIF(c.[SourcePersonID] IS NULL OR (p.[SourceBusinessEntityID] IS NOT NULL AND LEN(TRIM(p.[FirstName])) > 0 AND LEN(TRIM(p.[LastName])) > 0), 1, 0) AS [IsPersonNameValid],
         IIF(c.[SourceTerritoryID] IS NULL OR st.[SalesTerritoryKey] IS NOT NULL, 1, 0) AS [IsSalesTerritoryValid]
     FROM [staging].[Customer] AS c
+    LEFT JOIN [staging].[Person] AS p
+        ON p.[SourceBusinessEntityID] = c.[SourcePersonID]
     LEFT JOIN [prod].[SalesTerritory] AS st
         ON st.[SourceTerritoryID] = c.[SourceTerritoryID];
 
     INSERT INTO [control].[validation_results] ([details], [affected_row_count], [execution_step_id], [validation_code_id])
-    SELECT 'Customer Load - FirstName and LastName must not be blank when SourcePersonID is provided.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
+    SELECT 'Customer Load - SourcePersonID must reference a person with nonblank FirstName and LastName when provided.', COUNT_BIG(*), @execution_step_id, @not_null_validation_code_id
     FROM [work].[Customer]
     WHERE [IsPersonNameValid] = 0
     HAVING COUNT_BIG(*) > 0;

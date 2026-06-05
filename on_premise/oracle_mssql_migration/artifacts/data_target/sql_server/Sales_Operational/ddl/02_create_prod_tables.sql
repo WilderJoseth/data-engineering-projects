@@ -1,4 +1,4 @@
-﻿/*
+/*
     Script name
         02_create_prod_tables.sql
 
@@ -268,8 +268,8 @@ CREATE TABLE [prod].[Product] (
 );
 GO
 
-CREATE TABLE [prod].[SalesPerson] (
-    [SalesPersonKey] INT IDENTITY(1,1) NOT NULL,
+CREATE TABLE [prod].[Employee] (
+    [EmployeeKey] INT IDENTITY(1,1) NOT NULL,
     [SourceBusinessEntityID] INT NOT NULL,
     [SalesTerritoryKey] INT NULL,
     [Title] VARCHAR(8) NULL,
@@ -284,17 +284,17 @@ CREATE TABLE [prod].[SalesPerson] (
     [CommissionPct] DECIMAL(10,4) NOT NULL,
     [SalesYTD] DECIMAL(19,4) NOT NULL,
     [SalesLastYear] DECIMAL(19,4) NOT NULL,
-    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_SalesPerson_created_at] DEFAULT (SYSUTCDATETIME()),
-    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_SalesPerson_created_by] DEFAULT (USER_NAME()),
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_prod_Employee_created_at] DEFAULT (SYSUTCDATETIME()),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_prod_Employee_created_by] DEFAULT (USER_NAME()),
     [updated_at] DATETIME2(7) NULL,
     [updated_by] VARCHAR(50) NULL,
     [created_execution_step_id] INT NOT NULL,
     [last_updated_execution_step_id] INT NULL,
-    [is_active] BIT NOT NULL CONSTRAINT [df_prod_SalesPerson_is_active] DEFAULT ((1)),
+    [is_active] BIT NOT NULL CONSTRAINT [df_prod_Employee_is_active] DEFAULT ((1)),
 
-    CONSTRAINT [pk_prod_SalesPerson] PRIMARY KEY CLUSTERED ([SalesPersonKey] ASC),
-    CONSTRAINT [uk_prod_SalesPerson_SourceBusinessEntityID] UNIQUE ([SourceBusinessEntityID]),
-    CONSTRAINT [fk_prod_SalesPerson_SalesTerritoryKey] FOREIGN KEY ([SalesTerritoryKey]) REFERENCES [prod].[SalesTerritory]([SalesTerritoryKey])
+    CONSTRAINT [pk_prod_Employee] PRIMARY KEY CLUSTERED ([EmployeeKey] ASC),
+    CONSTRAINT [uk_prod_Employee_SourceBusinessEntityID] UNIQUE ([SourceBusinessEntityID]),
+    CONSTRAINT [fk_prod_Employee_SalesTerritoryKey] FOREIGN KEY ([SalesTerritoryKey]) REFERENCES [prod].[SalesTerritory]([SalesTerritoryKey])
 );
 GO
 
@@ -335,7 +335,7 @@ CREATE TABLE [prod].[SalesOrderHeader] (
     [PurchaseOrderNumber] VARCHAR(25) NULL,
     [AccountNumber] VARCHAR(20) NULL,
     [CustomerKey] INT NOT NULL,
-    [SalesPersonKey] INT NULL,
+    [EmployeeKey] INT NULL,
     [SalesTerritoryKey] INT NULL,
     [BillToAddressKey] INT NOT NULL,
     [ShipToAddressKey] INT NOT NULL,
@@ -358,7 +358,7 @@ CREATE TABLE [prod].[SalesOrderHeader] (
     CONSTRAINT [pk_prod_SalesOrderHeader] PRIMARY KEY CLUSTERED ([SalesOrderHeaderKey] ASC),
     CONSTRAINT [uk_prod_SalesOrderHeader_SourceSalesOrderID] UNIQUE ([SourceSalesOrderID]),
     CONSTRAINT [fk_prod_SalesOrderHeader_CustomerKey] FOREIGN KEY ([CustomerKey]) REFERENCES [prod].[Customer]([CustomerKey]),
-    CONSTRAINT [fk_prod_SalesOrderHeader_SalesPersonKey] FOREIGN KEY ([SalesPersonKey]) REFERENCES [prod].[SalesPerson]([SalesPersonKey]),
+    CONSTRAINT [fk_prod_SalesOrderHeader_EmployeeKey] FOREIGN KEY ([EmployeeKey]) REFERENCES [prod].[Employee]([EmployeeKey]),
     CONSTRAINT [fk_prod_SalesOrderHeader_SalesTerritoryKey] FOREIGN KEY ([SalesTerritoryKey]) REFERENCES [prod].[SalesTerritory]([SalesTerritoryKey]),
     CONSTRAINT [fk_prod_SalesOrderHeader_BillToAddressKey] FOREIGN KEY ([BillToAddressKey]) REFERENCES [prod].[Address]([AddressKey]),
     CONSTRAINT [fk_prod_SalesOrderHeader_ShipToAddressKey] FOREIGN KEY ([ShipToAddressKey]) REFERENCES [prod].[Address]([AddressKey]),

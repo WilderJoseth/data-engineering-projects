@@ -185,7 +185,7 @@ CREATE TABLE [work].[Product] (
 );
 GO
 
-CREATE TABLE [work].[SalesPerson] (
+CREATE TABLE [work].[Employee] (
     [SourceBusinessEntityID] INT NOT NULL,
     [SourceTerritoryID] INT NULL,
     [Title] VARCHAR(8) NULL,
@@ -200,13 +200,13 @@ CREATE TABLE [work].[SalesPerson] (
     [CommissionPct] DECIMAL(10,4) NOT NULL,
     [SalesYTD] DECIMAL(19,4) NOT NULL,
     [SalesLastYear] DECIMAL(19,4) NOT NULL,
-    [IsFirstNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsFirstNameNotBlank] DEFAULT ((0)),
-    [IsLastNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsLastNameNotBlank] DEFAULT ((0)),
-    [IsJobTitleNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsJobTitleNotBlank] DEFAULT ((0)),
-    [IsGenderNotBlank] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsGenderNotBlank] DEFAULT ((0)),
-    [IsSalesTerritoryValid] BIT NOT NULL CONSTRAINT [df_work_SalesPerson_IsSalesTerritoryValid] DEFAULT ((0)),
+    [IsFirstNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_Employee_IsFirstNameNotBlank] DEFAULT ((0)),
+    [IsLastNameNotBlank] BIT NOT NULL CONSTRAINT [df_work_Employee_IsLastNameNotBlank] DEFAULT ((0)),
+    [IsJobTitleNotBlank] BIT NOT NULL CONSTRAINT [df_work_Employee_IsJobTitleNotBlank] DEFAULT ((0)),
+    [IsGenderNotBlank] BIT NOT NULL CONSTRAINT [df_work_Employee_IsGenderNotBlank] DEFAULT ((0)),
+    [IsSalesTerritoryValid] BIT NOT NULL CONSTRAINT [df_work_Employee_IsSalesTerritoryValid] DEFAULT ((0)),
 
-    CONSTRAINT [pk_work_SalesPerson_SourceBusinessEntityID] PRIMARY KEY CLUSTERED ([SourceBusinessEntityID] ASC)
+    CONSTRAINT [pk_work_Employee_SourceBusinessEntityID] PRIMARY KEY CLUSTERED ([SourceBusinessEntityID] ASC)
 );
 GO
 
@@ -238,7 +238,7 @@ CREATE TABLE [work].[SalesOrderHeader] (
     [PurchaseOrderNumber] VARCHAR(25) NULL,
     [AccountNumber] VARCHAR(20) NULL,
     [CustomerKey] INT NOT NULL,
-    [SalesPersonKey] INT NULL,
+    [EmployeeKey] INT NULL,
     [SalesTerritoryKey] INT NULL,
     [BillToAddressKey] INT NOT NULL,
     [ShipToAddressKey] INT NOT NULL,

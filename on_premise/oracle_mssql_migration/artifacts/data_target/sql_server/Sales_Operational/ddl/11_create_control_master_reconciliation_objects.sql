@@ -1,4 +1,4 @@
-﻿/*
+/*
     Script name
         11_create_control_master_reconciliation_objects.sql
 
@@ -132,7 +132,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER FUNCTION [control].[ufn_get_SalesPerson_reconciliation_results] (
+CREATE OR ALTER FUNCTION [control].[ufn_get_Employee_reconciliation_results] (
     @reconciliation_side VARCHAR(20),
     @execution_step_id INT
 )
@@ -150,19 +150,19 @@ BEGIN
 
     IF @normalized_side = 'SOURCE'
         INSERT INTO @results
-        SELECT 'ROW_COUNT', 'TABLE=SalesPerson', @normalized_side, @execution_step_id, NULL, COUNT_BIG(*)
+        SELECT 'ROW_COUNT', 'TABLE=Employee', @normalized_side, @execution_step_id, NULL, COUNT_BIG(*)
         FROM [staging].[SalesPerson];
 
     IF @normalized_side = 'TARGET'
         INSERT INTO @results
-        SELECT 'ROW_COUNT', 'TABLE=SalesPerson', @normalized_side, @execution_step_id, NULL, SUM([row_count])
+        SELECT 'ROW_COUNT', 'TABLE=Employee', @normalized_side, @execution_step_id, NULL, SUM([row_count])
         FROM (
             SELECT COUNT_BIG(*) AS [row_count]
-            FROM [prod].[SalesPerson]
+            FROM [prod].[Employee]
             WHERE [created_execution_step_id] = @execution_step_id
             UNION ALL
             SELECT COUNT_BIG(*) AS [row_count]
-            FROM [prod].[SalesPerson]
+            FROM [prod].[Employee]
             WHERE [last_updated_execution_step_id] = @execution_step_id
         ) AS target_counts;
 

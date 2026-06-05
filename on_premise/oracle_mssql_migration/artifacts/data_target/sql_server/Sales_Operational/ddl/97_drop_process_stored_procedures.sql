@@ -35,13 +35,13 @@ DROP PROCEDURE IF EXISTS [control].[usp_cleanup_AddressType];
 GO
 
 DROP PROCEDURE IF EXISTS [work].[usp_validate_Customer];
-DROP PROCEDURE IF EXISTS [work].[usp_validate_SalesPerson];
+DROP PROCEDURE IF EXISTS [work].[usp_validate_Employee];
 DROP PROCEDURE IF EXISTS [work].[usp_validate_Product];
 DROP PROCEDURE IF EXISTS [work].[usp_validate_Address];
 DROP PROCEDURE IF EXISTS [work].[usp_validate_CreditCard];
 
 DROP PROCEDURE IF EXISTS [control].[usp_cleanup_Customer];
-DROP PROCEDURE IF EXISTS [control].[usp_cleanup_SalesPerson];
+DROP PROCEDURE IF EXISTS [control].[usp_cleanup_Employee];
 DROP PROCEDURE IF EXISTS [control].[usp_cleanup_Product];
 DROP PROCEDURE IF EXISTS [control].[usp_cleanup_Address];
 DROP PROCEDURE IF EXISTS [control].[usp_cleanup_CreditCard];

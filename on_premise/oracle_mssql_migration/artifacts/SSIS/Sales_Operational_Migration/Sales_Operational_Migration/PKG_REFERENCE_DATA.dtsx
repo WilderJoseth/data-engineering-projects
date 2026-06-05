@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_REFERENCE_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="154"
-  DTS:VersionGUID="{E5ECDFE6-91FF-43BB-A81B-002D7CD1F981}">
+  DTS:VersionBuild="156"
+  DTS:VersionGUID="{8CE1FE2E-F801-4694-87A7-EAF8234AEBF8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -4843,6 +4843,10 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
       <GraphLayout
         Capacity="64" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
         <NodeLayout
+          Size="250.4,41.6"
+          Id="Package\Foreach Loop Container\End clean up staging and work tables"
+          TopLeft="566.799975413085,1155.63333102812" />
+        <NodeLayout
           Size="166.4,41.6"
           Id="Package\Foreach Loop Container\End execution step"
           TopLeft="611.02074215946,1069.07356107154" />
@@ -4986,6 +4990,10 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           Size="254.4,41.6"
           Id="Package\Foreach Loop Container\Start clean up staging and work tables"
           TopLeft="537.781608384577,163.119188676466" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Foreach Loop Container\Start execution step"
+          TopLeft="577.911085917112,90.4111101819963" />
         <NodeLayout
           Size="164,41.6"
           Id="Package\Foreach Loop Container\Validate work data"
@@ -5315,6 +5323,50 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 18]"
+          TopLeft="664.046347150844,132.011110181996">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,31.1080784944701"
+              Start="0,0"
+              End="0,23.6080784944701">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.6080784944701" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 19]"
+          TopLeft="693.110358786272,1110.67356107154">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.9597699565797"
+              Start="0,0"
+              End="0,37.4597699565797">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.4597699565797" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
           Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
           TopLeft="691.471924125289,803.091409858581">
           <EdgeLayout.Curve>
@@ -5394,6 +5446,28 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
                   Capacity="5">
                   <mssgle:LineSegment
                     End="0,26.2508383447253" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
+          TopLeft="662.844409506742,54.2222219007988">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.1888882811975"
+              Start="0,0"
+              End="0,28.6888882811975">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.6888882811975" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5508,80 +5582,6 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
               RelativePosition="Any" />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="170.4,41.6"
-          Id="Package\Foreach Loop Container\Start execution step"
-          TopLeft="577.911085917112,90.4111101819963" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
-          TopLeft="662.844409506742,54.2222219007988">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,36.1888882811975"
-              Start="0,0"
-              End="0,28.6888882811975">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,28.6888882811975" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 18]"
-          TopLeft="664.046347150844,132.011110181996">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,31.1080784944701"
-              Start="0,0"
-              End="0,23.6080784944701">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,23.6080784944701" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="250.4,41.6"
-          Id="Package\Foreach Loop Container\End clean up staging and work tables"
-          TopLeft="566.799975413085,1155.63333102812" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 19]"
-          TopLeft="693.110358786272,1110.67356107154">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,44.9597699565797"
-              Start="0,0"
-              End="0,37.4597699565797">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,37.4597699565797" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
         <ContainerLayout
           HeaderHeight="43"
           IsExpanded="True"
@@ -5603,14 +5603,14 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,40.3794126093394"
+              EndConnector="0,40.37941260934"
               Start="0,0"
-              End="0,32.8794126093394">
+              End="0,32.87941260934">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,32.8794126093394" />
+                    End="0,32.87941260934" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -5625,14 +5625,14 @@ FROM ADVENTUREWORKS2022.SALES_SPECIALOFFER;</property>
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,54.2110623448041"
+              EndConnector="0,54.211062344804"
               Start="0,0"
-              End="0,46.7110623448041">
+              End="0,46.711062344804">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,46.7110623448041" />
+                    End="0,46.711062344804" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

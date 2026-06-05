@@ -1,4 +1,4 @@
-﻿/*
+/*
     Script name
         09_create_prod_master_stored_procedures.sql
 
@@ -220,7 +220,7 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE [prod].[usp_load_SalesPerson]
+CREATE OR ALTER PROCEDURE [prod].[usp_load_Employee]
     @execution_step_id INT
 AS
 BEGIN
@@ -248,8 +248,8 @@ BEGIN
         tgt.[updated_by] = USER_NAME(),
         tgt.[last_updated_execution_step_id] = @execution_step_id,
         tgt.[is_active] = 1
-    FROM [prod].[SalesPerson] AS tgt
-    INNER JOIN [work].[SalesPerson] AS src
+    FROM [prod].[Employee] AS tgt
+    INNER JOIN [work].[Employee] AS src
         ON src.[SourceBusinessEntityID] = tgt.[SourceBusinessEntityID]
     LEFT JOIN [prod].[SalesTerritory] AS sales_territory
         ON sales_territory.[SourceTerritoryID] = src.[SourceTerritoryID]
@@ -259,7 +259,7 @@ BEGIN
       AND src.[IsGenderNotBlank] = 1
       AND src.[IsSalesTerritoryValid] = 1;
 
-    INSERT INTO [prod].[SalesPerson] (
+    INSERT INTO [prod].[Employee] (
         [SourceBusinessEntityID],
         [SalesTerritoryKey],
         [Title],
@@ -292,7 +292,7 @@ BEGIN
         src.[SalesYTD],
         src.[SalesLastYear],
         @execution_step_id
-    FROM [work].[SalesPerson] AS src
+    FROM [work].[Employee] AS src
     LEFT JOIN [prod].[SalesTerritory] AS sales_territory
         ON sales_territory.[SourceTerritoryID] = src.[SourceTerritoryID]
     WHERE src.[IsFirstNameNotBlank] = 1
@@ -302,7 +302,7 @@ BEGIN
       AND src.[IsSalesTerritoryValid] = 1
       AND NOT EXISTS (
             SELECT 1
-            FROM [prod].[SalesPerson] AS tgt
+            FROM [prod].[Employee] AS tgt
             WHERE tgt.[SourceBusinessEntityID] = src.[SourceBusinessEntityID]
         );
 

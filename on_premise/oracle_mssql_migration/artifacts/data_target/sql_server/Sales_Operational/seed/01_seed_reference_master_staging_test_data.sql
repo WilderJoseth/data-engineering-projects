@@ -29,6 +29,8 @@ BEGIN TRANSACTION;
 */
 DELETE FROM [staging].[Customer];
 DELETE FROM [staging].[SalesPerson];
+DELETE FROM [staging].[Employee];
+DELETE FROM [staging].[Person];
 DELETE FROM [staging].[Product];
 DELETE FROM [staging].[Address];
 DELETE FROM [staging].[CreditCard];
@@ -253,22 +255,49 @@ VALUES
     (2093, 'BK-X99B-48', 'Invalid Category Product', 'Black', 100, 75, 1000.0000, 1500.0000, '48', 18.50, 999, '2022-01-01', NULL, NULL);
 
 /*
-    Master data: SalesPerson
+    Master data: Employee
     Validation coverage:
         - Valid salesperson.
         - Blank first name, last name, job title, and gender.
         - Invalid SalesTerritory dependency.
 */
-INSERT INTO [staging].[SalesPerson] (
+INSERT INTO [staging].[Person] (
     [SourceBusinessEntityID],
-    [SourceTerritoryID],
+    [PersonType],
     [Title],
     [FirstName],
     [MiddleName],
-    [LastName],
+    [LastName]
+)
+VALUES
+    (3000, 'SP', 'Mr.', 'David', 'R.', 'Campbell'),
+    (3091, 'SP', 'Ms.', '   ', NULL, 'Martinez'),
+    (3092, 'SP', 'Mr.', 'John', NULL, '   '),
+    (3093, 'SP', NULL, 'Sarah', NULL, 'Smith'),
+    (3094, 'SP', NULL, 'Kyle', NULL, 'Young'),
+    (3095, 'SP', NULL, 'Maria', NULL, 'Lopez'),
+    (5000, 'IN', 'Mr.', 'Aaron', NULL, 'Conner'),
+    (5091, 'IN', 'Ms.', '   ', NULL, 'Parker'),
+    (5092, 'IN', 'Mr.', 'James', NULL, '   '),
+    (5093, 'IN', 'Ms.', 'Laura', NULL, 'Green');
+
+INSERT INTO [staging].[Employee] (
+    [SourceBusinessEntityID],
     [JobTitle],
     [Gender],
-    [HireDate],
+    [HireDate]
+)
+VALUES
+    (3000, 'Sales Representative', 'M', '2018-06-01'),
+    (3091, 'Sales Representative', 'F', '2019-01-15'),
+    (3092, 'Sales Representative', 'M', '2019-02-15'),
+    (3093, '   ', 'F', '2019-03-15'),
+    (3094, 'Sales Representative', ' ', '2019-04-15'),
+    (3095, 'Sales Representative', 'F', '2019-05-15');
+
+INSERT INTO [staging].[SalesPerson] (
+    [SourceBusinessEntityID],
+    [SourceTerritoryID],
     [SalesQuota],
     [Bonus],
     [CommissionPct],
@@ -276,12 +305,12 @@ INSERT INTO [staging].[SalesPerson] (
     [SalesLastYear]
 )
 VALUES
-    (3000, 1, 'Mr.', 'David', 'R.', 'Campbell', 'Sales Representative', 'M', '2018-06-01', 250000.0000, 5000.0000, 0.0150, 4251368.5497, 4116871.2277),
-    (3091, 1, 'Ms.', '   ', NULL, 'Martinez', 'Sales Representative', 'F', '2019-01-15', 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
-    (3092, 1, 'Mr.', 'John', NULL, '   ', 'Sales Representative', 'M', '2019-02-15', 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
-    (3093, 1, NULL, 'Sarah', NULL, 'Smith', '   ', 'F', '2019-03-15', 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
-    (3094, 1, NULL, 'Kyle', NULL, 'Young', 'Sales Representative', ' ', '2019-04-15', 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
-    (3095, 999, NULL, 'Maria', NULL, 'Lopez', 'Sales Representative', 'F', '2019-05-15', 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000);
+    (3000, 1, 250000.0000, 5000.0000, 0.0150, 4251368.5497, 4116871.2277),
+    (3091, 1, 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
+    (3092, 1, 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
+    (3093, 1, 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
+    (3094, 1, 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000),
+    (3095, 999, 250000.0000, 3500.0000, 0.0120, 1200000.0000, 900000.0000);
 
 /*
     Master data: Customer
@@ -294,20 +323,16 @@ VALUES
 INSERT INTO [staging].[Customer] (
     [SourceCustomerID],
     [SourcePersonID],
+    [SourceStoreID],
     [SourceTerritoryID],
-    [PersonType],
-    [Title],
-    [FirstName],
-    [MiddleName],
-    [LastName],
     [AccountNumber]
 )
 VALUES
-    (4000, 5000, 1, 'IN', 'Mr.', 'Aaron', NULL, 'Conner', 'AW00004000'),
-    (4001, NULL, 1, NULL, NULL, NULL, NULL, NULL, 'AW00004001'),
-    (4091, 5091, 1, 'IN', 'Ms.', '   ', NULL, 'Parker', 'AW00004091'),
-    (4092, 5092, 1, 'IN', 'Mr.', 'James', NULL, '   ', 'AW00004092'),
-    (4093, 5093, 999, 'IN', 'Ms.', 'Laura', NULL, 'Green', 'AW00004093');
+    (4000, 5000, NULL, 1, 'AW00004000'),
+    (4001, NULL, NULL, 1, 'AW00004001'),
+    (4091, 5091, NULL, 1, 'AW00004091'),
+    (4092, 5092, NULL, 1, 'AW00004092'),
+    (4093, 5093, NULL, 999, 'AW00004093');
 
 COMMIT TRANSACTION;
 GO

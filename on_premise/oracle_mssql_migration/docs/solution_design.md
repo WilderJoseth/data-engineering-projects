@@ -6,7 +6,7 @@ This document describes the technical design for the Sales domain migration and 
 
 ## Data Source in Scope
 
-The operational migration scope includes the Sales order process and the supporting entities like Customer, Address, Product, and SalesPerson.
+The operational migration scope includes the Sales order process and the supporting entities like Customer, Address, Product, and Employee.
 
 ### Technical Details
 
@@ -95,7 +95,7 @@ The `Sales_Operational` model is a normalized target model for the Sales domain.
 
 Key design decisions:
 
-- `SalesPerson` consolidates source `HUMANRESOURCES_EMPLOYEE`, `PERSON_PERSON`, and `SALES_SALESPERSON` data.
+- `Employee` consolidates source `PERSON_PERSON`, `HUMANRESOURCES_EMPLOYEE`, and `SALES_SALESPERSON` data.
 - `Customer` consolidates source `PERSON_PERSON` and `SALES_CUSTOMER` data.
 - `PERSON_BUSINESSENTITYADDRESS` is removed; address classification is handled directly through `AddressType` and `Address`.
 - `SALES_SPECIALOFFERPRODUCT` is removed; the applied offer is stored at `SalesOrderDetail` level.
@@ -105,7 +105,7 @@ Key design decisions:
 | Data role | Target table |
 |---|---|
 | Transactional | `SalesOrderHeader`, `SalesOrderDetail` |
-| Master / Core | `Customer`, `SalesPerson`, `Address`, `Product`, `CreditCard` |
+| Master / Core | `Customer`, `Employee`, `Address`, `Product`, `CreditCard` |
 | Reference / Lookup | `CountryRegion`, `StateProvince`, `SalesTerritory`, `AddressType`, `ShipMethod`, `Currency`, `CurrencyRate`, `SpecialOffer`, `ProductCategory` |
 
 ### Sales_Analytics Data Model
@@ -416,7 +416,7 @@ Master data is loaded using the common table-level load pattern. Independent mas
 | `CreditCard Load` | `CreditCard` | `SALES_CREDITCARD` | None | Independent table load; can run in parallel. |
 | `Address Load` | `Address` | `PERSON_ADDRESS` | `StateProvince`, `AddressType` | Loaded after required reference data is available. |
 | `Product Load` | `Product` | `PRODUCTION_PRODUCT` | `ProductCategory` | Loaded after required reference data is available. |
-| `SalesPerson Load` | `SalesPerson` | `PERSON_PERSON`, `SALES_SALESPERSON`, `HUMANRESOURCES_EMPLOYEE` | `SalesTerritory` | Loaded after parent master and reference data. |
+| `Employee Load` | `Employee` | `PERSON_PERSON`, `HUMANRESOURCES_EMPLOYEE`, `SALES_SALESPERSON` | `SalesTerritory` | Loaded after parent master and reference data. |
 | `Customer Load` | `Customer` | `PERSON_PERSON`, `SALES_CUSTOMER` | `SalesTerritory` | Loaded after parent master and reference data. |
 
 The following diagram shows the master data load flow.
@@ -438,7 +438,7 @@ Header and detail records are extracted and processed together within the same b
 
 | Load container | Target table | Source table | Dependency | Execution behavior |
 |---|---|---|---|---|
-| `Sales Load` | `SalesOrderHeader`, `SalesOrderDetail` | `SALES_SALESORDERHEADER`, `SALES_SALESORDERDETAIL` | `Customer`, `SalesPerson`, `Address`, `Product`, `CreditCard`, `CurrencyRate`, `ShipMethod`, `SalesTerritory`, `SpecialOffer` | Processed together within each `yyyyMM` batch; final load uses delete-and-reload logic for the selected period. |
+| `Sales Load` | `SalesOrderHeader`, `SalesOrderDetail` | `SALES_SALESORDERHEADER`, `SALES_SALESORDERDETAIL` | `Customer`, `Employee`, `Address`, `Product`, `CreditCard`, `CurrencyRate`, `ShipMethod`, `SalesTerritory`, `SpecialOffer` | Processed together within each `yyyyMM` batch; final load uses delete-and-reload logic for the selected period. |
 
 The following diagram shows the transactional data load flow.
 

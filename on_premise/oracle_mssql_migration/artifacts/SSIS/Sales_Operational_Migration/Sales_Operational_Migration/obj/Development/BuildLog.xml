@@ -2,28 +2,28 @@
 <BuildLog xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ProjectInfo>
     <Name>Sales_Operational_Migration</Name>
-    <LastWriteTime>2026-06-04T22:28:51.9083955Z</LastWriteTime>
+    <LastWriteTime>2026-06-05T02:42:24.4708224Z</LastWriteTime>
     <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
   </ProjectInfo>
   <LastBuildInfos>
     <ProjectBuildItemInfo>
       <Name>PKG_MASTER_DATA.dtsx</Name>
-      <LastWriteTime>2026-06-04T23:02:55.4284105Z</LastWriteTime>
+      <LastWriteTime>2026-06-05T03:12:01.3036589Z</LastWriteTime>
       <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
     </ProjectBuildItemInfo>
     <ProjectBuildItemInfo>
       <Name>PKG_TRANSACTIONAL_DATA.dtsx</Name>
-      <LastWriteTime>2026-06-04T17:30:49.0123131Z</LastWriteTime>
+      <LastWriteTime>2026-06-05T03:20:48.7183761Z</LastWriteTime>
       <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
     </ProjectBuildItemInfo>
     <ProjectBuildItemInfo>
       <Name>PKG_OPERATIONAL_MIGRATION.dtsx</Name>
-      <LastWriteTime>2026-06-04T22:36:38.4730489Z</LastWriteTime>
+      <LastWriteTime>2026-06-05T03:07:13.6094904Z</LastWriteTime>
       <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
     </ProjectBuildItemInfo>
     <ProjectBuildItemInfo>
       <Name>PKG_REFERENCE_DATA.dtsx</Name>
-      <LastWriteTime>2026-06-04T22:52:50.5231943Z</LastWriteTime>
+      <LastWriteTime>2026-06-05T03:06:20.8188109Z</LastWriteTime>
       <LastKnownProtectionLevel>EncryptSensitiveWithUserKey</LastKnownProtectionLevel>
     </ProjectBuildItemInfo>
   </LastBuildInfos>

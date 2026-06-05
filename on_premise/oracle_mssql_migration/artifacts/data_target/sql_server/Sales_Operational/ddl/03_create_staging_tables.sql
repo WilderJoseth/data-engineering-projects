@@ -168,17 +168,34 @@ CREATE TABLE [staging].[Product] (
 );
 GO
 
-CREATE TABLE [staging].[SalesPerson] (
-    [StagingSalesPersonKey] BIGINT IDENTITY(1,1) NOT NULL,
+CREATE TABLE [staging].[Person] (
+    [StagingPersonKey] BIGINT IDENTITY(1,1) NOT NULL,
     [SourceBusinessEntityID] INT NOT NULL,
-    [SourceTerritoryID] INT NULL,
+    [PersonType] NCHAR(2) NOT NULL,
     [Title] NVARCHAR(8) NULL,
     [FirstName] NVARCHAR(50) NOT NULL,
     [MiddleName] NVARCHAR(50) NULL,
     [LastName] NVARCHAR(50) NOT NULL,
+
+    CONSTRAINT [pk_staging_Person_StagingPersonKey] PRIMARY KEY CLUSTERED ([StagingPersonKey] ASC)
+);
+GO
+
+CREATE TABLE [staging].[Employee] (
+    [StagingEmployeeKey] BIGINT IDENTITY(1,1) NOT NULL,
+    [SourceBusinessEntityID] INT NOT NULL,
     [JobTitle] NVARCHAR(50) NOT NULL,
     [Gender] NCHAR(1) NOT NULL,
     [HireDate] DATE NOT NULL,
+
+    CONSTRAINT [pk_staging_Employee_StagingEmployeeKey] PRIMARY KEY CLUSTERED ([StagingEmployeeKey] ASC)
+);
+GO
+
+CREATE TABLE [staging].[SalesPerson] (
+    [StagingSalesPersonKey] BIGINT IDENTITY(1,1) NOT NULL,
+    [SourceBusinessEntityID] INT NOT NULL,
+    [SourceTerritoryID] INT NULL,
     [SalesQuota] DECIMAL(19,4) NULL,
     [Bonus] DECIMAL(19,4) NOT NULL,
     [CommissionPct] DECIMAL(10,4) NOT NULL,
@@ -193,12 +210,8 @@ CREATE TABLE [staging].[Customer] (
     [StagingCustomerKey] BIGINT IDENTITY(1,1) NOT NULL,
     [SourceCustomerID] INT NOT NULL,
     [SourcePersonID] INT NULL,
+    [SourceStoreID] INT NULL,
     [SourceTerritoryID] INT NULL,
-    [PersonType] NCHAR(2) NULL,
-    [Title] NVARCHAR(8) NULL,
-    [FirstName] NVARCHAR(50) NULL,
-    [MiddleName] NVARCHAR(50) NULL,
-    [LastName] NVARCHAR(50) NULL,
     [AccountNumber] NVARCHAR(20) NULL,
 
     CONSTRAINT [pk_staging_Customer_StagingCustomerKey] PRIMARY KEY CLUSTERED ([StagingCustomerKey] ASC)

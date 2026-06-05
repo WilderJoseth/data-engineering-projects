@@ -11,271 +11,1392 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_TRANSACTIONAL_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="35"
-  DTS:VersionGUID="{88443987-E475-419F-BE3C-1791EE5642E9}">
+  DTS:VersionBuild="82"
+  DTS:VersionGUID="{92BD6865-7CB5-4556-94AA-FE4771281E2C}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:PackageParameters>
+    <DTS:PackageParameter
+      DTS:CreationName=""
+      DTS:DataType="3"
+      DTS:DTSID="{EDCE5106-B75A-4951-B479-A6196D423290}"
+      DTS:ObjectName="p_execution_run_id">
+      <DTS:Property
+        DTS:DataType="3"
+        DTS:Name="ParameterValue">0</DTS:Property>
+    </DTS:PackageParameter>
+  </DTS:PackageParameters>
   <DTS:Variables>
     <DTS:Variable
       DTS:CreationName=""
-      DTS:DTSID="{27925BCA-B000-415C-8C53-C69C4BB1D5F9}"
+      DTS:DTSID="{44131F5B-18C2-47CB-BB6D-C8AE5D1E834B}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_1">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_start_execution_step] {1}, {2}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{FA6A6F25-A524-4E7F-81E7-1D817E1FEF0F}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(@[User::v_action_1], &quot;{1}&quot;, (DT_WSTR, 10) @[$Package::p_execution_run_id] ), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_child_project_process_id]  )"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_1_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_start_execution_step] 0, 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0E3F0F75-AA3D-4883-96DB-FB02A14AF319}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_2">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrderHeader_reconciliation_results]({1}, {2})</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{8860831F-8739-4838-B624-7114BD68CD41}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE(@[User::v_action_2], &quot;{1}&quot;, &quot;'SOURCE'&quot;), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_child_execution_step_id] )"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_2_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT * FROM [Sales_Operational].[control].[ufn_get_SalesOrderHeader_reconciliation_results]('SOURCE', 0)</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{33F2DB6D-C178-407D-8D19-FA5C3D378A79}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_3">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[work].[usp_validate_SalesOrderHeader] {1}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{46FF208D-3C62-42A9-96E1-E0C0574F26E4}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(@[User::v_action_3], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_child_execution_step_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_3_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[work].[usp_validate_SalesOrderHeader] 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{20759D34-79BA-4CE2-8274-4380E8C2DE3C}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_4">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[prod].[usp_load_SalesOrderHeader] {1} EXEC [Sales_Operational].[prod].[usp_load_SalesOrderHeader] {1}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9C34D278-CCFF-4AC7-82C1-7824B5F09B07}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(@[User::v_action_4], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_child_execution_step_id] )"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_4_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[prod].[usp_load_SalesOrderHeader] 0 EXEC [Sales_Operational].[prod].[usp_load_SalesOrderHeader] 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C31CAAF4-DE02-4931-A27C-9D3E08A3B7D5}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_6">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT [Sales_Operational].[control].[ufn_get_SalesOrderHeader_load_status_code]({1}) AS [result_value]</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{12740D1D-8A5B-45AF-821A-698DD63EE015}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(@[User::v_action_6], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_child_execution_step_id] )"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_6_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">SELECT [Sales_Operational].[control].[ufn_get_SalesOrderHeader_load_status_code](0) AS [result_value]</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{31B629A7-E9A5-49CD-9895-C780FDAD28BD}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_7">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_end_execution_step] {1}, {2}</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{3AD92781-871D-40F2-B41B-A2677B1B7D8E}"
+      DTS:EvaluateAsExpression="True"
+      DTS:Expression="REPLACE(REPLACE( @[User::v_action_7], &quot;{1}&quot;,  (DT_WSTR, 10) @[User::v_child_execution_step_id] ), &quot;{2}&quot;,  (DT_WSTR, 10) @[User::v_child_status_code_id])"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_7_paremeter_value">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [DataOps_Control].[runtime].[usp_end_execution_step] 0, 0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{0DD7E421-EE04-4B38-BEC1-A53DF899FEE0}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_action_8">
+      <DTS:VariableValue
+        DTS:DataType="8">EXEC [Sales_Operational].[control].[usp_cleanup_SalesOrderHeader]</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{56CABBC4-ACA6-40DB-896F-1A4F83CB33B7}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_batch_end_value">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{C9A1DCC6-1D2C-488E-830F-112AD5DB114D}"
+      DTS:IncludeInDebugDump="2345"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_batch_start_value">
+      <DTS:VariableValue
+        DTS:DataType="8"
+        xml:space="preserve"></DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{9D7CFA9B-A68E-43A9-A6F7-06380A91C78F}"
       DTS:IncludeInDebugDump="6789"
       DTS:Namespace="User"
-      DTS:ObjectName="SalesOrderHeaderToStart">
+      DTS:ObjectName="v_child_execution_step_id">
       <DTS:VariableValue
-        DTS:DataType="11">0</DTS:VariableValue>
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{90E9662A-F0AE-4FF7-9F4B-7ABADD74CA43}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_child_project_process_id">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{F7F59F08-05AE-44A0-9C0C-DFC8A87F9202}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_child_status_code_id">
+      <DTS:VariableValue
+        DTS:DataType="2">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{6DECAEDE-4573-442E-A958-0F4A588474B0}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_list_batches">
+      <DTS:VariableValue
+        DTS:DataSubType="ManagedSerializable"
+        DTS:DataType="13">
+        <SOAP-ENV:Envelope xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+          <SOAP-ENV:Body>
+            <xsd:anyType
+              id="ref-1"></xsd:anyType>
+          </SOAP-ENV:Body>
+        </SOAP-ENV:Envelope>
+      </DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{EEA5564B-2FDE-40D5-A660-25E9D3185F25}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_parent_execution_step_id">
+      <DTS:VariableValue
+        DTS:DataType="3">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{4387EAF9-3226-4243-BE87-B86B2B215CA7}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="v_parent_project_process_id">
+      <DTS:VariableValue
+        DTS:DataType="3">6</DTS:VariableValue>
     </DTS:Variable>
   </DTS:Variables>
   <DTS:Executables>
     <DTS:Executable
-      DTS:refId="Package\Clean Up Transactional Staging and Work Tables - End"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{6aa487b7-5803-4a48-b213-d0172cfde23a}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:refId="Package\Foreach Loop Container"
+      DTS:CreationName="STOCK:FOREACHLOOP"
+      DTS:Description="Foreach Loop Container"
+      DTS:DTSID="{86778574-7DA7-45EB-B88E-EEAD8471C719}"
+      DTS:ExecutableType="STOCK:FOREACHLOOP"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Clean Up Transactional Staging and Work Tables - End"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\Clean Up Transactional Staging and Work Tables - Start"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{5872ab17-fc60-4249-841a-6b829f32d202}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="Clean Up Transactional Staging and Work Tables - Start"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\Confirm Master Data Load completed successfully"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{5d862876-4569-4882-a474-57a79802099d}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="Confirm Master Data Load completed successfully"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\End Transactional Data Subprocess"
-      DTS:CreationName="Microsoft.ExecuteSQLTask"
-      DTS:Description="Execute SQL Task"
-      DTS:DTSID="{d9e1a447-41bd-48a9-adaa-64e9995f8093}"
-      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-      DTS:LocaleID="-1"
-      DTS:ObjectName="End Transactional Data Subprocess"
-      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-      DTS:ThreadHint="0">
-      <DTS:Variables />
-      <DTS:ObjectData>
-        <SQLTask:SqlTaskData
-          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-      </DTS:ObjectData>
-    </DTS:Executable>
-    <DTS:Executable
-      DTS:refId="Package\For Loop Load Sales"
-      DTS:CreationName="STOCK:FORLOOP"
-      DTS:Description="For Loop Container"
-      DTS:DTSID="{EA6F59B2-6599-4B47-BE45-E36CAB54F6CF}"
-      DTS:EvalExpression="0==0"
-      DTS:ExecutableType="STOCK:FORLOOP"
-      DTS:InitExpression="0"
-      DTS:LocaleID="-1"
-      DTS:MaxConcurrent="1"
-      DTS:ObjectName="For Loop Load Sales">
+      DTS:ObjectName="Foreach Loop Container">
+      <DTS:ForEachEnumerator
+        DTS:CreationName="Microsoft.ForEachADOEnumerator"
+        DTS:DTSID="{B0E6BC37-FF45-4504-866E-A367F91DFE89}"
+        DTS:ObjectName="{B0E6BC37-FF45-4504-866E-A367F91DFE89}">
+        <DTS:ObjectData>
+          <FEEADO
+            EnumType="EnumerateRowsInFirstTable"
+            VarName="User::v_list_batches" />
+        </DTS:ObjectData>
+      </DTS:ForEachEnumerator>
       <DTS:Variables />
       <DTS:Executables>
         <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Extract SalesOrderHeader join SalesOrderDetail to Staging"
+          DTS:refId="Package\Foreach Loop Container\End clean up staging and work tables"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{1268ec6c-a4f3-4846-9d34-44a4771d0506}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="End clean up staging and work tables"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_8" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\End execution step"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5c22a0f6-f091-4425-8839-f6cb9301f869}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="End execution step"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_7_paremeter_value" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Get actions"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{a327e09f-de16-4cf1-a9b1-e700802f9d4c}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Get actions"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+              SQLTask:SqlStatementSource="SELECT&#xA;    MAX(CASE WHEN [action_position] = 1 THEN [execution_command_template] END) AS [action_1],&#xA;    MAX(CASE WHEN [action_position] = 2 THEN [execution_command_template] END) AS [action_2],&#xA;    MAX(CASE WHEN [action_position] = 3 THEN [execution_command_template] END) AS [action_3],&#xA;    MAX(CASE WHEN [action_position] = 4 THEN [execution_command_template] END) AS [action_4],&#xA;    MAX(CASE WHEN [action_position] = 5 THEN [execution_command_template] END) AS [action_5],&#xA;    MAX(CASE WHEN [action_position] = 6 THEN [execution_command_template] END) AS [action_6],&#xA;    MAX(CASE WHEN [action_position] = 7 THEN [execution_command_template] END) AS [action_7],&#xA;    MAX(CASE WHEN [action_position] = 8 THEN [execution_command_template] END) AS [action_8]&#xA;FROM [metadata].[ufn_list_project_process_actions](?);"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_1"
+                SQLTask:DtsVariableName="User::v_action_1" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_3"
+                SQLTask:DtsVariableName="User::v_action_3" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_4"
+                SQLTask:DtsVariableName="User::v_action_4" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_6"
+                SQLTask:DtsVariableName="User::v_action_6" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_7"
+                SQLTask:DtsVariableName="User::v_action_7" />
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="action_8"
+                SQLTask:DtsVariableName="User::v_action_8" />
+              <SQLTask:ParameterBinding
+                SQLTask:ParameterName="0"
+                SQLTask:DtsVariableName="User::v_child_project_process_id"
+                SQLTask:ParameterDirection="Input"
+                SQLTask:DataType="3"
+                SQLTask:ParameterSize="-1" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Get load status code"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{749bd759-87f1-4655-83b3-1ffe67585658}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Get load status code"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_6_paremeter_value"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="result_value"
+                SQLTask:DtsVariableName="User::v_child_status_code_id" />
+            </SQLTask:SqlTaskData>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Load final table"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{614aea18-b514-4d69-9a18-cc646ea83af6}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load final table"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_4_paremeter_value" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Publish Final Reconciliation Results"
           DTS:CreationName="Microsoft.Pipeline"
           DTS:Description="Tarea Flujo de datos"
-          DTS:DTSID="{222aebc2-645e-48a6-aa9b-aa3df1343253}"
+          DTS:Disabled="True"
+          DTS:DTSID="{37de6946-cfb7-4520-be92-8a9ef42ec8e5}"
           DTS:ExecutableType="Microsoft.Pipeline"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Extract SalesOrderHeader join SalesOrderDetail to Staging"
+          DTS:ObjectName="Publish Final Reconciliation Results"
           DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
           <DTS:Variables />
           <DTS:ObjectData>
             <pipeline
-              version="1" />
+              version="1">
+              <components>
+                <component
+                  refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+                  description="Destino de OLE DB"
+                  name="Destino de OLE DB"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowset">[observability].[reconciliation_results]</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="Comando SQL para ejecutar."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Connections[OleDbConnection]"
+                      connectionManagerID="{248B846D-257D-4960-B092-2545A0A85847}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DataOps_Control]"
+                      description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                      errorOrTruncationOperation="Insertar"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="Entrada de destino de OLE DB">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[metric_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="metric_name"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_name]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_name]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[reconciliation_key]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="reconciliation_key"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_key]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_key]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[reconciliation_side]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="reconciliation_side"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_side]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_side]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[metric_value_decimal]"
+                          cachedDataType="numeric"
+                          cachedName="metric_value_decimal"
+                          cachedPrecision="20"
+                          cachedScale="4"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_decimal]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_decimal]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[metric_value_bigint]"
+                          cachedDataType="i8"
+                          cachedName="metric_value_bigint"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_bigint]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_bigint]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[execution_step_id]"
+                          cachedDataType="i4"
+                          cachedName="execution_step_id"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[execution_step_id]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[execution_step_id]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[id]"
+                          dataType="i4"
+                          name="id" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="metric_name" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="reconciliation_key" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="reconciliation_side" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_decimal]"
+                          dataType="numeric"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_bigint]"
+                          dataType="i8"
+                          name="metric_value_bigint" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[execution_step_id]"
+                          dataType="i8"
+                          name="execution_step_id" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[created_at]"
+                          dataType="wstr"
+                          length="27"
+                          name="created_at" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Salida de error de destino de OLE DB"
+                      synchronousInputId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+                  description="Origen de OLE DB"
+                  name="Origen de OLE DB"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="Comando SQL para ejecutar."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT * FROM [control].[ufn_get_AddressType_reconciliation_results]('SOURCE');</property>
+                    <property
+                      dataType="System.String"
+                      description="Variable que contiene el comando SQL para ejecutar."
+                      name="SqlCommandVariable">User::v_action_5_paremeter_value</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.String"
+                      description="Asignaciones entre los parámetros del comando SQL y las variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Connections[OleDbConnection]"
+                      connectionManagerID="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[Sales_Operational]"
+                      description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                      name="Salida de origen de OLE DB">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_name]"
+                          length="50"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_name]"
+                          name="metric_name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_key]"
+                          length="100"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_key]"
+                          name="reconciliation_key"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_side]"
+                          length="20"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_side]"
+                          name="reconciliation_side"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_decimal]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_decimal]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_decimal]"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_bigint]"
+                          dataType="i8"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_bigint]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_bigint]"
+                          name="metric_value_bigint"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[execution_step_id]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[execution_step_id]"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[execution_step_id]"
+                          name="execution_step_id"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="metric_name" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="reconciliation_key" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="reconciliation_side" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_decimal]"
+                          dataType="numeric"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_bigint]"
+                          dataType="i8"
+                          name="metric_value_bigint" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[execution_step_id]"
+                          dataType="i4"
+                          name="execution_step_id" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                      isErrorOut="true"
+                      name="Salida de error de origen de OLE DB">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_name]"
+                          name="metric_name" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_key]"
+                          name="reconciliation_key" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_side]"
+                          name="reconciliation_side" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[execution_step_id]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[execution_step_id]"
+                          name="execution_step_id" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_decimal]"
+                          dataType="numeric"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_decimal]"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_bigint]"
+                          dataType="i8"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_bigint]"
+                          name="metric_value_bigint" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Foreach Loop Container\Publish Final Reconciliation Results.Paths[Salida de origen de OLE DB]"
+                  endId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  name="Salida de origen de OLE DB"
+                  startId="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+              </paths>
+            </pipeline>
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Load Sales to Prod"
+          DTS:refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:Disabled="True"
+          DTS:DTSID="{8fae3a9f-7c5b-4cd9-84c5-412fd3d7a32a}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Publish Initial Reconciliation Results"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1">
+              <components>
+                <component
+                  refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB"
+                  componentClassID="Microsoft.OLEDBDestination"
+                  contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+                  description="Destino de OLE DB"
+                  name="Destino de OLE DB"
+                  usesDispositions="true"
+                  version="4">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowset">[observability].[reconciliation_results]</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="Comando SQL para ejecutar."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadKeepIdentity">false</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadKeepNulls">false</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                      name="FastLoadMaxInsertCommitSize">2147483647</property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Connections[OleDbConnection]"
+                      connectionManagerID="{248B846D-257D-4960-B092-2545A0A85847}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[DataOps_Control]"
+                      description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                      name="OleDbConnection" />
+                  </connections>
+                  <inputs>
+                    <input
+                      refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                      errorOrTruncationOperation="Insertar"
+                      errorRowDisposition="FailComponent"
+                      hasSideEffects="true"
+                      name="Entrada de destino de OLE DB">
+                      <inputColumns>
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[metric_name]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="50"
+                          cachedName="metric_name"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_name]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_name]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[reconciliation_key]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="100"
+                          cachedName="reconciliation_key"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_key]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_key]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[reconciliation_side]"
+                          cachedCodepage="1252"
+                          cachedDataType="str"
+                          cachedLength="20"
+                          cachedName="reconciliation_side"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_side]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_side]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[metric_value_decimal]"
+                          cachedDataType="numeric"
+                          cachedName="metric_value_decimal"
+                          cachedPrecision="20"
+                          cachedScale="4"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_decimal]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_decimal]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[metric_value_bigint]"
+                          cachedDataType="i8"
+                          cachedName="metric_value_bigint"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_bigint]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_bigint]" />
+                        <inputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].Columns[execution_step_id]"
+                          cachedDataType="i4"
+                          cachedName="execution_step_id"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[execution_step_id]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[execution_step_id]" />
+                      </inputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[id]"
+                          dataType="i4"
+                          name="id" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="metric_name" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="reconciliation_key" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="reconciliation_side" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_decimal]"
+                          dataType="numeric"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[metric_value_bigint]"
+                          dataType="i8"
+                          name="metric_value_bigint" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[execution_step_id]"
+                          dataType="i8"
+                          name="execution_step_id" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB].ExternalColumns[created_at]"
+                          dataType="wstr"
+                          length="27"
+                          name="created_at" />
+                      </externalMetadataColumns>
+                    </input>
+                  </inputs>
+                  <outputs>
+                    <output
+                      refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB]"
+                      exclusionGroup="1"
+                      isErrorOut="true"
+                      name="Salida de error de destino de OLE DB"
+                      synchronousInputId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+                <component
+                  refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB"
+                  componentClassID="Microsoft.OLEDBSource"
+                  contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+                  description="Origen de OLE DB"
+                  name="Origen de OLE DB"
+                  usesDispositions="true"
+                  version="7">
+                  <properties>
+                    <property
+                      dataType="System.Int32"
+                      description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                      name="CommandTimeout">0</property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowset"></property>
+                    <property
+                      dataType="System.String"
+                      description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                      name="OpenRowsetVariable"></property>
+                    <property
+                      dataType="System.String"
+                      description="Comando SQL para ejecutar."
+                      name="SqlCommand"
+                      UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">SELECT * FROM [control].[ufn_get_AddressType_reconciliation_results]('SOURCE');</property>
+                    <property
+                      dataType="System.String"
+                      description="Variable que contiene el comando SQL para ejecutar."
+                      name="SqlCommandVariable">User::v_action_2_paremeter_value</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                      name="DefaultCodePage">1252</property>
+                    <property
+                      dataType="System.Boolean"
+                      description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                      name="AlwaysUseDefaultCodePage">false</property>
+                    <property
+                      dataType="System.Int32"
+                      description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                      name="AccessMode"
+                      typeConverter="AccessMode">3</property>
+                    <property
+                      dataType="System.String"
+                      description="Asignaciones entre los parámetros del comando SQL y las variables."
+                      name="ParameterMapping"></property>
+                  </properties>
+                  <connections>
+                    <connection
+                      refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Connections[OleDbConnection]"
+                      connectionManagerID="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}:external"
+                      connectionManagerRefId="Project.ConnectionManagers[Sales_Operational]"
+                      description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                      name="OleDbConnection" />
+                  </connections>
+                  <outputs>
+                    <output
+                      refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                      name="Salida de origen de OLE DB">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_name]"
+                          length="50"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_name]"
+                          name="metric_name"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_key]"
+                          length="100"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_key]"
+                          name="reconciliation_key"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_side]"
+                          length="20"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[reconciliation_side]"
+                          name="reconciliation_side"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_decimal]"
+                          dataType="numeric"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_decimal]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_decimal]"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_bigint]"
+                          dataType="i8"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_bigint]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[metric_value_bigint]"
+                          name="metric_value_bigint"
+                          truncationRowDisposition="FailComponent" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[execution_step_id]"
+                          dataType="i4"
+                          errorOrTruncationOperation="Conversión"
+                          errorRowDisposition="FailComponent"
+                          externalMetadataColumnId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[execution_step_id]"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[execution_step_id]"
+                          name="execution_step_id"
+                          truncationRowDisposition="FailComponent" />
+                      </outputColumns>
+                      <externalMetadataColumns
+                        isUsed="True">
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          name="metric_name" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          name="reconciliation_key" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          name="reconciliation_side" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_decimal]"
+                          dataType="numeric"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[metric_value_bigint]"
+                          dataType="i8"
+                          name="metric_value_bigint" />
+                        <externalMetadataColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[execution_step_id]"
+                          dataType="i4"
+                          name="execution_step_id" />
+                      </externalMetadataColumns>
+                    </output>
+                    <output
+                      refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                      isErrorOut="true"
+                      name="Salida de error de origen de OLE DB">
+                      <outputColumns>
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_name]"
+                          codePage="1252"
+                          dataType="str"
+                          length="50"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_name]"
+                          name="metric_name" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_key]"
+                          codePage="1252"
+                          dataType="str"
+                          length="100"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_key]"
+                          name="reconciliation_key" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_side]"
+                          codePage="1252"
+                          dataType="str"
+                          length="20"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[reconciliation_side]"
+                          name="reconciliation_side" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[execution_step_id]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[execution_step_id]"
+                          name="execution_step_id" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_decimal]"
+                          dataType="numeric"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_decimal]"
+                          name="metric_value_decimal"
+                          precision="20"
+                          scale="4" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_bigint]"
+                          dataType="i8"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[metric_value_bigint]"
+                          name="metric_value_bigint" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                          name="ErrorCode"
+                          specialFlags="1" />
+                        <outputColumn
+                          refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                          dataType="i4"
+                          lineageId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                          name="ErrorColumn"
+                          specialFlags="2" />
+                      </outputColumns>
+                      <externalMetadataColumns />
+                    </output>
+                  </outputs>
+                </component>
+              </components>
+              <paths>
+                <path
+                  refId="Package\Foreach Loop Container\Publish Initial Reconciliation Results.Paths[Salida de origen de OLE DB]"
+                  endId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB.Inputs[Entrada de destino de OLE DB]"
+                  name="Salida de origen de OLE DB"
+                  startId="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+              </paths>
+            </pipeline>
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Start clean up staging and work tables"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{03076d34-9a9f-4d88-9718-fe2d44590d08}"
+          DTS:DTSID="{cfe7364f-49ab-4850-9a46-f4b66da7f3f5}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Load Sales to Prod"
+          DTS:ObjectName="Start clean up staging and work tables"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_8" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\Foreach Loop Container\Start execution step"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{6630eac8-f696-4c43-ac19-25d86f79bb2d}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Start execution step"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
               SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_1_paremeter_value"
+              SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+              <SQLTask:ResultBinding
+                SQLTask:ResultName="execution_step_id"
+                SQLTask:DtsVariableName="User::v_child_execution_step_id" />
+            </SQLTask:SqlTaskData>
           </DTS:ObjectData>
         </DTS:Executable>
         <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Register Initial Count"
+          DTS:refId="Package\Foreach Loop Container\Validate work data"
           DTS:CreationName="Microsoft.ExecuteSQLTask"
           DTS:Description="Execute SQL Task"
-          DTS:DTSID="{aac52d46-29ed-422d-8363-be158a1a2465}"
+          DTS:DTSID="{718c75c3-175d-4b04-815c-f0be15f5ba60}"
           DTS:ExecutableType="Microsoft.ExecuteSQLTask"
           DTS:LocaleID="-1"
-          DTS:ObjectName="Register Initial Count"
+          DTS:ObjectName="Validate work data"
           DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
           DTS:ThreadHint="0">
           <DTS:Variables />
           <DTS:ObjectData>
             <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-          </DTS:ObjectData>
-        </DTS:Executable>
-        <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Register Sales Load End"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{5a6bc4ac-3c4a-4b1e-bf73-bbb9d8f93bb9}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Register Sales Load End"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-          </DTS:ObjectData>
-        </DTS:Executable>
-        <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Register Sales Load Start"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{e0222a53-e03b-4a8b-8001-fabe6cd66d4c}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Register Sales Load Start"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-          </DTS:ObjectData>
-        </DTS:Executable>
-        <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Update Sales Load Status"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{2e8fee66-2289-43bd-8454-2b7086e546ee}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Update Sales Load Status"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
-          </DTS:ObjectData>
-        </DTS:Executable>
-        <DTS:Executable
-          DTS:refId="Package\For Loop Load Sales\Validate and Load Sales to Work"
-          DTS:CreationName="Microsoft.ExecuteSQLTask"
-          DTS:Description="Execute SQL Task"
-          DTS:DTSID="{0037ed34-81ef-4ea8-9524-085cfe3ef674}"
-          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
-          DTS:LocaleID="-1"
-          DTS:ObjectName="Validate and Load Sales to Work"
-          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
-          DTS:ThreadHint="0">
-          <DTS:Variables />
-          <DTS:ObjectData>
-            <SQLTask:SqlTaskData
-              SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+              SQLTask:Connection="{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}"
+              SQLTask:SqlStmtSourceType="Variable"
+              SQLTask:SqlStatementSource="User::v_action_3_paremeter_value" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
           </DTS:ObjectData>
         </DTS:Executable>
       </DTS:Executables>
       <DTS:PrecedenceConstraints>
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\For Loop Load Sales.PrecedenceConstraints[Constraint]"
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
           DTS:CreationName=""
-          DTS:DTSID="{4C6A103A-70D5-444A-94EA-9F029CBAD1BE}"
-          DTS:From="Package\For Loop Load Sales\Register Sales Load Start"
+          DTS:DTSID="{3D776C37-D78B-4985-AC51-8C20A3CB8BA4}"
+          DTS:From="Package\Foreach Loop Container\Get actions"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint"
-          DTS:To="Package\For Loop Load Sales\Extract SalesOrderHeader join SalesOrderDetail to Staging" />
+          DTS:To="Package\Foreach Loop Container\Start execution step" />
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 1]"
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
           DTS:CreationName=""
-          DTS:DTSID="{DB73DB0C-1371-4B5C-A46C-5795F48E4EFB}"
-          DTS:From="Package\For Loop Load Sales\Extract SalesOrderHeader join SalesOrderDetail to Staging"
+          DTS:DTSID="{E3D5F729-4C8F-4F4D-9919-BC5D741F74C3}"
+          DTS:From="Package\Foreach Loop Container\Start execution step"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 1"
-          DTS:To="Package\For Loop Load Sales\Register Initial Count" />
+          DTS:To="Package\Foreach Loop Container\Start clean up staging and work tables" />
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 2]"
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
           DTS:CreationName=""
-          DTS:DTSID="{B3D039DA-E7AA-4E87-B25E-EBEA77239354}"
-          DTS:From="Package\For Loop Load Sales\Register Initial Count"
+          DTS:DTSID="{C40BF33D-DF4F-4431-97D4-92C4698646A8}"
+          DTS:From="Package\Foreach Loop Container\Start clean up staging and work tables"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 2"
-          DTS:To="Package\For Loop Load Sales\Validate and Load Sales to Work" />
+          DTS:To="Package\Foreach Loop Container\Publish Initial Reconciliation Results" />
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 3]"
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
           DTS:CreationName=""
-          DTS:DTSID="{E3B4F5B5-B409-48BA-9BE7-E7E05CE1A741}"
-          DTS:From="Package\For Loop Load Sales\Validate and Load Sales to Work"
+          DTS:DTSID="{0E9499AD-642F-4A0F-AF84-499E59904D9A}"
+          DTS:From="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 3"
-          DTS:To="Package\For Loop Load Sales\Load Sales to Prod" />
+          DTS:To="Package\Foreach Loop Container\Validate work data" />
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 4]"
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 4]"
           DTS:CreationName=""
-          DTS:DTSID="{53D89F6C-3AA0-4E1F-905F-0F01E946D57B}"
-          DTS:From="Package\For Loop Load Sales\Load Sales to Prod"
+          DTS:DTSID="{187193AC-802B-4E60-B3D8-074B5F011D86}"
+          DTS:From="Package\Foreach Loop Container\Validate work data"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 4"
-          DTS:To="Package\For Loop Load Sales\Register Sales Load End" />
+          DTS:To="Package\Foreach Loop Container\Load final table" />
         <DTS:PrecedenceConstraint
-          DTS:refId="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 5]"
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 5]"
           DTS:CreationName=""
-          DTS:DTSID="{B3CC22A4-14FD-4BAC-A5FA-6381EB396C93}"
-          DTS:From="Package\For Loop Load Sales\Register Sales Load End"
+          DTS:DTSID="{9A41F4DE-89A2-42A6-82AC-F4A667B340C7}"
+          DTS:From="Package\Foreach Loop Container\Load final table"
           DTS:LogicalAnd="True"
           DTS:ObjectName="Constraint 5"
-          DTS:To="Package\For Loop Load Sales\Update Sales Load Status" />
+          DTS:To="Package\Foreach Loop Container\Publish Final Reconciliation Results" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
+          DTS:CreationName=""
+          DTS:DTSID="{30876720-164D-4147-A611-34EB35AD02CD}"
+          DTS:From="Package\Foreach Loop Container\Get load status code"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 6"
+          DTS:To="Package\Foreach Loop Container\End execution step" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 7]"
+          DTS:CreationName=""
+          DTS:DTSID="{2DC46C43-15E8-4788-A18B-68C6E9FE3DB8}"
+          DTS:From="Package\Foreach Loop Container\End execution step"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 7"
+          DTS:To="Package\Foreach Loop Container\End clean up staging and work tables" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 8]"
+          DTS:CreationName=""
+          DTS:DTSID="{902C909E-C778-44F5-B2E2-A9DD683E3430}"
+          DTS:From="Package\Foreach Loop Container\Publish Final Reconciliation Results"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 8"
+          DTS:To="Package\Foreach Loop Container\Get load status code" />
       </DTS:PrecedenceConstraints>
+      <DTS:ForEachVariableMappings>
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{5012F4DB-6B1B-4F32-812B-ECA13E88BB78}"
+          DTS:ObjectName="{5012F4DB-6B1B-4F32-812B-ECA13E88BB78}"
+          DTS:ValueIndex="0"
+          DTS:VariableName="User::v_batch_start_value" />
+        <DTS:ForEachVariableMapping
+          DTS:CreationName=""
+          DTS:DTSID="{44522E61-BD92-4E53-A241-8C7CB95A32BF}"
+          DTS:ObjectName="{44522E61-BD92-4E53-A241-8C7CB95A32BF}"
+          DTS:ValueIndex="1"
+          DTS:VariableName="User::v_batch_end_value" />
+      </DTS:ForEachVariableMappings>
     </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Get Sales Periods"
@@ -291,7 +1412,46 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="SELECT&#xA;&#x9;[batch_column_type],&#xA;&#x9;[batch_value],&#xA;&#x9;[batch_start_value],&#xA;&#x9;[batch_end_value]&#xA;FROM [metadata].[ufn_list_project_process_table_batches](?);"
+          SQLTask:ResultType="ResultSetType_Rowset" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="0"
+            SQLTask:DtsVariableName="User::v_list_batches" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_child_project_process_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get Transactional Load Configuration"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{5d862876-4569-4882-a474-57a79802099d}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Transactional Load Configuration"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
+          SQLTask:SqlStatementSource="SELECT TOP 1&#xA;&#x9;[child_project_process_id]&#xA;FROM [metadata].[ufn_list_project_process_children](?)&#xA;ORDER BY [child_project_process_id];"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="child_project_process_id"
+            SQLTask:DtsVariableName="User::v_child_project_process_id" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::v_parent_project_process_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
@@ -308,7 +1468,24 @@
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
           SQLTask:Connection="{248B846D-257D-4960-B092-2545A0A85847}"
-          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          SQLTask:SqlStatementSource="EXEC [runtime].[usp_start_execution_step] ?, ?"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="execution_step_id"
+            SQLTask:DtsVariableName="User::v_child_execution_step_id" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="$Package::p_execution_run_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="1"
+            SQLTask:DtsVariableName="User::v_parent_project_process_id"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
       </DTS:ObjectData>
     </DTS:Executable>
   </DTS:Executables>
@@ -316,13 +1493,19 @@
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint]"
       DTS:CreationName=""
-      DTS:DTSID="{570A24D7-CCE5-49E6-A235-13B8A65F70BB}"
-      DTS:EvalOp="3"
-      DTS:Expression="@[User::SalesOrderHeaderToStart] == True"
+      DTS:DTSID="{33A38920-3F5F-463A-A9D3-3A1581A153CE}"
       DTS:From="Package\Get Sales Periods"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint"
-      DTS:To="Package\For Loop Load Sales" />
+      DTS:To="Package\Foreach Loop Container" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{5BCE85B4-D795-4099-96A2-9E9F92D5D2EC}"
+      DTS:From="Package\Get Transactional Load Configuration"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Get Sales Periods" />
     <DTS:PrecedenceConstraint
       DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
       DTS:CreationName=""
@@ -330,39 +1513,7 @@
       DTS:From="Package\Start Transactional Data Subprocess"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 2"
-      DTS:To="Package\Confirm Master Data Load completed successfully" />
-    <DTS:PrecedenceConstraint
-      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
-      DTS:CreationName=""
-      DTS:DTSID="{C6F037CF-3844-4417-B5E3-366FCC2216FE}"
-      DTS:From="Package\Clean Up Transactional Staging and Work Tables - Start"
-      DTS:LogicalAnd="True"
-      DTS:ObjectName="Constraint 3"
-      DTS:To="Package\Get Sales Periods" />
-    <DTS:PrecedenceConstraint
-      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
-      DTS:CreationName=""
-      DTS:DTSID="{B833CA2C-77B2-485C-AADF-A545538632B7}"
-      DTS:From="Package\Confirm Master Data Load completed successfully"
-      DTS:LogicalAnd="True"
-      DTS:ObjectName="Constraint 4"
-      DTS:To="Package\Clean Up Transactional Staging and Work Tables - Start" />
-    <DTS:PrecedenceConstraint
-      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
-      DTS:CreationName=""
-      DTS:DTSID="{60070E2B-44D9-4D6F-8DF8-2A6D0E2AD495}"
-      DTS:From="Package\Clean Up Transactional Staging and Work Tables - End"
-      DTS:LogicalAnd="True"
-      DTS:ObjectName="Constraint 5"
-      DTS:To="Package\End Transactional Data Subprocess" />
-    <DTS:PrecedenceConstraint
-      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
-      DTS:CreationName=""
-      DTS:DTSID="{8E458B32-A776-492A-8544-6C536DB3AA59}"
-      DTS:From="Package\For Loop Load Sales"
-      DTS:LogicalAnd="True"
-      DTS:ObjectName="Constraint 6"
-      DTS:To="Package\Clean Up Transactional Staging and Work Tables - End" />
+      DTS:To="Package\Get Transactional Load Configuration" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -375,190 +1526,7 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
-        <NodeLayout
-          Size="333.6,41.6"
-          Id="Package\Clean Up Transactional Staging and Work Tables - End"
-          TopLeft="223.181805987702,1092.66060360774" />
-        <NodeLayout
-          Size="337.6,41.6"
-          Id="Package\Clean Up Transactional Staging and Work Tables - Start"
-          TopLeft="228.106048142895,193.581819728486" />
-        <NodeLayout
-          Size="309.6,41.6"
-          Id="Package\Confirm Master Data Load completed successfully"
-          TopLeft="244.772713898935,117.539398211771" />
-        <NodeLayout
-          Size="244.8,41.6"
-          Id="Package\End Transactional Data Subprocess"
-          TopLeft="274.015136543625,1177.86060308944" />
-        <NodeLayout
-          Size="351.2,41.6"
-          Id="Package\For Loop Load Sales\Extract SalesOrderHeader join SalesOrderDetail to Staging"
-          TopLeft="31.8015205386986,108.902018846928" />
-        <NodeLayout
-          Size="166.4,41.6"
-          Id="Package\For Loop Load Sales\Load Sales to Prod"
-          TopLeft="127.560083265992,367.778787390077" />
-        <NodeLayout
-          Size="175.2,41.6"
-          Id="Package\For Loop Load Sales\Register Initial Count"
-          TopLeft="121.561616644524,195.621210163087" />
-        <NodeLayout
-          Size="192.8,41.6"
-          Id="Package\For Loop Load Sales\Register Sales Load End"
-          TopLeft="115.615639474163,447.078786838635" />
-        <NodeLayout
-          Size="196.8,41.6"
-          Id="Package\For Loop Load Sales\Register Sales Load Start"
-          TopLeft="101.512104891211,24.8818180470393" />
-        <NodeLayout
-          Size="199.2,41.6"
-          Id="Package\For Loop Load Sales\Update Sales Load Status"
-          TopLeft="110.893417509952,530.725250903432" />
-        <NodeLayout
-          Size="229.6,41.6"
-          Id="Package\For Loop Load Sales\Validate and Load Sales to Work"
-          TopLeft="92.2181839043443,278.624239888922" />
-        <EdgeLayout
-          Id="Package\For Loop Load Sales.PrecedenceConstraints[Constraint]"
-          TopLeft="203.656812714955,66.4818180470393">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,42.4202007998887"
-              Start="0,0"
-              End="0,34.9202007998887">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,34.9202007998887" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 1]"
-          TopLeft="208.281568591611,150.502018846928">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,45.1191913161589"
-              Start="0,0"
-              End="0,37.6191913161589">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,37.6191913161589" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 2]"
-          TopLeft="208.089900274434,237.221210163087">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,41.403029725835"
-              Start="0,0"
-              End="0,33.903029725835">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,33.903029725835" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 3]"
-          TopLeft="208.889133585168,320.224239888922">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,47.5545475011551"
-              Start="0,0"
-              End="0,40.0545475011551">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,40.0545475011551" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 4]"
-          TopLeft="211.387861370078,409.378787390077">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,37.6999994485581"
-              Start="0,0"
-              End="0,30.1999994485581">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,30.1999994485581" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package\For Loop Load Sales.PrecedenceConstraints[Constraint 5]"
-          TopLeft="211.254528492058,488.678786838635">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,42.0464640647967"
-              Start="0,0"
-              End="0,34.5464640647967">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,34.5464640647967" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="420.8,635.2"
-          Size="420.8,678.4"
-          Id="Package\For Loop Load Sales"
-          TopLeft="180.909081024654,365.951512667422" />
+        Capacity="32" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
           Size="162.4,41.6"
           Id="Package\Get Sales Periods"
@@ -566,34 +1534,14 @@
         <NodeLayout
           Size="248,41.6"
           Id="Package\Start Transactional Data Subprocess"
-          TopLeft="273.560591113914,36.95757821537" />
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="393.299986477196,311.666664849345">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,54.2848478180769"
-              Start="0,0"
-              End="0,46.7848478180769">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,46.7848478180769" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <mssgm:EdgeLabel
-              BoundingBox="-8,15.3924239090385,16,16"
-              RelativePosition="Any" />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
+          TopLeft="268.560591387102,105.424244405928" />
+        <NodeLayout
+          Size="251.2,41.6"
+          Id="Package\Get Transactional Load Configuration"
+          TopLeft="269.772712532995,186.006064402329" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="398.566652506424,78.55757821537">
+          TopLeft="393.966651960049,147.024244405928">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
@@ -614,19 +1562,235 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 3]"
-          TopLeft="396.098470036316,235.181819728486">
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="395.331802231367,227.606064402329">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.8848451208591"
+              EndConnector="0,42.460600447016"
               Start="0,0"
-              End="0,27.3848451208591">
+              End="0,34.960600447016">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,27.3848451208591" />
+                    End="0,34.960600447016" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="131.2,41.6"
+          Id="Package\Foreach Loop Container\Get actions"
+          TopLeft="104.13331566718,15.9999989151955" />
+        <NodeLayout
+          Size="170.4,41.6"
+          Id="Package\Foreach Loop Container\Start execution step"
+          TopLeft="91.6333163501496,97.4666650153532" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint]"
+          TopLeft="173.283316008665,57.5999989151955">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.8666661001577"
+              Start="0,0"
+              End="0,32.3666661001577">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,32.3666661001577" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="254.4,41.6"
+          Id="Package\Foreach Loop Container\Start clean up staging and work tables"
+          TopLeft="45.1055411145373,177.622220291672" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 1]"
+          TopLeft="174.569428732343,139.066665015353">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.5555552763186"
+              Start="0,0"
+              End="0,31.0555552763186">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0555552763186" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="244.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
+          TopLeft="43.992756523697,262.257573867112" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
+          TopLeft="169.349148819117,219.222220291672">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.0353535754399"
+              Start="0,0"
+              End="0,35.5353535754399">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.5353535754399" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="164,41.6"
+          Id="Package\Foreach Loop Container\Validate work data"
+          TopLeft="84.3363690380343,344.425469269882" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 3]"
+          TopLeft="166.364562780866,303.857573867112">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,40.5678954027701"
+              Start="0,0"
+              End="0,33.0678954027701">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.0678954027701" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="148.8,41.6"
+          Id="Package\Foreach Loop Container\Load final table"
+          TopLeft="92.6101781097834,419.85173137164" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 4]"
+          TopLeft="166.673273573909,386.025469269882">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33.8262621017579"
+              Start="0,0"
+              End="0,26.3262621017579">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.3262621017579" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="173.6,41.6"
+          Id="Package\Foreach Loop Container\Get load status code"
+          TopLeft="78.7474443794749,582.228210670805" />
+        <NodeLayout
+          Size="166.4,41.6"
+          Id="Package\Foreach Loop Container\End execution step"
+          TopLeft="82.9482822631431,659.12666805239" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 6]"
+          TopLeft="165.847863321309,623.828210670805">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,35.2984573815853"
+              Start="0,0"
+              End="0,27.7984573815853">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.7984573815853" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="250.4,41.6"
+          Id="Package\Foreach Loop Container\End clean up staging and work tables"
+          TopLeft="47.0608483947891,743.365009453681" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 7]"
+          TopLeft="169.204565328966,700.72666805239">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.6383414012903"
+              Start="0,0"
+              End="0,35.1383414012903">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.1383414012903" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="243.2,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results"
+          TopLeft="42.991674327312,500.154617522625" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 5]"
+          TopLeft="165.800926218548,461.45173137164">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.7028861509851"
+              Start="0,0"
+              End="0,31.2028861509851">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.2028861509851" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -636,19 +1800,19 @@
           </EdgeLayout.Labels>
         </EdgeLayout>
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 4]"
-          TopLeft="398.239381020915,159.139398211771">
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 8]"
+          TopLeft="165.069559353393,541.754617522625">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,34.4424215167155"
+              EndConnector="0,40.4735931481803"
               Start="0,0"
-              End="0,26.9424215167155">
+              End="0,32.9735931481803">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,26.9424215167155" />
+                    End="0,32.9735931481803" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -657,42 +1821,27 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="342.4,840"
+          Size="342.4,883.2"
+          Id="Package\Foreach Loop Container"
+          TopLeft="219.166654691929,356.27878540127" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 5]"
-          TopLeft="393.198471265664,1134.26060360774">
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="392.828773310833,311.666664849345">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,43.5999994817"
+              EndConnector="0,44.6121205519248"
               Start="0,0"
-              End="0,36.0999994817">
+              End="0,37.1121205519248">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,36.0999994817" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 6]"
-          TopLeft="390.645443506178,1044.35151266742">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,48.3090909403181"
-              Start="0,0"
-              End="0,40.8090909403181">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,40.8090909403181" />
+                    End="0,37.1121205519248" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -704,5 +1853,83 @@
       </GraphLayout>
     </LayoutInfo>
   </Package>
+  <TaskHost
+    design-time-name="Package\Foreach Loop Container\Publish Initial Reconciliation Results">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Destino de OLE DB"
+          TopLeft="639.999965031943,190.666665340794" />
+        <NodeLayout
+          Size="164.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results\Origen de OLE DB"
+          TopLeft="637.499965168537,85.7999994033575" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results.Paths[Salida de origen de OLE DB]"
+          TopLeft="722.14996510024,127.399999403357">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,63.2666659374367"
+              Start="0,0"
+              End="0,55.7666659374367">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,55.7666659374367" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <TaskHost
+    design-time-name="Package\Foreach Loop Container\Publish Final Reconciliation Results">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Destino de OLE DB"
+          TopLeft="639.999965031943,190.666665340794" />
+        <NodeLayout
+          Size="164.8,41.6"
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results\Origen de OLE DB"
+          TopLeft="637.499965168537,85.7999994033575" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Publish Final Reconciliation Results.Paths[Salida de origen de OLE DB]"
+          TopLeft="722.14996510024,127.399999403357">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,63.2666659374367"
+              Start="0,0"
+              End="0,55.7666659374367">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,55.7666659374367" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
 </Objects>]]></DTS:DesignTimeProperties>
 </DTS:Executable>

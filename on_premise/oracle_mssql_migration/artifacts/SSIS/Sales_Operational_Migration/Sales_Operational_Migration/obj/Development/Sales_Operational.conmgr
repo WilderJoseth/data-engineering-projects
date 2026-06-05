@@ -18,7 +18,7 @@
       DTS:ConnectionString="Data Source=LocalHost;User ID=login_sales_operational_etl;Initial Catalog=Sales_Operational;Provider=SQLOLEDB.1;Application Name=SSIS-Sales_Operational_Migration-{4C9DBAC2-1D8F-4804-B2A3-774DD9C54F50}LocalHost.Sales_Operational.login_sales_operational_etl;Auto Translate=False;">
       <DTS:Password
         DTS:Name="Password"
-        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAAAK9XeQkefLkFq9UA3SkqRn56wR1vwzUDhtrlWoucqEkgAAAAAOgAAAAAIAACAAAADJk+AiFkkekdiNIzjspyHCTkc3S4XFektahQVBjgS0QJAAAABbXXVwWVWs+WR/1tJw9RSkbt4MvjKptkEyRLx8TrIhjMnz3lvbhTaRGLb2bMxrCckY1UneNw9WZTZPNXEfjkRIE4U+/1Bup8EMrkQbKyr1BuXyPDQpmXPgtdiv5f8YoCE9SItG7wQ3+gAVwnT4697ZnfXDmLcAWHCz/UBpKdbpNpH+ftl6D9/247XIov8SmBFAAAAADCyxw/y3RINeSUNCc4RxnCYT9nO/h/QAz7/ZqL7qR25PngPde7fyDlpBoeMAj+1p7DYHmYfo/5SpLXUdnN+uEw==</DTS:Password>
+        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAAD7mkDgVPn9WhhdUNqR6uxuIez3pQ4+rxf8eEaObhcnzwAAAAAOgAAAAAIAACAAAACPrKO7AFV2tVb0oQwFMS1FvT+KBK20jezmCwWV99UgN5AAAAD8Ri+LoOCZ8um5R3wDIslGGRXckei31jfkkncSbEQaBrYaicoVkil7xAWaNc6FLcSDNyeRdKAGtHWhoHZOZxsjwcwlIDG3I5qo3s29vg0V0c/q3CBXowLYkvw3zs6rcAlfPHGaLdLfNwCzaoB1VWGvjj6CLdfhiW62TtfvHHJYGn3T0cSymW8Vp7geGUQv6lVAAAAAq1iyADslBXQNYwdBumPcNkpjvju6lYBsynbR90u7qf/LEAAC2v/DgElRQPkMyykw5lCvQKVU25qNzJec9FrsYw==</DTS:Password>
     </DTS:ConnectionManager>
   </DTS:ObjectData>
 </DTS:ConnectionManager>

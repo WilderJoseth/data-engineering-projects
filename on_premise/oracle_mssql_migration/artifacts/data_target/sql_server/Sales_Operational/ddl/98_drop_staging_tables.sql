@@ -31,6 +31,8 @@ DROP TABLE IF EXISTS [staging].[SalesOrderHeader];
 
 DROP TABLE IF EXISTS [staging].[Customer];
 DROP TABLE IF EXISTS [staging].[SalesPerson];
+DROP TABLE IF EXISTS [staging].[Employee];
+DROP TABLE IF EXISTS [staging].[Person];
 DROP TABLE IF EXISTS [staging].[Product];
 DROP TABLE IF EXISTS [staging].[Address];
 DROP TABLE IF EXISTS [staging].[CreditCard];

@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_OPERATIONAL_MIGRATION"
   DTS:PackageType="5"
-  DTS:VersionBuild="40"
-  DTS:VersionGUID="{6924A1AA-246A-413D-B4C1-BC364190AEE3}">
+  DTS:VersionBuild="41"
+  DTS:VersionGUID="{61C76A25-BA65-4E33-9BD6-2A0FFAC465E8}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:Variables>
@@ -64,6 +64,7 @@
       DTS:refId="Package\Load Master Data"
       DTS:CreationName="Microsoft.ExecutePackageTask"
       DTS:Description="Tarea Ejecutar paquete"
+      DTS:Disabled="True"
       DTS:DTSID="{66c6115e-8674-4273-afcd-e7cd4d7f5618}"
       DTS:ExecutableType="Microsoft.ExecutePackageTask"
       DTS:LocaleID="-1"
@@ -107,7 +108,6 @@
       DTS:refId="Package\Load Transactional Data"
       DTS:CreationName="Microsoft.ExecutePackageTask"
       DTS:Description="Tarea Ejecutar paquete"
-      DTS:Disabled="True"
       DTS:DTSID="{66bc6986-b9f2-4650-b5d1-68b9f216f1cc}"
       DTS:ExecutableType="Microsoft.ExecutePackageTask"
       DTS:LocaleID="-1"
@@ -118,6 +118,10 @@
         <ExecutePackageTask>
           <UseProjectReference>True</UseProjectReference>
           <PackageName>PKG_TRANSACTIONAL_DATA.dtsx</PackageName>
+          <ParameterAssignment>
+            <ParameterName>p_execution_run_id</ParameterName>
+            <BindedVariableOrParameterName>User::v_execution_run_id</BindedVariableOrParameterName>
+          </ParameterAssignment>
         </ExecutePackageTask>
       </DTS:ObjectData>
     </DTS:Executable>
