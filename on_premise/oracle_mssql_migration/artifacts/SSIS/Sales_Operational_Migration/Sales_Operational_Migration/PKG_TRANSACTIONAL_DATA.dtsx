@@ -11,8 +11,8 @@
   DTS:LocaleID="10250"
   DTS:ObjectName="PKG_TRANSACTIONAL_DATA"
   DTS:PackageType="5"
-  DTS:VersionBuild="95"
-  DTS:VersionGUID="{BD031B94-88F5-475A-9D21-43990ED82FEB}">
+  DTS:VersionBuild="96"
+  DTS:VersionGUID="{9E080AC3-89A3-40C3-AFA8-4E4FAF76B743}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:PackageParameters>
@@ -1891,6 +1891,43 @@ AND ORDERDATE &lt; TO_DATE(2011-05-31 23:59:59, 'YYYY-MM-DD HH24:MI:SS');</DTS:V
           Id="Package\Foreach Loop Container\Publish Initial Reconciliation Results"
           TopLeft="55.1038670277237,574.257571697503" />
         <NodeLayout
+          Size="192.8,41.6"
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderDetail"
+          TopLeft="34.0222059827168,120.207405733326" />
+        <NodeLayout
+          Size="200,41.6"
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader"
+          TopLeft="35.8740577333878,25.5407397496845" />
+        <EdgeLayout
+          Id="Package\Foreach Loop Container\Sequence Container.PrecedenceConstraints[Constraint]"
+          TopLeft="133.148131858052,67.1407397496845">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53.0666659836416"
+              Start="0,0"
+              End="0,45.5666659836416">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,45.5666659836416" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="263.2,218.4"
+          Size="263.2,261.6"
+          Id="Package\Foreach Loop Container\Sequence Container"
+          TopLeft="42.9629485953006,273.096294903461" />
+        <NodeLayout
           Size="254.4,41.6"
           Id="Package\Foreach Loop Container\Start clean up staging and work tables"
           TopLeft="45.1055411145373,177.622220291672" />
@@ -1938,6 +1975,28 @@ AND ORDERDATE &lt; TO_DATE(2011-05-31 23:59:59, 'YYYY-MM-DD HH24:MI:SS');</DTS:V
                   Capacity="5">
                   <mssgle:LineSegment
                     End="0,31.0555552763186" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
+          TopLeft="173.434244854919,219.222220291672">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,53.8740746117886"
+              Start="0,0"
+              End="0,46.3740746117886">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,46.3740746117886" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2070,65 +2129,6 @@ AND ORDERDATE &lt; TO_DATE(2011-05-31 23:59:59, 'YYYY-MM-DD HH24:MI:SS');</DTS:V
                   Capacity="5">
                   <mssgle:LineSegment
                     End="0,32.9735931481803" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <NodeLayout
-          Size="200,41.6"
-          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader"
-          TopLeft="35.8740577333878,25.5407397496845" />
-        <NodeLayout
-          Size="192.8,41.6"
-          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderDetail"
-          TopLeft="34.0222059827168,120.207405733326" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container\Sequence Container.PrecedenceConstraints[Constraint]"
-          TopLeft="133.148131858052,67.1407397496845">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,53.0666659836416"
-              Start="0,0"
-              End="0,45.5666659836416">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,45.5666659836416" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-        <ContainerLayout
-          HeaderHeight="43"
-          IsExpanded="True"
-          PanelSize="263.2,218.4"
-          Size="263.2,261.6"
-          Id="Package\Foreach Loop Container\Sequence Container"
-          TopLeft="42.9629485953006,273.096294903461" />
-        <EdgeLayout
-          Id="Package\Foreach Loop Container.PrecedenceConstraints[Constraint 2]"
-          TopLeft="173.434244854919,219.222220291672">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="0,53.8740746117886"
-              Start="0,0"
-              End="0,46.3740746117886">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,46.3740746117886" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2345,13 +2345,13 @@ AND ORDERDATE &lt; TO_DATE(2011-05-31 23:59:59, 'YYYY-MM-DD HH24:MI:SS');</DTS:V
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph">
         <NodeLayout
-          Size="168.8,41.6"
-          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB"
-          TopLeft="474.999992921948,250.999996259809" />
-        <NodeLayout
           Size="142.4,41.6"
           Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Origen ODBC"
           TopLeft="491.999992668629,119.999998211861" />
+        <NodeLayout
+          Size="168.8,41.6"
+          Id="Package\Foreach Loop Container\Sequence Container\Extract SalesOrderHeader\Destino de OLE DB"
+          TopLeft="474.999992921948,250.999996259809" />
       </GraphLayout>
     </LayoutInfo>
   </TaskHost>
