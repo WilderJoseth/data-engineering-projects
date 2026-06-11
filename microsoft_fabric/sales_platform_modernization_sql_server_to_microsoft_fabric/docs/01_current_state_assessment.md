@@ -6,20 +6,28 @@ Evaluate the current Sales data platform, identify modernization drivers, and ex
 
 ## Current Environment Summary
 
-The current Sales platform runs on a SQL Server 2022 on-premise instance.
+The current Sales platform contains two active databases hosted on the same on-premise SQL Server 2022 instance.
 
-It contains two main databases:
-
-| Database            | Role                        | Data Model       | Current Status                                |
-| ------------------- | --------------------------- | ---------------- | --------------------------------------------- |
-| `Sales_Operational` | Operational source of truth | Normalized model | Active and remains on-premise                 |
-| `Sales_Analytics`   | Reporting source of truth   | Star schema      | Active and provides historical reporting data |
-
-The current architecture already separates operational and analytical responsibilities.
+| Characteristic            | `Sales_Operational`                                           | `Sales_Analytics`                                                  |
+| ------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Platform                  | SQL Server 2022                                               | SQL Server 2022                                                    |
+| Hosting model             | On-premise                                                    | On-premise                                                         |
+| Current role              | Operational source of truth                                   | Reporting source of truth                                          |
+| Primary usage             | Transactional Sales operations                                | Business reporting and analysis                                    |
+| Workload type             | OLTP-style operational workload                               | Analytical/reporting workload                                      |
+| Data model                | Normalized model                                              | Star schema                                                        |
+| Current status            | Active                                                        | Active                                                             |
+| Data volume               | Millions of operational records                               | Tens of millions of historical analytical records                  |
+| Historical range          | Current and recent operational history                        | Multi-year historical reporting data                               |
+| Update frequency          | Continuously updated during business operations               | Refreshed through scheduled analytical loads                       |
+| Main growth driver        | New Sales transactions                                        | Accumulated historical facts                                       |
+| Largest data areas        | Sales orders and order details                                | Sales fact history                                                 |
+| Maintenance pattern       | Operational tables maintained in current normalized structure | Historical fact data maintained through year-based physical copies |
+| Business criticality      | Required for active Sales operations                          | Required for reporting, analysis, and decision-making              |
 
 ## What Works Well Today
 
-| Area                   | Current Strength                                                                   |
+| Aspect                 | Current Strength                                                                   |
 | ---------------------- | ---------------------------------------------------------------------------------- |
 | Operational processing | `Sales_Operational` supports on-premise transactional operations                   |
 | Reporting model        | `Sales_Analytics` provides a curated star schema for business reporting            |
@@ -31,46 +39,45 @@ The current architecture already separates operational and analytical responsibi
 
 ## Current Limitations
 
-Although the current environment is reliable, it has limitations for future enterprise analytics.
+Although the current environment is reliable, its analytical capabilities are limited by the fact that the trusted reporting platform remains on-premise.
 
-| Area                       | Current Limitation                                                               | Impact                                                                           |
-| -------------------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Reporting dependency       | Reporting depends on the on-premise SQL Server analytical database               | Cloud analytics adoption remains limited                                         |
-| Workload location          | Operational and analytical databases run on the same on-premise server instance  | Analytical workloads remain tied to the operational environment                  |
-| Enterprise consumption     | Sales analytical data is mainly structured for reporting                         | Other consumers may require custom extracts                                      |
-| AI and data science access | Data science teams need governed access to curated historical and new Sales data | Additional pipelines may be created outside the main reporting platform          |
-| ETL scalability            | New departments may request new extracts or custom transformations               | Risk of duplicated ETL and inconsistent data definitions                         |
-| Historical maintenance     | Large historical tables are maintained through year-based physical copies        | Maintenance can become harder as data volume and usage increase                  |
-| Cloud integration          | Current analytical data is not stored in a cloud-native analytical format        | Fabric, OneLake, Spark, Direct Lake, and AI workloads cannot consume it natively |
-
-## Modernization Drivers
-
-The main driver is to turn Sales analytical data into a reusable cloud analytical data product.
-
-| Driver                         | Reason                                                                                                            |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------- |
-| Fabric reporting modernization | Move reporting ownership from SQL Server `Sales_Analytics` to Microsoft Fabric                                    |
-| Unified reporting source       | Combine historical reporting data from `Sales_Analytics` with new reporting data derived from `Sales_Operational` |
-| Direct Lake readiness          | Support Fabric-native Power BI consumption patterns                                                               |
-| AI and data science enablement | Provide governed access to historical and new Sales data                                                          |
-| Reusable data products         | Reduce custom data extracts for each new consumer                                                                 |
-| Open analytical storage        | Store analytical data using Delta/Parquet-based patterns                                                          |
-| Workload separation            | Keep operational processing on-premise while moving analytics to the cloud                                        |
-| Long-term maintainability      | Reduce dependency on year-based physical table copies for historical data management                              |
-| Enterprise scalability         | Prepare Sales data for broader cross-domain analytical use                                                        |
+| Aspect                        | Current Limitation                                                                                             | Impact                                                                                                            |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Cloud analytical availability | Trusted Sales reporting data exists only in the on-premise `Sales_Analytics` database                          | Cloud-native analytics, AI, and data science workloads cannot consume the trusted model directly                  |
+| Reporting platform dependency | Reporting depends on the on-premise SQL Server analytical database                                             | Reporting remains tied to SQL Server connectivity, availability, and operational constraints                      |
+| Enterprise data sharing       | Curated Sales data is available in the on-premise reporting database, but not as a governed cloud data product | New cloud consumers require additional integration work                                                           |
+| Analytical storage format     | Historical Sales data is stored in SQL Server relational structures                                            | The data is not directly available in Delta/Parquet format for Lakehouse, Spark, and Direct Lake scenarios        |
+| Historical maintenance        | Large historical reporting tables are maintained through year-based physical copies                            | Maintenance is more complex as historical volume and usage increase                                               |
+| Workload location             | Operational and analytical databases run on the same on-premise SQL Server instance                            | Analytical growth remains physically tied to the same server environment as operational processing                |
+| Future platform alignment     | The current platform is optimized for traditional SQL Server reporting                                         | It does not provide a Fabric-native foundation for future reporting, AI, data science, and cross-domain analytics |
 
 ## Risk of Doing Nothing
 
-If the current platform remains unchanged, the organization may continue to operate successfully in the short term. However, the long-term analytics model becomes harder to scale.
+If the current platform remains unchanged, the organization can continue operating successfully in the short term. However, future cloud analytics demand may be handled through isolated solutions instead of a governed Fabric-based analytical platform.
 
-| Risk                      | Description                                                                                   |
-| ------------------------- | --------------------------------------------------------------------------------------------- |
-| More duplicated ETL       | New departments may build separate extracts from `Sales_Analytics` or `Sales_Operational`     |
-| Fragmented definitions    | Different teams may calculate Sales metrics differently                                       |
-| Slower AI adoption        | Data science teams may not have direct governed access to curated Sales data                  |
-| On-premise dependency     | Reporting remains tied to the on-premise SQL Server environment                               |
-| Harder maintenance        | Historical table copies may increase operational complexity                                   |
-| Limited cloud integration | Fabric-native capabilities cannot be fully used while analytical data remains only on-premise |
+| Risk                                | Description                                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Duplicated data pipelines           | New cloud consumers may create separate extracts, replicated datasets, or custom pipelines from the on-premise Sales databases  |
+| Fragmented Sales definitions        | Different teams may calculate Sales metrics differently if they build independent datasets outside the governed reporting model |
+| Slower AI and data science adoption | Data science teams may not have direct governed access to curated Sales history in cloud-native analytical formats              |
+| Increased maintenance effort        | Historical table-copy patterns may become harder to manage as data volume, retention, and usage increase                        |
+| Delayed Fabric adoption             | Direct Lake, OneLake, Spark, and Fabric-native consumption may remain limited while trusted Sales data stays only on-premise    |
+| Higher integration backlog          | Data engineering teams may spend more time creating one-off integrations instead of publishing reusable Sales data products     |
+
+## Modernization Drivers
+
+The main driver is to evolve the trusted Sales analytical model into a governed cloud analytical data product.
+
+| Driver | Reason |
+|---|---|
+| Fabric reporting modernization | Move reporting ownership from on-premise `Sales_Analytics` to Microsoft Fabric |
+| Direct Lake readiness | Support Fabric-native Power BI consumption patterns over trusted analytical data |
+| AI and data science enablement | Provide governed access to historical and new Sales data in a cloud analytical platform |
+| Reusable data products | Publish curated Sales data for multiple consumers instead of creating one-off extracts |
+| Open analytical storage | Store analytical data using Delta/Parquet-based patterns for broader analytical use |
+| Analytical workload separation | Keep operational processing on-premise while moving analytical ownership to Fabric |
+| Long-term maintainability | Reduce dependency on year-based physical table copies for historical reporting data |
+| Enterprise analytical consumption | Prepare Sales data for reporting, AI, data science, and cross-domain analytics |
 
 ## Modernization Boundary
 
@@ -83,23 +90,7 @@ The project is not a full replacement of the Sales platform.
 | `Sales_Operational`                       | Provides new transactional data to Fabric for reporting transformation    |
 | Microsoft Fabric                          | Unified reporting source of truth                                         |
 
-## Design Implications
-
-The current-state assessment leads to several design decisions.
-
-| Assessment Finding                                   | Design Implication                                                                |
-| ---------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `Sales_Operational` remains active on-premise        | Fabric must support ongoing ingestion from operational data                       |
-| `Sales_Analytics` contains historical reporting data | Fabric must be seeded with historical reporting data                              |
-| New reporting data comes from `Sales_Operational`    | Fabric must implement reporting transformations for new data                      |
-| Fabric becomes the unified reporting source          | Historical and new data must be aligned under a consistent analytical model       |
-| Current platform already has execution control       | The Fabric solution must include equivalent or improved control capabilities      |
-| AI and data science need access                      | Data should be available in reusable analytical formats                           |
-| New consumers should avoid custom extracts           | Curated data products should be published from Fabric                             |
-| Historical data is large                             | Load strategy must support full reload, incremental load, and batch period reload |
-| Cutover must be controlled                           | A clear reporting boundary date or period must be defined                         |
-
-## Assessment Conclusion
+## Conclusion
 
 The current Sales platform is reliable and well structured for its original purpose. `Sales_Operational` supports on-premise transactional operations, while `Sales_Analytics` provides a controlled and trusted reporting model with historical analytical data.
 
@@ -107,4 +98,4 @@ The modernization is not driven by a failed platform. It is driven by the need t
 
 The recommended approach is to keep `Sales_Operational` on-premise, use `Sales_Analytics` as the historical reporting baseline, and build Microsoft Fabric as the new unified reporting source of truth for both historical and new Sales reporting data.
 
-This approach preserves the value of the current platform while moving analytical ownership to a cloud-native architecture based on Fabric, OneLake, Lakehouse/Warehouse patterns, open analytical storage, controlled execution, validation, and reconciliation.
+This approach preserves the value of the current platform while addressing the main modernization need: moving trusted Sales analytics from an on-premise reporting dependency to a governed cloud analytical platform.

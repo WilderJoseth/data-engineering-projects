@@ -8,33 +8,6 @@ The goal is to design a cloud-based architecture that supports historical migrat
 
 This project is part of a data engineering portfolio focused on cloud modernization, Microsoft Fabric, data platform design, and migration practices.
 
-## Current-State Assessment and Modernization Drivers
-
-The current Sales platform runs on an on-premise SQL Server 2022 instance and is separated into two databases:
-
-| Database            | Role                        | Current State                                                      |
-| ------------------- | --------------------------- | ------------------------------------------------------------------ |
-| `Sales_Operational` | Operational source of truth | Normalized database used to support transactional Sales operations |
-| `Sales_Analytics`   | Reporting source of truth   | Star schema used for Sales reporting and business analysis         |
-
-The current environment is not treated as a failed platform. `Sales_Operational` continues to support on-premise operations, and `Sales_Analytics` is a reliable reporting source of truth with existing execution control, metadata management, validation, and reconciliation processes.
-
-The modernization need comes from the growing demand to use Sales analytical data beyond traditional reporting.
-
-| Driver                    | Current Situation                                                         | Modernization Need                                                    |
-| ------------------------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Reporting modernization   | Sales reporting depends on the on-premise analytical database             | Move reporting ownership to Microsoft Fabric                          |
-| Enterprise data access    | Other departments may need curated Sales data                             | Provide a shared cloud analytical layer                               |
-| AI and data science       | Data science teams need governed access to historical Sales data          | Make curated Sales data available through Fabric                      |
-| ETL duplication           | New consumers may require additional extracts or custom pipelines         | Reduce duplicated ETL by publishing reusable analytical data products |
-| Data storage format       | Analytical data is stored in SQL Server structures                        | Use open analytical storage based on Delta/Parquet patterns           |
-| Power BI integration      | Reporting depends on the current SQL Server analytical layer              | Enable Fabric-native reporting patterns such as Direct Lake           |
-| Long-term maintainability | Large historical tables are maintained through year-based physical copies | Move toward a scalable lakehouse/warehouse structure                  |
-
-The target state is not a full replacement of the on-premise Sales platform. The goal is to keep `Sales_Operational` on-premise while moving the reporting source of truth from `Sales_Analytics` to Microsoft Fabric.
-
-This allows Fabric to become the cloud analytical platform for reporting, AI, data science, and future cross-domain consumption.
-
 ## Project Scope
 
 | Area            | In Scope                                  |
