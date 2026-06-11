@@ -2,8 +2,6 @@
 
 ## Document Goal
 
-Document the source data used by the Sales Platform Modernization project.
-
 This document explains the source databases, their roles, source object categories, and how each source contributes to the Fabric migration.
 
 ## Source Platform Overview
@@ -12,140 +10,99 @@ The current Sales platform runs on an on-premise SQL Server 2022 instance.
 
 The source platform contains two databases with different responsibilities:
 
-| Source Database | Current Responsibility | Data Model | Fabric Modernization Role |
+| Source Database | Current Responsibility | Data Model | Modernization Role |
 |---|---|---|---|
-| `Sales_Operational` | Supports active on-premise Sales operations | Normalized model | Long-term source for new data ingestion into Fabric |
-| `Sales_Analytics` | Provides trusted analytical reporting data | Star schema | Historical baseline used to seed Fabric reporting objects |
+| `Sales_Operational` | Supports active on-premise Sales operations | Normalized model | Provides new transactional data for future reporting periods |
+| `Sales_Analytics` | Provides trusted analytical reporting data | Star schema | Provides the historical reporting baseline before reporting cutover |
 
 ## Source Data Categories
 
-The source data is grouped by business and processing role.
+The source data is grouped by business and analytical role.
 
-| Data Category         | Description                                                      | Main Source         |
-| --------------------- | ---------------------------------------------------------------- | ------------------- |
-| Reference / Lookup    | Stable or low-change descriptive values                          | `Sales_Operational` |
-| Master / Core         | Business entities used across Sales processes                    | `Sales_Operational` |
-| Transactional         | Sales orders, sales order lines, and related transaction records | `Sales_Operational` |
-| Analytical Dimensions | Reporting-ready descriptive structures                           | `Sales_Analytics`   |
-| Analytical Facts      | Reporting-ready measurable business events                       | `Sales_Analytics`   |
+| Data Category | Description | Main Source | Expected Data Volume | Estimated Row Count |
+|---|---|---|---|---|
+| Reference / Lookup | Stable or low-change descriptive values | `Sales_Operational` | Low | 100 - 10,000 rows |
+| Master / Core | Business entities used across Sales processes | `Sales_Operational` | Medium | 10,000 - 1 million rows |
+| Transactional | Sales orders, sales order lines, and related transaction records | `Sales_Operational` | High | 1 million - 20 million rows |
+| Analytical Dimensions | Reporting-ready descriptive structures | `Sales_Analytics` | Medium | 10,000 - 2 million rows |
+| Analytical Facts | Reporting-ready measurable business events | `Sales_Analytics` | Very high | 10 million - 100 million rows |
 
-This classification helps define how each source object should be ingested, validated, reconciled, and transformed in Fabric.
+This classification helps identify which source objects are small and stable, which objects change over time, and which objects may require controlled batch processing during migration.
 
-## Sales_Operational
+## Sales_Operational Source Tables
 
-`Sales_Operational` provides normalized operational data. It remains the operational source of truth and provides new transactional data for future reporting periods.
+`Sales_Operational` provides normalized operational data and remains the operational source of truth.
 
-### Source Objects
+The database includes internal processing schemas such as `staging`, `work`, and `prod`. For Fabric ingestion, only final curated tables from the `prod` schema are expected to be used as source tables.
 
-The database contains internal processing schemas such as `staging`, `work`, and `prod`. For Fabric ingestion, the expected source objects are the final curated tables in the `prod` schema.
+| Schema | Data Role | Source Table | Expected Volume | Purpose |
+|---|---|---|---|---|
+| `prod` | Transactional | `SalesOrderHeader` | High | Stores sales order header records |
+| `prod` | Transactional | `SalesOrderDetail` | High | Stores sales order line records |
+| `prod` | Master / Core | `Customer` | Medium | Stores customer records |
+| `prod` | Master / Core | `SalesPerson` | Medium | Stores salesperson records |
+| `prod` | Master / Core | `Product` | Medium | Stores product records |
+| `prod` | Master / Core | `Address` | Medium | Stores address records |
+| `prod` | Master / Core | `CreditCard` | Medium | Stores payment-related source records |
+| `prod` | Reference / Lookup | `AddressType` | Low | Stores address type values |
+| `prod` | Reference / Lookup | `CountryRegion` | Low | Stores country or region values |
+| `prod` | Reference / Lookup | `StateProvince` | Low | Stores state or province values |
+| `prod` | Reference / Lookup | `SalesTerritory` | Low | Stores sales territory values |
+| `prod` | Reference / Lookup | `Currency` | Low | Stores currency values |
+| `prod` | Reference / Lookup | `CurrencyRate` | Medium | Stores currency exchange rate values |
+| `prod` | Reference / Lookup | `ShipMethod` | Low | Stores shipping method values |
+| `prod` | Reference / Lookup | `SpecialOffer` | Low | Stores promotion and discount values |
+| `prod` | Reference / Lookup | `ProductCategory` | Low | Stores product category values |
 
-| Schema | Data Role | Source Object | Purpose |
-|---|---|---|---|
-| `prod` | Transactional | `SalesOrderHeader` | Stores sales order header records |
-| `prod` | Transactional | `SalesOrderDetail` | Stores sales order line records |
-| `prod` | Master / Core | `Customer` | Stores customer records |
-| `prod` | Master / Core | `SalesPerson` | Stores salesperson records |
-| `prod` | Master / Core | `Product` | Stores product records |
-| `prod` | Master / Core | `Address` | Stores address records |
-| `prod` | Master / Core | `CreditCard` | Stores payment-related source records |
-| `prod` | Reference / Lookup | `AddressType` | Stores address type values |
-| `prod` | Reference / Lookup | `CountryRegion` | Stores country or region values |
-| `prod` | Reference / Lookup | `StateProvince` | Stores state or province values |
-| `prod` | Reference / Lookup | `SalesTerritory` | Stores sales territory values |
-| `prod` | Reference / Lookup | `Currency` | Stores currency values |
-| `prod` | Reference / Lookup | `CurrencyRate` | Stores currency exchange rate values |
-| `prod` | Reference / Lookup | `ShipMethod` | Stores shipping method values |
-| `prod` | Reference / Lookup | `SpecialOffer` | Stores promotion and discount values |
-| `prod` | Reference / Lookup | `ProductCategory` | Stores product category values |
+## Sales_Analytics Source Tables
 
-### Usage in Fabric
+`Sales_Analytics` provides the existing trusted reporting model and is used as the historical reporting baseline.
 
-| Usage                | Description                                                                       |
-| -------------------- | --------------------------------------------------------------------------------- |
-| New data ingestion   | Provides new transactional and master data to Fabric                              |
-| Bronze source        | Source records are landed in the Lakehouse Bronze layer                           |
-| Silver curation      | Bronze records are standardized, typed, deduplicated, and validated               |
-| Gold transformation  | Curated operational data is transformed into reporting-ready facts and dimensions |
-| Long-term processing | Becomes the long-term source for new Fabric reporting periods                     |
+The database includes internal processing schemas such as `staging`, `work`, `dim`, and `fact`. For Fabric ingestion, only final curated tables from the `dim` and `fact` schemas are expected to be used as source tables.
 
-## Sales_Analytics
-
-`Sales_Analytics` provides the existing reporting model. It is used as the historical baseline for Fabric.
-
-### Source Objects
-
-The database contains internal processing schemas such as `staging`, `work`, `dim` and `fact`. For Fabric ingestion, the expected source objects are the final curated tables in the `dim` and `fact` schemas.
-
-| Schema   | Data Role | Source Object       | Purpose                                                        |
-| -------- | --------- | ------------------- | -------------------------------------------------------------- |
-| `fact`   | Fact      | `FactSales`         | Stores historical Sales transaction facts                      |
-| `dim`    | Dimension | `DimCustomer`       | Stores historical reporting customer attributes                |
-| `dim`    | Dimension | `DimProduct`        | Stores historical reporting product attributes                 |
-| `dim`    | Dimension | `DimSalesPerson`    | Stores historical reporting salesperson attributes             |
-| `dim`    | Dimension | `DimSalesTerritory` | Stores historical reporting geography and territory attributes |
-| `dim`    | Dimension | `DimPaymentMethod`  | Stores historical payment method attributes                    |
-| `dim`    | Dimension | `DimShipMethod`     | Stores historical shipping method attributes                   |
-| `dim`    | Dimension | `DimDate`           | Supports date-based reporting                                  |
-
-### Usage in Fabric
-
-| Usage                    | Description                                                                       |
-| ------------------------ | --------------------------------------------------------------------------------- |
-| Historical baseline      | Provides existing historical reporting data to seed Fabric                        |
-| Warehouse staging source | Historical analytical objects are loaded into Fabric Warehouse staging            |
-| Gold initialization      | Historical data is published into Fabric Gold after validation and reconciliation |
-| Reconciliation baseline  | Used to compare historical source data against Fabric target data                 |
-| Temporary fallback       | May be used during transition if reporting cutover is not complete                |
-
-## Historical Data Context
-
-`Sales_Analytics` already contains historical reporting data in a star schema.
-
-This historical data is valuable because it represents the trusted reporting baseline used by the business before Fabric modernization.
-
-| Historical Consideration | Description                                                                                   |
-| ------------------------ | --------------------------------------------------------------------------------------------- |
-| Historical source        | `Sales_Analytics`                                                                             |
-| Historical model         | Star schema                                                                                   |
-| Historical facts         | `FactSales`                                                                                   |
-| Historical dimensions    | Customer, Product, Salesperson, Territory, Payment Method, Ship Method, Date                  |
-| Target use               | Seed Fabric with trusted reporting history                                                    |
-| Key risk                 | Avoid reloading the same reporting period from both `Sales_Analytics` and `Sales_Operational` |
-
-A reporting boundary period must be defined so Fabric can clearly separate historical reporting data from new reporting data.
+| Schema | Data Role | Source Table | Expected Volume | Purpose |
+|---|---|---|---|---|
+| `fact` | Fact | `FactSales` | Very high | Stores historical Sales transaction facts |
+| `dim` | Dimension | `DimCustomer` | Medium | Stores historical reporting customer attributes |
+| `dim` | Dimension | `DimProduct` | Medium | Stores historical reporting product attributes |
+| `dim` | Dimension | `DimSalesPerson` | Medium | Stores historical reporting salesperson attributes |
+| `dim` | Dimension | `DimSalesTerritory` | Low | Stores historical reporting geography and territory attributes |
+| `dim` | Dimension | `DimPaymentMethod` | Low | Stores historical payment method attributes |
+| `dim` | Dimension | `DimShipMethod` | Low | Stores historical shipping method attributes |
+| `dim` | Dimension | `DimDate` | Low | Supports date-based reporting |
 
 ## Source Assumptions
 
-| Assumption                                 | Notes                                                                                                |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `Sales_Operational` remains active         | On-premise operations continue after Fabric implementation starts                                    |
-| `Sales_Analytics` is trusted               | Historical reporting data is treated as the baseline for Fabric                                      |
-| Source databases are read-only for Fabric  | Fabric should not modify the on-premise source databases                                             |
-| Historical and new data need alignment     | Fabric Gold must align historical data from `Sales_Analytics` with new data from `Sales_Operational` |
-| Source object inventory may evolve         | Table lists may be refined during implementation                                                     |
-| Data volumes require controlled processing | Large historical and transactional objects may require batch-based processing                        |
+| Assumption | Notes |
+|---|---|
+| `Sales_Operational` remains active | On-premise operations continue after the modernization starts |
+| `Sales_Analytics` is trusted | Historical reporting data is treated as the baseline for the target analytical model |
+| Source databases are read-only | The modernization process should not modify the on-premise source databases |
+| Historical and new data need alignment | The target analytical model must align historical data from `Sales_Analytics` with new data from `Sales_Operational` |
+| Source object inventory may evolve | Source table lists may be refined during implementation |
+| Data volumes require controlled processing | Large historical and transactional objects may require batch-based processing |
 
 ## Source Profiling Checklist
 
-The following details should be collected during detailed source analysis or implementation.
+The following items must be confirmed before implementation so load strategy, validation, reconciliation, and batching rules can be finalized.
 
-| Profiling Item          | Purpose                                                          |
-| ----------------------- | ---------------------------------------------------------------- |
-| Row counts by table     | Estimate load volume and processing effort                       |
-| Historical date range   | Define backfill scope                                            |
-| Business keys           | Support deduplication, joins, and reconciliation                 |
-| Primary keys            | Support source integrity checks                                  |
-| Foreign keys            | Support relationship validation                                  |
-| Date columns            | Support reporting period logic and batch reloads                 |
-| Change tracking columns | Support watermark incremental loads                              |
-| Nullable columns        | Identify data quality risks                                      |
-| Duplicate patterns      | Identify cleansing and validation needs                          |
-| Large table candidates  | Identify tables that may require partitioned or batch processing |
+| Profiling Item | Purpose |
+|---|---|
+| Row counts by table | Estimate load volume and processing effort |
+| Historical date range | Define backfill scope |
+| Business keys | Support deduplication, joins, and reconciliation |
+| Primary keys | Support source integrity checks |
+| Foreign keys | Support relationship validation |
+| Date columns | Support reporting period logic and batch reloads |
+| Change tracking columns | Support watermark incremental loads |
+| Nullable columns | Identify data quality risks |
+| Duplicate patterns | Identify cleansing and validation needs |
+| Large table candidates | Identify tables that may require partitioned or batch processing |
 
 ## Conclusion
 
-The current source environment provides a strong baseline for Fabric modernization.
+The current source environment provides a strong baseline for the Sales reporting modernization.
 
-`Sales_Operational` remains the operational source of truth and provides new transactional data to Fabric. `Sales_Analytics` provides the trusted historical reporting baseline used to initialize the Fabric analytical model.
+`Sales_Operational` remains the active operational source of truth and provides new transactional data for future reporting periods. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables.
 
-The main source design challenge is to align historical reporting data from `Sales_Analytics` with new reporting data derived from `Sales_Operational`, while maintaining traceability, validation, reconciliation, and clear reporting-period ownership.
+The main source profiling challenge is to confirm row counts, historical ranges, business keys, date columns, change tracking columns, and large-table candidates before implementation.

@@ -2,17 +2,15 @@
 
 ## Document Goal
 
-Define the main data flows required to move Sales data from the on-premise SQL Server environment into Microsoft Fabric.
-
 This document explains source-to-target movement patterns, flow responsibilities, and how historical and new reporting data are processed into the Fabric analytical model.
 
 ## Data Flow Overview
 
-The solution supports three main data flows because Fabric must combine historical reporting data with new reporting data derived from the operational source.
+The solution supports three main data flows because the target analytical platform must combine historical reporting data with new reporting data derived from the operational source.
 
 | Flow                      | Source                                    | Path                                                                                                            | Purpose                                               |
 | ------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| Historical reporting flow | `Sales_Analytics`                         | `Sales_Analytics` → `wh_sales_analytics.staging` → `wh_sales_analytics.gold`                                    | Seed Fabric with trusted historical reporting data    |
+| Historical reporting flow | `Sales_Analytics`                         | `Sales_Analytics` → `wh_sales_analytics.staging` → `wh_sales_analytics.gold`                                    | Load the trusted historical reporting baseline    |
 | New reporting data flow   | `Sales_Operational`                       | `Sales_Operational` → `lh_sales_operational.bronze` → `lh_sales_operational.silver` → `wh_sales_analytics.gold` | Build new reporting data from the operational source  |
 | Coexistence support flow  | `Sales_Analytics` and `Sales_Operational` | Controlled by reporting-period ownership                                                                        | Support transition before Fabric fully owns reporting |
 

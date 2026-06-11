@@ -2,8 +2,6 @@
 
 ## Document Goal
 
-Define the target technical architecture for the Sales Platform Modernization project.
-
 This document explains the main platform components, architectural responsibilities, and design decisions required to build Microsoft Fabric as the new unified reporting source of truth.
 
 ## High-Level Architecture
@@ -42,97 +40,82 @@ Power BI Semantic Model
 
 The current on-premise platform contains two SQL Server 2022 databases.
 
-| Source Component    | Purpose                                                                         |
-| ------------------- | ------------------------------------------------------------------------------- |
-| `Sales_Operational` | Long-term source for new transactional data used to build future reporting data |
-| `Sales_Analytics`   | Historical reporting baseline used to seed Fabric before reporting cutover      |
+| Source Component | Purpose |
+|---|---|
+| `Sales_Operational` | Provides new transactional data to build future reporting data in the target analytical platform |
+| `Sales_Analytics` | Provides the historical reporting baseline for the target analytical platform before reporting cutover |
 
 ## Target Platform Components
 
-| Target Component        | Proposed Name                               | Purpose                                                                      |
-| ----------------------- | ------------------------------------------- | ---------------------------------------------------------------------------- |
-| Fabric Workspace        | `ws_sales_analytics_modernization_dev`      | Development workspace for the Sales modernization assets                     |
-| Fabric Lakehouse        | `lh_sales_operational`                      | Stores Bronze and Silver Delta tables for operational ingestion and curation |
-| Fabric Warehouse        | `wh_sales_analytics`                        | Stores staging and Gold analytical reporting objects                         |
-| Power BI Semantic Model | `sm_sales_analytics`                        | Provides the reporting consumption layer                                     |
-| Azure SQL Database      | `DataOps_Control`                           | Shared control framework for execution tracking and observability            |
+| Target Component | Proposed Name | Purpose |
+|---|---|---|
+| Fabric Lakehouse | `lh_sales_operational` | Provides storage and processing for Bronze and Silver operational data areas |
+| Fabric Warehouse | `wh_sales_analytics` | Provides storage and processing for Staging and Gold analytical data areas |
+| Power BI Semantic Model | `sm_sales_analytics` | Provides the governed reporting consumption layer over Gold data |
+| Azure SQL Database | `DataOps_Control` | Provides shared execution control and observability for the data flows |
 
-## Fabric Layer Responsibilities
+## Target Area Responsibilities
 
-| Layer          | Location  | Responsibility                                                     |
-| -------------- | --------- | ------------------------------------------------------------------ |
-| Bronze         | Lakehouse | Store raw source-aligned data from `Sales_Operational`             |
-| Silver         | Lakehouse | Store curated and standardized operational data                    |
-| Staging        | Warehouse | Temporarily store historical reporting data from `Sales_Analytics` |
-| Gold           | Warehouse | Store final reporting-ready dimensional and fact objects           |
-| Semantic Model | Power BI  | Provide business-facing reporting layer                            |
+| Target Area | Location | Responsibility |
+|---|---|---|
+| Bronze | Lakehouse | Stores raw source-aligned data from `Sales_Operational` |
+| Silver | Lakehouse | Stores curated and standardized data from Bronze objects |
+| Staging | Warehouse | Temporarily stores historical reporting data from `Sales_Analytics` |
+| Gold | Warehouse | Stores final reporting-ready dimensional and fact objects |
+| Semantic Model | Power BI | Provides the governed reporting consumption layer |
 
-## Data Ownership Model
+## Reporting Data Ownership
 
-| Data Period                  | Source                  | Target Ownership                                                   |
-| ---------------------------- | ----------------------- | ------------------------------------------------------------------ |
-| Historical reporting periods | `Sales_Analytics`       | Loaded into Fabric as the historical reporting baseline            |
-| New reporting periods        | `Sales_Operational`     | Processed in Fabric from operational data                          |
-| Post-cutover reporting       | `wh_sales_analytics`    | Fabric Warehouse becomes the unified reporting source of truth     |
+This section defines which component is authoritative for each reporting data responsibility.
+
+| Ownership Area | Owner | Responsibility |
+|---|---|---|
+| Operational transactions | `Sales_Operational` | Remains the system of record for active Sales transactions |
+| Historical reporting baseline | `Sales_Analytics` | Provides trusted historical reporting data before reporting cutover |
+| Target analytical model | `wh_sales_analytics` | Stores the final analytical objects built from historical and new reporting data |
+| Reporting consumption | `sm_sales_analytics` | Provides the governed reporting layer for Power BI consumers |
 
 ## Control and Observability
 
-The solution uses `DataOps_Control` as a shared execution control framework.
+The solution uses `DataOps_Control` as a shared control framework for execution tracking and observability.
 
-| Responsibility          | Purpose                                                                 |
-| ----------------------- | ----------------------------------------------------------------------- |
-| Metadata management     | Define projects, source objects, target objects, processes, and batches |
-| Execution tracking      | Track pipeline, notebook, and data processing runs                      |
-| Validation tracking     | Store validation results by execution step                              |
-| Reconciliation tracking | Store source-to-target comparison results                               |
-| Error logging           | Capture technical failures and troubleshooting details                  |
-| Rerun support           | Support recovery by process, table, or batch period                     |
+| Control Area | Purpose |
+|---|---|
+| Metadata management | Defines source objects, target objects, processes, and batches |
+| Execution tracking | Tracks pipeline, notebook, and data processing executions |
+| Validation and reconciliation | Stores control results used to confirm data quality and source-to-target consistency |
+| Error logging | Captures technical failures for troubleshooting |
+| Rerun support | Supports controlled recovery by process, object, or batch period |
 
-`DataOps_Control` is not a Sales-only database. It is a reusable control framework that can support multiple projects.
+`DataOps_Control` is reusable and is not treated as a Sales-only database.
 
 ## Main Design Decisions
 
 | Decision | Rationale |
 |---|---|
 | Keep `Sales_Operational` on-premise | Operational processes continue to run locally |
-| Use `Sales_Analytics` for historical baseline | Historical reporting data already exists and is trusted |
-| Use `wh_sales_analytics` as the analytical source of truth | Reporting ownership moves to a cloud analytical platform |
-| Use Lakehouse for Bronze and Silver | Operational data needs raw and curated Delta-based storage |
+| Use `Sales_Analytics` as the historical baseline | Historical reporting data already exists and is trusted |
+| Use `wh_sales_analytics` as the target analytical model | Final reporting-ready data is stored in the Fabric Warehouse |
+| Use Lakehouse for Bronze and Silver | Operational data requires source-aligned landing and curated preparation before analytical modeling |
 | Use Warehouse for Staging and Gold | Historical and final reporting objects require relational analytical structures |
-| Use Power BI semantic model for consumption | Reports should consume governed business-facing objects |
-| Use `DataOps_Control` for execution control | Migration and synchronization require traceability, validation, reconciliation, and rerun support |
+| Use Power BI Semantic Model for consumption | Reports should consume governed business-facing objects |
+| Use `DataOps_Control` for execution control | Controlled migration requires execution tracking, validation, reconciliation, and rerun support |
 | Define a reporting boundary period | Prevent the same reporting period from being loaded from both historical and new sources |
 
 ## Naming Conventions
 
 | Object Type       | Convention                            | Example                                 |
 | ----------------- | ------------------------------------- | --------------------------------------- |
-| Workspace         | `ws_[domain]_[purpose]_[environment]` | `ws_sales_analytics_modernization_dev`  |
 | Lakehouse         | `lh_[domain]_[purpose]`               | `lh_sales_operational`                  |
 | Warehouse         | `wh_[domain]_[purpose]`               | `wh_sales_analytics`                    |
 | Semantic model    | `sm_[domain]_[purpose]`               | `sm_sales_analytics`                    |
 
 ## Architecture Rules
 
-* Power BI should consume the semantic model, not Bronze, Silver, or staging tables directly.
-* Bronze should preserve source-aligned operational data.
-* Silver should apply standardization, typing, deduplication, and business validation.
-* Warehouse staging should support historical loads from `Sales_Analytics`.
-* Gold should contain the final reporting-ready model.
-* Historical and new reporting data must be aligned under one consistent analytical model.
-* Validation and reconciliation must be completed before data is treated as trusted.
-* The solution must prevent duplicate ownership of the same reporting period.
-
-## Related Documents
-
-| Document                                   | Purpose                                                                             |
-| ------------------------------------------ | ----------------------------------------------------------------------------------- |
-| `01_current_state_assessment.md`           | Explains current environment, modernization drivers, risks, and design implications |
-| `03_source_data_profile.md`                | Documents source databases, source tables, data roles, and historical context       |
-| `04_target_data_model.md`                  | Defines target objects, tables, grains, and modeling decisions                      |
-| `05_data_flow_strategy.md`                 | Explains historical, coexistence, and operational data flows                        |
-| `06_load_strategy.md`                      | Defines full reload, watermark incremental, and batch period reload rules           |
-| `07_validation_reconciliation_strategy.md` | Defines validation and reconciliation approach                                      |
-| `08_cutover_strategy.md`                   | Defines reporting ownership transition and cutover rules                            |
-| `09_implementation_plan.md`                | Defines implementation phases                                                       |
-| `10_operational_runbook.md`                | Defines operational execution, monitoring, troubleshooting, and rerun procedures    |
+- Power BI reports must consume the governed semantic model, not Bronze, Silver, or Staging objects directly.
+- Bronze objects should preserve source-aligned operational data from `Sales_Operational`.
+- Silver objects should standardize, validate, and prepare operational data for analytical modeling.
+- Gold objects should contain the final reporting-ready dimensional and fact model.
+- Historical data from `Sales_Analytics` and new data from `Sales_Operational` must align under one consistent analytical model.
+- Data should not be treated as trusted until validation and reconciliation are completed or accepted.
+- The same reporting period must not be loaded into Gold from more than one approved source.

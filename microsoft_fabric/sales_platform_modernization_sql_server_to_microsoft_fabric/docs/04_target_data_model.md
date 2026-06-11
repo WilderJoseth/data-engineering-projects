@@ -2,30 +2,30 @@
 
 ## Document Goal
 
-Define the target data objects required for the Sales Platform Modernization project.
-
 This document describes the Lakehouse, Warehouse, and semantic model objects that will support Microsoft Fabric as the unified reporting source of truth.
 
 ## Target Data Model Overview
 
-The target data model is organized across Microsoft Fabric assets.
+The target data model is organized by data area and modeling responsibility.
 
-| Asset Type | Target Asset | Purpose |
+| Data Area | Target Component | Main Responsibility |
 |---|---|---|
-| Fabric Lakehouse | `lh_sales_operational` | Stores raw and curated operational data from `Sales_Operational` |
-| Fabric Warehouse | `wh_sales_analytics` | Stores historical staging data and final analytical reporting objects |
-| Power BI semantic model | `sm_sales_analytics` | Provides governed reporting consumption for Power BI |
+| Bronze | `lh_sales_operational` | Store raw source-aligned operational data |
+| Silver | `lh_sales_operational` | Store curated and standardized operational data |
+| Staging | `wh_sales_analytics` | Temporarily store historical analytical data before Gold publication |
+| Gold | `wh_sales_analytics` | Store final reporting-ready facts and dimensions |
+| Semantic Model | `sm_sales_analytics` | Provides the governed reporting consumption layer |
 
 ## Lakehouse Data Model
 
 The Lakehouse stores operational-source data from `Sales_Operational`.
 
-It is organized into `bronze` and `silver` schemas.
+It is organized into the `bronze` and `silver` schemas.
 
 | Schema | Purpose |
 |---|---|
-| `bronze` | Preserve raw source-aligned data |
-| `silver` | Standardize, curate, and validate operational data before analytical transformation |
+| `bronze` | Preserves raw source-aligned operational data |
+| `silver` | Standardizes, curates, and validates operational data before analytical transformation |
 
 ### Bronze Tables
 
@@ -93,16 +93,16 @@ Silver tables store curated operational data from Bronze.
 
 ## Warehouse Data Model
 
-The Warehouse contains `staging` and `gold` schemas.
+The Warehouse contains the `staging` and `gold` schemas.
 
 | Schema | Purpose |
 |---|---|
-| `staging` | Store historical reporting data from `Sales_Analytics` before publishing to Gold |
-| `gold` | Store final reporting-ready dimensional and fact objects |
+| `staging` | Temporarily stores historical reporting data from `Sales_Analytics` before publishing to Gold |
+| `gold` | Stores final reporting-ready dimensional and fact objects |
 
 ### Staging Tables
 
-Staging tables store historical analytical data from `Sales_Analytics`.
+Staging tables temporarily store historical analytical data from `Sales_Analytics`.
 
 | Data Role         | Staging Table               | Source Object                           | Purpose                                                   |
 | ----------------- | --------------------------- | --------------------------------------- | --------------------------------------------------------- |
@@ -113,7 +113,7 @@ Staging tables store historical analytical data from `Sales_Analytics`.
 | Dimension staging | `staging.DimSalesTerritory` | `Sales_Analytics.dim.DimSalesTerritory` | Stores historical territory dimension data                |
 | Dimension staging | `staging.DimPaymentMethod`  | `Sales_Analytics.dim.DimPaymentMethod`  | Stores historical payment method dimension data           |
 | Dimension staging | `staging.DimShipMethod`     | `Sales_Analytics.dim.DimShipMethod`     | Stores historical ship method dimension data              |
-| Dimension staging | `staging.DimDate`           | `Sales_Analytics.dim.DimDate`           | Stores historical date dimension data                     |
+| Dimension staging | `staging.DimDate`           | `Sales_Analytics.dim.DimDate`  or generated calendar | Stores historical date dimension data                     |
 
 #### Staging Rules
 
@@ -122,7 +122,6 @@ Staging tables store historical analytical data from `Sales_Analytics`.
 | Historical source alignment | Staging should preserve the analytical structure from `Sales_Analytics` |
 | Temporary ownership         | Staging is not the final reporting layer                                |
 | Reconciliation support      | Staging supports source-to-target comparison before Gold publication    |
-| Cutover support             | Staging helps separate historical data from future Fabric-managed data  |
 
 ### Gold Dimensions
 
@@ -130,7 +129,7 @@ Gold dimensions store final reporting-ready descriptive entities.
 
 | Gold Dimension           | Main Inputs                                                                                          | Purpose                                                   |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `gold.DimDate`           | `staging.DimDate` or generated calendar                                                              | Supports date-based reporting                             |
+| `gold.DimDate`           | `staging.DimDate`                                                                                    | Supports date-based reporting                             |
 | `gold.DimCustomer`       | `staging.DimCustomer`, `silver.Customer`                                                             | Stores final customer reporting attributes                |
 | `gold.DimProduct`        | `staging.DimProduct`, `silver.Product`, `silver.ProductCategory`                                     | Stores final product and category reporting attributes    |
 | `gold.DimSalesPerson`    | `staging.DimSalesPerson`, `silver.SalesPerson`                                                       | Stores final salesperson reporting attributes             |
@@ -152,9 +151,9 @@ Gold dimensions store final reporting-ready descriptive entities.
 
 Gold facts store final reporting-ready business events and measures.
 
-| Gold Fact        | Grain                        | Main Inputs                                                               | Purpose                                               |
-| ---------------- | ---------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `gold.FactSales` | One row per sales order line | `staging.FactSales`, `silver.SalesOrderHeader`, `silver.SalesOrderDetail` | Stores final sales transaction measures for reporting |
+| Gold Fact        | Main Inputs                                                               | Purpose                                               |
+| ---------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- |
+| `gold.FactSales` | `staging.FactSales`, `silver.SalesOrderHeader`, `silver.SalesOrderDetail` | Stores final sales transaction measures for reporting |
 
 #### Fact Rules
 
@@ -163,25 +162,24 @@ Gold facts store final reporting-ready business events and measures.
 | Defined grain        | `gold.FactSales` is stored at sales order line grain                                                                      |
 | Historical alignment | Historical fact records are initialized from `Sales_Analytics.fact.FactSales`                                             |
 | Future processing    | New fact records are derived from `Sales_Operational` through Bronze and Silver                                           |
-| Period ownership     | A reporting period should be owned by only one approved source                                                            |
 | Measure consistency  | Sales amounts, quantities, discounts, taxes, freight, and totals must remain consistent across historical and new periods |
 
 ## Semantic Model Scope
 
 The semantic model provides the governed reporting layer for Power BI.
 
-| Semantic Object      | Source                    | Purpose                                                           |
-| -------------------- | ------------------------- | ----------------------------------------------------------------- |
-| `sm_sales_analytics` | `wh_sales_analytics.gold` | Provides business-facing reporting over Gold facts and dimensions |
+| Semantic Model | Source | Purpose |
+|---|---|---|
+| `sm_sales_analytics` | `wh_sales_analytics.gold` | Provides governed reporting consumption over Gold facts and dimensions |
 
 ### Semantic Model Rules
 
-| Rule                 | Description                                                                                              |
-| -------------------- | -------------------------------------------------------------------------------------------------------- |
-| Reporting access     | Reports should consume the semantic model instead of directly querying Bronze, Silver, or staging tables |
-| Business definitions | Measures and relationships should be defined consistently for reporting                                  |
-| Gold dependency      | The semantic model should depend on Gold objects as the trusted reporting layer                          |
-| Consumer focus       | The semantic model should hide technical ingestion and staging structures from report users              |
+| Rule | Description |
+|---|---|
+| Reporting access | Reports should consume the semantic model instead of directly querying Bronze, Silver, Staging, or Gold objects |
+| Business definitions | Measures, relationships, and business terms should be defined consistently for reporting |
+| Gold dependency | The semantic model should depend on Gold objects as the trusted analytical layer |
+| Consumer focus | Technical ingestion, staging, and transformation structures should be hidden from report users |
 
 ## Target Object Naming
 
@@ -226,6 +224,6 @@ Target tables should include technical metadata columns where required for trace
 
 The target data model separates operational ingestion, historical staging, analytical modeling, and reporting consumption.
 
-`lh_sales_operational` stores raw and curated operational data from `Sales_Operational`. `wh_sales_analytics` stores historical staging data from `Sales_Analytics` and final Gold reporting objects. `sm_sales_analytics` provides the governed reporting layer for Power BI.
+`lh_sales_operational` stores Bronze and Silver operational data objects from `Sales_Operational`. `wh_sales_analytics` stores Staging objects used for historical loads and Gold objects used for final reporting-ready facts and dimensions. `sm_sales_analytics` provides the governed reporting layer for Power BI.
 
-The main modeling challenge is to align historical data from `Sales_Analytics` with new data derived from `Sales_Operational` under a consistent Gold analytical model.
+The main modeling challenge is to align historical reporting data from `Sales_Analytics` with new reporting data derived from `Sales_Operational` under a consistent Gold analytical model.
