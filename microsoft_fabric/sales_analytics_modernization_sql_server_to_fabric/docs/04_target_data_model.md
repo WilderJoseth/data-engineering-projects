@@ -2,7 +2,7 @@
 
 ## Document Goal
 
-This document describes the Lakehouse, Warehouse, and semantic model objects that will support Microsoft Fabric as the unified reporting source of truth.
+This document describes the Lakehouse, Warehouse, and semantic model objects that will support the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth.
 
 ## Target Data Model Overview
 
@@ -206,7 +206,7 @@ Target tables should include technical metadata columns where required for trace
 | `source_schema`       | Identifies the source schema                                                           |
 | `source_object`       | Identifies the source object                                                           |
 | `batch_period_yyyymm` | Identifies the business reporting period when applicable                               |
-| `ingestion_datetime`  | Stores when the record was ingested into Fabric                                        |
+| `ingestion_datetime`  | Stores when the record was ingested into the target analytics platform                 |
 | `load_datetime`       | Stores when the record was loaded into the target object                               |
 
 ## Modeling Assumptions

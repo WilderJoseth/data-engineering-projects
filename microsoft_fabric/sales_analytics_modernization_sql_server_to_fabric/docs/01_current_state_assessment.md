@@ -2,7 +2,7 @@
 
 ## Document Goal
 
-Evaluate the current Sales data platform, identify modernization drivers, and explain why building Microsoft Fabric as the new reporting source of truth is justified.
+Evaluate the current Sales data platform, identify modernization drivers, and explain why building the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth is justified.
 
 ## Current Environment Summary
 
@@ -12,7 +12,7 @@ The current Sales platform contains two active databases hosted on the same on-p
 | ------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------ |
 | Platform                  | SQL Server 2022                                               | SQL Server 2022                                                    |
 | Hosting model             | On-premise                                                    | On-premise                                                         |
-| Current role              | Operational source of truth                                   | Reporting source of truth                                          |
+| Current role              | Operational system of record                                  | Current reporting source of truth                                  |
 | Primary usage             | Transactional Sales operations                                | Business reporting and analysis                                    |
 | Workload type             | OLTP-style operational workload                               | Analytical/reporting workload                                      |
 | Data model                | Normalized model                                              | Star schema                                                        |
@@ -31,7 +31,7 @@ The current Sales platform contains two active databases hosted on the same on-p
 | ---------------------- | ---------------------------------------------------------------------------------- |
 | Operational processing | `Sales_Operational` supports on-premise transactional operations                   |
 | Reporting model        | `Sales_Analytics` provides a curated star schema for business reporting            |
-| Source of truth        | `Sales_Analytics` is a reliable reporting source of truth for historical reporting |
+| Source of truth        | `Sales_Analytics` is a reliable current reporting source of truth for historical reporting |
 | Execution control      | The analytical platform includes metadata-driven execution control                 |
 | Validation             | Existing processes support validation and reconciliation                           |
 | Data history           | Historical analytical data is already available in `Sales_Analytics`               |
@@ -70,12 +70,12 @@ The main driver is to evolve the trusted Sales analytical model into a governed 
 
 | Driver | Reason |
 |---|---|
-| Fabric reporting modernization | Move reporting ownership from on-premise `Sales_Analytics` to Microsoft Fabric |
+| Fabric reporting modernization | Move reporting ownership from on-premise `Sales_Analytics` to the Warehouse Gold model exposed through the Power BI semantic model |
 | Direct Lake readiness | Support Fabric-native Power BI consumption patterns over trusted analytical data |
 | AI and data science enablement | Provide governed access to historical and new Sales data in a cloud analytical platform |
 | Reusable data products | Publish curated Sales data for multiple consumers instead of creating one-off extracts |
 | Open analytical storage | Store analytical data using Delta/Parquet-based patterns for broader analytical use |
-| Analytical workload separation | Keep operational processing on-premise while moving analytical ownership to Fabric |
+| Analytical workload separation | Keep operational processing on-premise while moving analytical ownership to the target analytics platform |
 | Long-term maintainability | Reduce dependency on year-based physical table copies for historical reporting data |
 | Enterprise analytical consumption | Prepare Sales data for reporting, AI, data science, and cross-domain analytics |
 
@@ -86,9 +86,9 @@ The project is not a full replacement of the Sales platform.
 | Scope Item                                | Decision                                                                  |
 | ----------------------------------------- | ------------------------------------------------------------------------- |
 | `Sales_Operational`                       | Remains on-premise and continues supporting transactional operations      |
-| `Sales_Analytics`                         | Provides historical reporting data for the Fabric baseline                |
-| `Sales_Operational`                       | Provides new transactional data to Fabric for reporting transformation    |
-| Microsoft Fabric                          | Unified reporting source of truth                                         |
+| `Sales_Analytics`                         | Provides historical reporting data for the historical reporting baseline  |
+| `Sales_Operational`                       | Provides new transactional data for reporting transformation in the target analytics platform |
+| Warehouse Gold model and Power BI semantic model | Target reporting source of truth                                  |
 
 ## Conclusion
 
@@ -96,6 +96,6 @@ The current Sales platform is reliable and well structured for its original purp
 
 The modernization is not driven by a failed platform. It is driven by the need to expand Sales analytical data beyond traditional reporting and make it available as a reusable cloud data product for Power BI, AI, data science, and broader enterprise consumption.
 
-The recommended approach is to keep `Sales_Operational` on-premise, use `Sales_Analytics` as the historical reporting baseline, and build Microsoft Fabric as the new unified reporting source of truth for both historical and new Sales reporting data.
+The recommended approach is to keep `Sales_Operational` on-premise, use `Sales_Analytics` as the historical reporting baseline, and build the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth for both historical and new Sales reporting data.
 
 This approach preserves the value of the current platform while addressing the main modernization need: moving trusted Sales analytics from an on-premise reporting dependency to a governed cloud analytical platform.

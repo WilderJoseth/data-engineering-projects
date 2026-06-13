@@ -2,7 +2,7 @@
 
 ## Document Goal
 
-This document explains the source databases, their roles, source object categories, and how each source contributes to the Fabric migration.
+This document explains the source databases, their roles, source object categories, and how each source contributes to the modernization flow.
 
 ## Source Platform Overview
 
@@ -31,9 +31,9 @@ This classification helps identify which source objects are small and stable, wh
 
 ## Sales_Operational Source Tables
 
-`Sales_Operational` provides normalized operational data and remains the operational source of truth.
+`Sales_Operational` provides normalized operational data and remains the operational system of record.
 
-The database includes internal processing schemas such as `staging`, `work`, and `prod`. For Fabric ingestion, only final curated tables from the `prod` schema are expected to be used as source tables.
+The database includes internal processing schemas such as `staging`, `work`, and `prod`. For target ingestion, only final curated tables from the `prod` schema are expected to be used as source tables.
 
 | Schema | Data Role | Source Table | Expected Volume | Purpose |
 |---|---|---|---|---|
@@ -58,7 +58,7 @@ The database includes internal processing schemas such as `staging`, `work`, and
 
 `Sales_Analytics` provides the existing trusted reporting model and is used as the historical reporting baseline.
 
-The database includes internal processing schemas such as `staging`, `work`, `dim`, and `fact`. For Fabric ingestion, only final curated tables from the `dim` and `fact` schemas are expected to be used as source tables.
+The database includes internal processing schemas such as `staging`, `work`, `dim`, and `fact`. For target ingestion, only final curated tables from the `dim` and `fact` schemas are expected to be used as source tables.
 
 | Schema | Data Role | Source Table | Expected Volume | Purpose |
 |---|---|---|---|---|
@@ -103,6 +103,6 @@ The following items must be confirmed before implementation so load strategy, va
 
 The current source environment provides a strong baseline for the Sales reporting modernization.
 
-`Sales_Operational` remains the active operational source of truth and provides new transactional data for future reporting periods. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables.
+`Sales_Operational` remains the active operational system of record and provides new transactional data for future reporting periods. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables.
 
 The main source profiling challenge is to confirm row counts, historical ranges, business keys, date columns, change tracking columns, and large-table candidates before implementation.

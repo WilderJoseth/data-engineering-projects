@@ -10,15 +10,15 @@ This project is part of a data engineering portfolio focused on cloud modernizat
 
 ## Project Scope
 
-| Area            | In Scope                                  |
-| --------------- | ----------------------------------------- |
-| Source platform | On-premise SQL Server Sales databases     |
-| Target platform | Microsoft Fabric                          |
-| Data storage    | Lakehouse and Warehouse patterns          |
-| Processing      | Historical and incremental migration      |
-| Control         | Metadata-driven execution tracking        |
-| Validation      | Data validation and reconciliation design |
-| Consumption     | Analytical model for reporting            |
+| Area                      | In Scope                                                      |
+| ------------------------- | ------------------------------------------------------------- |
+| Source platform           | On-premise SQL Server Sales databases                         |
+| Target analytics platform | Microsoft Fabric with Azure SQL Database for DataOps control  |
+| Data storage              | Lakehouse and Warehouse patterns                              |
+| Processing                | Historical and incremental migration                          |
+| Control                   | Metadata-driven execution tracking                            |
+| Validation                | Data validation and reconciliation design                     |
+| Consumption               | Analytical model for reporting                                |
 
 ## Out of Scope
 
@@ -38,13 +38,13 @@ On-Premise SQL Server
 Fabric Data Factory Pipelines
         |
         v
-Bronze Lakehouse
+Fabric Lakehouse Bronze data area
         |
         v
 Curated Operational Data
         |
         v
-Sales Analytics Warehouse
+Fabric Warehouse Gold analytical model
         |
         v
 Power BI Semantic Model
@@ -72,7 +72,13 @@ sales_platform_modernization_sql_server_to_microsoft_fabric/
 |
 |-- README.md
 |-- docs/
-|   |-- solution_design.md
+|   |-- 00_concepts_and_terminology_guide.md
+|   |-- 01_current_state_assessment.md
+|   |-- 02_solution_design.md
+|   |-- 03_source_data_profile.md
+|   |-- 04_target_data_model.md
+|   |-- 05_data_flow_strategy.md
+|   |-- 06_load_strategy.md
 |
 |-- diagrams/        # planned
 |-- fabric/          # planned
@@ -83,10 +89,13 @@ sales_platform_modernization_sql_server_to_microsoft_fabric/
 
 | Document                                     | Purpose                                                     |
 | -------------------------------------------- | ----------------------------------------------------------- |
-| `docs/solution_design.md`                    | Describes the target architecture and main design decisions |
-| `docs/source_data_profile.md`                | Planned document for source data analysis                   |
-| `docs/data_flow_strategy.md`                 | Planned document for migration and processing flows         |
-| `docs/load_strategy.md`                      | Planned document for full, incremental, and batch loading   |
+| `docs/00_concepts_and_terminology_guide.md` | Defines project terminology and usage rules                 |
+| `docs/01_current_state_assessment.md`       | Describes the current source platform and modernization drivers |
+| `docs/02_solution_design.md`                | Describes the target architecture and main design decisions |
+| `docs/03_source_data_profile.md`            | Describes source databases, source objects, and profiling needs |
+| `docs/04_target_data_model.md`              | Describes Lakehouse, Warehouse, Gold, and semantic model objects |
+| `docs/05_data_flow_strategy.md`             | Describes historical, new reporting, and coexistence data flows |
+| `docs/06_load_strategy.md`                  | Describes full, incremental, and batch loading rules        |
 | `docs/validation_reconciliation_strategy.md` | Planned document for data quality and reconciliation        |
 | `docs/cutover_strategy.md`                   | Planned document for transition from on-premise to Fabric   |
 
@@ -101,9 +110,6 @@ sales_platform_modernization_sql_server_to_microsoft_fabric/
 | Validation and reconciliation | Planned     |
 | Reporting layer               | Planned     |
 
-```
-
 ## Notes
 
-This version keeps the README focused. The detailed explanation should move to `docs/solution_design.md` and future supporting documents.
-```
+This version keeps the README focused. The detailed explanation should move to `docs/02_solution_design.md` and future supporting documents.

@@ -2,7 +2,7 @@
 
 ## Document Goal
 
-This document explains the main platform components, architectural responsibilities, and design decisions required to build Microsoft Fabric as the new unified reporting source of truth.
+This document explains the main platform components, architectural responsibilities, and design decisions required to build the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth.
 
 ## High-Level Architecture
 
@@ -11,10 +11,10 @@ Historical reporting data
 Sales_Analytics
       |
       v
-Fabric Warehouse Staging
+wh_sales_analytics.staging
       |
       v
-Fabric Gold Model
+wh_sales_analytics.gold
       |
       v
 Power BI Semantic Model
@@ -24,13 +24,13 @@ New transactional data
 Sales_Operational
       |
       v
-Fabric Lakehouse Bronze
+lh_sales_operational.bronze
       |
       v
-Fabric Lakehouse Silver
+lh_sales_operational.silver
       |
       v
-Fabric Gold Model
+wh_sales_analytics.gold
       |
       v
 Power BI Semantic Model
@@ -42,10 +42,10 @@ The current on-premise platform contains two SQL Server 2022 databases.
 
 | Source Component | Purpose |
 |---|---|
-| `Sales_Operational` | Provides new transactional data to build future reporting data in the target analytical platform |
-| `Sales_Analytics` | Provides the historical reporting baseline for the target analytical platform before reporting cutover |
+| `Sales_Operational` | Provides new transactional data to build future reporting data in the target analytics platform |
+| `Sales_Analytics` | Provides the historical reporting baseline for the target analytics platform before reporting cutover |
 
-## Target Platform Components
+## Target Analytics Platform Components
 
 | Target Component | Proposed Name | Purpose |
 |---|---|---|
@@ -54,9 +54,9 @@ The current on-premise platform contains two SQL Server 2022 databases.
 | Power BI Semantic Model | `sm_sales_analytics` | Provides the governed reporting consumption layer over Gold data |
 | Azure SQL Database | `DataOps_Control` | Provides shared execution control and observability for the data flows |
 
-## Target Area Responsibilities
+## Target Data Area Responsibilities
 
-| Target Area | Location | Responsibility |
+| Data Area | Location | Responsibility |
 |---|---|---|
 | Bronze | Lakehouse | Stores raw source-aligned data from `Sales_Operational` |
 | Silver | Lakehouse | Stores curated and standardized data from Bronze objects |
@@ -70,7 +70,7 @@ This section defines which component is authoritative for each reporting data re
 
 | Ownership Area | Owner | Responsibility |
 |---|---|---|
-| Operational transactions | `Sales_Operational` | Remains the system of record for active Sales transactions |
+| Operational transactions | `Sales_Operational` | Remains the operational system of record for active Sales transactions |
 | Historical reporting baseline | `Sales_Analytics` | Provides trusted historical reporting data before reporting cutover |
 | Target analytical model | `wh_sales_analytics` | Stores the final analytical objects built from historical and new reporting data |
 | Reporting consumption | `sm_sales_analytics` | Provides the governed reporting layer for Power BI consumers |
