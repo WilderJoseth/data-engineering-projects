@@ -1,42 +1,42 @@
-# Target Data Model
+# Target Data Architecture
 
 ## Document Goal
 
-This document describes the Lakehouse, Warehouse, and semantic model objects that will support the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth.
+This document describes the Lakehouse, Warehouse, and Power BI Semantic Model objects that support the target reporting platform.
 
-## Target Data Model Overview
+This document expands the target data architecture section introduced in `02_solution_design.md`.
 
-The target data model is organized by data area and modeling responsibility.
+## Target Data Architecture Overview
 
-| Data Area | Target Component | Main Responsibility |
-|---|---|---|
-| Bronze | `lh_sales_operational` | Store raw source-aligned operational data |
-| Silver | `lh_sales_operational` | Store curated and standardized operational data |
-| Staging | `wh_sales_analytics` | Temporarily store historical analytical data before Gold publication |
-| Gold | `wh_sales_analytics` | Store final reporting-ready facts and dimensions |
-| Semantic Model | `sm_sales_analytics` | Provides the governed reporting consumption layer |
+The target data architecture is organized by data area and modeling responsibility.
 
-## Lakehouse Data Model
+| Architecture Area | Target Component | Target Component Name | Main Responsibility |
+|---|---|---|---|
+| Bronze | Lakehouse | `lh_sales_operational` | Stores raw source-aligned operational data |
+| Silver | Lakehouse | `lh_sales_operational` | Stores curated and standardized operational data |
+| Staging | Warehouse | `wh_sales_analytics` | Temporarily stores historical analytical data before Gold publication |
+| Gold | Warehouse | `wh_sales_analytics` | Stores final reporting-ready facts and dimensions |
+| Semantic Model | Power BI Semantic Model | `sm_sales_analytics` | Provides the governed reporting consumption layer |
 
-The Lakehouse stores operational-source data from `Sales_Operational`.
+## Lakehouse
 
-It is organized into the `bronze` and `silver` schemas.
+The Lakehouse is organized into the `bronze` and `silver` schemas.
 
 | Schema | Purpose |
 |---|---|
-| `bronze` | Preserves raw source-aligned operational data |
+| `bronze` | Stores raw source-aligned operational data from `Sales_Operational` |
 | `silver` | Standardizes, curates, and validates operational data before analytical transformation |
 
 ### Bronze Tables
 
 Bronze tables store raw source-aligned records from `Sales_Operational.prod`.
 
-| Data Role          | Bronze Table              | Source Object                             | Purpose                                   |
+| Data Category      | Bronze Table              | Source Object                             | Purpose                                   |
 | ------------------ | ------------------------- | ----------------------------------------- | ----------------------------------------- |
 | Transactional      | `bronze.SalesOrderHeader` | `Sales_Operational.prod.SalesOrderHeader` | Stores raw sales order header records     |
 | Transactional      | `bronze.SalesOrderDetail` | `Sales_Operational.prod.SalesOrderDetail` | Stores raw sales order line records       |
 | Master / Core      | `bronze.Customer`         | `Sales_Operational.prod.Customer`         | Stores raw customer records               |
-| Master / Core      | `bronze.SalesPerson`      | `Sales_Operational.prod.SalesPerson`      | Stores raw salesperson records            |
+| Master / Core      | `bronze.SalesPerson`      | `Sales_Operational.prod.SalesPerson`      | Stores raw sales person records           |
 | Master / Core      | `bronze.Product`          | `Sales_Operational.prod.Product`          | Stores raw product records                |
 | Master / Core      | `bronze.Address`          | `Sales_Operational.prod.Address`          | Stores raw address records                |
 | Master / Core      | `bronze.CreditCard`       | `Sales_Operational.prod.CreditCard`       | Stores raw payment-related source records |
@@ -63,12 +63,12 @@ Bronze tables store raw source-aligned records from `Sales_Operational.prod`.
 
 Silver tables store curated operational data from Bronze.
 
-| Data Role          | Silver Table              | Source Table              | Purpose                                         |
+| Data Category      | Silver Table              | Source Table              | Purpose                                         |
 | ------------------ | ------------------------- | ------------------------- | ----------------------------------------------- |
 | Transactional      | `silver.SalesOrderHeader` | `bronze.SalesOrderHeader` | Stores standardized sales order header records  |
 | Transactional      | `silver.SalesOrderDetail` | `bronze.SalesOrderDetail` | Stores standardized sales order line records    |
 | Master / Core      | `silver.Customer`         | `bronze.Customer`         | Stores standardized customer records            |
-| Master / Core      | `silver.SalesPerson`      | `bronze.SalesPerson`      | Stores standardized salesperson records         |
+| Master / Core      | `silver.SalesPerson`      | `bronze.SalesPerson`      | Stores standardized sales person records |
 | Master / Core      | `silver.Product`          | `bronze.Product`          | Stores standardized product records             |
 | Master / Core      | `silver.Address`          | `bronze.Address`          | Stores standardized address records             |
 | Master / Core      | `silver.CreditCard`       | `bronze.CreditCard`       | Stores reporting-safe payment source attributes |
@@ -91,9 +91,9 @@ Silver tables store curated operational data from Bronze.
 | Business readiness     | Silver prepares operational data for analytical transformation     |
 | No reporting ownership | Silver is not the final reporting layer                            |
 
-## Warehouse Data Model
+## Warehouse
 
-The Warehouse contains the `staging` and `gold` schemas.
+The Warehouse is organized into the `staging` and `gold` schemas.
 
 | Schema | Purpose |
 |---|---|
@@ -104,16 +104,16 @@ The Warehouse contains the `staging` and `gold` schemas.
 
 Staging tables temporarily store historical analytical data from `Sales_Analytics`.
 
-| Data Role         | Staging Table               | Source Object                           | Purpose                                                   |
+| Data Category     | Staging Table               | Source Object                           | Purpose                                                   |
 | ----------------- | --------------------------- | --------------------------------------- | --------------------------------------------------------- |
-| Fact staging      | `staging.FactSales`         | `Sales_Analytics.fact.FactSales`        | Stores historical sales fact data before Gold publication |
-| Dimension staging | `staging.DimCustomer`       | `Sales_Analytics.dim.DimCustomer`       | Stores historical customer dimension data                 |
-| Dimension staging | `staging.DimProduct`        | `Sales_Analytics.dim.DimProduct`        | Stores historical product dimension data                  |
-| Dimension staging | `staging.DimSalesPerson`    | `Sales_Analytics.dim.DimSalesPerson`    | Stores historical salesperson dimension data              |
-| Dimension staging | `staging.DimSalesTerritory` | `Sales_Analytics.dim.DimSalesTerritory` | Stores historical territory dimension data                |
-| Dimension staging | `staging.DimPaymentMethod`  | `Sales_Analytics.dim.DimPaymentMethod`  | Stores historical payment method dimension data           |
-| Dimension staging | `staging.DimShipMethod`     | `Sales_Analytics.dim.DimShipMethod`     | Stores historical ship method dimension data              |
-| Dimension staging | `staging.DimDate`           | `Sales_Analytics.dim.DimDate`  or generated calendar | Stores historical date dimension data                     |
+| Analytical Fact  | `staging.FactSales` | `Sales_Analytics.fact.FactSales` | Stores historical sales fact data before Gold publication |
+| Analytical Dimension | `staging.DimCustomer` | `Sales_Analytics.dim.DimCustomer` | Stores historical customer dimension attributes |
+| Analytical Dimension | `staging.DimProduct` | `Sales_Analytics.dim.DimProduct` | Stores historical product and category dimension attributes |
+| Analytical Dimension | `staging.DimSalesPerson` | `Sales_Analytics.dim.DimSalesPerson` | Stores historical sales person dimension attributes |
+| Analytical Dimension | `staging.DimSalesTerritory` | `Sales_Analytics.dim.DimSalesTerritory` | Stores historical territory dimension attributes |
+| Analytical Dimension | `staging.DimPaymentMethod` | `Sales_Analytics.dim.DimPaymentMethod` | Stores historical payment method dimension attributes |
+| Analytical Dimension | `staging.DimShipMethod` | `Sales_Analytics.dim.DimShipMethod` | Stores historical ship method dimension attributes |
+| Analytical Dimension | `staging.DimDate` | `Sales_Analytics.dim.DimDate` | Stores historical date dimension attributes |
 
 #### Staging Rules
 
@@ -123,19 +123,19 @@ Staging tables temporarily store historical analytical data from `Sales_Analytic
 | Temporary ownership         | Staging is not the final reporting layer                                |
 | Reconciliation support      | Staging supports source-to-target comparison before Gold publication    |
 
-### Gold Dimensions
+### Gold Tables: Dimensions
 
 Gold dimensions store final reporting-ready descriptive entities.
 
-| Gold Dimension           | Main Inputs                                                                                          | Purpose                                                   |
+| Gold Dimension | Main Inputs | Purpose |
 | ------------------------ | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `gold.DimDate`           | `staging.DimDate`                                                                                    | Supports date-based reporting                             |
-| `gold.DimCustomer`       | `staging.DimCustomer`, `silver.Customer`                                                             | Stores final customer reporting attributes                |
-| `gold.DimProduct`        | `staging.DimProduct`, `silver.Product`, `silver.ProductCategory`                                     | Stores final product and category reporting attributes    |
-| `gold.DimSalesPerson`    | `staging.DimSalesPerson`, `silver.SalesPerson`                                                       | Stores final salesperson reporting attributes             |
-| `gold.DimSalesTerritory` | `staging.DimSalesTerritory`, `silver.SalesTerritory`, `silver.CountryRegion`, `silver.StateProvince` | Stores final territory and geography reporting attributes |
-| `gold.DimPaymentMethod`  | `staging.DimPaymentMethod`, `silver.CreditCard`                                                      | Stores reporting-safe payment method attributes           |
-| `gold.DimShipMethod`     | `staging.DimShipMethod`, `silver.ShipMethod`                                                         | Stores final shipping method reporting attributes         |
+| `gold.DimDate` | `staging.DimDate` or generated calendar | Supports date-based reporting and analysis |
+| `gold.DimCustomer` | `staging.DimCustomer`, `silver.Customer` | Stores final customer dimension attributes |
+| `gold.DimProduct` | `staging.DimProduct`, `silver.Product`, `silver.ProductCategory` | Stores final product and category dimension attributes |
+| `gold.DimSalesPerson` | `staging.DimSalesPerson`, `silver.SalesPerson` | Stores final sales person dimension attributes |
+| `gold.DimSalesTerritory` | `staging.DimSalesTerritory`, `silver.SalesTerritory`, `silver.CountryRegion`, `silver.StateProvince` | Stores final territory dimension attributes |
+| `gold.DimPaymentMethod` | `staging.DimPaymentMethod`, `silver.CreditCard` | Stores final payment method dimension attributes |
+| `gold.DimShipMethod` | `staging.DimShipMethod`, `silver.ShipMethod` | Stores final ship method dimension attributes |
 
 #### Dimension Rules
 
@@ -147,7 +147,7 @@ Gold dimensions store final reporting-ready descriptive entities.
 | Source traceability  | Dimensions should retain source identifiers where useful for reconciliation |
 | Reporting readiness  | Dimensions should expose business-friendly attributes for reporting         |
 
-### Gold Facts
+### Gold Tables: Facts
 
 Gold facts store final reporting-ready business events and measures.
 
@@ -159,14 +159,14 @@ Gold facts store final reporting-ready business events and measures.
 
 | Rule                 | Description                                                                                                               |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Defined grain        | `gold.FactSales` is stored at sales order line grain                                                                      |
+| Defined grain        | `gold.FactSales` is stored at sales order detail line grain                                                                      |
 | Historical alignment | Historical fact records are initialized from `Sales_Analytics.fact.FactSales`                                             |
 | Future processing    | New fact records are derived from `Sales_Operational` through Bronze and Silver                                           |
 | Measure consistency  | Sales amounts, quantities, discounts, taxes, freight, and totals must remain consistent across historical and new periods |
 
-## Semantic Model Scope
+## Power BI Semantic Model
 
-The semantic model provides the governed reporting layer for Power BI.
+The Power BI Semantic Model provides the governed reporting consumption layer over Gold objects.
 
 | Semantic Model | Source | Purpose |
 |---|---|---|
@@ -209,20 +209,20 @@ Target tables should include technical metadata columns where required for trace
 | `ingestion_datetime`  | Stores when the record was ingested into the target analytics platform                 |
 | `load_datetime`       | Stores when the record was loaded into the target object                               |
 
-## Modeling Assumptions
+## Modeling Assumptions and Constraints
 
-| Assumption                                      | Description                                                                                           |
-| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Historical and new data must align              | Gold must combine historical records from `Sales_Analytics` with new records from `Sales_Operational` |
-| Gold is the trusted analytical layer            | Reporting consumers should use Gold through the semantic model                                        |
-| Bronze and Silver support operational ingestion | They are not reporting consumption layers                                                             |
-| Staging supports historical baseline loading    | It is not a permanent reporting layer                                                                 |
-| Source object inventory may evolve              | Target objects may be refined during implementation                                                   |
-| Column-level mappings are not finalized         | Detailed mappings can be added later as metadata or mapping documents                                 |
+| Type | Statement | Description |
+|---|---|---|
+| Requirement | Historical and new data must align | Gold must combine historical records from `Sales_Analytics` with new records from `Sales_Operational` |
+| Rule | Gold stores trusted reporting-ready data | Reporting consumers should use the semantic model over Gold objects |
+| Rule | Bronze and Silver support operational ingestion | Bronze and Silver are not reporting consumption layers |
+| Rule | Staging supports historical baseline loading | Staging is not a permanent reporting layer |
+| Assumption | Source object inventory may evolve | Target objects may be refined during implementation |
+| Assumption | Column-level mappings are not finalized | Detailed mappings can be added later as metadata or mapping documents |
 
 ## Conclusion
 
-The target data model separates operational ingestion, historical staging, analytical modeling, and reporting consumption.
+The target data architecture defines the Lakehouse, Warehouse, Gold analytical objects, semantic model scope, naming conventions, and technical metadata required for reporting.
 
 `lh_sales_operational` stores Bronze and Silver operational data objects from `Sales_Operational`. `wh_sales_analytics` stores Staging objects used for historical loads and Gold objects used for final reporting-ready facts and dimensions. `sm_sales_analytics` provides the governed reporting layer for Power BI.
 

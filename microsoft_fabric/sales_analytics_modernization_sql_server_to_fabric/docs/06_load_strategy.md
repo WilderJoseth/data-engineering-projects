@@ -2,190 +2,93 @@
 
 ## Document Goal
 
-Define how Sales data should be refreshed in Microsoft Fabric.
+This document describes the load strategies used to refresh Sales data across the target reporting platform.
 
-This document explains the load strategies used by the project and how they apply to source data categories, Fabric schemas, and reporting objects.
+This document expands the load behavior section introduced in `02_solution_design.md`.
 
 ## Load Strategy Overview
 
-The solution uses three load strategies:
+The solution uses three main refresh strategies and one Bronze-specific write pattern.
 
-| Load Strategy              | Purpose                                                                     |
-| -------------------------- | --------------------------------------------------------------------------- |
-| Full reload                | Reload the full dataset for small or controlled objects                     |
-| Watermark incremental load | Load only new or changed records based on a reliable change tracking column |
-| Batch period reload        | Reload a specific business period, usually based on `batch_period_yyyymm`   |
-
-The selected strategy depends on the source object, data role, data volume, change pattern, and recovery requirement.
-
-## Load Strategy Types
-
-### Full Reload
-
-Full reload replaces or reloads the full target dataset.
-
-| Item            | Description                                                         |
-| --------------- | ------------------------------------------------------------------- |
-| Best for        | Small reference tables, lookup tables, or controlled full refreshes |
-| Main benefit    | Simple and reliable                                                 |
-| Main limitation | Not suitable for large transactional history                        |
-| Example objects | `Currency`, `ShipMethod`, `AddressType`, `ProductCategory`          |
-
-### Watermark Incremental Load
-
-Watermark incremental load extracts records that changed after the last successful load.
-
-| Item            | Description                                                            |
-| --------------- | ---------------------------------------------------------------------- |
-| Best for        | Master/core entities and objects with reliable change tracking columns |
-| Main benefit    | Reduces data movement and processing time                              |
-| Main limitation | Requires a trusted watermark column                                    |
-| Example objects | `Customer`, `Product`, `SalesPerson`, `Address`                        |
-
-Common watermark candidates:
-
-| Watermark Type      | Example                                    |
-| ------------------- | ------------------------------------------ |
-| Modified date       | `ModifiedDate`                             |
-| Created date        | `CreatedDate`                              |
-| Row version         | `rowversion` or equivalent tracking column |
-| Source audit column | Source-controlled change timestamp         |
-
-### Batch Period Reload
-
-Batch period reload replaces or reloads a specific business period.
-
-| Item            | Description                                                        |
-| --------------- | ------------------------------------------------------------------ |
-| Best for        | Transactional tables, fact tables, and period-based reconciliation |
-| Main benefit    | Supports controlled recovery and rerun by period                   |
-| Main limitation | Requires a reliable business date or period column                 |
-| Example objects | `SalesOrderHeader`, `SalesOrderDetail`, `FactSales`                |
-
-Common batch period candidates:
-
-| Period Type      | Example                            |
-| ---------------- | ---------------------------------- |
-| Monthly period   | `batch_period_yyyymm`              |
-| Order period     | Derived from `OrderDate`           |
-| Posting period   | Derived from business posting date |
-| Reporting period | Approved reporting calendar period |
-
-## Load Strategy by Data Category
-
-| Data Category         | Preferred Strategy                        | Reason                                                                                |
-| --------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------- |
-| Reference / Lookup    | Full reload                               | Small and low-change objects are easier to refresh completely                         |
-| Master / Core         | Watermark incremental load                | Business entities may change over time and should avoid full reload when volume grows |
-| Transactional         | Batch period reload                       | Sales transactions need controlled recovery and reconciliation by reporting period    |
-| Analytical Dimensions | Full reload or watermark incremental load | Depends on dimension size and change tracking availability                            |
-| Analytical Facts      | Batch period reload                       | Historical facts should support period-based backfill, reconciliation, and rerun      |
+| Strategy / Pattern | Purpose | Applies To |
+|---|---|---|
+| Full reload | Reloads the full dataset for controlled initialization or generated objects | Analytical dimensions from `Sales_Analytics`, generated dimensions such as `DimDate`, and approved small objects |
+| Watermark incremental load | Loads new records using `created_at` and changed records using `updated_at` | Reference, lookup, master, and core objects from `Sales_Operational` |
+| Batch period reload | Reloads a specific monthly business period based on `OrderDate` | Transactional objects from `Sales_Operational` and analytical facts from `Sales_Analytics` |
+| Append load | Appends extracted records without updating existing target rows | Bronze tables only |
 
 ## Load Strategy by Source
 
 ### Sales_Operational
 
-`Sales_Operational` provides new operational data to Fabric.
+`Sales_Operational` provides new operational data for future reporting periods.
 
-| Data Role          | Source Objects                                                                               | Target Path                     | Preferred Strategy         |
-| ------------------ | -------------------------------------------------------------------------------------------- | ------------------------------- | -------------------------- |
-| Reference / Lookup | `AddressType`, `CountryRegion`, `StateProvince`, `Currency`, `ShipMethod`, `ProductCategory` | `prod` → Bronze → Silver        | Full reload                |
-| Master / Core      | `Customer`, `Product`, `SalesPerson`, `Address`, `CreditCard`                                | `prod` → Bronze → Silver        | Watermark incremental load |
-| Transactional      | `SalesOrderHeader`, `SalesOrderDetail`                                                       | `prod` → Bronze → Silver → Gold | Batch period reload        |
+| Data Category | Source Object | Bronze Target Object | Silver Target Object | Gold Target Object | Match Key | Refresh Control Column | Load Strategy |
+|---|---|---|---|---|---|---|---|
+| Transactional | `SalesOrderHeader` | `SalesOrderHeader` | `SalesOrderHeader` | `FactSales` | `SourceSalesOrderID` | `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
+| Transactional | `SalesOrderDetail` | `SalesOrderDetail` | `SalesOrderDetail` | `FactSales` | `SourceSalesOrderDetailID` | Header `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
+| Master / Core | `Customer` | `Customer` | `Customer` | `DimCustomer` | `SourceCustomerID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Master / Core | `SalesPerson` | `SalesPerson` | `SalesPerson` | `DimSalesPerson` | `SourceSalesPersonID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Master / Core | `Product` | `Product` | `Product` | `DimProduct` | `SourceProductID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Master / Core | `CreditCard` | `CreditCard` | `CreditCard` | `DimPaymentMethod` | `SourceCreditCardID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Reference / Lookup | `CountryRegion` | `CountryRegion` | `CountryRegion` | `DimSalesTerritory` | `SourceCountryRegionCode` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Reference / Lookup | `StateProvince` | `StateProvince` | `StateProvince` | `DimSalesTerritory` | `SourceStateProvinceID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Reference / Lookup | `SalesTerritory` | `SalesTerritory` | `SalesTerritory` | `DimSalesTerritory` | `SourceSalesTerritoryID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Reference / Lookup | `ShipMethod` | `ShipMethod` | `ShipMethod` | `DimShipMethod` | `SourceShipMethodID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Reference / Lookup | `ProductCategory` | `ProductCategory` | `ProductCategory` | `DimProduct` | `SourceProductCategoryID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 
 ### Sales_Analytics
 
-`Sales_Analytics` provides historical reporting data to initialize Fabric.
+`Sales_Analytics` provides trusted historical reporting data used to initialize the target reporting model before cutover.
 
-| Data Role             | Source Objects                                                                                                     | Target Path                       | Preferred Strategy                        |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------- | ----------------------------------------- |
-| Analytical Dimensions | `DimCustomer`, `DimProduct`, `DimSalesPerson`, `DimSalesTerritory`, `DimPaymentMethod`, `DimShipMethod`, `DimDate` | `dim` → Warehouse staging → Gold  | Full reload or watermark incremental load |
-| Analytical Facts      | `FactSales`                                                                                                        | `fact` → Warehouse staging → Gold | Batch period reload                       |
-
-## Load Strategy by Fabric Schema
-
-| Fabric Asset           | Schema    | Typical Strategy                                           | Notes                                                         |
-| ---------------------- | --------- | ---------------------------------------------------------- | ------------------------------------------------------------- |
-| `lh_sales_operational` | `bronze`  | Full reload, watermark incremental, or batch period reload | Strategy depends on source object category                    |
-| `lh_sales_operational` | `silver`  | Same strategy as Bronze or controlled merge                | Silver should preserve traceability from Bronze               |
-| `wh_sales_analytics`   | `staging` | Full reload or batch period reload                         | Used for historical analytical loads from `Sales_Analytics`   |
-| `wh_sales_analytics`   | `gold`    | Batch period reload or controlled merge                    | Gold must preserve period ownership and reporting consistency |
-
-## Historical Reporting Load Strategy
-
-Historical reporting data comes from `Sales_Analytics`.
-
-| Object Type           | Strategy                                  | Reason                                                                            |
-| --------------------- | ----------------------------------------- | --------------------------------------------------------------------------------- |
-| Historical dimensions | Full reload or watermark incremental load | Dimensions are already reporting-shaped and may be manageable as complete reloads |
-| Historical facts      | Batch period reload                       | Fact history may be large and should support controlled period-based loading      |
-| Date dimension        | Full reload or generated calendar         | Calendar data should be consistent across historical and new reporting periods    |
-
-Historical fact loads should support reload by reporting period.
-
-Example:
-
-```text
-FactSales for 2022-01
-FactSales for 2022-02
-FactSales for 2022-03
-```
-
-This allows historical data to be loaded, reconciled, and rerun in controlled batches.
-
-## New Reporting Data Load Strategy
-
-New reporting data comes from `Sales_Operational`.
-
-| Object Type        | Strategy                   | Reason                                                                            |
-| ------------------ | -------------------------- | --------------------------------------------------------------------------------- |
-| Reference / Lookup | Full reload                | Low-change objects are simple to refresh completely                               |
-| Master / Core      | Watermark incremental load | Entity changes should be captured without reloading full history                  |
-| Transactional      | Batch period reload        | Sales transactions should support recovery and reconciliation by reporting period |
-| Gold dimensions    | Controlled merge           | New and historical dimension records must align under one model                   |
-| Gold facts         | Batch period reload        | New reporting facts should be loaded by approved reporting period                 |
-
-New transactional loads should be based on a reliable business date, such as `OrderDate`, and assigned to a reporting period.
+| Data Category | Source Object | Staging Target Object | Gold Target Object | Match Key | Refresh Control Column | Load Strategy |
+|---|---|---|---|---|---|---|
+| Analytical Fact | `FactSales` | `FactSales` | `FactSales` | `SourceSalesOrderDetailID` | `OrderDate` | Staging monthly batch reload; Gold monthly batch reload |
+| Analytical Dimension | `DimCustomer` | `DimCustomer` | `DimCustomer` | `SourceCustomerID` | Not required | Staging full reload; Gold full reload |
+| Analytical Dimension | `DimProduct` | `DimProduct` | `DimProduct` | `SourceProductID` | Not required | Staging full reload; Gold full reload |
+| Analytical Dimension | `DimSalesPerson` | `DimSalesPerson` | `DimSalesPerson` | `SourceSalesPersonID` | Not required | Staging full reload; Gold full reload |
+| Analytical Dimension | `DimSalesTerritory` | `DimSalesTerritory` | `DimSalesTerritory` | `SourceSalesTerritoryID` | Not required | Staging full reload; Gold full reload |
+| Analytical Dimension | `DimPaymentMethod` | `DimPaymentMethod` | `DimPaymentMethod` | `SourcePaymentMethodID` | Not required | Staging full reload; Gold full reload |
+| Analytical Dimension | `DimShipMethod` | `DimShipMethod` | `DimShipMethod` | `SourceShipMethodID` | Not required | Staging full reload; Gold full reload |
+| Analytical Dimension | `DimDate` | `DimDate` | `DimDate` | `DateKey` | Not required | Staging full reload; Gold generated refresh or full reload |
 
 ## Load Strategy Rules
 
-| Rule                                                 | Description                                                                         |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Full reload is limited to controlled objects         | Use full reload for small or low-change objects, not large fact history             |
-| Watermark loads require a reliable tracking column   | Do not use watermark incremental load without a trusted change column               |
-| Batch period reload is preferred for facts           | Transactional and fact data should support period-based recovery                    |
-| Gold must avoid duplicate period ownership           | The same reporting period should not be loaded from both historical and new sources |
-| Reruns must be traceable                             | Reloaded objects or periods must be linked to execution metadata                    |
-| Load strategy must be metadata-driven where possible | Object-level load behavior should be configurable through control metadata          |
+| Rule | Description |
+|---|---|
+| Full reload is limited to historical dimensional tables and generated dimensions | Use full reload for analytical dimensions loaded from `Sales_Analytics` during historical initialization before cutover, and for generated dimensions such as `DimDate` |
+| Watermark loads require reliable tracking columns | Use `created_at` for new records and `updated_at` for changed records |
+| Batch period reload uses `OrderDate` by month | Transactional and fact processing must derive `batch_period_yyyymm` from `OrderDate` |
+| Bronze is append-based | Bronze preserves source-aligned records and execution traceability |
+| Silver is curated by data category | Silver uses upsert or batch reload depending on the operational data category |
+| Gold is loaded by analytical object type | Dimensions use upsert to preserve surrogate key stability; facts use monthly batch period reload |
+| Gold must avoid duplicate period ownership | The same reporting period must not be loaded from both historical and new sources |
+| Reruns must be traceable | Reloaded objects or periods must be linked to execution metadata |
+| Load strategy should be metadata-driven where possible | Object-level load behavior should be configurable through `DataOps_Control` |
 
 ## Rerun and Recovery Considerations
 
-| Scenario                     | Expected Behavior                                               |
-| ---------------------------- | --------------------------------------------------------------- |
-| Reference load failure       | Rerun full object reload                                        |
-| Master/core load failure     | Rerun from last successful watermark or approved recovery point |
-| Transactional period failure | Rerun the affected reporting period                             |
-| Historical fact failure      | Reload the affected historical period from `Sales_Analytics`    |
-| Gold publication failure     | Reprocess affected Gold object or reporting period              |
-| Reconciliation failure       | Keep the affected batch unaccepted until corrected or approved  |
+| Scenario | Expected Behavior |
+|---|---|
+| Reference / lookup load failure | Rerun from the last successful watermark or approved recovery point |
+| Master / core load failure | Rerun from the last successful watermark or approved recovery point |
+| Transactional period failure | Rerun the affected `OrderDate` month |
+| Historical analytical dimension failure | Rerun the full affected dimension |
+| Historical analytical fact failure | Reload the affected historical `OrderDate` month |
+| Gold dimension failure | Reprocess the affected dimension through upsert |
+| Gold fact failure | Delete and reload the affected `OrderDate` month |
+| Reconciliation failure | Keep the affected batch unaccepted until corrected or approved |
 
 Reruns should not create duplicate records in Silver or Gold.
 
-## Load Strategy Assumptions
-
-| Assumption                                         | Description                                                         |
-| -------------------------------------------------- | ------------------------------------------------------------------- |
-| Source databases are read-only for Fabric          | Fabric extracts data but does not update source databases           |
-| Reference tables are manageable as full reloads    | These objects are expected to be small or low-change                |
-| Master/core tables have change tracking candidates | Watermark columns should be confirmed during source profiling       |
-| Fact and transactional data support period logic   | Period reloads depend on reliable business date columns             |
-| Historical fact data may be large                  | `FactSales` should support period-based loading and rerun           |
-| Detailed column mappings are not finalized         | Specific keys, watermarks, and date columns will be confirmed later |
-
 ## Conclusion
 
-The load strategy separates refresh behavior from data flow design.
+The load strategy defines how each source object is refreshed across the target reporting platform.
 
-Reference data is generally loaded using full reloads. Master and core entities use watermark incremental loads when reliable change tracking exists. Transactional and fact data use batch period reloads to support reconciliation, recovery, and controlled reruns.
+Reference, lookup, master, and core objects from `Sales_Operational` use watermark incremental loading based on `created_at` and `updated_at`, with upsert processing in Silver and Gold. Transactional data from `Sales_Operational` uses monthly batch period reloads based on `OrderDate`.
 
-This strategy allows Fabric to load trusted historical reporting data from `Sales_Analytics` and new reporting data from `Sales_Operational` while maintaining traceability, recoverability, and reporting-period control.
+Historical analytical dimensions from `Sales_Analytics` are loaded using full reload during historical initialization before cutover. Historical analytical facts from `Sales_Analytics` use monthly batch reloads based on `OrderDate`.
+
+Bronze uses append-based ingestion to preserve traceability. Silver applies curated loading by operational data category. Gold uses upsert for dimensions and monthly delete-and-reload processing for facts.
+
+This strategy allows the target reporting platform to initialize trusted historical reporting data from `Sales_Analytics` and continue loading new reporting data from `Sales_Operational` while maintaining traceability, recoverability, and reporting-period control.

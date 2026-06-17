@@ -2,7 +2,9 @@
 
 ## Document Goal
 
-This document explains the main platform components, architectural responsibilities, and design decisions required to build the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth.
+This document provides the solution overview for the Sales reporting modernization.
+
+It defines the main components, architectural responsibilities, ownership boundaries, and design decisions required to build the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth. Detailed source profiling, target data modeling, and data flow behavior are expanded in the supporting documents.
 
 ## High-Level Architecture
 
@@ -112,10 +114,16 @@ The solution uses `DataOps_Control` as a shared control framework for execution 
 
 ## Architecture Rules
 
-- Power BI reports must consume the governed semantic model, not Bronze, Silver, or Staging objects directly.
+- Power BI reports must consume the governed semantic model, not Bronze, Silver, Staging, or Gold objects directly.
 - Bronze objects should preserve source-aligned operational data from `Sales_Operational`.
 - Silver objects should standardize, validate, and prepare operational data for analytical modeling.
 - Gold objects should contain the final reporting-ready dimensional and fact model.
 - Historical data from `Sales_Analytics` and new data from `Sales_Operational` must align under one consistent analytical model.
 - Data should not be treated as trusted until validation and reconciliation are completed or accepted.
 - The same reporting period must not be loaded into Gold from more than one approved source.
+
+## Conclusion
+
+The solution design defines the target architecture, the main platform components, the ownership boundaries, and the design decisions that guide the supporting documents.
+
+The main design boundary is to keep operational processing in `Sales_Operational`, use `Sales_Analytics` as the historical reporting baseline, and make the Warehouse Gold model exposed through the Power BI semantic model the target reporting source of truth.

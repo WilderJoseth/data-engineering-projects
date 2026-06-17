@@ -2,7 +2,9 @@
 
 ## Document Goal
 
-This document explains the source databases, their roles, source object categories, and how each source contributes to the modernization flow.
+This document describes the source databases, their roles, source object categories, and how each source contributes to the target reporting platform.
+
+This document expands the source-side section introduced in `02_solution_design.md`.
 
 ## Source Platform Overview
 
@@ -31,11 +33,9 @@ This classification helps identify which source objects are small and stable, wh
 
 ## Sales_Operational Source Tables
 
-`Sales_Operational` provides normalized operational data and remains the operational system of record.
+For target ingestion, only final curated tables from the `prod` schema are expected to be used as source tables.
 
-The database includes internal processing schemas such as `staging`, `work`, and `prod`. For target ingestion, only final curated tables from the `prod` schema are expected to be used as source tables.
-
-| Schema | Data Role | Source Table | Expected Volume | Purpose |
+| Schema | Data Category | Source Table | Expected Volume | Purpose |
 |---|---|---|---|---|
 | `prod` | Transactional | `SalesOrderHeader` | High | Stores sales order header records |
 | `prod` | Transactional | `SalesOrderDetail` | High | Stores sales order line records |
@@ -56,31 +56,29 @@ The database includes internal processing schemas such as `staging`, `work`, and
 
 ## Sales_Analytics Source Tables
 
-`Sales_Analytics` provides the existing trusted reporting model and is used as the historical reporting baseline.
+For target ingestion, only final curated tables from the `dim` and `fact` schemas are expected to be used as source tables.
 
-The database includes internal processing schemas such as `staging`, `work`, `dim`, and `fact`. For target ingestion, only final curated tables from the `dim` and `fact` schemas are expected to be used as source tables.
-
-| Schema | Data Role | Source Table | Expected Volume | Purpose |
+| Schema | Data Category | Source Table | Expected Volume | Purpose |
 |---|---|---|---|---|
-| `fact` | Fact | `FactSales` | Very high | Stores historical Sales transaction facts |
-| `dim` | Dimension | `DimCustomer` | Medium | Stores historical reporting customer attributes |
-| `dim` | Dimension | `DimProduct` | Medium | Stores historical reporting product attributes |
-| `dim` | Dimension | `DimSalesPerson` | Medium | Stores historical reporting salesperson attributes |
-| `dim` | Dimension | `DimSalesTerritory` | Low | Stores historical reporting geography and territory attributes |
-| `dim` | Dimension | `DimPaymentMethod` | Low | Stores historical payment method attributes |
-| `dim` | Dimension | `DimShipMethod` | Low | Stores historical shipping method attributes |
-| `dim` | Dimension | `DimDate` | Low | Supports date-based reporting |
+| `fact` | Analytical Fact | `FactSales` | Very high | Stores historical Sales transaction facts |
+| `dim` | Analytical Dimension | `DimCustomer` | Medium | Stores historical reporting customer attributes |
+| `dim` | Analytical Dimension | `DimProduct` | Medium | Stores historical reporting product attributes |
+| `dim` | Analytical Dimension | `DimSalesPerson` | Medium | Stores historical reporting salesperson attributes |
+| `dim` | Analytical Dimension | `DimSalesTerritory` | Low | Stores historical reporting geography and territory attributes |
+| `dim` | Analytical Dimension | `DimPaymentMethod` | Low | Stores historical payment method attributes |
+| `dim` | Analytical Dimension | `DimShipMethod` | Low | Stores historical shipping method attributes |
+| `dim` | Analytical Dimension | `DimDate` | Low | Supports date-based reporting |
 
-## Source Assumptions
+## Source Assumptions and Constraints
 
-| Assumption | Notes |
-|---|---|
-| `Sales_Operational` remains active | On-premise operations continue after the modernization starts |
-| `Sales_Analytics` is trusted | Historical reporting data is treated as the baseline for the target analytical model |
-| Source databases are read-only | The modernization process should not modify the on-premise source databases |
-| Historical and new data need alignment | The target analytical model must align historical data from `Sales_Analytics` with new data from `Sales_Operational` |
-| Source object inventory may evolve | Source table lists may be refined during implementation |
-| Data volumes require controlled processing | Large historical and transactional objects may require batch-based processing |
+| Type | Statement | Notes |
+|---|---|---|
+| Constraint | `Sales_Operational` remains active | On-premise operations continue after the modernization starts |
+| Assumption | `Sales_Analytics` is trusted | Historical reporting data is treated as the baseline for the target reporting model |
+| Rule | Source databases are read-only | The modernization process must not modify the on-premise source databases |
+| Requirement | Historical and new data need alignment | The target reporting model must align historical data from `Sales_Analytics` with new data from `Sales_Operational` |
+| Assumption | Source object inventory may evolve | Source table lists may be refined during implementation |
+| Assumption | Data volumes require controlled processing | Large historical and transactional objects may require batch-based processing |
 
 ## Source Profiling Checklist
 
@@ -101,8 +99,8 @@ The following items must be confirmed before implementation so load strategy, va
 
 ## Conclusion
 
-The current source environment provides a strong baseline for the Sales reporting modernization.
+The source data profile defines the source databases, source object categories, source table inventory, and profiling checks required before implementation.
 
 `Sales_Operational` remains the active operational system of record and provides new transactional data for future reporting periods. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables.
 
-The main source profiling challenge is to confirm row counts, historical ranges, business keys, date columns, change tracking columns, and large-table candidates before implementation.
+Before implementation, the main source profiling focus is to confirm row counts, historical ranges, business keys, date columns, change tracking columns, and large-table candidates. These details are required to finalize load strategy, validation, reconciliation, and batch processing rules.
