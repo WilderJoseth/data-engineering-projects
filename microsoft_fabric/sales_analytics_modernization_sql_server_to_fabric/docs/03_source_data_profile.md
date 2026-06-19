@@ -2,7 +2,7 @@
 
 ## Document Goal
 
-This document describes the source databases, their roles, source object categories, and how each source contributes to the target reporting platform.
+This document describes the source databases, their roles, source object categories, estimated data volumes, growth assumptions, and how each source contributes to the target reporting platform.
 
 This document expands the source-side section introduced in `02_solution_design.md`.
 
@@ -10,11 +10,11 @@ This document expands the source-side section introduced in `02_solution_design.
 
 The current Sales platform runs on an on-premise SQL Server 2022 instance.
 
-The source platform contains two databases with different responsibilities:
+The source platform contains two business databases with different responsibilities:
 
 | Source Database | Current Responsibility | Data Model | Modernization Role |
 |---|---|---|---|
-| `Sales_Operational` | Supports active on-premise Sales operations | Normalized model | Provides new transactional data for future reporting periods |
+| `Sales_Operational` | Supports active on-premise Sales operations | Normalized model | Provides new transactional and master data for future reporting periods after cutover |
 | `Sales_Analytics` | Provides trusted analytical reporting data | Star schema | Provides the historical reporting baseline before reporting cutover |
 
 ## Source Data Categories
@@ -23,84 +23,64 @@ The source data is grouped by business and analytical role.
 
 | Data Category | Description | Main Source | Expected Data Volume | Estimated Row Count |
 |---|---|---|---|---|
-| Reference / Lookup | Stable or low-change descriptive values | `Sales_Operational` | Low | 100 - 10,000 rows |
-| Master / Core | Business entities used across Sales processes | `Sales_Operational` | Medium | 10,000 - 1 million rows |
-| Transactional | Sales orders, sales order lines, and related transaction records | `Sales_Operational` | High | 1 million - 20 million rows |
-| Analytical Dimensions | Reporting-ready descriptive structures | `Sales_Analytics` | Medium | 10,000 - 2 million rows |
-| Analytical Facts | Reporting-ready measurable business events | `Sales_Analytics` | Very high | 10 million - 100 million rows |
+| Reference / Lookup | Stable or low-change descriptive values | `Sales_Operational` | Low | 10 to 302,500 rows |
+| Master / Core | Business entities | `Sales_Operational` | Medium to high | 5,000 to 31,475,000 rows |
+| Transactional | Sales orders and sales order lines | `Sales_Operational` | Very high | 252,500,000 to 1,262,500,000 rows |
+| Analytical Dimensions | Reporting-ready descriptive structures | `Sales_Analytics` | Low to high | 20 to 25,250,000 rows |
+| Analytical Facts | Reporting-ready measurable business events | `Sales_Analytics` | Very high | 1,262,500,000 rows |
 
-This classification helps identify which source objects are small and stable, which objects change over time, and which objects may require controlled batch processing during migration.
+## Source Volume Summary
+
+| Source Database | Rows | Data Size | Index Size |
+|---|---:|---:|---:|
+| `Sales_Operational` | 1,590,939,000 | 209.03 – 322.25 GB | 104.25 – 238.94 GB |
+| `Sales_Analytics` | 1,306,659,117 | 196.99 – 281.68 GB | 93.47 – 189.53 GB |
+| **Total** | **2,897,598,117** | **406.02 – 603.94 GB** | **197.71 – 428.47 GB** |
 
 ## Sales_Operational Source Tables
 
-For target ingestion, only final curated tables from the `prod` schema are expected to be used as source tables.
+For target ingestion, only final persisted business tables from the `prod` schema are included in the `Sales_Operational` source inventory.
 
-| Schema | Data Category | Source Table | Expected Volume | Purpose |
-|---|---|---|---|---|
-| `prod` | Transactional | `SalesOrderHeader` | High | Stores sales order header records |
-| `prod` | Transactional | `SalesOrderDetail` | High | Stores sales order line records |
-| `prod` | Master / Core | `Customer` | Medium | Stores customer records |
-| `prod` | Master / Core | `SalesPerson` | Medium | Stores salesperson records |
-| `prod` | Master / Core | `Product` | Medium | Stores product records |
-| `prod` | Master / Core | `Address` | Medium | Stores address records |
-| `prod` | Master / Core | `CreditCard` | Medium | Stores payment-related source records |
-| `prod` | Reference / Lookup | `AddressType` | Low | Stores address type values |
-| `prod` | Reference / Lookup | `CountryRegion` | Low | Stores country or region values |
-| `prod` | Reference / Lookup | `StateProvince` | Low | Stores state or province values |
-| `prod` | Reference / Lookup | `SalesTerritory` | Low | Stores sales territory values |
-| `prod` | Reference / Lookup | `Currency` | Low | Stores currency values |
-| `prod` | Reference / Lookup | `CurrencyRate` | Medium | Stores currency exchange rate values |
-| `prod` | Reference / Lookup | `ShipMethod` | Low | Stores shipping method values |
-| `prod` | Reference / Lookup | `SpecialOffer` | Low | Stores promotion and discount values |
-| `prod` | Reference / Lookup | `ProductCategory` | Low | Stores product category values |
+| Data Category | Schema | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Current Index Size |
+|---|---|---|---:|---:|---:|---:|
+| Transactional | `prod` | `SalesOrderDetail` | 7,500,000 rows/month | 1,262,500,000 | 138.88 – 195.69 GB | 50.50 – 113.62 GB |
+| Transactional | `prod` | `SalesOrderHeader` | 1,500,000 rows/month | 252,500,000 | 56.81 – 94.69 GB | 44.19 – 101.00 GB |
+| Master / Core | `prod` | `Customer` | 150,000 rows/month | 25,250,000 | 2.52 – 5.05 GB | 2.52 – 6.31 GB |
+| Master / Core | `prod` | `Address` | 185,000 rows/month | 31,475,000 | 8.81 – 22.66 GB | 5.04 – 12.59 GB |
+| Master / Core | `prod` | `CreditCard` | 110,000 rows/month | 18,850,000 | 1.89 – 3.77 GB | 1.89 – 5.03 GB |
+| Master / Core | `prod` | `Product` | Static / very low | 50,000 | 0.05 – 0.15 GB | 0.05 – 0.15 GB |
+| Master / Core | `prod` | `SalesPerson` | Static / very low | 5,000 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `CurrencyRate` | 1,500 rows/month | 302,500 | 0.06 – 0.18 GB | 0.06 – 0.18 GB |
+| Reference / Lookup | `prod` | `SpecialOffer` | Static / very low | 5,000 | < 0.01 – 0.03 GB | < 0.01 – 0.02 GB |
+| Reference / Lookup | `prod` | `ProductCategory` | Static / very low | 500 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `StateProvince` | Static / very low | 500 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `CountryRegion` | Static / very low | 250 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `Currency` | Static / very low | 200 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `ShipMethod` | Static / very low | 20 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `SalesTerritory` | Static / very low | 20 | < 0.01 GB | < 0.01 GB |
+| Reference / Lookup | `prod` | `AddressType` | Static / very low | 10 | < 0.01 GB | < 0.01 GB |
 
 ## Sales_Analytics Source Tables
 
-For target ingestion, only final curated tables from the `dim` and `fact` schemas are expected to be used as source tables.
+For target ingestion, only final persisted reporting tables from the `dim` and `fact` schemas are included in the `Sales_Analytics` source inve
 
-| Schema | Data Category | Source Table | Expected Volume | Purpose |
-|---|---|---|---|---|
-| `fact` | Analytical Fact | `FactSales` | Very high | Stores historical Sales transaction facts |
-| `dim` | Analytical Dimension | `DimCustomer` | Medium | Stores historical reporting customer attributes |
-| `dim` | Analytical Dimension | `DimProduct` | Medium | Stores historical reporting product attributes |
-| `dim` | Analytical Dimension | `DimSalesPerson` | Medium | Stores historical reporting salesperson attributes |
-| `dim` | Analytical Dimension | `DimSalesTerritory` | Low | Stores historical reporting geography and territory attributes |
-| `dim` | Analytical Dimension | `DimPaymentMethod` | Low | Stores historical payment method attributes |
-| `dim` | Analytical Dimension | `DimShipMethod` | Low | Stores historical shipping method attributes |
-| `dim` | Analytical Dimension | `DimDate` | Low | Supports date-based reporting |
-
-## Source Assumptions and Constraints
-
-| Type | Statement | Notes |
-|---|---|---|
-| Constraint | `Sales_Operational` remains active | On-premise operations continue after the modernization starts |
-| Assumption | `Sales_Analytics` is trusted | Historical reporting data is treated as the baseline for the target reporting model |
-| Rule | Source databases are read-only | The modernization process must not modify the on-premise source databases |
-| Requirement | Historical and new data need alignment | The target reporting model must align historical data from `Sales_Analytics` with new data from `Sales_Operational` |
-| Assumption | Source object inventory may evolve | Source table lists may be refined during implementation |
-| Assumption | Data volumes require controlled processing | Large historical and transactional objects may require batch-based processing |
-
-## Source Profiling Checklist
-
-The following items must be confirmed before implementation so load strategy, validation, reconciliation, and batching rules can be finalized.
-
-| Profiling Item | Purpose |
-|---|---|
-| Row counts by table | Estimate load volume and processing effort |
-| Historical date range | Define backfill scope |
-| Business keys | Support deduplication, joins, and reconciliation |
-| Primary keys | Support source integrity checks |
-| Foreign keys | Support relationship validation |
-| Date columns | Support reporting period logic and batch reloads |
-| Change tracking columns | Support watermark incremental loads |
-| Nullable columns | Identify data quality risks |
-| Duplicate patterns | Identify cleansing and validation needs |
-| Large table candidates | Identify tables that may require partitioned or batch processing |
+| Data Category | Schema | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Current Index Size |
+|---|---|---|---:|---:|---:|---:|
+| Analytical Fact | `fact` | `FactSales` | 7,500,000 rows/month | 1,262,500,000 | 189.38 – 265.12 GB | 88.38 – 176.75 GB |
+| Analytical Dimension | `dim` | `DimCustomer` | 150,000 rows/month | 25,250,000 | 5.05 – 10.10 GB | 3.79 – 8.84 GB |
+| Analytical Dimension | `dim` | `DimPaymentMethod` | 110,000 rows/month | 18,850,000 | 2.51 – 6.28 GB | 1.26 – 3.77 GB |
+| Analytical Dimension | `dim` | `DimProduct` | Static / very low | 50,000 | 0.05 – 0.15 GB | 0.05 – 0.15 GB |
+| Analytical Dimension | `dim` | `DimSalesPerson` | Static / very low | 5,000 | < 0.01 GB | < 0.01 GB |
+| Analytical Dimension | `dim` | `DimDate` | Static / very low | 4,077 | < 0.01 GB | < 0.01 GB |
+| Analytical Dimension | `dim` | `DimSalesTerritory` | Static / very low | 20 | < 0.01 GB | < 0.01 GB |
+| Analytical Dimension | `dim` | `DimShipMethod` | Static / very low | 20 | < 0.01 GB | < 0.01 GB |
 
 ## Conclusion
 
-The source data profile defines the source databases, source object categories, source table inventory, and profiling checks required before implementation.
+The source data profile defines the source databases, source object categories, persisted source table inventory, estimated current-state volumes, and growth assumptions required before implementation.
 
-`Sales_Operational` remains the active operational system of record and provides new transactional data for future reporting periods. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables.
+`Sales_Operational` remains the active operational system of record and provides new transactional, master, and reference data for future reporting periods after cutover. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables before cutover.
 
-Before implementation, the main source profiling focus is to confirm row counts, historical ranges, business keys, date columns, change tracking columns, and large-table candidates. These details are required to finalize load strategy, validation, reconciliation, and batch processing rules.
+The source platform contains approximately 2.90 billion persisted business rows across `Sales_Operational` and `Sales_Analytics`. The largest objects are `Sales_Analytics.fact.FactSales`, `Sales_Operational.prod.SalesOrderDetail`, and `Sales_Operational.prod.SalesOrderHeader`.
+
+These volumes confirm that the Fabric migration must use controlled historical loading, watermark-based incremental processing for operational non-transactional data, batch-period handling for large transactional and fact data, and reconciliation checks by table and reporting period.
