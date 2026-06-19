@@ -29,26 +29,26 @@ The Lakehouse is organized into the `bronze` and `silver` schemas.
 
 ### Bronze Tables
 
-Bronze tables store raw source-aligned records from `Sales_Operational.prod`.
+Bronze tables store raw source-aligned records from `Sales_Operational`.
 
-| Data Category      | Bronze Table              | Source Object                             | Purpose                                   |
-| ------------------ | ------------------------- | ----------------------------------------- | ----------------------------------------- |
-| Transactional      | `bronze.SalesOrderHeader` | `Sales_Operational.prod.SalesOrderHeader` | Stores raw sales order header records     |
-| Transactional      | `bronze.SalesOrderDetail` | `Sales_Operational.prod.SalesOrderDetail` | Stores raw sales order line records       |
-| Master / Core      | `bronze.Customer`         | `Sales_Operational.prod.Customer`         | Stores raw customer records               |
-| Master / Core      | `bronze.SalesPerson`      | `Sales_Operational.prod.SalesPerson`      | Stores raw sales person records           |
-| Master / Core      | `bronze.Product`          | `Sales_Operational.prod.Product`          | Stores raw product records                |
-| Master / Core      | `bronze.Address`          | `Sales_Operational.prod.Address`          | Stores raw address records                |
-| Master / Core      | `bronze.CreditCard`       | `Sales_Operational.prod.CreditCard`       | Stores raw payment-related source records |
-| Reference / Lookup | `bronze.AddressType`      | `Sales_Operational.prod.AddressType`      | Stores raw address type values            |
-| Reference / Lookup | `bronze.CountryRegion`    | `Sales_Operational.prod.CountryRegion`    | Stores raw country or region values       |
-| Reference / Lookup | `bronze.StateProvince`    | `Sales_Operational.prod.StateProvince`    | Stores raw state or province values       |
-| Reference / Lookup | `bronze.SalesTerritory`   | `Sales_Operational.prod.SalesTerritory`   | Stores raw sales territory values         |
-| Reference / Lookup | `bronze.Currency`         | `Sales_Operational.prod.Currency`         | Stores raw currency values                |
-| Reference / Lookup | `bronze.CurrencyRate`     | `Sales_Operational.prod.CurrencyRate`     | Stores raw currency exchange rate values  |
-| Reference / Lookup | `bronze.ShipMethod`       | `Sales_Operational.prod.ShipMethod`       | Stores raw shipping method values         |
-| Reference / Lookup | `bronze.SpecialOffer`     | `Sales_Operational.prod.SpecialOffer`     | Stores raw promotion and discount values  |
-| Reference / Lookup | `bronze.ProductCategory`  | `Sales_Operational.prod.ProductCategory`  | Stores raw product category values        |
+| Data Category | Source Table | Target Table | Purpose |
+|---|---|---|---|
+| Transactional | `prod.SalesOrderHeader` | `bronze.SalesOrderHeader` | Stores raw sales order header records |
+| Transactional | `prod.SalesOrderDetail` | `bronze.SalesOrderDetail` | Stores raw sales order line records |
+| Master / Core | `prod.Customer` | `bronze.Customer` | Stores raw customer records |
+| Master / Core | `prod.SalesPerson` | `bronze.SalesPerson` | Stores raw salesperson records |
+| Master / Core | `prod.Product` | `bronze.Product` | Stores raw product records |
+| Master / Core | `prod.Address` | `bronze.Address` | Stores raw address records |
+| Master / Core | `prod.CreditCard` | `bronze.CreditCard` | Stores raw payment-related source records |
+| Reference / Lookup | `prod.AddressType` | `bronze.AddressType` | Stores raw address type values |
+| Reference / Lookup | `prod.CountryRegion` | `bronze.CountryRegion` | Stores raw country or region values |
+| Reference / Lookup | `prod.StateProvince` | `bronze.StateProvince` | Stores raw state or province values |
+| Reference / Lookup | `prod.SalesTerritory` | `bronze.SalesTerritory` | Stores raw sales territory values |
+| Reference / Lookup | `prod.Currency` | `bronze.Currency` | Stores raw currency values |
+| Reference / Lookup | `prod.CurrencyRate` | `bronze.CurrencyRate` | Stores raw currency exchange rate values |
+| Reference / Lookup | `prod.ShipMethod` | `bronze.ShipMethod` | Stores raw shipping method values |
+| Reference / Lookup | `prod.SpecialOffer` | `bronze.SpecialOffer` | Stores raw promotion and discount values |
+| Reference / Lookup | `prod.ProductCategory` | `bronze.ProductCategory` | Stores raw product category values |
 
 #### Bronze Rules
 
@@ -63,24 +63,24 @@ Bronze tables store raw source-aligned records from `Sales_Operational.prod`.
 
 Silver tables store curated operational data from Bronze.
 
-| Data Category      | Silver Table              | Source Table              | Purpose                                         |
-| ------------------ | ------------------------- | ------------------------- | ----------------------------------------------- |
-| Transactional      | `silver.SalesOrderHeader` | `bronze.SalesOrderHeader` | Stores standardized sales order header records  |
-| Transactional      | `silver.SalesOrderDetail` | `bronze.SalesOrderDetail` | Stores standardized sales order line records    |
-| Master / Core      | `silver.Customer`         | `bronze.Customer`         | Stores standardized customer records            |
-| Master / Core      | `silver.SalesPerson`      | `bronze.SalesPerson`      | Stores standardized sales person records |
-| Master / Core      | `silver.Product`          | `bronze.Product`          | Stores standardized product records             |
-| Master / Core      | `silver.Address`          | `bronze.Address`          | Stores standardized address records             |
-| Master / Core      | `silver.CreditCard`       | `bronze.CreditCard`       | Stores reporting-safe payment source attributes |
-| Reference / Lookup | `silver.AddressType`      | `bronze.AddressType`      | Stores validated address type values            |
-| Reference / Lookup | `silver.CountryRegion`    | `bronze.CountryRegion`    | Stores validated country or region values       |
-| Reference / Lookup | `silver.StateProvince`    | `bronze.StateProvince`    | Stores validated state or province values       |
-| Reference / Lookup | `silver.SalesTerritory`   | `bronze.SalesTerritory`   | Stores validated sales territory values         |
-| Reference / Lookup | `silver.Currency`         | `bronze.Currency`         | Stores validated currency values                |
-| Reference / Lookup | `silver.CurrencyRate`     | `bronze.CurrencyRate`     | Stores validated currency exchange rate values  |
-| Reference / Lookup | `silver.ShipMethod`       | `bronze.ShipMethod`       | Stores validated shipping method values         |
-| Reference / Lookup | `silver.SpecialOffer`     | `bronze.SpecialOffer`     | Stores validated promotion and discount values  |
-| Reference / Lookup | `silver.ProductCategory`  | `bronze.ProductCategory`  | Stores validated product category values        |
+| Data Category | Source Table | Target Table | Purpose |
+|---|---|---|---|
+| Transactional | `bronze.SalesOrderHeader` | `silver.SalesOrderHeader` | Stores standardized sales order header records |
+| Transactional | `bronze.SalesOrderDetail` | `silver.SalesOrderDetail` | Stores standardized sales order line records |
+| Master / Core | `bronze.Customer` | `silver.Customer` | Stores standardized customer records |
+| Master / Core | `bronze.SalesPerson` | `silver.SalesPerson` | Stores standardized salesperson records |
+| Master / Core | `bronze.Product` | `silver.Product` | Stores standardized product records |
+| Master / Core | `bronze.Address` | `silver.Address` | Stores standardized address records |
+| Master / Core | `bronze.CreditCard` | `silver.CreditCard` | Stores reporting-safe payment source attributes |
+| Reference / Lookup | `bronze.AddressType` | `silver.AddressType` | Stores validated address type values |
+| Reference / Lookup | `bronze.CountryRegion` | `silver.CountryRegion` | Stores validated country or region values |
+| Reference / Lookup | `bronze.StateProvince` | `silver.StateProvince` | Stores validated state or province values |
+| Reference / Lookup | `bronze.SalesTerritory` | `silver.SalesTerritory` | Stores validated sales territory values |
+| Reference / Lookup | `bronze.Currency` | `silver.Currency` | Stores validated currency values |
+| Reference / Lookup | `bronze.CurrencyRate` | `silver.CurrencyRate` | Stores validated currency exchange rate values |
+| Reference / Lookup | `bronze.ShipMethod` | `silver.ShipMethod` | Stores validated shipping method values |
+| Reference / Lookup | `bronze.SpecialOffer` | `silver.SpecialOffer` | Stores validated promotion and discount values |
+| Reference / Lookup | `bronze.ProductCategory` | `silver.ProductCategory` | Stores validated product category values |
 
 #### Silver Rules
 
@@ -104,16 +104,16 @@ The Warehouse is organized into the `staging` and `gold` schemas.
 
 Staging tables temporarily store historical analytical data from `Sales_Analytics`.
 
-| Data Category     | Staging Table               | Source Object                           | Purpose                                                   |
-| ----------------- | --------------------------- | --------------------------------------- | --------------------------------------------------------- |
-| Analytical Fact  | `staging.FactSales` | `Sales_Analytics.fact.FactSales` | Stores historical sales fact data before Gold publication |
-| Analytical Dimension | `staging.DimCustomer` | `Sales_Analytics.dim.DimCustomer` | Stores historical customer dimension attributes |
-| Analytical Dimension | `staging.DimProduct` | `Sales_Analytics.dim.DimProduct` | Stores historical product and category dimension attributes |
-| Analytical Dimension | `staging.DimSalesPerson` | `Sales_Analytics.dim.DimSalesPerson` | Stores historical sales person dimension attributes |
-| Analytical Dimension | `staging.DimSalesTerritory` | `Sales_Analytics.dim.DimSalesTerritory` | Stores historical territory dimension attributes |
-| Analytical Dimension | `staging.DimPaymentMethod` | `Sales_Analytics.dim.DimPaymentMethod` | Stores historical payment method dimension attributes |
-| Analytical Dimension | `staging.DimShipMethod` | `Sales_Analytics.dim.DimShipMethod` | Stores historical ship method dimension attributes |
-| Analytical Dimension | `staging.DimDate` | `Sales_Analytics.dim.DimDate` | Stores historical date dimension attributes |
+| Data Category | Source Table | Target Table | Purpose |
+|---|---|---|---|
+| Analytical Fact | `fact.FactSales` | `staging.FactSales` | Stores historical sales fact data before Gold publication |
+| Analytical Dimension | `dim.DimCustomer` | `staging.DimCustomer` | Stores historical customer dimension attributes |
+| Analytical Dimension | `dim.DimProduct` | `staging.DimProduct` | Stores historical product and category dimension attributes |
+| Analytical Dimension | `dim.DimSalesPerson` | `staging.DimSalesPerson` | Stores historical salesperson dimension attributes |
+| Analytical Dimension | `dim.DimSalesTerritory` | `staging.DimSalesTerritory` | Stores historical territory dimension attributes |
+| Analytical Dimension | `dim.DimPaymentMethod` | `staging.DimPaymentMethod` | Stores historical payment method dimension attributes |
+| Analytical Dimension | `dim.DimShipMethod` | `staging.DimShipMethod` | Stores historical ship method dimension attributes |
+| Analytical Dimension | `dim.DimDate` | `staging.DimDate` | Stores historical date dimension attributes |
 
 #### Staging Rules
 
@@ -123,46 +123,40 @@ Staging tables temporarily store historical analytical data from `Sales_Analytic
 | Temporary ownership         | Staging is not the final reporting layer                                |
 | Reconciliation support      | Staging supports source-to-target comparison before Gold publication    |
 
-### Gold Tables: Dimensions
+### Gold Tables
 
-Gold dimensions store final reporting-ready descriptive entities.
+Gold tables store final reporting-ready data.
 
-| Gold Dimension | Main Inputs | Purpose |
-| ------------------------ | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| `gold.DimDate` | `staging.DimDate` or generated calendar | Supports date-based reporting and analysis |
-| `gold.DimCustomer` | `staging.DimCustomer`, `silver.Customer` | Stores final customer dimension attributes |
-| `gold.DimProduct` | `staging.DimProduct`, `silver.Product`, `silver.ProductCategory` | Stores final product and category dimension attributes |
-| `gold.DimSalesPerson` | `staging.DimSalesPerson`, `silver.SalesPerson` | Stores final sales person dimension attributes |
-| `gold.DimSalesTerritory` | `staging.DimSalesTerritory`, `silver.SalesTerritory`, `silver.CountryRegion`, `silver.StateProvince` | Stores final territory dimension attributes |
-| `gold.DimPaymentMethod` | `staging.DimPaymentMethod`, `silver.CreditCard` | Stores final payment method dimension attributes |
-| `gold.DimShipMethod` | `staging.DimShipMethod`, `silver.ShipMethod` | Stores final ship method dimension attributes |
+| Data Category | Source Table | Target Table | Purpose |
+|---|---|---|---|
+| Analytical Fact | `staging.FactSales`, `silver.SalesOrderHeader`, `silver.SalesOrderDetail` | `gold.FactSales` | Stores final sales transaction measures for reporting |
+| Analytical Dimension | `staging.DimCustomer`, `silver.Customer` | `gold.DimCustomer` | Stores final customer dimension attributes |
+| Analytical Dimension | `staging.DimProduct`, `silver.Product`, `silver.ProductCategory` | `gold.DimProduct` | Stores final product and category dimension attributes |
+| Analytical Dimension | `staging.DimSalesPerson`, `silver.SalesPerson` | `gold.DimSalesPerson` | Stores final salesperson dimension attributes |
+| Analytical Dimension | `staging.DimSalesTerritory`, `silver.SalesTerritory`, `silver.CountryRegion`, `silver.StateProvince` | `gold.DimSalesTerritory` | Stores final territory dimension attributes |
+| Analytical Dimension | `staging.DimPaymentMethod`, `silver.CreditCard` | `gold.DimPaymentMethod` | Stores final payment method dimension attributes |
+| Analytical Dimension | `staging.DimShipMethod`, `silver.ShipMethod` | `gold.DimShipMethod` | Stores final ship method dimension attributes |
+| Analytical Dimension | `staging.DimDate` or generated calendar | `gold.DimDate` | Supports date-based reporting and analysis |
 
-#### Dimension Rules
+#### Gold Dimension Rules
 
-| Rule                 | Description                                                                 |
-| -------------------- | --------------------------------------------------------------------------- |
-| Historical alignment | Dimensions must support historical records loaded from `Sales_Analytics`    |
-| Future alignment     | Dimensions must support new records derived from `Sales_Operational`        |
-| Surrogate keys       | Gold dimensions should use analytical surrogate keys                        |
-| Source traceability  | Dimensions should retain source identifiers where useful for reconciliation |
-| Reporting readiness  | Dimensions should expose business-friendly attributes for reporting         |
+| Rule | Description |
+|---|---|
+| Historical alignment | Gold dimensions must support historical dimension records loaded from `Sales_Analytics` |
+| Future alignment | Gold dimensions must support new dimension records derived from `Sales_Operational` |
+| Surrogate keys | Gold dimensions should use analytical surrogate keys for stable fact relationships |
+| Source traceability | Gold dimensions should retain source identifiers where useful for reconciliation and troubleshooting |
+| Reporting readiness | Gold dimensions should expose business-friendly attributes for reporting |
 
-### Gold Tables: Facts
+#### Gold Fact Rules
 
-Gold facts store final reporting-ready business events and measures.
-
-| Gold Fact        | Main Inputs                                                               | Purpose                                               |
-| ---------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- |
-| `gold.FactSales` | `staging.FactSales`, `silver.SalesOrderHeader`, `silver.SalesOrderDetail` | Stores final sales transaction measures for reporting |
-
-#### Fact Rules
-
-| Rule                 | Description                                                                                                               |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Defined grain        | `gold.FactSales` is stored at sales order detail line grain                                                                      |
-| Historical alignment | Historical fact records are initialized from `Sales_Analytics.fact.FactSales`                                             |
-| Future processing    | New fact records are derived from `Sales_Operational` through Bronze and Silver                                           |
-| Measure consistency  | Sales amounts, quantities, discounts, taxes, freight, and totals must remain consistent across historical and new periods |
+| Rule | Description |
+|---|---|
+| Historical alignment | Gold facts must support historical fact records loaded from `Sales_Analytics` |
+| Future alignment | Gold facts must support new fact records derived from `Sales_Operational` |
+| Period ownership | The same reporting period must not be loaded from both historical and new sources |
+| Measure consistency | Gold fact amounts, quantities, discounts, taxes, freight, and totals must remain consistent across historical and new periods |
+| Reporting grain | Each `gold.FactSales` row represents one sales order line item |
 
 ## Power BI Semantic Model
 
@@ -200,25 +194,11 @@ Target tables should include technical metadata columns where required for trace
 
 | Column                | Purpose                                                                                |
 | --------------------- | -------------------------------------------------------------------------------------- |
-| `execution_run_id`    | Identifies the execution run that loaded or transformed the record                     |
-| `execution_step_id`   | Identifies the execution step responsible for the record                               |
-| `source_database`     | Identifies whether the record originated from `Sales_Operational` or `Sales_Analytics` |
-| `source_schema`       | Identifies the source schema                                                           |
-| `source_object`       | Identifies the source object                                                           |
-| `batch_period_yyyymm` | Identifies the business reporting period when applicable                               |
-| `ingestion_datetime`  | Stores when the record was ingested into the target analytics platform                 |
-| `load_datetime`       | Stores when the record was loaded into the target object                               |
-
-## Modeling Assumptions and Constraints
-
-| Type | Statement | Description |
-|---|---|---|
-| Requirement | Historical and new data must align | Gold must combine historical records from `Sales_Analytics` with new records from `Sales_Operational` |
-| Rule | Gold stores trusted reporting-ready data | Reporting consumers should use the semantic model over Gold objects |
-| Rule | Bronze and Silver support operational ingestion | Bronze and Silver are not reporting consumption layers |
-| Rule | Staging supports historical baseline loading | Staging is not a permanent reporting layer |
-| Assumption | Source object inventory may evolve | Target objects may be refined during implementation |
-| Assumption | Column-level mappings are not finalized | Detailed mappings can be added later as metadata or mapping documents |
+| `execution_step_id` | Identifies the execution step responsible for loading or updating the record |
+| `loaded_at` | Identifies when the record was inserted into the target table |
+| `loaded_by` | Identifies the user or process that inserted the record into the target table |
+| `updated_at` | Identifies when the record was last updated in the target table |
+| `updated_by` | Identifies the user or process that last updated the record in the target table |
 
 ## Conclusion
 

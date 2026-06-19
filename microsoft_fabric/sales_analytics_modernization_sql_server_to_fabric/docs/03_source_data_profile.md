@@ -4,7 +4,7 @@
 
 This document describes the source databases, their roles, source object categories, estimated data volumes, growth assumptions, and how each source contributes to the target reporting platform.
 
-This document expands the source-side section introduced in `02_solution_design.md`.
+This document expands the source data profile section introduced in `02_solution_design.md`.
 
 ## Source Platform Overview
 

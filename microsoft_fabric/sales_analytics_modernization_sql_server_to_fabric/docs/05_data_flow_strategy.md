@@ -10,47 +10,15 @@ This document expands the data flow section introduced in `02_solution_design.md
 
 The solution supports three main data flows because the target reporting platform must combine historical reporting data with new reporting data derived from the operational source.
 
-| Flow                      | Source                                    | Path                                                                                                            | Purpose                                               |
-| ------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| Historical reporting flow | `Sales_Analytics`                         | `Sales_Analytics` -> `wh_sales_analytics.staging` -> `wh_sales_analytics.gold`                                    | Load the trusted historical reporting baseline       |
-| New reporting data flow   | `Sales_Operational`                       | `Sales_Operational` -> `lh_sales_operational.bronze` -> `lh_sales_operational.silver` -> `wh_sales_analytics.gold` | Build new reporting data from the operational source  |
-| Coexistence support flow  | `Sales_Analytics` and `Sales_Operational` | Controlled by reporting-period ownership                                                                        | Support transition before target reporting cutover |
-
-The high-level movement pattern is:
-
-```text
-Historical reporting data
-Sales_Analytics
-      |
-      v
-wh_sales_analytics.staging
-      |
-      v
-wh_sales_analytics.gold
-      |
-      v
-sm_sales_analytics
-
-
-New reporting data
-Sales_Operational
-      |
-      v
-lh_sales_operational.bronze
-      |
-      v
-lh_sales_operational.silver
-      |
-      v
-wh_sales_analytics.gold
-      |
-      v
-sm_sales_analytics
-```
+| Flow | Source | Purpose |
+| ------------------------- | ------------------------- | ------------------------- |
+| Historical reporting flow | `Sales_Analytics` | Load the trusted historical reporting baseline |
+| New reporting data flow | `Sales_Operational` | Build new reporting data from the operational source |
+| Coexistence support flow | `Sales_Analytics` and `Sales_Operational` | Support transition before target reporting cutover |
 
 ## Historical Reporting Flow
 
-The historical reporting flow loads trusted historical reporting data from `Sales_Analytics` into the Warehouse staging area.
+The historical reporting flow loads trusted historical reporting data from `Sales_Analytics` in the target reporting platform.
 
 This flow uses the Warehouse path because `Sales_Analytics` already contains reporting-ready facts and dimensions.
 
