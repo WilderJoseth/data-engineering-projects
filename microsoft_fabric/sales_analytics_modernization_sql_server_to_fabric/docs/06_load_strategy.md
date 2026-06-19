@@ -23,7 +23,7 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 
 `Sales_Operational` provides new operational data for future reporting periods.
 
-| Data Category | Source Object | Bronze Target Object | Silver Target Object | Gold Target Object | Match Key | Refresh Control Column | Load Strategy |
+| Data Category | Source Table | Bronze Target Table | Silver Target Table | Gold Target Table | Match Key | Refresh Control Column | Load Strategy |
 |---|---|---|---|---|---|---|---|
 | Transactional | `SalesOrderHeader` | `SalesOrderHeader` | `SalesOrderHeader` | `FactSales` | Not required | `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
 | Transactional | `SalesOrderDetail` | `SalesOrderDetail` | `SalesOrderDetail` | `FactSales` | Not required | Header `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
@@ -38,7 +38,7 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 
 `Sales_Analytics` provides trusted historical reporting data used to initialize the target reporting model before cutover.
 
-| Data Category | Source Object | Staging Target Object | Gold Target Object | Match Key | Refresh Control Column | Load Strategy |
+| Data Category | Source Table | Staging Target Table | Gold Target Table | Match Key | Refresh Control Column | Load Strategy |
 |---|---|---|---|---|---|---|
 | Analytical Fact | `FactSales` | `FactSales` | `FactSales` | Not required | `OrderDate` | Staging monthly batch reload; Gold monthly batch reload |
 | Analytical Dimension | `DimCustomer` | `DimCustomer` | `DimCustomer` | `SourceCustomerID` | Not required | Staging full reload; Gold full reload |
