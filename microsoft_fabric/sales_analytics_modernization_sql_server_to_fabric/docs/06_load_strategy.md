@@ -13,7 +13,7 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 | Strategy / Pattern | Purpose | Applies To |
 |---|---|---|
 | Full reload | Reloads the full dataset for controlled initialization or generated objects | Analytical dimensions from `Sales_Analytics`, generated dimensions such as `DimDate`, and approved small objects |
-| Watermark incremental load | Loads new records using `created_at` and changed records using `updated_at` | Reference, lookup, master, and core objects from `Sales_Operational` |
+| Watermark incremental load | Loads new records using `created_at` and changed records using `updated_at` | Reference, lookup, and master tables from `Sales_Operational` |
 | Batch period reload | Reloads a specific monthly business period based on `OrderDate` | Transactional objects from `Sales_Operational` and analytical facts from `Sales_Analytics` |
 | Append load | Appends extracted records without updating existing target rows | Bronze tables only |
 
@@ -25,17 +25,14 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 
 | Data Category | Source Object | Bronze Target Object | Silver Target Object | Gold Target Object | Match Key | Refresh Control Column | Load Strategy |
 |---|---|---|---|---|---|---|---|
-| Transactional | `SalesOrderHeader` | `SalesOrderHeader` | `SalesOrderHeader` | `FactSales` | `SourceSalesOrderID` | `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
-| Transactional | `SalesOrderDetail` | `SalesOrderDetail` | `SalesOrderDetail` | `FactSales` | `SourceSalesOrderDetailID` | Header `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
+| Transactional | `SalesOrderHeader` | `SalesOrderHeader` | `SalesOrderHeader` | `FactSales` | Not required | `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
+| Transactional | `SalesOrderDetail` | `SalesOrderDetail` | `SalesOrderDetail` | `FactSales` | Not required | Header `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
 | Master / Core | `Customer` | `Customer` | `Customer` | `DimCustomer` | `SourceCustomerID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 | Master / Core | `SalesPerson` | `SalesPerson` | `SalesPerson` | `DimSalesPerson` | `SourceSalesPersonID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
-| Master / Core | `Product` | `Product` | `Product` | `DimProduct` | `SourceProductID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Master / Core | `Product`, `ProductCategory` | `Product`, `ProductCategory` | `Product`, `ProductCategory` | `DimProduct` | `SourceProductID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 | Master / Core | `CreditCard` | `CreditCard` | `CreditCard` | `DimPaymentMethod` | `SourceCreditCardID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
-| Reference / Lookup | `CountryRegion` | `CountryRegion` | `CountryRegion` | `DimSalesTerritory` | `SourceCountryRegionCode` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
-| Reference / Lookup | `StateProvince` | `StateProvince` | `StateProvince` | `DimSalesTerritory` | `SourceStateProvinceID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
-| Reference / Lookup | `SalesTerritory` | `SalesTerritory` | `SalesTerritory` | `DimSalesTerritory` | `SourceSalesTerritoryID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
+| Reference / Lookup | `CountryRegion`, `StateProvince`, `SalesTerritory` | `CountryRegion`, `StateProvince`, `SalesTerritory` | `CountryRegion`, `StateProvince`, `SalesTerritory` | `DimSalesTerritory` | `SourceCountryRegionCode` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 | Reference / Lookup | `ShipMethod` | `ShipMethod` | `ShipMethod` | `DimShipMethod` | `SourceShipMethodID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
-| Reference / Lookup | `ProductCategory` | `ProductCategory` | `ProductCategory` | `DimProduct` | `SourceProductCategoryID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 
 ### Sales_Analytics
 
@@ -43,7 +40,7 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 
 | Data Category | Source Object | Staging Target Object | Gold Target Object | Match Key | Refresh Control Column | Load Strategy |
 |---|---|---|---|---|---|---|
-| Analytical Fact | `FactSales` | `FactSales` | `FactSales` | `SourceSalesOrderDetailID` | `OrderDate` | Staging monthly batch reload; Gold monthly batch reload |
+| Analytical Fact | `FactSales` | `FactSales` | `FactSales` | Not required | `OrderDate` | Staging monthly batch reload; Gold monthly batch reload |
 | Analytical Dimension | `DimCustomer` | `DimCustomer` | `DimCustomer` | `SourceCustomerID` | Not required | Staging full reload; Gold full reload |
 | Analytical Dimension | `DimProduct` | `DimProduct` | `DimProduct` | `SourceProductID` | Not required | Staging full reload; Gold full reload |
 | Analytical Dimension | `DimSalesPerson` | `DimSalesPerson` | `DimSalesPerson` | `SourceSalesPersonID` | Not required | Staging full reload; Gold full reload |
