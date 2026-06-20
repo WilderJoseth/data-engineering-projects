@@ -20,18 +20,6 @@ GO
 USE [Sales_Operational];
 GO
 
-CREATE SCHEMA [prod];
-GO
-
-CREATE SCHEMA [staging];
-GO
-
-CREATE SCHEMA [work];
-GO
-
-CREATE SCHEMA [control];
-GO
-
 CREATE SCHEMA [control] AUTHORIZATION [dbo];
 GO
 

@@ -14,17 +14,23 @@
 CREATE DATABASE [Sales_Analytics];
 GO
 
+ALTER AUTHORIZATION ON DATABASE::[Sales_Analytics] TO [sa];
+GO
+
 USE [Sales_Analytics];
 GO
 
-CREATE SCHEMA [dim];
+CREATE SCHEMA [control] AUTHORIZATION [dbo];
 GO
 
-CREATE SCHEMA [fact];
+CREATE SCHEMA [staging] AUTHORIZATION [dbo];
 GO
 
-CREATE SCHEMA [staging];
+CREATE SCHEMA [work] AUTHORIZATION [dbo];
 GO
 
-CREATE SCHEMA [work];
+CREATE SCHEMA [dim] AUTHORIZATION [dbo];
+GO
+
+CREATE SCHEMA [fact] AUTHORIZATION [dbo];
 GO
