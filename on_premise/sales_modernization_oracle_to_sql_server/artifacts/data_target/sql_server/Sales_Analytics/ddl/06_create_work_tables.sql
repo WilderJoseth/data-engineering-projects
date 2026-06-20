@@ -16,23 +16,6 @@
 USE [Sales_Analytics];
 GO
 
-CREATE TABLE [work].[DimDate] (
-    [DateKey] INT NOT NULL,
-    [FullDate] DATE NOT NULL,
-    [DayNumberOfWeek] TINYINT NOT NULL,
-    [DayName] VARCHAR(10) NOT NULL,
-    [DayNumberOfMonth] TINYINT NOT NULL,
-    [DayNumberOfYear] SMALLINT NOT NULL,
-    [WeekNumberOfYear] TINYINT NOT NULL,
-    [MonthNumber] TINYINT NOT NULL,
-    [MonthName] VARCHAR(10) NOT NULL,
-    [CalendarQuarter] TINYINT NOT NULL,
-    [CalendarYear] SMALLINT NOT NULL,
-
-    CONSTRAINT [pk_work_DimDate_DateKey] PRIMARY KEY CLUSTERED ([DateKey] ASC)
-);
-GO
-
 CREATE TABLE [work].[DimCustomer] (
     [SourceCustomerID] INT NOT NULL,
     [AccountNumber] VARCHAR(20) NULL,

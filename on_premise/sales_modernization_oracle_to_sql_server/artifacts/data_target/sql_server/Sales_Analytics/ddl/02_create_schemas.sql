@@ -1,21 +1,16 @@
 /*
     Script name
-        01_create_database_and_schemas.sql
+        02_create_schemas.sql
 
     Purpose
-        Creates the Sales_Analytics database and the schemas required by the
-        analytical migration pipeline.
+        Creates the schemas required by the Sales_Analytics analytical
+        migration pipeline.
 
     Scope
-        Creates staging, work, dim, and fact schemas. Local control objects are
+        Creates control, staging, work, dim, and fact schemas inside the
+        Sales_Analytics database. Local control tables and procedures are
         intentionally deferred to a later implementation step.
 */
-
-CREATE DATABASE [Sales_Analytics];
-GO
-
-ALTER AUTHORIZATION ON DATABASE::[Sales_Analytics] TO [sa];
-GO
 
 USE [Sales_Analytics];
 GO

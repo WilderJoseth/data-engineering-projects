@@ -3,10 +3,10 @@
         03_create_fact_tables.sql
 
     Purpose
-        Creates the fact tables for the analytical star schema for Sales reporting.
+        Creates the fact tables for the analytical star schema used by Sales
+        reporting.
 
     Design rules
-        - Dimensions expose business-friendly descriptive attributes.
         - FactSales is line-grain: one row per sales order detail line.
         - Source identifiers are retained where useful for lineage.
         - Operational and source technical columns are excluded.

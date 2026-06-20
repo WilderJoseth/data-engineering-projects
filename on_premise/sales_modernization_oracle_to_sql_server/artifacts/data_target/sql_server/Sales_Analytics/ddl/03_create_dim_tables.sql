@@ -1,13 +1,13 @@
 /*
     Script name
-        02_create_dimensional_tables.sql
+        02_create_dim_tables.sql
 
     Purpose
-        Creates the dimensional tables for the analytical star schema for Sales reporting.
+        Creates the dimension tables for the analytical star schema used by
+        Sales reporting.
 
     Design rules
         - Dimensions expose business-friendly descriptive attributes.
-        - FactSales is line-grain: one row per sales order detail line.
         - Source identifiers are retained where useful for lineage.
         - Operational and source technical columns are excluded.
         - Final tables include standard audit columns from the solution design.
