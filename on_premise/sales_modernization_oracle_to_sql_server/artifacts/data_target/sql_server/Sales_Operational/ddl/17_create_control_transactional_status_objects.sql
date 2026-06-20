@@ -1,18 +1,12 @@
 /*
     Script name
-        16_create_control_transactional_status_objects.sql
+        17_create_control_transactional_status_objects.sql
 
     Purpose
-        Creates control-schema scalar functions used to determine the final
-        status code for transactional load process execution steps.
+        Creates control functions that derive transactional process completion status.
 
-    Design rules
-        - Each transactional load process has its own status function.
-        - Success means reconciliation row counts match and validation results
-          contain no non-info findings.
-        - Observed means reconciliation row counts differ or validation results
-          include Warning/Error validations.
-        - Failed remains the responsibility of ETL technical error handling.
+    Scope
+        Functions return a status code id based on transactional reconciliation and validation results.
 */
 
 USE [Sales_Operational];

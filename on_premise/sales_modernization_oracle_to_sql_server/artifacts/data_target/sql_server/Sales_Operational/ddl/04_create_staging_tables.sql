@@ -1,20 +1,12 @@
 /*
     Script name
-        03_create_staging_tables.sql
+        04_create_staging_tables.sql
 
     Purpose
         Creates raw staging tables for the Sales_Operational migration.
 
-    Design rules
-        - Staging tables receive extracted Oracle data before validation.
-        - Table names use PascalCase under the lower-case staging schema.
-        - Source identifiers are preserved for traceability and rerun support.
-        - Source identifiers use unique constraints only when the Oracle source
-          table guarantees uniqueness through a primary key.
-        - Character columns use NVARCHAR/NCHAR to preserve source Unicode text
-          before validation and target conversion.
-        - Audit columns are intentionally excluded because staging data is
-          temporary and controlled by ETL execution metadata.
+    Scope
+        Staging tables receive extracted Oracle data before validation and transformation.
 */
 
 USE [Sales_Operational];

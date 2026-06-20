@@ -1,9 +1,12 @@
 /*
     Script name
-        09_create_prod_master_stored_procedures.sql
+        10_create_prod_master_stored_procedures.sql
 
     Purpose
-        Creates prod-schema load stored procedures for master data load processes.
+        Creates prod-schema load procedures for master data load processes.
+
+    Scope
+        Master load procedures upsert only validated work rows into prod tables.
 */
 
 USE [Sales_Operational];
@@ -376,6 +379,3 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
-
-
-

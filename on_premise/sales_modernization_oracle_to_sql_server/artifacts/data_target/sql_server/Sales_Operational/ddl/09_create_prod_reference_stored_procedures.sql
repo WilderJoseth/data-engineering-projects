@@ -1,9 +1,12 @@
-﻿/*
+/*
     Script name
-        08_create_prod_reference_stored_procedures.sql
+        09_create_prod_reference_stored_procedures.sql
 
     Purpose
-        Creates prod-schema load stored procedures for reference data load processes.
+        Creates prod-schema load procedures for reference data load processes.
+
+    Scope
+        Reference load procedures upsert only validated work rows into prod tables.
 */
 
 USE [Sales_Operational];
@@ -447,6 +450,3 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
-
-
-

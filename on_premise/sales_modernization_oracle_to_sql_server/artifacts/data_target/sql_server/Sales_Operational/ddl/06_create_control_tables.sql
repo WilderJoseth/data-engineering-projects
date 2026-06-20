@@ -1,3 +1,13 @@
+/*
+    Script name
+        06_create_control_tables.sql
+
+    Purpose
+        Creates local control tables used by the Sales_Operational migration.
+
+    Scope
+        Control tables store local validation, reconciliation, and process status results before they are published to DataOps_Control.
+*/
 
 USE [Sales_Operational];
 GO

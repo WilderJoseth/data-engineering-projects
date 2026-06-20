@@ -1,19 +1,15 @@
 /*
     Script name
-        99_drop_prod_tables.sql
+        02_drop_prod_tables.sql
 
     Purpose
         Safely drops all prod-schema tables from the Sales_Operational database.
 
     Safety rules
         - Drops only tables in the prod schema.
-        - Drops child tables before parent tables to respect foreign keys.
+        - Orders child tables before parent tables to satisfy foreign keys.
         - Uses DROP TABLE IF EXISTS so the script can be re-run.
         - Runs inside a transaction with XACT_ABORT enabled.
-
-    Usage warning
-        This script removes table definitions and all data in prod tables.
-        Use only when resetting a development or test target environment.
 */
 
 USE [Sales_Operational];

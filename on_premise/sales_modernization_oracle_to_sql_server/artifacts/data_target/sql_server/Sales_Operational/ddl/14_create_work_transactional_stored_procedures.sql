@@ -1,17 +1,12 @@
 /*
     Script name
-        13_create_work_transactional_stored_procedures.sql
+        14_create_work_transactional_stored_procedures.sql
 
     Purpose
-        Creates work-schema validation stored procedures for transactional
-        Sales_Operational load processes.
+        Creates work-schema cleanup and validation procedures for transactional load processes.
 
-    Design rules
-        - SalesOrder is processed as one business unit because header and
-          detail rows are related.
-        - Cleanup procedures belong to the control schema.
-        - Validation procedures belong to the work schema.
-        - Work tables store all staging rows and flag validation results.
+    Scope
+        Transactional validation procedures process related staging tables as one business unit when required.
 */
 
 USE [Sales_Operational];

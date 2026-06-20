@@ -1,17 +1,12 @@
 /*
     Script name
-        14_create_prod_transactional_stored_procedures.sql
+        15_create_prod_transactional_stored_procedures.sql
 
     Purpose
-        Creates prod-schema load stored procedures for transactional
-        Sales_Operational load processes.
+        Creates prod-schema load procedures for transactional load processes.
 
-    Design rules
-        - SalesOrder is processed as one business unit because header and
-          detail rows are related.
-        - Transactional data is loaded by controlled delete-and-reload for the
-          current work batch.
-        - Only rows that passed all validation flags are loaded to prod.
+    Scope
+        Transactional load procedures upsert only validated work rows into prod tables.
 */
 
 USE [Sales_Operational];

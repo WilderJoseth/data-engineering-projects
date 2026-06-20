@@ -1,18 +1,12 @@
 /*
     Script name
-        11_create_control_master_reconciliation_objects.sql
+        12_create_control_master_reconciliation_objects.sql
 
     Purpose
-        Creates control-schema table-valued functions used to calculate master
-        data reconciliation results by ETL load process.
+        Creates control functions that return reconciliation metrics for master data load processes.
 
-    Design rules
-        - Each master load process has its own function.
-        - ETL calls the process-specific function inside the process container.
-        - Source reconciliation reads from staging tables.
-        - Target reconciliation reads rows created or updated by the current
-          execution step.
-        - Functions only return results; ETL publishes them to DataOps_Control.
+    Scope
+        Functions return row-count metrics for source and target sides by execution step.
 */
 
 USE [Sales_Operational];
@@ -207,4 +201,3 @@ BEGIN
     RETURN;
 END;
 GO
-

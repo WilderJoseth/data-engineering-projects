@@ -1,17 +1,12 @@
 /*
     Script name
-        02_create_prod_tables.sql
+        03_create_prod_tables.sql
 
     Purpose
-        Creates the final normalized operational tables for the Sales-domain
-        migration target.
+        Creates the final normalized operational tables for the Sales-domain migration target.
 
-    Design rules
-        - Only business-relevant columns are modeled.
-        - Source identifiers are preserved for traceability and reconciliation.
-        - Oracle technical columns such as ROWGUID and MODIFIEDDATE are excluded.
-        - Final tables include standard audit columns from the solution design.
-        - created_execution_step_id must be supplied by the migration process. last_updated_execution_step_id is populated when an existing row is updated.
+    Scope
+        Prod tables include business keys, selected business attributes, and audit columns required by the solution design.
 */
 
 USE [Sales_Operational];
@@ -392,5 +387,3 @@ CREATE TABLE [prod].[SalesOrderDetail] (
     CONSTRAINT [fk_prod_SalesOrderDetail_SpecialOfferKey] FOREIGN KEY ([SpecialOfferKey]) REFERENCES [prod].[SpecialOffer]([SpecialOfferKey])
 );
 GO
-
-

@@ -1,24 +1,12 @@
 /*
     Script name
-        12_create_control_process_status_objects.sql
+        13_create_control_process_status_objects.sql
 
     Purpose
-        Creates control-schema scalar functions used to determine the final
-        status code for each load process execution step.
+        Creates control functions that derive process completion status from reconciliation and validation results.
 
-    Design rules
-        - Each load process has its own status function.
-        - Functions return the DataOps_Control-compatible status code ID copied
-          into control.status_codes.
-        - Success means reconciliation row counts match and validation results
-          contain no non-info findings.
-        - Observed means reconciliation row counts differ or validation results
-          include Warning/Error validations.
-        - Failed remains the responsibility of ETL technical error handling.
-
-    Function limitation
-        SQL Server functions cannot THROW. If required status codes are missing,
-        the functions return NULL so ETL can fail the step explicitly.
+    Scope
+        Functions return a status code id that can be passed to DataOps_Control execution-step finalization.
 */
 
 USE [Sales_Operational];
@@ -366,5 +354,3 @@ BEGIN
     RETURN @status_code_id;
 END;
 GO
-
-

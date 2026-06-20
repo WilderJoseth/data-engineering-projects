@@ -1,18 +1,12 @@
 /*
     Script name
-        04_create_work_tables.sql
+        05_create_work_tables.sql
 
     Purpose
         Creates transformed work tables for the Sales_Operational migration.
 
-    Design rules
-        - Work tables store validated/transformed rows and row-level validation
-          flags before final load.
-        - Table names use PascalCase under the lower-case work schema.
-        - Resolved prod surrogate keys are stored where final loads require
-          foreign-key relationships.
-        - Audit columns are intentionally excluded because work data is
-          temporary and controlled by ETL execution metadata.
+    Scope
+        Work tables store cleaned rows and validation indicator columns used before loading prod tables.
 */
 
 USE [Sales_Operational];

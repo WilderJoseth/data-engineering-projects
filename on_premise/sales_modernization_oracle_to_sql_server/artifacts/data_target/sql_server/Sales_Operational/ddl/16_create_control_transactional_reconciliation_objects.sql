@@ -1,18 +1,12 @@
 /*
     Script name
-        15_create_control_transactional_reconciliation_objects.sql
+        16_create_control_transactional_reconciliation_objects.sql
 
     Purpose
-        Creates control-schema table-valued functions used to calculate
-        transactional data reconciliation results by ETL load process.
+        Creates control functions that return reconciliation metrics for transactional load processes.
 
-    Design rules
-        - Each transactional load process has its own function.
-        - ETL calls the process-specific function inside the process container.
-        - Source reconciliation reads from staging tables.
-        - Target reconciliation reads rows created by the current execution
-          step because transactional loads use delete-and-reload logic.
-        - Functions only return results; ETL publishes them to DataOps_Control.
+    Scope
+        Functions return row-count metrics for source and target sides by execution step.
 */
 
 USE [Sales_Operational];

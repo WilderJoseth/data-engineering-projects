@@ -1,9 +1,12 @@
-﻿/*
+/*
     Script name
-        06_create_work_reference_stored_procedures.sql
+        07_create_work_reference_stored_procedures.sql
 
     Purpose
-        Creates work-schema validation stored procedures for reference data load processes.
+        Creates work-schema cleanup and validation procedures for reference data load processes.
+
+    Scope
+        Reference validation procedures clean staging data into work tables and register validation results.
 */
 
 USE [Sales_Operational];
@@ -604,4 +607,3 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
-

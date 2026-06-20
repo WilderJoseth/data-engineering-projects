@@ -1,7 +1,6 @@
 /*
     Script name
-        03_create_staging_tables.sql
-
+        05_create_staging_tables.sql
     Purpose
         Creates staging tables for the Sales_Analytics migration.
 

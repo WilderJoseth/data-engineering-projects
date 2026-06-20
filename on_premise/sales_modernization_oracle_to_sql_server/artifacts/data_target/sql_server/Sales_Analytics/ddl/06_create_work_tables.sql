@@ -1,7 +1,6 @@
 /*
     Script name
-        04_create_work_tables.sql
-
+        06_create_work_tables.sql
     Purpose
         Creates transformed work tables for the Sales_Analytics migration.
 

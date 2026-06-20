@@ -1,9 +1,12 @@
 /*
     Script name
-        07_create_work_master_stored_procedures.sql
+        08_create_work_master_stored_procedures.sql
 
     Purpose
-        Creates work-schema validation stored procedures for master data load processes.
+        Creates work-schema cleanup and validation procedures for master data load processes.
+
+    Scope
+        Master validation procedures apply source-aligned checks and reference dependencies before prod load.
 */
 
 USE [Sales_Operational];
@@ -549,7 +552,3 @@ BEGIN
     COMMIT TRANSACTION;
 END;
 GO
-
-
-
-
