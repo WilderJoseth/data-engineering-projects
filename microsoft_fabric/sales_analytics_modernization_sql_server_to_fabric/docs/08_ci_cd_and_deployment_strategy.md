@@ -2,218 +2,103 @@
 
 ## Document Goal
 
-This document defines the CI/CD and deployment strategy for the Sales Analytics Modernization project.
+This document defines the CI/CD and deployment strategy for the Sales Reporting Modernization project.
 
-The goal is to describe how development, testing, and production changes are managed, versioned, configured, and promoted across the target reporting platform.
+The purpose is to describe how the current Fabric project is organized across environments, workspaces, Fabric items, connections, repository branches, and deployment promotion.
 
-This document focuses on deployment strategy and environment management. It does not define detailed pipeline implementation, security permissions, or operational runbook procedures.
+This document reflects the current project setup. It is not intended to be a generic CI/CD implementation manual.
 
-## CI/CD Strategy Overview
+## Environment and Deployment Strategy
 
-The CI/CD strategy is based on environment separation, source control, controlled promotion, and environment-specific configuration.
+Workspace names include the environment suffix because the workspace is the main deployment boundary. The deployment pipeline promotes approved Fabric items from development to production.
 
-| Area | Strategy |
-|---|---|
-| Environment separation | Use separate environments for development, testing, and production workloads |
-| Source control | Store project artifacts, scripts, notebooks, and documentation in Git |
-| Deployment promotion | Promote approved changes from development to test and then to production |
-| Configuration management | Keep environment-specific values outside reusable code where possible |
-| Release validation | Validate deployed objects before they are accepted for reporting use |
-| Rollback support | Use source control and controlled deployment steps to support recovery from failed releases |
+| Environment | Suffix | Workspace Name | Deployment Stage | Purpose |
+|---|---|---|---|---|
+| Development | dev | `ws_sales_reporting_modernization_dev` | Development | Build, modify and test Fabric items |
+| Production | prod | `ws_sales_reporting_modernization_prod` | Production | Host approved reporting workloads |
 
-## Environment Strategy
+The expected promotion path is:
 
-The project uses separate environments to reduce risk and isolate development activity from trusted reporting workloads.
+```text
+DEV → PROD
+```
 
-| Environment | Purpose | Expected Usage |
+## Fabric Items
+
+The current Fabric project includes the following core items.
+
+| Item Type | Item Name | Purpose |
 |---|---|---|
-| Development | Build and modify project objects | Used for active development, experimentation, and unit-level testing |
-| Test | Validate releases before production | Used for deployment testing, integration checks, and release validation |
-| Production | Host trusted reporting workloads | Used for accepted data pipelines, Gold reporting objects, and the Power BI semantic model |
+| Lakehouse | `lh_sales_operational` | Stores Bronze and Silver operational data |
+| Warehouse | `wh_sales_analytics` | Stores Staging and Gold analytical data |
+| Power BI Semantic Model | `sm_sales_analytics` | Provides the governed reporting consumption layer |
+| Deployment Pipeline | `dp_sales_reporting_modernization` | Promotes Fabric items across DEV, TEST, and PROD |
 
-Each environment should use equivalent logical components, but with environment-specific names, connections, and configuration values.
+## Connection Strategy
 
-## Fabric Workspace Strategy
+Connections are configured inside Fabric and are part of the workspace setup.
 
-Fabric workspaces should be separated by environment.
+Connection names should remain consistent across DEV, TEST, and PROD. The workspace determines the environment, while each connection points to the environment-specific endpoint.
 
-| Environment | Workspace Purpose | Example Naming Pattern |
+| Connection | Purpose | Category |
 |---|---|---|
-| Development | Development workspace for building Fabric objects | `ws_sales_modernization_dev` |
-| Test | Testing workspace for validating promoted changes | `ws_sales_modernization_test` |
-| Production | Production workspace for trusted reporting workloads | `ws_sales_modernization_prod` |
+| On-premise SQL Server connection | Connects to source SQL Server databases such as `Sales_Operational` and `Sales_Analytics` | Source connection |
+| Azure SQL connection | Connects to `DataOps_Control` for metadata, execution tracking, validation, and reconciliation | Control connection |
+| Lakehouse connection | Supports access to `lh_sales_operational`, including SQL view usage where required | Target/component connection |
+| Warehouse connection | Supports SQL operations against `wh_sales_analytics` | Target/component connection |
+| Fabric Data Pipelines connection | Supports pipeline-to-pipeline orchestration where required | Orchestration connection |
 
-Workspace separation helps prevent development changes from affecting production reporting.
+Secrets and credentials should be managed through Fabric connection settings and should not be stored in the GitHub repository.
 
-## Target Component Strategy by Environment
+## Deployment Folder Plan
 
-Each environment should contain its own Fabric target components.
+The deployment folder is not yet created, but it should be added later to support controlled releases.
 
-| Component | Development | Test | Production |
-|---|---|---|---|
-| Lakehouse | Development Lakehouse objects | Test Lakehouse objects | Production Lakehouse objects |
-| Warehouse | Development Warehouse objects | Test Warehouse objects | Production Warehouse objects |
-| Pipelines / Dataflows | Development orchestration | Test orchestration | Production orchestration |
-| Notebooks | Development transformation logic | Tested transformation logic | Approved transformation logic |
-| Semantic Model | Development semantic model | Test semantic model | Production semantic model |
+Recommended structure:
 
-Production components should only receive approved changes through the deployment process.
+```text
+/deployment
+  deployment_order.md
+  release_checklist.md
+  release_notes_template.md
+  manual_deployment_steps.md
+```
 
-## Source Control Strategy
-
-Git is used as the source control system for project artifacts.
-
-| Artifact Type | Source Control Strategy |
+| File | Purpose |
 |---|---|
-| Documentation | Stored in Git as Markdown files |
-| SQL scripts | Stored in Git and organized by object type or deployment purpose |
-| Notebooks | Stored in Git where supported by Fabric lifecycle management |
-| Pipelines | Stored in Git where supported by Fabric lifecycle management |
-| Semantic model definitions | Stored in Git or managed through Fabric-supported lifecycle features where applicable |
-| Configuration templates | Stored in Git without environment secrets |
-| Environment-specific values | Managed through parameters, variables, deployment rules, or secure configuration mechanisms |
+| `deployment_order.md` | Defines the order for deploying Fabric items, scripts, and supporting objects |
+| `release_checklist.md` | Defines pre-release and post-release checks |
+| `release_notes_template.md` | Captures what changed in each release |
+| `manual_deployment_steps.md` | Documents manual steps required because Fabric Git integration is not enabled |
 
-Git should be treated as the authoritative source for project documentation and deployable artifacts.
+## Release Validation
 
-## Repository Organization
-
-The repository should separate documentation, source scripts, Fabric artifacts, and deployment assets.
-
-| Repository Area | Purpose |
-|---|---|
-| `/docs` | Architecture, strategy, and project documentation |
-| `/sql` | SQL scripts for Warehouse, control objects, and utility objects |
-| `/notebooks` | Notebook-based transformation and processing logic |
-| `/pipelines` | Pipeline definitions or deployment references where applicable |
-| `/semantic-model` | Semantic model definitions or related metadata where applicable |
-| `/deployment` | Deployment scripts, release checklists, and environment configuration templates |
-| `/tests` | Validation, reconciliation, and smoke-test scripts |
-
-The exact repository layout may evolve as Fabric artifacts and deployment methods are finalized.
-
-## Branching Strategy
-
-The project should use a simple branching model.
-
-| Branch | Purpose |
-|---|---|
-| `main` | Represents production-ready approved content |
-| `develop` | Represents integrated development content ready for test validation |
-| Feature branches | Used for specific changes, fixes, or enhancements |
-
-Changes should be reviewed before they are merged into `main`.
-
-For a portfolio implementation, the branching strategy should remain simple and easy to maintain.
-
-## Deployment Flow
-
-Changes should follow a controlled promotion path.
-
-| Step | Description |
-|---|---|
-| 1. Develop | Build or modify objects in the development environment |
-| 2. Commit | Save changes to Git with a meaningful commit message |
-| 3. Review | Review code, scripts, configuration, and documentation updates |
-| 4. Promote to Test | Deploy approved changes to the test environment |
-| 5. Validate | Run deployment checks, smoke tests, and reconciliation checks where applicable |
-| 6. Promote to Production | Deploy validated changes to the production environment |
-| 7. Confirm Release | Confirm that production objects are available and reporting outputs are stable |
-
-Production deployment should not be performed directly from unreviewed development changes.
-
-## Deployment Scope
-
-Deployment scope depends on the artifact type.
-
-| Artifact | Deployment Approach |
-|---|---|
-| Lakehouse objects | Promote supported Fabric items and deploy required schema/table scripts where needed |
-| Warehouse objects | Deploy schema, table, view, and stored procedure scripts through controlled SQL deployment |
-| Notebooks | Promote through Fabric lifecycle management where supported |
-| Pipelines | Promote through Fabric lifecycle management where supported |
-| Semantic Model | Promote through Fabric lifecycle management or semantic-model deployment process where supported |
-| Documentation | Promote through Git review and repository release process |
-| Configuration | Apply environment-specific values during or after deployment |
-
-Some Fabric items may require a hybrid approach that combines Fabric deployment features with SQL scripts or manual configuration steps.
-
-## Configuration Strategy
-
-Configuration must be separated from reusable logic.
-
-| Configuration Type | Example | Strategy |
-|---|---|---|
-| Environment names | Dev, Test, Prod | Managed by deployment configuration |
-| Workspace names | Fabric workspace per environment | Environment-specific value |
-| Lakehouse names | `lh_sales_operational` or environment-specific equivalent | Environment-specific value |
-| Warehouse names | `wh_sales_analytics` or environment-specific equivalent | Environment-specific value |
-| Connection values | SQL Server, Warehouse, Lakehouse, control database connections | Managed through secure environment configuration |
-| Runtime parameters | Batch period, source system, load mode | Managed through pipeline or control metadata |
-| Secrets | Passwords, keys, tokens | Must not be stored directly in Git |
-
-Reusable code should reference configuration values instead of hardcoding environment-specific settings.
-
-## Deployment Validation
-
-Each deployment should be validated before it is accepted.
+Release validation should confirm that the promoted environment is usable before it is accepted.
 
 | Validation Area | Expected Check |
 |---|---|
-| Object availability | Confirm deployed objects exist in the target environment |
-| Schema consistency | Confirm expected schemas, tables, views, and columns are available |
-| Pipeline availability | Confirm required orchestration objects are deployed and runnable |
-| Notebook availability | Confirm required notebooks are deployed and linked correctly |
-| Configuration | Confirm environment-specific values point to the correct environment |
-| Data validation | Run selected validation and reconciliation checks after data loads |
-| Reporting validation | Confirm the semantic model and reports connect to the correct Gold objects |
-
-Deployment validation should be lightweight but sufficient to prevent broken releases from reaching reporting users.
-
-## Release Control
-
-Production releases should be controlled and traceable.
-
-| Control | Description |
-|---|---|
-| Release notes | Summarize what changed in the release |
-| Approval | Confirm the release is approved before production deployment |
-| Deployment log | Record what was deployed, when, and by whom |
-| Validation result | Confirm release validation completed successfully |
-| Rollback plan | Identify how to recover if the release fails |
-
-For this project, release control can be lightweight, but it should still be explicit.
-
-## Rollback Strategy
-
-Rollback depends on the type of change.
-
-| Change Type | Rollback Approach |
-|---|---|
-| Documentation | Revert Git commit or restore prior version |
-| SQL object change | Redeploy previous SQL script version or restore prior object definition |
-| Notebook change | Revert to previous Git version and redeploy |
-| Pipeline change | Revert to previous Git or deployed version |
-| Semantic model change | Revert to previous approved semantic model version where supported |
-| Configuration issue | Restore prior environment-specific configuration values |
-| Data issue | Rerun the affected object, batch, or period according to the load strategy |
-
-Rollback should prioritize restoring trusted reporting behavior as quickly as possible.
+| Workspace | Correct workspace is used for the target environment |
+| Fabric items | Lakehouse, Warehouse, pipelines, notebooks, and deployment pipeline items are available where expected |
+| Connections | Source, control, Lakehouse, Warehouse, and pipeline connections point to the correct environment endpoints |
+| Schemas and tables | Required Bronze, Silver, Staging, and Gold objects are available |
+| Pipelines | Required pipelines are present and runnable |
+| Notebooks | Required notebooks are present and linked where needed |
+| Data checks | Required validation and reconciliation checks can be executed after load processing |
 
 ## Assumptions and Constraints
 
 | Type | Statement | Description |
 |---|---|---|
-| Assumption | Fabric workspaces are separated by environment | Development, test, and production workloads are isolated from each other |
-| Assumption | Git is used for source control | Project artifacts and deployment assets are versioned in a repository |
-| Assumption | Deployment features may vary by Fabric item type | Some objects may require Fabric deployment features while others may require scripts or manual configuration |
-| Requirement | Production changes must be reviewed | Production should only receive approved changes |
-| Requirement | Environment-specific configuration must be isolated | Secrets and environment values must not be hardcoded into reusable artifacts |
-| Constraint | Control database design is still evolving | Detailed DataOps control deployment behavior will be documented separately when finalized |
+| Constraint | Fabric Git integration is not enabled | The project uses GitHub for external artifact versioning, not direct workspace synchronization |
+| Constraint | Configuration files are skipped for now | Environment configuration is currently managed through workspace separation, item naming, parameters, and Fabric connections |
+| Assumption | One workspace exists per environment | DEV, TEST, and PROD are separated through dedicated Fabric workspaces |
+| Assumption | Fabric item names remain consistent | Item names do not include environment suffixes because the workspace identifies the environment |
+| Assumption | Semantic model is out of scope for this phase | Semantic model deployment will be added later |
 
 ## Conclusion
 
-The CI/CD and deployment strategy defines how project artifacts are versioned, validated, and promoted across development, test, and production environments.
+The CI/CD and deployment strategy defines how the current Fabric project is organized across DEV, TEST, and PROD.
 
-The strategy uses environment separation, Git-based source control, controlled deployment promotion, and environment-specific configuration to reduce deployment risk.
+The project uses one workspace per environment, consistent Fabric item names across environments, a Fabric deployment pipeline for promotion, and GitHub as the external repository for documentation, scripts, notebooks, pipeline artifacts, and deployment support files.
 
-This approach supports a stable target reporting platform by ensuring that changes are reviewed, tested, traceable, and recoverable before they are accepted into production.
+Because direct Fabric Git integration is not enabled in the trial environment, deployment is handled through a controlled manual-assisted process supported by repository artifacts, workspace separation, consistent naming, Fabric connections, and release validation.
