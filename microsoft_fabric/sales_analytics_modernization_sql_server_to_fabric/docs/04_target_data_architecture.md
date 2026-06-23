@@ -65,22 +65,22 @@ Silver tables store curated operational data from Bronze.
 
 | Data Category | Source Table | Target Table | Purpose |
 |---|---|---|---|
-| Transactional | `bronze.SalesOrderHeader` | `silver.SalesOrderHeader` | Stores standardized sales order header records |
-| Transactional | `bronze.SalesOrderDetail` | `silver.SalesOrderDetail` | Stores standardized sales order line records |
-| Master / Core | `bronze.Customer` | `silver.Customer` | Stores standardized customer records |
-| Master / Core | `bronze.SalesPerson` | `silver.SalesPerson` | Stores standardized salesperson records |
-| Master / Core | `bronze.Product` | `silver.Product` | Stores standardized product records |
-| Master / Core | `bronze.Address` | `silver.Address` | Stores standardized address records |
-| Master / Core | `bronze.CreditCard` | `silver.CreditCard` | Stores reporting-safe payment source attributes |
-| Reference / Lookup | `bronze.AddressType` | `silver.AddressType` | Stores validated address type values |
-| Reference / Lookup | `bronze.CountryRegion` | `silver.CountryRegion` | Stores validated country or region values |
-| Reference / Lookup | `bronze.StateProvince` | `silver.StateProvince` | Stores validated state or province values |
-| Reference / Lookup | `bronze.SalesTerritory` | `silver.SalesTerritory` | Stores validated sales territory values |
-| Reference / Lookup | `bronze.Currency` | `silver.Currency` | Stores validated currency values |
-| Reference / Lookup | `bronze.CurrencyRate` | `silver.CurrencyRate` | Stores validated currency exchange rate values |
-| Reference / Lookup | `bronze.ShipMethod` | `silver.ShipMethod` | Stores validated shipping method values |
-| Reference / Lookup | `bronze.SpecialOffer` | `silver.SpecialOffer` | Stores validated promotion and discount values |
-| Reference / Lookup | `bronze.ProductCategory` | `silver.ProductCategory` | Stores validated product category values |
+| Transactional | `bronze.SalesOrderHeader` | `silver.SalesOrderHeader` | Stores curated sales order header records |
+| Transactional | `bronze.SalesOrderDetail` | `silver.SalesOrderDetail` | Stores curated sales order line records |
+| Master / Core | `bronze.Customer` | `silver.Customer` | Stores curated customer records |
+| Master / Core | `bronze.SalesPerson` | `silver.SalesPerson` | Stores curated salesperson records |
+| Master / Core | `bronze.Product` | `silver.Product` | Stores curated product records |
+| Master / Core | `bronze.Address` | `silver.Address` | Stores curated address records |
+| Master / Core | `bronze.CreditCard` | `silver.CreditCard` | Stores curated reporting-safe payment source attributes |
+| Reference / Lookup | `bronze.AddressType` | `silver.AddressType` | Stores curated address type values |
+| Reference / Lookup | `bronze.CountryRegion` | `silver.CountryRegion` | Stores curated country or region values |
+| Reference / Lookup | `bronze.StateProvince` | `silver.StateProvince` | Stores curated state or province values |
+| Reference / Lookup | `bronze.SalesTerritory` | `silver.SalesTerritory` | Stores curated sales territory values |
+| Reference / Lookup | `bronze.Currency` | `silver.Currency` | Stores curated currency values |
+| Reference / Lookup | `bronze.CurrencyRate` | `silver.CurrencyRate` | Stores curated currency exchange rate values |
+| Reference / Lookup | `bronze.ShipMethod` | `silver.ShipMethod` | Stores curated shipping method values |
+| Reference / Lookup | `bronze.SpecialOffer` | `silver.SpecialOffer` | Stores curated promotion and discount values |
+| Reference / Lookup | `bronze.ProductCategory` | `silver.ProductCategory` | Stores curated product category values |
 
 #### Silver Rules
 

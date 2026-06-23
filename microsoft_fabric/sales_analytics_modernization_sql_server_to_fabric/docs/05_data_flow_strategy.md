@@ -134,19 +134,6 @@ Each flow should be controlled and observable through `DataOps_Control`.
 | Reconciliation status  | Confirm whether source and target results match expected values          |
 | Rerun support          | Allow controlled reprocessing by flow, object, or reporting period       |
 
-## Data Flow Assumptions and Constraints
-
-| Type | Statement | Description |
-|---|---|---|
-| Rule | Source databases are read-only for the target reporting platform | The target reporting platform extracts data but does not update source databases |
-| Assumption | `Sales_Analytics` is trusted for historical reporting | Historical data is treated as the baseline for target reporting model initialization |
-| Constraint | `Sales_Operational` remains active | New data continues to be produced by the on-premise operational system |
-| Assumption | Historical data is already reporting-shaped | Historical data can use the Warehouse staging-to-Gold path |
-| Requirement | New data requires operational curation | New data follows the Lakehouse Bronze-to-Silver path before Gold |
-| Rule | Gold requires a reporting boundary | Historical and new reporting data must not overlap incorrectly |
-| Assumption | Data flow details may evolve | Exact pipeline and notebook implementation may be refined later |
-| Rule | Load strategy is defined separately | Full reload, watermark incremental, and batch period reload rules are documented in `06_load_strategy.md` |
-
 ## Conclusion
 
 The data flow strategy defines the historical reporting flow, new reporting data flow, coexistence support flow, ownership rules, and control requirements.
