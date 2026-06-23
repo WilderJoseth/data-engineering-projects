@@ -50,8 +50,6 @@ Fabric Warehouse Gold analytical model
 Power BI Semantic Model
 ```
 
-A shared control database supports metadata, execution tracking, validation, reconciliation, error logging, and rerun management.
-
 ## Technologies
 
 | Category       | Technology          |
@@ -65,39 +63,21 @@ A shared control database supports metadata, execution tracking, validation, rec
 | Reporting      | Power BI            |
 | Control layer  | Azure SQL Database  |
 
-## Repository Structure
-
-```text
-sales_platform_modernization_sql_server_to_microsoft_fabric/
-|
-|-- README.md
-|-- docs/
-|   |-- 00_concepts_and_terminology_guide.md
-|   |-- 01_current_state_assessment.md
-|   |-- 02_solution_design.md
-|   |-- 03_source_data_profile.md
-|   |-- 04_target_data_model.md
-|   |-- 05_data_flow_strategy.md
-|   |-- 06_load_strategy.md
-|
-|-- diagrams/        # planned
-|-- fabric/          # planned
-|-- sql/             # planned
-```
-
 ## Documentation
 
-| Document                                     | Purpose                                                     |
-| -------------------------------------------- | ----------------------------------------------------------- |
-| `docs/00_concepts_and_terminology_guide.md` | Defines project terminology and usage rules                 |
-| `docs/01_current_state_assessment.md`       | Describes the current source platform and modernization drivers |
-| `docs/02_solution_design.md`                | Describes the target architecture and main design decisions |
-| `docs/03_source_data_profile.md`            | Describes source databases, source objects, and profiling needs |
-| `docs/04_target_data_model.md`              | Describes Lakehouse, Warehouse, Gold, and semantic model objects |
-| `docs/05_data_flow_strategy.md`             | Describes historical, new reporting, and coexistence data flows |
-| `docs/06_load_strategy.md`                  | Describes full, incremental, and batch loading rules        |
-| `docs/validation_reconciliation_strategy.md` | Planned document for data quality and reconciliation        |
-| `docs/cutover_strategy.md`                   | Planned document for transition from on-premise to Fabric   |
+The solution design is supported by detailed documents.
+
+| Area                          | Document                                                                                          | Purpose                                                                                                                       |
+| ----------------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| Current state assessment      | [01_current_state_assessment.md](docs/01_current_state_assessment.md)                             | Defines the current Sales data platform, its limitations, and the modernization need                                         |
+| Source Data Profile           | [02_source_data_profile.md](docs/02_source_data_profile.md)                                       | Defines the SQL Server source databases, their roles, estimated volumes, growth, and profiling assumptions                   |
+| Target Data Architecture      | [03_target_data_architecture.md](docs/03_target_data_architecture.md)                             | Defines the Fabric target structure, including the Lakehouse Bronze/Silver schemas and Warehouse Staging/Gold schemas        |
+| Data Flow Strategy            | [04_data_flow_strategy.md](docs/04_data_flow_strategy.md)                                         | Defines the historical reporting flow from `Sales_Analytics` and the new reporting flow from `Sales_Operational`             |
+| Load Strategy                 | [05_load_strategy.md](docs/05_load_strategy.md)                                                   | Defines the append, incremental, full reload, batch period reload, and upsert patterns used across the solution              |
+| Validation and Reconciliation | [06_validation_and_reconciliation_strategy.md](docs/06_validation_and_reconciliation_strategy.md) | Defines the row count checks, total checks, reconciliation grain, and result tracking in `DataOps_Control`                   |
+| CI/CD and Deployment          | [07_ci_cd_and_deployment_strategy.md](docs/07_ci_cd_and_deployment_strategy.md)                   | Defines the Development and Production environments, deployment pipeline usage, repository structure, and deployment scope   |
+| Security and Access           | [08_security_and_access_strategy.md](docs/08_security_and_access_strategy.md)                     | Defines authentication, access control, secret handling, source users, `DataOps_Control` access, and sensitive data handling |
+
 
 ## Project Status
 
@@ -109,7 +89,3 @@ sales_platform_modernization_sql_server_to_microsoft_fabric/
 | Fabric implementation         | Planned     |
 | Validation and reconciliation | Planned     |
 | Reporting layer               | Planned     |
-
-## Notes
-
-This version keeps the README focused. The detailed explanation should move to `docs/02_solution_design.md` and future supporting documents.
