@@ -4,8 +4,6 @@
 
 This document describes source-to-target movement patterns, flow responsibilities, and how historical and new reporting data are processed into the target reporting platform.
 
-This document expands the data flow section introduced in `02_solution_design.md`.
-
 ## Data Flow Overview
 
 The solution supports three main data flows because the target reporting platform must combine historical reporting data with new reporting data derived from the operational source.
@@ -133,11 +131,3 @@ Each flow should be controlled and observable through `DataOps_Control`.
 | Validation status      | Confirm whether data passed required quality checks                      |
 | Reconciliation status  | Confirm whether source and target results match expected values          |
 | Rerun support          | Allow controlled reprocessing by flow, object, or reporting period       |
-
-## Conclusion
-
-The data flow strategy defines the historical reporting flow, new reporting data flow, coexistence support flow, ownership rules, and control requirements.
-
-`Sales_Analytics` provides the trusted historical reporting baseline through Warehouse staging and Gold. `Sales_Operational` provides new operational data that is landed in Bronze, curated in Silver, and transformed into Gold. `wh_sales_analytics.gold` becomes the trusted reporting data layer exposed through `sm_sales_analytics`.
-
-The main data flow challenge is to align historical and new reporting data while maintaining traceability, controlled execution, reconciliation, and clear reporting-period ownership.

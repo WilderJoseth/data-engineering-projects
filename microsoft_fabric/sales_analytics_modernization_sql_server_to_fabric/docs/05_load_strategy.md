@@ -4,8 +4,6 @@
 
 This document describes the load strategies used to refresh Sales data across the target reporting platform.
 
-This document expands the load behavior section introduced in `02_solution_design.md`.
-
 ## Load Strategy Overview
 
 The solution uses three main refresh strategies and one Bronze-specific write pattern.
@@ -77,15 +75,3 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 | Reconciliation failure | Keep the affected batch unaccepted until corrected or approved |
 
 Reruns should not create duplicate records in Silver or Gold.
-
-## Conclusion
-
-The load strategy defines how each source object is refreshed across the target reporting platform.
-
-Reference, lookup, master, and core objects from `Sales_Operational` use watermark incremental loading based on `created_at` and `updated_at`, with upsert processing in Silver and Gold. Transactional data from `Sales_Operational` uses monthly batch period reloads based on `OrderDate`.
-
-Historical analytical dimensions from `Sales_Analytics` are loaded using full reload during historical initialization before cutover. Historical analytical facts from `Sales_Analytics` use monthly batch reloads based on `OrderDate`.
-
-Bronze uses append-based ingestion to preserve traceability. Silver applies curated loading by operational data category. Gold uses upsert for dimensions and monthly delete-and-reload processing for facts.
-
-This strategy allows the target reporting platform to initialize trusted historical reporting data from `Sales_Analytics` and continue loading new reporting data from `Sales_Operational` while maintaining traceability, recoverability, and reporting-period control.

@@ -4,8 +4,6 @@
 
 This document describes the source databases, their roles, source object categories, estimated data volumes, growth assumptions, and how each source contributes to the target reporting platform.
 
-This document expands the source data profile section introduced in `02_solution_design.md`.
-
 ## Source Platform Overview
 
 The current Sales platform runs on an on-premise SQL Server 2022 instance, and it contains two business databases with different responsibilities:
@@ -39,7 +37,7 @@ The source data is grouped by business and analytical role.
 
 For target ingestion, only final persisted business tables from the `prod` schema are included in the `Sales_Operational` source inventory.
 
-| Data Category | Schema | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Current Index Size |
+| Data Category | Source Schema | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Current Index Size |
 |---|---|---|---:|---:|---:|---:|
 | Transactional | `prod` | `SalesOrderDetail` | 7,500,000 rows/month | 1,262,500,000 | 138.88 – 195.69 GB | 50.50 – 113.62 GB |
 | Transactional | `prod` | `SalesOrderHeader` | 1,500,000 rows/month | 252,500,000 | 56.81 – 94.69 GB | 28.40 – 75.75 GB |
@@ -62,7 +60,7 @@ For target ingestion, only final persisted business tables from the `prod` schem
 
 For target ingestion, only final persisted reporting tables from the `dim` and `fact` schemas are included in the `Sales_Analytics` source inventory.
 
-| Data Category | Schema | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Current Index Size |
+| Data Category | Source Schema | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Current Index Size |
 |---|---|---|---:|---:|---:|---:|
 | Analytical Fact | `fact` | `FactSales` | 7,500,000 rows/month | 1,262,500,000 | 189.38 – 265.12 GB | 88.38 – 176.75 GB |
 | Analytical Dimension | `dim` | `DimCustomer` | 150,000 rows/month | 25,250,000 | 5.05 – 10.10 GB | 3.79 – 8.84 GB |
@@ -72,13 +70,3 @@ For target ingestion, only final persisted reporting tables from the `dim` and `
 | Analytical Dimension | `dim` | `DimDate` | Static / very low | 4,077 | < 0.01 GB | < 0.01 GB |
 | Analytical Dimension | `dim` | `DimSalesTerritory` | Static / very low | 20 | < 0.01 GB | < 0.01 GB |
 | Analytical Dimension | `dim` | `DimShipMethod` | Static / very low | 20 | < 0.01 GB | < 0.01 GB |
-
-## Conclusion
-
-The source data profile defines the source databases, source object categories, persisted source table inventory, estimated current-state volumes, and growth assumptions required before implementation.
-
-`Sales_Operational` remains the active operational system of record and provides new transactional, master, and reference data for future reporting periods after cutover. `Sales_Analytics` provides the trusted historical reporting baseline through its existing fact and dimension tables before cutover.
-
-The source platform contains approximately 2.90 billion persisted business rows across `Sales_Operational` and `Sales_Analytics`. The largest objects are `Sales_Analytics.fact.FactSales`, `Sales_Operational.prod.SalesOrderDetail`, and `Sales_Operational.prod.SalesOrderHeader`.
-
-These volumes confirm that the Fabric migration must use controlled historical loading, watermark-based incremental processing for operational non-transactional data, batch-period handling for large transactional and fact data, and reconciliation checks by table and reporting period.

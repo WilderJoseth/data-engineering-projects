@@ -89,13 +89,3 @@ The project is not a full replacement of the Sales platform.
 | `Sales_Analytics`                         | Provides historical reporting data for the historical reporting baseline  |
 | `Sales_Operational`                       | Provides new transactional data for reporting transformation in the target analytics platform |
 | Warehouse Gold model and Power BI semantic model | Target reporting source of truth                                  |
-
-## Conclusion
-
-The current Sales platform is reliable and well structured for its original purpose. `Sales_Operational` supports on-premise transactional operations, while `Sales_Analytics` provides a controlled and trusted reporting model with historical analytical data.
-
-The modernization is not driven by a failed platform. It is driven by the need to expand Sales analytical data beyond traditional reporting and make it available as a reusable cloud data product for Power BI, AI, data science, and broader enterprise consumption.
-
-The recommended approach is to keep `Sales_Operational` on-premise, use `Sales_Analytics` as the historical reporting baseline, and build the Warehouse Gold model exposed through the Power BI semantic model as the target reporting source of truth for both historical and new Sales reporting data.
-
-This approach preserves the value of the current platform while addressing the main modernization need: moving trusted Sales analytics from an on-premise reporting dependency to a governed cloud analytical platform.
