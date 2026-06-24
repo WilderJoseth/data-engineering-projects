@@ -31,24 +31,7 @@ This project is part of a data engineering portfolio focused on cloud modernizat
 
 ## High-Level Architecture
 
-```text
-On-Premise SQL Server
-        |
-        v
-Fabric Data Factory Pipelines
-        |
-        v
-Fabric Lakehouse Bronze data area
-        |
-        v
-Curated Operational Data
-        |
-        v
-Fabric Warehouse Gold analytical model
-        |
-        v
-Power BI Semantic Model
-```
+![Sales Analytics Modernization High Level Architecture](docs/img/sales_analytics_modernization_high_level_architecture.png)
 
 ## Technologies
 
@@ -56,8 +39,8 @@ Power BI Semantic Model
 | -------------- | ------------------- |
 | Source system  | SQL Server          |
 | Cloud platform | Microsoft Fabric    |
-| Orchestration  | Fabric Data Factory |
-| Storage        | OneLake / Lakehouse |
+| Orchestration  | Fabric Pipelines    |
+| Storage        | Fabric Lakehouse    |
 | Analytics      | Fabric Warehouse    |
 | Processing     | SQL / PySpark       |
 | Reporting      | Power BI            |
@@ -77,7 +60,6 @@ The solution design is supported by detailed documents.
 | Validation and Reconciliation | [06_validation_and_reconciliation_strategy.md](docs/06_validation_and_reconciliation_strategy.md) | Defines the row count checks, total checks, reconciliation grain, and result tracking in `DataOps_Control`                   |
 | CI/CD and Deployment          | [07_ci_cd_and_deployment_strategy.md](docs/07_ci_cd_and_deployment_strategy.md)                   | Defines the Development and Production environments, deployment pipeline usage, repository structure, and deployment scope   |
 | Security and Access           | [08_security_and_access_strategy.md](docs/08_security_and_access_strategy.md)                     | Defines authentication, access control, secret handling, source users, `DataOps_Control` access, and sensitive data handling |
-
 
 ## Project Status
 
