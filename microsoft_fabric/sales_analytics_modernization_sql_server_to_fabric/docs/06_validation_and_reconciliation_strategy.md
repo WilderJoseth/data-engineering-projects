@@ -4,8 +4,6 @@
 
 This document defines the initial validation and reconciliation strategy used to confirm that Sales data is loaded correctly across the target reporting platform.
 
-This document expands the validation and reconciliation strategy section introduced in `02_solution_design.md`.
-
 ## Validation Principles
 
 | Principle | Description |
@@ -89,11 +87,3 @@ The reconciliation strategy uses two reconciliation types.
 | Assumption | `ROW_COUNT` is the default reconciliation metric | Row count reconciliation applies to all source categories unless explicitly excluded |
 | Assumption | `SUM_TOTAL` applies only to transactional and fact data | Business totals are reconciled only where numeric measures exist and add value |
 | Requirement | Fact reconciliation is batch-based | Transactional and fact reconciliation must support `OrderDate` month-level comparison |
-
-## Conclusion
-
-The validation and reconciliation strategy defines a practical first set of checks for the Sales reporting modernization.
-
-`ROW_COUNT` reconciliation is used across reference, master, transactional, dimension, and fact tables to confirm load completeness. `SUM_TOTAL` reconciliation is used for transactional and fact tables to confirm business totals by batch period.
-
-The strategy avoids redundant checks that are already enforced by table constraints and focuses on validations that support completeness, consistency, reporting confidence, and controlled rerun behavior.

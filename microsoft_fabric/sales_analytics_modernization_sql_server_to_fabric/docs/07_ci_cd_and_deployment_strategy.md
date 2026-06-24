@@ -153,11 +153,3 @@ sales_analytics_modernization_sql_server_to_fabric
 | `artifacts/deployment/fabric/validation_checklists` | Stores deployment and post-deployment validation checklists |
 | `docs/diagrams` | Stores architecture and deployment diagrams |
 | `docs/images` | Stores supporting documentation images |
-
-## Conclusion
-
-The CI/CD and deployment strategy defines how the Sales Analytics Modernization project is organized across Development and Production.
-
-The project uses separate Fabric workspaces, one deployment pipeline, one stage-aware Variable Library, consistent Fabric item naming, per-environment connections, and GitHub-managed deployment artifacts.
-
-The strategy promotes Fabric logic such as pipelines, notebooks, and stage-aware configuration, while keeping platform containers, internal objects, and data controlled per environment. Lakehouse and Warehouse items are created per environment, Lakehouse and Warehouse objects are created by scripts, notebooks, or pipelines, and data is loaded by environment-specific execution processes rather than promoted from Development to Production.

@@ -95,11 +95,3 @@ Recommended handling by data area:
 | Publish reporting-safe Gold data | Gold should contain only approved reporting attributes                                           |
 | Keep execution traceability      | Data loads should be traceable through `DataOps_Control`                                         |
 | Do not reuse broad ETL accounts  | Existing ETL accounts with write permissions should not be reused for Fabric read-only ingestion |
-
-## Conclusion
-
-The security and access strategy defines the minimum security controls required to implement the Sales Analytics Modernization project.
-
-The project uses dedicated read-only source access, on-premise SQL Server connections, Fabric-managed authentication, workspace identity for `DataOps_Control`, stage-specific Variable Library values, and separate Development and Production configurations.
-
-Secrets are managed through Fabric connection management or platform identity configuration and are not stored in project artifacts. Sensitive source attributes are restricted in processing layers, and only reporting-safe data is published to Gold.
