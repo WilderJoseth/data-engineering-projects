@@ -1,33 +1,37 @@
-# Sales Platform Modernization: SQL Server to Microsoft Fabric
+# Sales Analytics Modernization: SQL Server to Microsoft Fabric
 
 ## Overview
 
-This project presents a Sales data platform modernization from an on-premise SQL Server environment to Microsoft Fabric.
+This project presents a Sales Analytics Modernization initiative from an on-premise SQL Server environment to Microsoft Fabric.
 
-The goal is to design a cloud-based architecture that supports historical migration, incremental data processing, operational data structures, analytical reporting, and controlled execution tracking.
+The goal is to design a cloud-based reporting architecture that supports historical migration, incremental data processing, operational source ingestion, analytical reporting, and controlled execution tracking.
 
 This project is part of a data engineering portfolio focused on cloud modernization, Microsoft Fabric, data platform design, and migration practices.
 
 ## Project Scope
 
-| Area                      | In Scope                                                      |
-| ------------------------- | ------------------------------------------------------------- |
-| Source platform           | On-premise SQL Server Sales databases                         |
-| Target analytics platform | Microsoft Fabric with Azure SQL Database for DataOps control  |
-| Data storage              | Lakehouse and Warehouse patterns                              |
-| Processing                | Historical and incremental migration                          |
-| Control                   | Metadata-driven execution tracking                            |
-| Validation                | Data validation and reconciliation design                     |
-| Consumption               | Analytical model for reporting                                |
+| Area                      | In Scope                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| Source platform           | On-premise SQL Server 2022 Sales databases                                                        |
+| Source systems            | `Sales_Operational` and `Sales_Analytics`                                                         |
+| Target reporting platform | Microsoft Fabric with Lakehouse and Warehouse                                                     |
+| DataOps control           | Azure SQL Database for execution tracking, validation, reconciliation, logging, and rerun control |
+| Data processing           | Historical reporting migration and incremental operational data processing                        |
+| Data architecture         | Bronze, Silver, Staging, and Gold layer design                                                    |
+| Validation                | Data validation and reconciliation design                                                         |
+| Security                  | Design-level access control, authentication, secret handling, and sensitive data handling         |
+| Deployment                | Development and Production environment strategy                                                   |
+| Consumption               | Reporting-ready Gold data and future Power BI semantic model                                      |
 
 ## Out of Scope
 
-| Area                             | Reason                                   |
-| -------------------------------- | ---------------------------------------- |
-| Real-time streaming              | Not required for the first version       |
-| Full enterprise migration        | The scope is limited to the Sales domain |
-| Production deployment automation | May be added in a later phase            |
-| Security implementation details  | Covered only at design level for now     |
+| Area                           | Reason                                                                                                                 |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
+| Operational system replacement | `Sales_Operational` remains on-premise and is not replaced by Microsoft Fabric                                         |
+| Real-time streaming            | The first version focuses on batch-based historical and incremental processing                                         |
+| Full enterprise migration      | The scope is limited to the Sales reporting domain                                                                     |
+| Production implementation      | The project defines the design and implementation approach, but full production rollout is outside the portfolio scope |
+| Power BI report development    | The semantic model is considered later; report/dashboard design is not part of the current scope                       |
 
 ## High-Level Architecture
 
