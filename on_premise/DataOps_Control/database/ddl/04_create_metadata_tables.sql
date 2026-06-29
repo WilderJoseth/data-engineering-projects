@@ -175,3 +175,25 @@ CREATE TABLE [metadata].[project_process_dependencies]
     CONSTRAINT [fk_metadata_project_process_dependencies_dependency_project_process_id] FOREIGN KEY ([dependency_project_process_id]) REFERENCES [metadata].[project_processes]([id]),
     CONSTRAINT [ck_metadata_project_process_dependencies_no_self_dependency] CHECK ([project_process_id] <> [dependency_project_process_id])
 );
+
+CREATE TABLE [metadata].[project_process_monitoring_metrics] (
+    [id] INT IDENTITY(1,1) NOT NULL,
+    [project_process_id] INT NOT NULL,
+    [monitoring_metric_code_id] SMALLINT NOT NULL,
+    [min_value_bigint] BIGINT NULL,
+    [max_value_bigint] BIGINT NULL,
+    [min_value_decimal] DECIMAL(20,4) NULL,
+    [max_value_decimal] DECIMAL(20,4) NULL,
+    [severity] VARCHAR(20) NOT NULL,
+    [is_active] BIT NOT NULL CONSTRAINT [df_metadata_project_process_monitoring_metrics_is_active] DEFAULT (1),
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_metadata_project_process_monitoring_metrics_created_at] DEFAULT SYSUTCDATETIME(),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_metadata_project_process_monitoring_metrics_created_by] DEFAULT USER_NAME(),
+    [updated_at] DATETIME2(7) NULL,
+    [updated_by] VARCHAR(50) NULL,
+
+    CONSTRAINT [pk_metadata_project_process_monitoring_metrics] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [fk_metadata_project_process_monitoring_metrics_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
+    CONSTRAINT [fk_metadata_project_process_monitoring_metrics_metric_code_id] FOREIGN KEY ([monitoring_metric_code_id]) REFERENCES [reference].[monitoring_metric_codes]([id]),
+    CONSTRAINT [uk_metadata_project_process_monitoring_metrics_process_metric] UNIQUE ([project_process_id], [monitoring_metric_code_id])
+);
+GO

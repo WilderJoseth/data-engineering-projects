@@ -45,3 +45,20 @@ CREATE TABLE [observability].[validation_results] (
     CONSTRAINT [fk_observability_validation_results_validation_code_id] FOREIGN KEY ([validation_code_id]) REFERENCES [reference].[validation_codes]([id])
 ) ON [PRIMARY];
 GO
+
+CREATE TABLE [observability].[monitoring_results] (
+    [id] BIGINT IDENTITY(1,1) NOT NULL,
+    [execution_step_id] BIGINT NOT NULL,
+    [project_process_monitoring_metric_id] INT NOT NULL,
+    [actual_value_bigint] BIGINT NULL,
+    [actual_value_decimal] DECIMAL(20,4) NULL,
+    [is_within_expected_range] BIT NOT NULL,
+    [created_at] DATETIME2(7) NOT NULL CONSTRAINT [df_observability_monitoring_results_created_at] DEFAULT SYSUTCDATETIME(),
+    [created_by] VARCHAR(50) NOT NULL CONSTRAINT [df_observability_monitoring_results_created_by] DEFAULT USER_NAME(),
+
+    CONSTRAINT [pk_observability_monitoring_results] PRIMARY KEY CLUSTERED ([id] ASC),
+    CONSTRAINT [fk_observability_monitoring_results_execution_step_id] FOREIGN KEY ([execution_step_id]) REFERENCES [runtime].[execution_steps]([id]),
+    CONSTRAINT [fk_observability_monitoring_results_project_process_monitoring_metric_id] FOREIGN KEY ([project_process_monitoring_metric_id]) REFERENCES [metadata].[project_process_monitoring_metrics]([id]),
+    CONSTRAINT [uk_observability_monitoring_results_step_metric] UNIQUE ([execution_step_id], [project_process_monitoring_metric_id])
+);
+GO

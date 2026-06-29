@@ -57,3 +57,48 @@ VALUES
     (8, 'RECON_WARNING',  'Validation passed with reconciliation or tolerance warning.', 'Warning', 1),
     (9, 'INFO_CHECK',     'Informational validation result.', 'Info', 1);
 GO
+
+INSERT INTO [reference].[monitoring_metric_codes] (
+    [code],
+    [description],
+    [metric_source],
+    [metric_value_type],
+    [metric_unit]
+)
+VALUES
+(
+    'DURATION_SECONDS',
+    'Measures how long the execution step took from start to end.',
+    'RUNTIME',
+    'BIGINT',
+    'seconds'
+),
+(
+    'VALIDATION_ISSUE_COUNT',
+    'Counts validation issues registered for the execution step.',
+    'VALIDATION',
+    'BIGINT',
+    'issues'
+),
+(
+    'RECONCILIATION_MISMATCH_COUNT',
+    'Counts reconciliation metrics that do not match expected source and target values.',
+    'RECONCILIATION',
+    'BIGINT',
+    'mismatches'
+),
+(
+    'ERROR_COUNT',
+    'Counts technical errors registered for the execution step.',
+    'ERROR_LOG',
+    'BIGINT',
+    'errors'
+),
+(
+    'ROW_COUNT',
+    'Measures the number of rows processed or reconciled.',
+    'RECONCILIATION',
+    'BIGINT',
+    'rows'
+);
+GO

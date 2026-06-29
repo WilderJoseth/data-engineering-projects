@@ -141,3 +141,63 @@ GROUP BY
     pp.[name],
     sc.[code];
 GO
+
+CREATE VIEW [observability].[vw_monitoring_results]
+AS
+SELECT
+    mr.[id] AS [monitoring_result_id],
+    mr.[execution_step_id],
+    er.[id] AS [execution_run_id],
+    p.[name] AS [project_name],
+    pp.[name] AS [project_process_name],
+    mmc.[code] AS [metric_code],
+    mmc.[description] AS [metric_description],
+    mmc.[metric_source],
+    mmc.[metric_unit],
+    CASE
+        WHEN mmc.[metric_value_type] = 'BIGINT'
+            THEN CONVERT(VARCHAR(100), mr.[actual_value_bigint])
+        WHEN mmc.[metric_value_type] = 'DECIMAL'
+            THEN CONVERT(VARCHAR(100), mr.[actual_value_decimal])
+        ELSE COALESCE(
+            CONVERT(VARCHAR(100), mr.[actual_value_bigint]),
+            CONVERT(VARCHAR(100), mr.[actual_value_decimal])
+        )
+    END AS [actual_value],
+    CASE
+        WHEN mmc.[metric_value_type] = 'BIGINT'
+            THEN CONCAT(
+                COALESCE(CONVERT(VARCHAR(100), ppm.[min_value_bigint]), 'NULL'),
+                ' - ',
+                COALESCE(CONVERT(VARCHAR(100), ppm.[max_value_bigint]), 'NULL')
+            )
+        WHEN mmc.[metric_value_type] = 'DECIMAL'
+            THEN CONCAT(
+                COALESCE(CONVERT(VARCHAR(100), ppm.[min_value_decimal]), 'NULL'),
+                ' - ',
+                COALESCE(CONVERT(VARCHAR(100), ppm.[max_value_decimal]), 'NULL')
+            )
+        ELSE NULL
+    END AS [expected_range],
+    ppm.[severity],
+    mr.[is_within_expected_range],
+    CASE
+        WHEN mr.[is_within_expected_range] = 1 THEN 'OK'
+        ELSE 'Observed'
+    END AS [monitoring_status],
+    mr.[created_at]
+FROM [observability].[monitoring_results] AS mr
+INNER JOIN [runtime].[execution_steps] AS es
+    ON es.[id] = mr.[execution_step_id]
+INNER JOIN [runtime].[execution_runs] AS er
+    ON er.[id] = es.[execution_run_id]
+INNER JOIN [metadata].[projects] AS p
+    ON p.[id] = er.[project_id]
+INNER JOIN [metadata].[project_processes] AS pp
+    ON pp.[id] = es.[project_process_id]
+INNER JOIN [metadata].[project_process_monitoring_metrics] AS ppm
+    ON ppm.[id] = mr.[project_process_monitoring_metric_id]
+INNER JOIN [reference].[monitoring_metric_codes] AS mmc
+    ON mmc.[id] = ppm.[monitoring_metric_code_id];
+GO
+
