@@ -700,3 +700,141 @@ VALUES
     (2808, 28, 8, 'Cleanup staging and work tables', 'STORED_PROCEDURE', 3, 'control', 'usp_cleanup_FactSales', NULL, 1);
 
 GO
+
+/*============================================================================
+  11. Project Process Monitoring Metrics
+
+  Purpose:
+  - Defines process-level metric thresholds for runtime scenario tests.
+  - Keeps this seed script metadata-only. Runtime scenario records for
+    execution_runs, execution_steps, error_logs, validation_results, and
+    reconciliation_results should be loaded by separate test scripts.
+
+  Scope:
+  - Metrics are configured only for executable load processes, starting at
+    metadata.project_processes.id = 10.
+  - Head/group processes 1 through 9 are orchestration containers and do not
+    produce process-action metrics directly.
+  - The process scope follows metadata.project_process_actions.
+
+  Scenario support:
+  - Successful ending:
+      Runtime metrics stay inside configured thresholds.
+  - Observed or failed metric result:
+      Runtime metric values fall outside configured min/max thresholds.
+
+  Metric severity convention:
+  - Warning thresholds are expected to drive Observed outcomes.
+  - Error thresholds are expected to drive Failed outcomes.
+
+  Threshold rules:
+  - Only bigint range metrics are configured in this seed.
+  - min_value_bigint and max_value_bigint are both populated.
+  - min_value_bigint is always 0 and cannot be greater than max_value_bigint.
+  - VALIDATION_ISSUE_COUNT, RECONCILIATION_MISMATCH_COUNT, and ERROR_COUNT are
+    intentionally not configured here.
+============================================================================*/
+
+/*============================================================================
+  11A. Sales_Operational_Migration executable process metrics
+
+  Processes:
+  - Reference loads: 10 through 15
+  - Master loads: 16 through 20
+  - Transactional load: 21
+============================================================================*/
+
+INSERT INTO [metadata].[project_process_monitoring_metrics]
+(
+    [project_process_id],
+    [monitoring_metric_code_id],
+    [min_value_bigint],
+    [max_value_bigint],
+    [min_value_decimal],
+    [max_value_decimal],
+    [severity]
+)
+SELECT
+    p.[project_process_id],
+    mc.[id] AS [monitoring_metric_code_id],
+    m.[min_value_bigint],
+    m.[max_value_bigint],
+    m.[min_value_decimal],
+    m.[max_value_decimal],
+    m.[severity]
+FROM
+(
+    VALUES
+        (10, 'AddressType Load', 300, 100000),
+        (11, 'ProductCategory Load', 300, 100000),
+        (12, 'SpecialOffer Load', 300, 100000),
+        (13, 'ShipMethod Load', 300, 100000),
+        (14, 'Geography Load', 600, 250000),
+        (15, 'Currency Load', 600, 250000),
+        (16, 'CreditCard Load', 600, 500000),
+        (17, 'Address Load', 900, 500000),
+        (18, 'Product Load', 900, 500000),
+        (19, 'SalesPerson Load', 900, 500000),
+        (20, 'Customer Load', 900, 500000),
+        (21, 'Sales Load', 3600, 10000000)
+) p ([project_process_id], [process_name], [max_duration_seconds], [max_row_count])
+CROSS APPLY
+(
+    VALUES
+        -- Success path thresholds
+        ('DURATION_SECONDS', CAST(0 AS BIGINT), CAST(p.[max_duration_seconds] AS BIGINT), CAST(NULL AS DECIMAL(20,4)), CAST(NULL AS DECIMAL(20,4)), 'Warning'),
+        ('ROW_COUNT', CAST(0 AS BIGINT), CAST(p.[max_row_count] AS BIGINT), CAST(NULL AS DECIMAL(20,4)), CAST(NULL AS DECIMAL(20,4)), 'Error')
+) m ([metric_code], [min_value_bigint], [max_value_bigint], [min_value_decimal], [max_value_decimal], [severity])
+INNER JOIN [reference].[monitoring_metric_codes] mc
+    ON mc.[code] = m.[metric_code]
+    AND mc.[is_active] = 1;
+GO
+
+/*============================================================================
+  11B. Sales_Analytics_Migration executable process metrics
+
+  Processes:
+  - Dimension loads: 22 through 27
+  - Fact load: 28
+============================================================================*/
+
+INSERT INTO [metadata].[project_process_monitoring_metrics]
+(
+    [project_process_id],
+    [monitoring_metric_code_id],
+    [min_value_bigint],
+    [max_value_bigint],
+    [min_value_decimal],
+    [max_value_decimal],
+    [severity]
+)
+SELECT
+    p.[project_process_id],
+    mc.[id] AS [monitoring_metric_code_id],
+    m.[min_value_bigint],
+    m.[max_value_bigint],
+    m.[min_value_decimal],
+    m.[max_value_decimal],
+    m.[severity]
+FROM
+(
+    VALUES
+        (22, 'DimCustomer Load', 900, 500000),
+        (23, 'DimPaymentMethod Load', 600, 500000),
+        (24, 'DimShipMethod Load', 600, 100000),
+        (25, 'DimProduct Load', 900, 500000),
+        (26, 'DimSalesTerritory Load', 900, 250000),
+        (27, 'DimSalesPerson Load', 900, 500000),
+        (28, 'FactSales Load', 1200, 10000000)
+) p ([project_process_id], [process_name], [max_duration_seconds], [max_row_count])
+CROSS APPLY
+(
+    VALUES
+        -- Success path thresholds
+        ('DURATION_SECONDS', CAST(0 AS BIGINT), CAST(p.[max_duration_seconds] AS BIGINT), CAST(NULL AS DECIMAL(20,4)), CAST(NULL AS DECIMAL(20,4)), 'Warning'),
+        ('ROW_COUNT', CAST(0 AS BIGINT), CAST(p.[max_row_count] AS BIGINT), CAST(NULL AS DECIMAL(20,4)), CAST(NULL AS DECIMAL(20,4)), 'Error')
+) m ([metric_code], [min_value_bigint], [max_value_bigint], [min_value_decimal], [max_value_decimal], [severity])
+INNER JOIN [reference].[monitoring_metric_codes] mc
+    ON mc.[code] = m.[metric_code]
+    AND mc.[is_active] = 1;
+GO

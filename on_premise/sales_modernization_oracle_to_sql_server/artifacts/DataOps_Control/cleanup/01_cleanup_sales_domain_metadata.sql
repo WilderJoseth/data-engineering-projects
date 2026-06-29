@@ -21,6 +21,18 @@ GO
   1. Runtime and Observability Test Data
 ============================================================================*/
 
+IF OBJECT_ID('[observability].[monitoring_results]', 'U') IS NOT NULL
+BEGIN
+    DELETE mr
+    FROM [observability].[monitoring_results] mr
+    INNER JOIN [runtime].[execution_steps] es
+        ON es.[id] = mr.[execution_step_id]
+    INNER JOIN [runtime].[execution_runs] er
+        ON er.[id] = es.[execution_run_id]
+    WHERE er.[project_id] = 1;
+END;
+GO
+
 IF OBJECT_ID('[observability].[error_logs]', 'U') IS NOT NULL
 BEGIN
     DELETE el
@@ -84,6 +96,16 @@ BEGIN
     FROM [metadata].[project_process_actions] a
     INNER JOIN [metadata].[project_processes] p
         ON p.[id] = a.[project_process_id]
+    WHERE p.[project_id] = 1;
+END;
+GO
+
+IF OBJECT_ID('[metadata].[project_process_monitoring_metrics]', 'U') IS NOT NULL
+BEGIN
+    DELETE m
+    FROM [metadata].[project_process_monitoring_metrics] m
+    INNER JOIN [metadata].[project_processes] p
+        ON p.[id] = m.[project_process_id]
     WHERE p.[project_id] = 1;
 END;
 GO
