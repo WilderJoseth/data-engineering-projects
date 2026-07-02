@@ -19,15 +19,6 @@
 USE [DataOps_Control];
 GO
 
-
-/*============================================================================
-  Removed / replaced views
-============================================================================*/
-
-DROP VIEW IF EXISTS [observability].[vw_monitoring_results];
-GO
-
-
 /*============================================================================
   View: metadata.vw_project_process_hierarchy
 
@@ -388,4 +379,28 @@ INNER JOIN [metadata].[projects] p ON p.[id] = er.[project_id]
 INNER JOIN [metadata].[project_processes] pp ON pp.[id] = es.[project_process_id]
 INNER JOIN [metadata].[project_process_monitoring_metrics] ppm ON ppm.[id] = mr.[project_process_monitoring_metric_id]
 INNER JOIN [reference].[monitoring_metric_codes] mmc ON mmc.[id] = ppm.[monitoring_metric_code_id];
+GO
+
+CREATE OR ALTER VIEW [observability].[vw_reconciliation_result_summary]
+AS
+SELECT
+    rr.[id] AS [reconciliation_result_id],
+    rr.[execution_step_id],
+    es.[execution_run_id],
+    er.[project_id],
+    p.[name] AS [project_name],
+    es.[project_process_id],
+    pp.[name] AS [process_name],
+    rr.[metric_name],
+    rr.[reconciliation_key],
+    rr.[reconciliation_side],
+    rr.[metric_value_bigint],
+    rr.[metric_value_decimal],
+    rr.[created_at],
+    rr.[created_by]
+FROM [observability].[reconciliation_results] rr
+INNER JOIN [runtime].[execution_steps] es ON es.[id] = rr.[execution_step_id]
+INNER JOIN [runtime].[execution_runs] er ON er.[id] = es.[execution_run_id]
+INNER JOIN [metadata].[projects] p ON p.[id] = er.[project_id]
+INNER JOIN [metadata].[project_processes] pp ON pp.[id] = es.[project_process_id];
 GO

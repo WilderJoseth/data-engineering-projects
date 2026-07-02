@@ -38,6 +38,7 @@ SELECT 'TABLE', v.[name]
 FROM (VALUES
     ('reference.status_codes'),
     ('reference.validation_codes'),
+    ('reference.monitoring_metric_codes'),
     ('metadata.projects'),
     ('metadata.project_databases'),
     ('metadata.project_database_mappings'),
@@ -48,11 +49,15 @@ FROM (VALUES
     ('metadata.project_process_table_batches'),
     ('metadata.project_table_batches'),
     ('metadata.project_columns'),
+    ('metadata.project_process_actions'),
+    ('metadata.project_process_dependencies'),
+    ('metadata.project_process_monitoring_metrics'),
     ('runtime.execution_runs'),
     ('runtime.execution_steps'),
     ('observability.error_logs'),
     ('observability.validation_results'),
-    ('observability.reconciliation_results')
+    ('observability.reconciliation_results'),
+    ('observability.monitoring_results')
 ) v([name])
 WHERE OBJECT_ID(v.[name], 'U') IS NULL;
 
@@ -72,10 +77,28 @@ WHERE OBJECT_ID(v.[name], 'P') IS NULL;
 INSERT INTO @missing_objects
 SELECT 'FUNCTION', v.[name]
 FROM (VALUES
-    ('metadata.ufn_list_project_process_tables'),
-    ('metadata.ufn_list_project_process_table_batches')
+    ('metadata.ufn_list_project_process_children'),
+    ('metadata.ufn_list_project_process_table_batches'),
+    ('metadata.ufn_list_project_process_actions')
 ) v([name])
 WHERE OBJECT_ID(v.[name], 'IF') IS NULL;
+
+/* Views */
+INSERT INTO @missing_objects
+SELECT 'VIEW', v.[name]
+FROM (VALUES
+    ('metadata.vw_project_process_hierarchy'),
+    ('metadata.vw_project_process_dependency_summary'),
+    ('metadata.vw_project_process_action_summary'),
+    ('metadata.vw_project_batch_execution_scope'),
+    ('metadata.vw_project_table_lineage_summary'),
+    ('metadata.vw_project_process_monitoring_metric_summary'),
+    ('runtime.vw_execution_run_summary'),
+    ('runtime.vw_execution_step_summary'),
+    ('observability.vw_execution_observability_summary'),
+    ('observability.vw_monitoring_result_summary')
+) v([name])
+WHERE OBJECT_ID(v.[name], 'V') IS NULL;
 
 /* Roles */
 INSERT INTO @missing_objects
@@ -95,17 +118,53 @@ WHERE NOT EXISTS (
 INSERT INTO @missing_objects
 SELECT 'REFERENCE STATUS', v.[code]
 FROM (VALUES
-    ('Pending'),
-    ('Running'),
-    ('Success'),
-    ('Observed'),
-    ('Failed'),
-    ('Skipped')
+    ('PENDING'),
+    ('RUNNING'),
+    ('SUCCESS'),
+    ('OBSERVED'),
+    ('FAILED'),
+    ('SKIPPED')
 ) v([code])
 WHERE NOT EXISTS (
     SELECT 1
     FROM [reference].[status_codes] sc
     WHERE sc.[code] = v.[code]
+);
+
+/* Reference validation values */
+INSERT INTO @missing_objects
+SELECT 'REFERENCE VALIDATION', v.[code]
+FROM (VALUES
+    ('NOT_NULL'),
+    ('DUPLICATE'),
+    ('FK_CHECK'),
+    ('DATA_TYPE'),
+    ('LENGTH_CHECK'),
+    ('DATE_RANGE'),
+    ('NEGATIVE_VALUE'),
+    ('RECON_WARNING'),
+    ('INFO_CHECK')
+) v([code])
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM [reference].[validation_codes] vc
+    WHERE vc.[code] = v.[code]
+);
+
+/* Reference monitoring metric values */
+INSERT INTO @missing_objects
+SELECT 'REFERENCE MONITORING', v.[code]
+FROM (VALUES
+    ('DURATION_SECONDS'),
+    ('VALIDATION_ISSUE_COUNT'),
+    ('RECONCILIATION_MISMATCH_COUNT'),
+    ('ERROR_COUNT'),
+    ('ROW_COUNT')
+) v([code])
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM [reference].[monitoring_metric_codes] mmc
+    WHERE mmc.[code] = v.[code]
 );
 
 IF EXISTS (SELECT 1 FROM @missing_objects)
