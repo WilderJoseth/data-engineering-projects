@@ -23,22 +23,6 @@ BEGIN
     DECLARE @status_code_id_running SMALLINT = 2;
 
     -------------------------------------------------------------------------
-    -- Validate project.
-    -- The project must exist and be active before starting an execution run.
-    -------------------------------------------------------------------------
-
-    IF NOT EXISTS
-    (
-        SELECT 1
-        FROM [metadata].[projects]
-        WHERE [id] = @p_project_id
-        AND [is_active] = 1
-    )
-    BEGIN
-        ;THROW 50001, 'Project was not found or is inactive.', 1;
-    END;
-
-    -------------------------------------------------------------------------
     -- Validate status code.
     -- Running must exist and be active in reference.status_codes.
     -------------------------------------------------------------------------
@@ -52,6 +36,22 @@ BEGIN
     )
     BEGIN
         ;THROW 50002, 'Status code Running was not found or is inactive.', 1;
+    END;
+
+    -------------------------------------------------------------------------
+    -- Validate project.
+    -- The project must exist and be active before starting an execution run.
+    -------------------------------------------------------------------------
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM [metadata].[projects]
+        WHERE [id] = @p_project_id
+        AND [is_active] = 1
+    )
+    BEGIN
+        ;THROW 50001, 'Project was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -98,6 +98,21 @@ BEGIN
     DECLARE @execution_run_project_id SMALLINT;
 
     -------------------------------------------------------------------------
+    -- Validate status code.
+    -------------------------------------------------------------------------
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM [reference].[status_codes]
+        WHERE [id] = @status_code_id_running
+        AND [is_active] = 1
+    )
+    BEGIN
+        ;THROW 50005, 'Status code Running was not found or is inactive.', 1;
+    END;
+
+    -------------------------------------------------------------------------
     -- Validate execution run.
     -- The run must exist and must still be open.
     -------------------------------------------------------------------------
@@ -129,21 +144,6 @@ BEGIN
     )
     BEGIN
         ;THROW 50004, 'Project process was not found, is inactive, or does not belong to the execution run project.', 1;
-    END;
-
-    -------------------------------------------------------------------------
-    -- Validate status code.
-    -------------------------------------------------------------------------
-
-    IF NOT EXISTS
-    (
-        SELECT 1
-        FROM [reference].[status_codes]
-        WHERE [id] = @status_code_id_running
-        AND [is_active] = 1
-    )
-    BEGIN
-        ;THROW 50005, 'Status code Running was not found or is inactive.', 1;
     END;
 
     -------------------------------------------------------------------------
@@ -224,9 +224,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_end_parent_execution_step]
-(
     @p_execution_step_id BIGINT
-)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -249,17 +247,6 @@ BEGIN
     DECLARE @execution_run_id INT;
     DECLARE @parent_project_process_id INT;
 
-    /*
-        Keep status IDs consistent with runtime.usp_end_execution_run.
-
-        Expected reference.status_codes:
-        1 = PENDING
-        2 = RUNNING
-        3 = SUCCESS
-        4 = FAILED
-        5 = SKIPPED
-        6 = OBSERVED
-    */
     DECLARE @status_pending SMALLINT = 1;
     DECLARE @status_running SMALLINT = 2;
     DECLARE @status_success SMALLINT = 3;
@@ -272,13 +259,16 @@ BEGIN
         Get the execution run and the process represented by the parent step.
     */
     SELECT
-        @execution_run_id = es.[execution_run_id],
-        @parent_project_process_id = es.[project_process_id]
-    FROM [runtime].[execution_steps] es
-    WHERE es.[id] = @p_execution_step_id;
+        @execution_run_id = [execution_run_id],
+        @parent_project_process_id = [project_process_id]
+    FROM [runtime].[execution_steps]
+    WHERE [id] = @p_execution_step_id
+    AND [end_run_date] IS NULL;
 
     IF @execution_run_id IS NULL
-        THROW 51000, 'Execution step was not found.', 1;
+    BEGIN
+        ;THROW 51000, 'Execution step was not found or is already closed.', 1;
+    END;
 
     /*
         Validate that the provided step belongs to a parent process.
@@ -396,9 +386,7 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE [runtime].[usp_register_skipped_child_execution_steps]
-(
     @p_parent_execution_step_id BIGINT
-)
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -423,29 +411,37 @@ BEGIN
 
     DECLARE @execution_run_id INT;
     DECLARE @parent_project_process_id INT;
+    DECLARE @status_code_id_skipped SMALLINT = 5;
 
-    /*
-        Expected reference.status_codes:
-        1 = PENDING
-        2 = RUNNING
-        3 = SUCCESS
-        4 = FAILED
-        5 = SKIPPED
-        6 = OBSERVED
-    */
-    DECLARE @status_skipped SMALLINT = 5;
+    -------------------------------------------------------------------------
+    -- Validate status code.
+    -------------------------------------------------------------------------
+
+    IF NOT EXISTS
+    (
+        SELECT 1
+        FROM [reference].[status_codes]
+        WHERE [id] = @status_code_id_skipped
+        AND [is_active] = 1
+    )
+    BEGIN
+        ;THROW 50005, 'Status code Skipped was not found or is inactive.', 1;
+    END;
 
     /*
         Get the execution run and parent process represented by the parent step.
     */
     SELECT
-        @execution_run_id = es.[execution_run_id],
-        @parent_project_process_id = es.[project_process_id]
-    FROM [runtime].[execution_steps] es
-    WHERE es.[id] = @p_parent_execution_step_id;
+        @execution_run_id = [execution_run_id],
+        @parent_project_process_id = [project_process_id]
+    FROM [runtime].[execution_steps]
+    WHERE [id] = @p_parent_execution_step_id
+    AND [end_run_date] IS NULL;
 
     IF @execution_run_id IS NULL
-        THROW 51000, 'Parent execution step was not found.', 1;
+    BEGIN
+        ;THROW 51000, 'Parent execution step was not found or is already closed.', 1;
+    END;
 
     /*
         Validate that the provided step belongs to a parent process.
@@ -476,7 +472,7 @@ BEGIN
     SELECT
         @execution_run_id,
         child.[id],
-        @status_skipped,
+        @status_code_id_skipped,
         SYSUTCDATETIME(),
         SYSUTCDATETIME()
     FROM [metadata].[project_processes] child
@@ -507,13 +503,6 @@ BEGIN
         3. If any step is Failed, mark the run as Failed.
         4. If no step failed but at least one step is Observed, mark the run as Observed.
         5. Otherwise, mark the run as Success.
-
-        Status code assumptions:
-        - 1 = Pending
-        - 2 = Running
-        - 3 = Success
-        - 4 = Failed
-        - 6 = Observed
     */
 
     DECLARE @status_pending SMALLINT = 1;
