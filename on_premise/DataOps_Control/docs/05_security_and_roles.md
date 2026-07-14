@@ -6,12 +6,34 @@ Describe the `DataOps_Control` database security model, role responsibilities, p
 
 SQL scripts remain the source of truth for exact grants.
 
+## Framework Security Scope
+
+Security in this project means framework-level security for `DataOps_Control`.
+
+| Security Area | Framework Responsibility |
+|---|---|
+| Metadata configuration | Control who can maintain project, system, object, process, scope, metric, and notification metadata. |
+| Runtime execution | Control who can execute approved runtime procedures and create execution state/history. |
+| Observability evidence | Control who can publish and review error, validation, reconciliation, and monitoring evidence. |
+| Reference data | Control who can maintain or read reusable framework codes. |
+
+The framework does not replace enterprise IAM, access approval, or broader access governance workflows.
+
 ## Role Responsibilities
 
 | Role | Intended Users | Responsibility |
 |---|---|---|
 | `DataOps_Admin` | Framework maintainers, deployment scripts, administrative users | Maintains framework objects, metadata, reference data, and administrative configuration. |
 | `DataOps_Project_Executor` | SSIS packages, SQL Server Agent jobs, Azure Data Factory pipelines, Fabric Data Pipelines, custom execution services | Reads framework metadata, executes approved runtime/observability procedures, and writes execution evidence. |
+
+## Access Responsibility Model
+
+| Responsibility | Expected Access Pattern |
+|---|---|
+| Administration / configuration | Can manage metadata and reference configuration through controlled administrator, configuration, or deployment processes. |
+| Execution | Can read metadata, execute framework procedures, and write runtime or observability records as needed for execution. |
+| Reader / reviewer | Can inspect metadata, runtime history, and observability evidence without changing framework configuration. |
+| Direct table updates | Should be restricted where possible, especially for executor identities. |
 
 ## Permission Summary
 
@@ -28,7 +50,7 @@ SQL scripts remain the source of truth for exact grants.
 | `DataOps_Project_Executor` | `observability.validation_results` | `INSERT` | Publish validation result records produced by external pipeline tools. |
 | `DataOps_Project_Executor` | `observability.reconciliation_results` | `INSERT` | Publish reconciliation result records produced by external pipeline tools. |
 | `DataOps_Project_Executor` | `observability.monitoring_results` | `INSERT` | Publish monitoring result records produced by external pipeline tools. |
-| `DataOps_Project_Executor` | `observability.error_logs` | `INSERT` | Publish error records produced during process execution. |
+| `DataOps_Project_Executor` | `observability.usp_log_error` | `EXECUTE` through `observability` schema | Publish technical error records through the approved logging procedure. |
 
 ## Least Privilege Model
 
@@ -38,8 +60,17 @@ SQL scripts remain the source of truth for exact grants.
 | Read-only metadata for executors | Pipeline tools can read metadata needed for orchestration but cannot change framework definitions through executor role permissions. | Process, table, batch, dependency, and action metadata can be consumed with `SELECT` access only. |
 | Read-only reference data for executors | Pipeline tools can read standard status, validation, and metric codes but cannot modify them. | Execution logic needs stable codes for consistency, but code maintenance is an administrative task. |
 | Controlled runtime updates | Execution lifecycle should be handled through stored procedures instead of direct table updates. | Executors can start and close runs or steps without broad direct modification rights on runtime tables. |
-| Evidence publishing only where required | Executor accounts can publish validation, reconciliation, monitoring, and error evidence without broad metadata or reference permissions. | Runtime evidence can be captured without allowing changes to framework configuration. |
+| Evidence publishing only where required | Executor accounts can directly publish validation, reconciliation, and monitoring evidence. Technical error logging is procedure-only through `observability.usp_log_error`. | Runtime evidence can be captured without allowing changes to framework configuration. |
 | Project-specific identities | Each consuming project should use its own login or service account mapped to a database user. | Access can be reviewed, isolated, revoked, or audited per consuming project. |
+
+## Metadata and Evidence Protection
+
+| Area | Rule |
+|---|---|
+| Metadata | Normal runtime execution should not modify metadata tables. Metadata changes should happen through administrator, configuration, or deployment processes. |
+| Runtime | Runtime procedures may insert or update execution state and history according to framework lifecycle rules. |
+| Observability | Observability procedures may insert evidence records. Evidence should remain append-only during normal execution. |
+| Direct updates | Direct table updates should be reserved for controlled administration, correction, or deployment scenarios. |
 
 ## Recommended Access Path
 
@@ -77,6 +108,11 @@ The framework security script does not create SQL Server logins or database user
 | Secret storage | Secrets are not stored or managed by the framework tables. |
 | Notification delivery security | Notification metadata exists, but delivery execution and delivery credentials are outside the current security model. |
 | Direct runtime table writes | `DataOps_Admin` can maintain runtime tables directly. Executor access is intended to use procedures. |
+| Enterprise access governance | Enterprise access approval workflows are outside the framework scope. |
+| Enterprise IAM workflows | Identity lifecycle, provisioning workflows, and enterprise IAM policy management are outside the framework scope. |
+| Business stewardship workflows | Governance stewardship, approvals, and ownership workflows are outside the framework scope. |
+| Privacy and compliance management | Full privacy/compliance management is outside current scope or future scope. |
+| Sensitive data classification | Sensitive data classification workflows are future scope unless explicitly implemented. |
 
 ## Source SQL Scripts
 

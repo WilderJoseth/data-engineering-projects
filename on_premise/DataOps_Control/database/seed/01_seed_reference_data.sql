@@ -31,7 +31,10 @@ VALUES
     (3, 'SUCCESS',       'Execution completed successfully without control issues.', 1),
     (4, 'FAILED',        'Execution failed due to a technical error.', 1),
     (5, 'SKIPPED',       'Execution was intentionally skipped.', 1),
-    (6, 'OBSERVED',      'Execution completed technically, but validation or reconciliation results require review.', 1);
+    (6, 'OBSERVED',      'Execution completed technically, but validation or reconciliation results require review.', 1),
+    (7, 'READY',         'Execution is ready to start when its dependencies are satisfied.', 1),
+    (8, 'BLOCKED',       'Execution cannot start because one or more dependencies are not satisfied.', 1),
+    (9, 'CANCELLED',     'Execution was cancelled before normal completion.', 1);
 GO
 
 /*============================================================================
@@ -58,7 +61,8 @@ VALUES
     (9, 'INFO_CHECK',     'Informational validation result.', 'INFO', 1);
 GO
 
-INSERT INTO [reference].[monitoring_metric_codes] (
+INSERT INTO [reference].[monitoring_metric_codes]
+(
     [id],
     [code],
     [description],
@@ -67,44 +71,9 @@ INSERT INTO [reference].[monitoring_metric_codes] (
     [metric_unit]
 )
 VALUES
-(
-    1,
-    'DURATION_SECONDS',
-    'Measures how long the execution step took from start to end.',
-    'RUNTIME',
-    'BIGINT',
-    'SECONDS'
-),
-(
-    2,
-    'VALIDATION_ISSUE_COUNT',
-    'Counts validation issues registered for the execution step.',
-    'VALIDATION',
-    'BIGINT',
-    'ISSUES'
-),
-(
-    3,
-    'RECONCILIATION_MISMATCH_COUNT',
-    'Counts reconciliation metrics that do not match expected source and target values.',
-    'RECONCILIATION',
-    'BIGINT',
-    'MISMATCHES'
-),
-(
-    4,
-    'ERROR_COUNT',
-    'Counts technical errors registered for the execution step.',
-    'ERROR_LOG',
-    'BIGINT',
-    'ERRORS'
-),
-(
-    5,
-    'ROW_COUNT',
-    'Measures the number of rows processed or reconciled.',
-    'RECONCILIATION',
-    'BIGINT',
-    'ROWS'
-);
+    (1, 'DURATION_SECONDS',              'Measures how long the execution step took from start to end.', 'RUNTIME',        'BIGINT', 'SECONDS'),
+    (2, 'VALIDATION_ISSUE_COUNT',        'Counts validation issues registered for the execution step.', 'VALIDATION',     'BIGINT', 'ISSUES'),
+    (3, 'RECONCILIATION_MISMATCH_COUNT', 'Counts reconciliation metrics that do not match expected source and target values.', 'RECONCILIATION', 'BIGINT', 'MISMATCHES'),
+    (4, 'ERROR_COUNT',                   'Counts technical errors registered for the execution step.', 'ERROR_LOG',      'BIGINT', 'ERRORS'),
+    (5, 'ROW_COUNT',                     'Measures the number of rows processed or reconciled.', 'RECONCILIATION', 'BIGINT', 'ROWS');
 GO

@@ -69,7 +69,8 @@ GO
     This grants the permissions defined for project execution:
     - Read metadata and reference data.
     - Execute runtime and observability procedures.
-    - Insert validation and reconciliation evidence.
+    - Insert validation, reconciliation, and monitoring evidence.
+    - Log technical errors only through observability.usp_log_error.
     - Read runtime and observability history.
 ==============================================================*/
 

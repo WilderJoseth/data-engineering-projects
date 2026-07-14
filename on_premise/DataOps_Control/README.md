@@ -1,135 +1,136 @@
-# Metadata-Driven Control Framework for Data Engineering Projects
+# DataOps_Control
 
-## Overview
+`DataOps_Control` is a metadata-driven control framework for data engineering pipelines. It provides a SQL Server control database for operational metadata management, execution control, runtime tracking, observability, validation and reconciliation evidence, dependency-aware execution, and watermark control.
 
-This project presents the design and implementation of `DataOps_Control`, a reusable metadata-driven control framework for data engineering projects.
+The framework does not move data itself. It supports external orchestration and execution tools such as SSIS, SQL Server Agent, Azure Data Factory, Fabric Data Pipelines, or custom services.
 
-`DataOps_Control` provides a centralized SQL Server control database designed to support metadata management, pipeline execution tracking, source-to-target mappings, validation summaries, reconciliation results, error logging, batch control, and rerun/recovery logic.
+## Current v2 Capabilities
 
-## Logical Data Model
+- Metadata configuration for projects, databases, tables, columns, process hierarchy, dependencies, actions, monitoring metrics, and notifications.
+- Execution plans that define controlled execution scope.
+- Plan process states with dependency-aware readiness.
+- Execution runs and execution steps for actual runtime history.
+- Runtime status model: `PENDING`, `READY`, `RUNNING`, `SUCCESS`, `FAILED`, `OBSERVED`, `BLOCKED`, `SKIPPED`, `CANCELLED`.
+- Runtime watermark controls and per-step execution watermark history.
+- Observability evidence for technical errors, validation results, reconciliation results, and monitoring results.
+- Security roles with least-privilege executor access.
+- Review views for metadata, runtime, watermark, and observability inspection.
+- Functional scenario tests for happy path, failure, recovery, observed, skipped, cancellation, and watermark behavior.
 
-The following diagram provides a high-level view of the `DataOps_Control` model, including its main metadata, runtime, observability, and reference components.
+## Architecture Summary
 
-![DataOps_Control Logical Data Model](docs/img/logical_data_model_DataOps_Control.png)
+`DataOps_Control` is organized into four responsibility-based schemas:
 
-## Problem Context
+| Schema | Purpose |
+|---|---|
+| `metadata` | Stores project configuration, process definitions, dependencies, table/column metadata, execution scope, actions, monitoring configuration, and notification metadata. |
+| `runtime` | Stores execution plans, plan processes, execution runs, execution steps, committed watermark controls, and per-step watermark history. |
+| `observability` | Stores technical errors, validation evidence, reconciliation evidence, and monitoring results. |
+| `reference` | Stores controlled framework codes such as statuses, validation codes, and monitoring metric codes. |
 
-Data engineering projects often start with simple ETL/ELT pipelines, but as they grow, they require stronger operational control.
+## Deployment
 
-Common challenges include:
+Run the scripts against SQL Server in this order:
 
-- Knowing which pipelines, tables, or batches were executed.
-- Tracking whether an execution succeeded, failed, or requires another execution.
-- Managing initial loads, incremental loads, and batch-based processing.
-- Keeping source-to-target mappings documented and reusable.
-- Capturing validation and reconciliation results in a consistent way.
-- Logging technical errors with enough context for troubleshooting.
-- Avoiding hardcoded status and validation values inside ETL packages, stored procedures, or orchestration logic.
-- Supporting multiple projects without creating a new control structure every time.
+```text
+database/ddl/01_create_database.sql
+database/ddl/02_create_schemas.sql
+database/ddl/03_create_reference_tables.sql
+database/ddl/04_create_metadata_tables.sql
+database/ddl/05_create_runtime_tables.sql
+database/ddl/06_create_observability_tables.sql
+database/ddl/07_create_stored_procedures.sql
+database/ddl/08_create_functions.sql
+database/ddl/09_create_security.sql
+database/ddl/10_create_views.sql
+database/seed/01_seed_reference_data.sql
+```
 
-## Project Scope
+Run `database/users/*` only when local SQL login/user setup is needed. Those scripts are templates for local/test access and are not required to create the framework objects.
 
-- Metadata management.
-- Source-to-target database and table mappings.
-- Process-to-table execution scope.
-- Execution run and execution step tracking.
-- Validation and reconciliation result capture.
-- Technical error logging.
-- Batch control.
-- Execution, rerun, recovery, and backfill support.
+The reference seed script is clean-database oriented and inserts fixed framework IDs. Re-running it against populated reference tables may fail unless cleanup is performed first.
 
-## Out of Scope
+## Validation Status
 
-- Implementing full business-specific ETL/ELT pipelines.
-- Replacing orchestration tools such as SSIS, SQL Server Agent, Azure Data Factory, Fabric Data Pipelines, or Airflow.
-- Storing row-level rejected records centrally.
-- Owning business-specific validation or reconciliation decisions.
-- Implementing a full data quality engine.
-- Providing a user interface for monitoring or metadata management.
-- Implementing automated alerting or notification workflows.
-- Supporting every possible data platform integration in the first version.
+Final local deployment validation passed:
+
+- Local fresh deployment completed with `sqlcmd -b`.
+- All deployment scripts returned exit code `0`.
+- Schemas, tables, procedures, views, seed data, and security grants were validated.
+- Final deployment readiness: **Ready**.
+
+See [deployment validation report](docs/review/00_deployment_validation_report_v2.md).
+
+Functional validation passed:
+
+- Happy-path runtime scenario passed.
+- Failure/recovery scenario passed.
+- Watermark commit and non-commit behavior passed.
+- `OBSERVED`, `SKIPPED`, `CANCELLED`, `FAILED`, and `BLOCKED` behavior passed.
+- Review views returned expected scenario rows.
+
+See:
+
+- [functional scenario test report](docs/review/00_functional_scenario_test_report.md)
+- [failure/recovery scenario test report](docs/review/00_failure_recovery_scenario_test_report.md)
+- [validation summary](docs/06_validation_summary.md)
+
+## Status Model
+
+Current implemented statuses:
+
+- `PENDING`
+- `READY`
+- `RUNNING`
+- `SUCCESS`
+- `FAILED`
+- `OBSERVED`
+- `BLOCKED`
+- `SKIPPED`
+- `CANCELLED`
+
+`WAITING` and `REQUIRES_RERUN` are not part of the current implemented model.
+
+## Key Documentation
+
+- [Project standards](docs/00_project_standards.md)
+- [Framework data model](docs/01_framework_data_model.md)
+- [Metadata design](docs/02_metadata_design.md)
+- [Runtime design](docs/03_runtime_design.md)
+- [Observability design](docs/04_observability_design.md)
+- [Security and roles](docs/05_security_and_roles.md)
+- [Validation summary](docs/06_validation_summary.md)
+
+Validation and review reports:
+
+- [Design/implementation gap review v3](docs/review/00_design_implementation_gap_review_v3.md)
+- [Project standards review v2](docs/review/00_project_standards_review_v2.md)
+- [Deployment validation report v2](docs/review/00_deployment_validation_report_v2.md)
+- [Functional scenario test report](docs/review/00_functional_scenario_test_report.md)
+- [Failure/recovery scenario test report](docs/review/00_failure_recovery_scenario_test_report.md)
+
+## Boundaries
+
+`DataOps_Control` is intentionally focused on operational control metadata. It does not:
+
+- Replace an enterprise data catalog.
+- Replace enterprise IAM or access governance.
+- Perform data movement.
+- Deliver notifications directly; notification delivery is future or external.
+- Automatically generate recovery plans; recovery and reprocessing use plan types and caller-selected scope.
 
 ## Repository Structure
 
 ```text
 database/
-|-- ddl/        # Database, schema, table, procedure, function, role, permission, and view scripts
-|-- seed/       # Reference and sample domain metadata
-|-- tests/      # Smoke, table-flow, and batch-flow test scripts
-|-- users/      # User creation scripts for admin and project execution access
-`-- cleanup/    # Cleanup scripts for resetting seeded or test data
+|-- ddl/      # Database, schema, table, procedure, function, security, and view scripts
+|-- seed/     # Framework reference seed data
+|-- tests/    # Smoke and functional scenario tests
+|-- users/    # Optional local/test login and user templates
+`-- cleanup/  # Cleanup scripts for framework objects and seeded data
 
 docs/
-|-- img/        # Logical data model and Entity Relationship diagrams
-`-- solution_design.md
+|-- review/   # Validation and review reports
+|-- img/      # Data model images
+`-- *.md      # Design and validation documentation
 ```
-
-## Related Documentation
-
-For the technical design, see:
-
-- [Solution Design](docs/solution_design.md)
-
-## Environment Assumptions
-
-- SQL Server 2022 or compatible version.
-- Scripts are intended to be executed using SQL Server Management Studio or sqlcmd.
-- `DataOps_Control` is deployed as a separate control database.
-- Consuming projects access the database through project-specific users assigned to framework roles.
-- The first implementation is intended for a fresh database deployment. Existing database upgrades are outside the scope of this version.
-
-## How to Run
-
-The database scripts should be executed manually in the order shown below.
-
-> Note: The DDL scripts are intended for a fresh `DataOps_Control` database deployment. They are not designed to be rerun against an existing database without cleanup or manual object removal.
-
-### 1. Create database objects
-
-Execute the scripts in `database/ddl/` in this order:
-
-```text
-01_create_database.sql
-02_create_schemas.sql
-03_create_reference_tables.sql
-04_create_metadata_tables.sql
-05_create_runtime_tables.sql
-06_create_observability_tables.sql
-07_create_stored_procedures.sql
-08_create_functions.sql
-09_create_security.sql
-10_create_views.sql
-```
-
-### 2. Load seed data
-
-Execute the scripts in `database/seed/` in this order:
-
-```text
-01_seed_reference_data.sql
-02_seed_sales_domain_metadata.sql
-```
-
-### 3. Create test users
-
-Execute the user scripts in `database/users/` if you want to test access using dedicated SQL Server logins and database users.
-
-```text
-01_create_project_executor_user.sql
-02_create_dataops_admin_user.sql
-```
-
-These scripts are optional for local testing. They are not required to create the database objects.
-
-### 4. Run validation tests
-
-Execute the scripts in `database/tests/` in this order:
-
-```text
-00_smoke_test_framework_objects.sql
-01_test_table_data_flow.sql
-02_test_batch_data_flow.sql
-```
-
-The smoke test verifies that the required schemas, tables, procedures, functions, roles, and reference values exist before running the functional data-flow tests.
-

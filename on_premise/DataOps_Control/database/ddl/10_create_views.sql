@@ -247,6 +247,7 @@ CREATE OR ALTER VIEW [runtime].[vw_execution_run_summary]
 AS
 SELECT
     er.[id] AS [execution_run_id],
+    er.[execution_plan_id],
     er.[project_id],
     p.[name] AS [project_name],
     sc.[code] AS [status_code],
@@ -273,6 +274,7 @@ AS
 SELECT
     es.[id] AS [execution_step_id],
     es.[execution_run_id],
+    es.[execution_plan_process_id],
     er.[project_id],
     p.[name] AS [project_name],
     es.[project_process_id],
@@ -290,6 +292,131 @@ INNER JOIN [metadata].[projects] p ON p.[id] = er.[project_id]
 INNER JOIN [metadata].[project_processes] pp ON pp.[id] = es.[project_process_id]
 LEFT JOIN [metadata].[project_processes] parent_pp ON parent_pp.[id] = pp.[parent_process_id]
 INNER JOIN [reference].[status_codes] sc ON sc.[id] = es.[status_code_id];
+GO
+
+/*============================================================================
+  View: runtime.vw_execution_plan_summary
+
+  Purpose:
+  - Provides one row per execution plan.
+  - Shows project, plan type, status, dates, and duration.
+============================================================================*/
+
+CREATE OR ALTER VIEW [runtime].[vw_execution_plan_summary]
+AS
+SELECT
+    ep.[id] AS [execution_plan_id],
+    ep.[plan_name],
+    ep.[plan_type],
+    ep.[project_id],
+    p.[name] AS [project_name],
+    ep.[root_project_process_id],
+    root_pp.[name] AS [root_process_name],
+    ep.[scope_description],
+    sc.[code] AS [status_code],
+    ep.[created_at],
+    ep.[start_plan_date],
+    ep.[end_plan_date],
+    DATEDIFF(SECOND, ep.[start_plan_date], ep.[end_plan_date]) AS [duration_seconds],
+    ep.[created_by]
+FROM [runtime].[execution_plans] ep
+INNER JOIN [metadata].[projects] p ON p.[id] = ep.[project_id]
+INNER JOIN [reference].[status_codes] sc ON sc.[id] = ep.[status_code_id]
+LEFT JOIN [metadata].[project_processes] root_pp ON root_pp.[id] = ep.[root_project_process_id];
+GO
+
+
+/*============================================================================
+  View: runtime.vw_execution_plan_process_summary
+
+  Purpose:
+  - Provides one row per process included in an execution plan.
+  - Shows process hierarchy, current status, and dependency context.
+============================================================================*/
+
+CREATE OR ALTER VIEW [runtime].[vw_execution_plan_process_summary]
+AS
+SELECT
+    epp.[id] AS [execution_plan_process_id],
+    epp.[execution_plan_id],
+    ep.[plan_name],
+    ep.[plan_type],
+    ep.[project_id],
+    p.[name] AS [project_name],
+    epp.[project_process_id],
+    pp.[name] AS [process_name],
+    pp.[parent_process_id],
+    parent_pp.[name] AS [parent_process_name],
+    sc.[code] AS [status_code],
+    epp.[dependency_evaluation_details],
+    CAST
+    (
+        CASE
+            WHEN EXISTS
+            (
+                SELECT 1
+                FROM [metadata].[project_process_dependencies] ppd
+                WHERE ppd.[project_process_id] = epp.[project_process_id]
+            )
+            THEN 1
+            ELSE 0
+        END AS BIT
+    ) AS [has_dependencies],
+    epp.[created_at],
+    epp.[created_by]
+FROM [runtime].[execution_plan_processes] epp
+INNER JOIN [runtime].[execution_plans] ep ON ep.[id] = epp.[execution_plan_id]
+INNER JOIN [metadata].[projects] p ON p.[id] = ep.[project_id]
+INNER JOIN [metadata].[project_processes] pp ON pp.[id] = epp.[project_process_id]
+LEFT JOIN [metadata].[project_processes] parent_pp ON parent_pp.[id] = pp.[parent_process_id]
+INNER JOIN [reference].[status_codes] sc ON sc.[id] = epp.[status_code_id];
+GO
+
+
+/*============================================================================
+  View: runtime.vw_execution_watermark_summary
+
+  Purpose:
+  - Shows watermark controls and per-step watermark history in one place.
+============================================================================*/
+
+CREATE OR ALTER VIEW [runtime].[vw_execution_watermark_summary]
+AS
+SELECT
+    ewc.[id] AS [execution_watermark_control_id],
+    ew.[id] AS [execution_watermark_id],
+    ewc.[project_process_id],
+    pp.[name] AS [process_name],
+    ewc.[table_id],
+    pd.[name] AS [database_name],
+    pt.[schema_name],
+    pt.[name] AS [table_name],
+    ewc.[watermark_column_id],
+    pc.[name] AS [watermark_column_name],
+    pc.[type] AS [watermark_column_type],
+    ewc.[last_committed_watermark_value],
+    ewc.[lower_bound_operator],
+    ewc.[upper_bound_operator],
+    ewc.[upper_bound_strategy],
+    ewc.[is_active] AS [watermark_control_is_active],
+    ew.[execution_step_id],
+    es.[execution_run_id],
+    ew.[previous_committed_watermark_value],
+    ew.[extraction_upper_bound_value],
+    ew.[candidate_watermark_value],
+    ew.[committed_watermark_value],
+    sc.[code] AS [status_code],
+    ew.[created_at],
+    ew.[created_by]
+FROM [runtime].[execution_watermark_controls] ewc
+LEFT JOIN [runtime].[execution_watermarks] ew
+    ON ew.[execution_watermark_control_id] = ewc.[id]
+INNER JOIN [metadata].[project_processes] pp ON pp.[id] = ewc.[project_process_id]
+INNER JOIN [metadata].[project_tables] pt ON pt.[id] = ewc.[table_id]
+INNER JOIN [metadata].[project_databases] pd ON pd.[id] = pt.[database_id]
+INNER JOIN [metadata].[project_columns] pc ON pc.[id] = ewc.[watermark_column_id]
+LEFT JOIN [runtime].[execution_steps] es ON es.[id] = ew.[execution_step_id]
+LEFT JOIN [reference].[status_codes] sc ON sc.[id] = ew.[status_code_id];
 GO
 
 

@@ -14,7 +14,7 @@ CREATE TABLE [reference].[status_codes] (
     [created_by] VARCHAR(50) NOT NULL CONSTRAINT [DF_reference_status_codes_created_by] DEFAULT USER_NAME(),
 
     CONSTRAINT [PK_reference_status_codes] PRIMARY KEY CLUSTERED ([id] ASC),
-    CONSTRAINT [UQ_reference_status_codes_code] UNIQUE ([code])
+    CONSTRAINT [UK_reference_status_codes_code] UNIQUE ([code])
 ) ON [PRIMARY];
 GO
 
@@ -28,7 +28,7 @@ CREATE TABLE [reference].[validation_codes] (
     [created_by] VARCHAR(50) NOT NULL CONSTRAINT [DF_reference_validation_codes_created_by] DEFAULT USER_NAME(),
 
     CONSTRAINT [PK_reference_validation_codes] PRIMARY KEY CLUSTERED ([id] ASC),
-    CONSTRAINT [UQ_reference_validation_codes_code] UNIQUE ([code]),
+    CONSTRAINT [UK_reference_validation_codes_code] UNIQUE ([code]),
     CONSTRAINT [CK_reference_validation_codes_severity] CHECK ([severity] IN ('ERROR', 'WARNING', 'INFO'))
 ) ON [PRIMARY];
 GO
@@ -45,7 +45,7 @@ CREATE TABLE [reference].[monitoring_metric_codes] (
     [created_by] VARCHAR(50) NOT NULL CONSTRAINT [DF_reference_monitoring_metric_codes_created_by] DEFAULT USER_NAME(),
 
     CONSTRAINT [PK_reference_monitoring_metric_codes] PRIMARY KEY CLUSTERED ([id] ASC),
-    CONSTRAINT [UQ_reference_monitoring_metric_codes_code] UNIQUE ([code]),
+    CONSTRAINT [UK_reference_monitoring_metric_codes_code] UNIQUE ([code]),
     CONSTRAINT [CK_reference_monitoring_metric_codes_metric_source] CHECK ([metric_source] IN ('RUNTIME', 'VALIDATION', 'RECONCILIATION', 'ERROR_LOG')),
     CONSTRAINT [CK_reference_monitoring_metric_codes_metric_value_type] CHECK ([metric_value_type] IN ('BIGINT', 'DECIMAL')),
     CONSTRAINT [CK_reference_monitoring_metric_codes_metric_unit] CHECK ([metric_unit] IN ('SECONDS', 'ISSUES', 'MISMATCHES', 'ERRORS', 'ROWS'))
