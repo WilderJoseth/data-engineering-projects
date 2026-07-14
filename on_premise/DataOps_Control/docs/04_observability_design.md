@@ -6,6 +6,17 @@ This document describes how the `observability` schema captures execution eviden
 
 SQL scripts remain the source of truth for exact table and procedure definitions.
 
+## Observability Role
+
+Observability records execution evidence. Runtime records state and status; observability records the details that explain why something succeeded, failed, was observed, or needs attention.
+
+| Responsibility | Owner |
+|---|---|
+| Run, step, and plan state/status | `runtime` |
+| Error, validation, reconciliation, and monitoring evidence | `observability` |
+| Final status application | Runtime logic or caller-controlled execution logic |
+| Evidence used to decide final status | Observability records |
+
 ## Observability Tables
 
 | Design Role / Concept | Table | Responsibility |
@@ -14,6 +25,18 @@ SQL scripts remain the source of truth for exact table and procedure definitions
 | Validation result capture | `observability.validation_results` | Stores validation findings linked to an execution step and validation code. |
 | Reconciliation result capture | `observability.reconciliation_results` | Stores metric values by reconciliation side and scope for an execution step. |
 | Monitoring result capture | `observability.monitoring_results` | Stores captured monitoring metric values and threshold evaluation results for an execution step. |
+
+## Append-Only Evidence Rule
+
+Observability tables should behave as append-only evidence tables.
+
+| Rule | Description |
+|---|---|
+| Preserve evidence | Existing evidence should not be overwritten during normal execution. |
+| Correct by adding records | Corrections should be inserted as new evidence records instead of replacing previous evidence. |
+| Limit updates/deletes | Updates or deletes should be avoided except for controlled technical fields when absolutely required. |
+| Controlled monitoring recalculation | Monitoring capture may delete and recalculate monitoring result rows for the same execution step when the procedure is designed to be idempotent. This is a controlled exception and should not be treated as general evidence deletion. |
+| Keep runtime separate | Observability records can inform final outcome, but runtime logic applies the status. |
 
 ## Important Design Distinctions
 
@@ -31,6 +54,61 @@ The observability model stores evidence from execution. It does not own project-
 | Monitoring definition vs monitoring result | Monitoring thresholds are configured in metadata. Monitoring results store actual captured values and range evaluation. | Expected values belong to metadata; observed values belong to observability. |
 | Monitoring calculation vs status decision | Monitoring capture can evaluate whether values are within range. Step status is still closed by runtime logic or the caller. | Observability evidence can inform status, but it does not replace execution control. |
 | Observability evidence vs rejected records | Observability tables store summary evidence. Row-level rejected business records are not centrally stored. | The framework tracks execution evidence without becoming a rejected-record repository. |
+
+## Severity Model
+
+Observability evidence should have a severity or impact level that can be used by runtime logic or project-specific logic.
+
+| Severity | Meaning | Expected Status Impact |
+|---|---|---|
+| `INFO` | Informational evidence only. | No status impact. |
+| `WARNING` | Non-blocking issue that requires attention. | May produce `OBSERVED`. |
+| `ERROR` | Blocking issue or unsafe result. | Should usually produce `FAILED`. |
+
+## Observability Outcome Rules
+
+Final status is applied by runtime logic, but observability provides the evidence used by that decision.
+
+| Evidence Condition | Expected Final Outcome |
+|---|---|
+| No blocking evidence | `SUCCESS` |
+| Warning or non-blocking evidence | `OBSERVED` |
+| Error validation evidence | `FAILED` |
+| Error reconciliation evidence | `FAILED` |
+| Error monitoring evidence | `FAILED` |
+| Technical failure or error preventing reliable execution | `FAILED` |
+
+## Validation and Reconciliation Impact
+
+| Evidence Type | Result | Expected Impact |
+|---|---|---|
+| Validation | Required checks pass. | Supports `SUCCESS`. |
+| Validation | Non-blocking warning. | May produce `OBSERVED`. |
+| Validation | Error rule failure. | Should produce `FAILED`. |
+| Reconciliation | Required comparisons pass. | Supports `SUCCESS`. |
+| Reconciliation | Non-blocking difference or tolerated variance. | May produce `OBSERVED`. |
+| Reconciliation | Blocking mismatch. | Should produce `FAILED`. |
+
+## Monitoring Metric Impact
+
+Monitoring metrics can be informational, warning, or error-level depending on configured threshold and severity.
+
+| Metric Severity | Example Impact |
+|---|---|
+| `INFO` | Record operational context without changing final outcome. |
+| `WARNING` | Mark execution as `OBSERVED` when attention is needed. |
+| `ERROR` | Mark execution as `FAILED` when the result is unsafe or unacceptable. |
+
+## Watermark Relationship
+
+Observability evidence can affect whether a runtime watermark is committed.
+
+| Final Evidence Result | Watermark Guidance |
+|---|---|
+| Execution succeeded and blocking validation/reconciliation rules passed. | Commit watermark. |
+| Technical failure or blocking evidence exists. | Do not commit watermark. |
+| `OBSERVED` with non-blocking accepted evidence. | Commit only if explicitly allowed by rule. |
+| `OBSERVED` requiring review before acceptance. | Do not commit automatically. |
 
 ## Observability Procedures and Views
 

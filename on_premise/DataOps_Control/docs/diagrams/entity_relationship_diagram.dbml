@@ -1,0 +1,319 @@
+Table reference.status_codes {
+  id smallint [pk, not null]
+  code varchar(15) [not null]
+  description varchar(100)
+  is_active bit [not null]
+}
+
+Table reference.validation_codes {
+  id smallint [pk, not null]
+  code varchar(50) [not null]
+  description varchar(200)
+  severity varchar(15) [not null]
+  is_active bit [not null]
+}
+
+Table reference.monitoring_metric_codes {
+  id smallint [pk, not null]
+  code varchar(100) [not null]
+  description varchar(500)
+  metric_source varchar(50) [not null]
+  metric_value_type varchar(20) [not null]
+  metric_unit varchar(30)
+  is_active bit [not null]
+}
+
+Table metadata.projects {
+  id smallint [pk, not null]
+  name varchar(100) [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_databases {
+  id smallint [pk, not null]
+  name varchar(50) [not null]
+  platform_type varchar(30) [not null]
+  database_role varchar(30)
+  project_id smallint [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_database_mappings {
+  database_source_id smallint [not null]
+  database_target_id smallint [not null]
+
+  Indexes {
+    (database_source_id, database_target_id) [pk]
+  }
+}
+
+Table metadata.project_processes {
+  id int [pk, not null]
+  name varchar(50) [not null]
+  project_id smallint [not null]
+  parent_process_id int
+  execution_required bit [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_tables {
+  id int [pk, not null]
+  schema_name varchar(50) [not null]
+  name varchar(50) [not null]
+  is_fact_table bit [not null]
+  is_transactional_table bit [not null]
+  batch_column_active bit [not null]
+  execution_required bit [not null]
+  database_id smallint [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_table_mappings {
+  table_source_id int [not null]
+  table_target_id int [not null]
+
+  Indexes {
+    (table_source_id, table_target_id) [pk]
+  }
+}
+
+Table metadata.project_process_tables {
+  process_id int [not null]
+  table_id int [not null]
+
+  Indexes {
+    (process_id, table_id) [pk]
+  }
+}
+
+Table metadata.project_table_batches {
+  id int [pk, not null]
+  position smallint [not null]
+  batch_column_name varchar(50) [not null]
+  batch_value varchar(50) [not null]
+  batch_start_value varchar(50)
+  batch_end_value varchar(50)
+  batch_column_type varchar(20) [not null]
+  execution_required bit [not null]
+  batch_source_table_id int [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_process_table_batches {
+  process_id int [not null]
+  table_id int [not null]
+  batch_id int [not null]
+
+  Indexes {
+    (process_id, table_id, batch_id) [pk]
+  }
+}
+
+Table metadata.project_columns {
+  id int [pk, not null]
+  position smallint [not null]
+  name varchar(50) [not null]
+  type varchar(20) [not null]
+  size smallint
+  size_scale smallint
+  default_value varchar(50)
+  is_nullable bit [not null]
+  is_watermark bit [not null]
+  is_reconciliation_column bit [not null]
+  table_id int [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_process_actions {
+  id int [pk, not null]
+  project_process_id int [not null]
+  position smallint [not null]
+  action_name varchar(100) [not null]
+  action_type varchar(30) [not null]
+  execution_database_id smallint
+  schema_name varchar(50) [not null]
+  object_name varchar(128) [not null]
+  parameter_template varchar(30)
+  is_required bit [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_process_dependencies {
+  project_process_id int [not null]
+  dependency_project_process_id int [not null]
+
+  Indexes {
+    (project_process_id, dependency_project_process_id) [pk]
+  }
+}
+
+Table metadata.project_process_monitoring_metrics {
+  id int [pk, not null]
+  project_process_id int [not null]
+  monitoring_metric_code_id smallint [not null]
+  min_value_bigint bigint
+  max_value_bigint bigint
+  min_value_decimal decimal(20,4)
+  max_value_decimal decimal(20,4)
+  severity varchar(20) [not null]
+  is_active bit [not null]
+}
+
+Table metadata.project_notifications {
+  id int [pk, not null]
+  project_id smallint [not null]
+  project_process_id int [not null]
+  notification_name varchar(100) [not null]
+  description varchar(500)
+  notification_method varchar(30) [not null]
+  subject_template nvarchar(300) [not null]
+  recipients nvarchar(max) [not null]
+  copy_recipients nvarchar(max)
+  blind_copy_recipients nvarchar(max)
+  is_active bit [not null]
+}
+
+Table runtime.execution_plans {
+  id bigint [pk, not null, increment]
+  plan_name varchar(100)
+  plan_type varchar(30) [not null]
+  status_code_id smallint [not null]
+  project_id smallint [not null]
+  root_project_process_id int
+  scope_description varchar(500)
+  start_plan_date datetime2
+  end_plan_date datetime2
+}
+
+Table runtime.execution_plan_processes {
+  id bigint [pk, not null, increment]
+  execution_plan_id bigint [not null]
+  project_process_id int [not null]
+  status_code_id smallint [not null]
+  dependency_evaluation_details varchar(1000)
+}
+
+Table runtime.execution_watermark_controls {
+  id bigint [pk, not null, increment]
+  project_process_id int [not null]
+  table_id int [not null]
+  watermark_column_id int [not null]
+  last_committed_watermark_value nvarchar(4000)
+  lower_bound_operator varchar(5) [not null]
+  upper_bound_operator varchar(5) [not null]
+  upper_bound_strategy varchar(50) [not null]
+  is_active bit [not null]
+}
+
+Table runtime.execution_runs {
+  id bigint [pk, not null, increment]
+  start_run_date datetime2 [not null]
+  end_run_date datetime2
+  status_code_id smallint [not null]
+  project_id smallint [not null]
+  execution_plan_id bigint
+}
+
+Table runtime.execution_steps {
+  id bigint [pk, not null, increment]
+  start_step_date datetime2 [not null]
+  end_step_date datetime2
+  status_code_id smallint [not null]
+  execution_run_id bigint [not null]
+  project_process_id int [not null]
+  execution_plan_process_id bigint
+}
+
+Table runtime.execution_watermarks {
+  id bigint [pk, not null, increment]
+  execution_step_id bigint [not null]
+  execution_watermark_control_id bigint [not null]
+  previous_committed_watermark_value nvarchar(4000)
+  extraction_upper_bound_value nvarchar(4000)
+  candidate_watermark_value nvarchar(4000)
+  committed_watermark_value nvarchar(4000)
+  status_code_id smallint [not null]
+}
+
+Table observability.error_logs {
+  id bigint [pk, not null, increment]
+  error_source varchar(200) [not null]
+  details nvarchar(max) [not null]
+  execution_step_id bigint [not null]
+}
+
+Table observability.reconciliation_results {
+  id bigint [pk, not null, increment]
+  metric_name varchar(50) [not null]
+  reconciliation_key varchar(100)
+  reconciliation_side varchar(20) [not null]
+  metric_value_decimal decimal(20,4)
+  metric_value_bigint bigint
+  execution_step_id bigint [not null]
+}
+
+Table observability.validation_results {
+  id bigint [pk, not null, increment]
+  details nvarchar(max) [not null]
+  affected_row_count bigint [not null]
+  execution_step_id bigint [not null]
+  validation_code_id smallint [not null]
+}
+
+Table observability.monitoring_results {
+  id bigint [pk, not null, increment]
+  execution_step_id bigint [not null]
+  project_process_monitoring_metric_id int [not null]
+  actual_value_bigint bigint
+  actual_value_decimal decimal(20,4)
+  is_within_expected_range bit [not null]
+}
+
+Ref: metadata.projects.id < metadata.project_databases.project_id
+Ref: metadata.project_databases.id < metadata.project_database_mappings.database_source_id
+Ref: metadata.project_databases.id < metadata.project_database_mappings.database_target_id
+Ref: metadata.projects.id < metadata.project_processes.project_id
+Ref: metadata.project_processes.id < metadata.project_processes.parent_process_id
+Ref: metadata.project_databases.id < metadata.project_tables.database_id
+Ref: metadata.project_tables.id < metadata.project_table_mappings.table_source_id
+Ref: metadata.project_tables.id < metadata.project_table_mappings.table_target_id
+Ref: metadata.project_processes.id < metadata.project_process_tables.process_id
+Ref: metadata.project_tables.id < metadata.project_process_tables.table_id
+Ref: metadata.project_tables.id < metadata.project_table_batches.batch_source_table_id
+Ref: metadata.project_processes.id < metadata.project_process_table_batches.process_id
+Ref: metadata.project_tables.id < metadata.project_process_table_batches.table_id
+Ref: metadata.project_table_batches.id < metadata.project_process_table_batches.batch_id
+Ref: metadata.project_tables.id < metadata.project_columns.table_id
+Ref: metadata.project_processes.id < metadata.project_process_actions.project_process_id
+Ref: metadata.project_databases.id < metadata.project_process_actions.execution_database_id
+Ref: metadata.project_processes.id < metadata.project_process_dependencies.project_process_id
+Ref: metadata.project_processes.id < metadata.project_process_dependencies.dependency_project_process_id
+Ref: metadata.project_processes.id < metadata.project_process_monitoring_metrics.project_process_id
+Ref: reference.monitoring_metric_codes.id < metadata.project_process_monitoring_metrics.monitoring_metric_code_id
+Ref: metadata.projects.id < metadata.project_notifications.project_id
+Ref: metadata.project_processes.id < metadata.project_notifications.project_process_id
+Ref: metadata.projects.id < runtime.execution_plans.project_id
+Ref: metadata.project_processes.id < runtime.execution_plans.root_project_process_id
+Ref: reference.status_codes.id < runtime.execution_plans.status_code_id
+Ref: runtime.execution_plans.id < runtime.execution_plan_processes.execution_plan_id
+Ref: metadata.project_processes.id < runtime.execution_plan_processes.project_process_id
+Ref: reference.status_codes.id < runtime.execution_plan_processes.status_code_id
+Ref: metadata.project_processes.id < runtime.execution_watermark_controls.project_process_id
+Ref: metadata.project_tables.id < runtime.execution_watermark_controls.table_id
+Ref: metadata.project_columns.id < runtime.execution_watermark_controls.watermark_column_id
+Ref: metadata.projects.id < runtime.execution_runs.project_id
+Ref: runtime.execution_plans.id < runtime.execution_runs.execution_plan_id
+Ref: reference.status_codes.id < runtime.execution_runs.status_code_id
+Ref: runtime.execution_runs.id < runtime.execution_steps.execution_run_id
+Ref: metadata.project_processes.id < runtime.execution_steps.project_process_id
+Ref: runtime.execution_plan_processes.id < runtime.execution_steps.execution_plan_process_id
+Ref: reference.status_codes.id < runtime.execution_steps.status_code_id
+Ref: runtime.execution_steps.id < runtime.execution_watermarks.execution_step_id
+Ref: runtime.execution_watermark_controls.id < runtime.execution_watermarks.execution_watermark_control_id
+Ref: reference.status_codes.id < runtime.execution_watermarks.status_code_id
+Ref: runtime.execution_steps.id < observability.error_logs.execution_step_id
+Ref: runtime.execution_steps.id < observability.reconciliation_results.execution_step_id
+Ref: runtime.execution_steps.id < observability.validation_results.execution_step_id
+Ref: reference.validation_codes.id < observability.validation_results.validation_code_id
+Ref: runtime.execution_steps.id < observability.monitoring_results.execution_step_id
+Ref: metadata.project_process_monitoring_metrics.id < observability.monitoring_results.project_process_monitoring_metric_id

@@ -13,7 +13,7 @@ CREATE TABLE [metadata].[projects] (
     [created_by] VARCHAR(50) NOT NULL CONSTRAINT [DF_metadata_projects_created_by] DEFAULT USER_NAME(),
 
     CONSTRAINT [PK_metadata_projects] PRIMARY KEY CLUSTERED ([id] ASC),
-    CONSTRAINT [UQ_metadata_projects_name] UNIQUE ([name])
+    CONSTRAINT [UK_metadata_projects_name] UNIQUE ([name])
 ) ON [PRIMARY];
 GO
 
@@ -29,7 +29,7 @@ CREATE TABLE [metadata].[project_databases] (
 
     CONSTRAINT [PK_metadata_project_databases] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_metadata_project_databases_project_id] FOREIGN KEY ([project_id]) REFERENCES [metadata].[projects]([id]),
-    CONSTRAINT [UQ_metadata_project_databases_project_name] UNIQUE ([project_id], [name])
+    CONSTRAINT [UK_metadata_project_databases_project_name] UNIQUE ([project_id], [name])
 ) ON [PRIMARY];
 GO
 
@@ -56,7 +56,7 @@ CREATE TABLE [metadata].[project_processes] (
     CONSTRAINT [PK_metadata_project_processes] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_metadata_project_processes_project_id] FOREIGN KEY ([project_id]) REFERENCES [metadata].[projects]([id]),
     CONSTRAINT [FK_metadata_project_processes_parent_process_id] FOREIGN KEY ([parent_process_id]) REFERENCES [metadata].[project_processes]([id]),
-    CONSTRAINT [UQ_metadata_project_processes_project_name] UNIQUE ([project_id], [name]),
+    CONSTRAINT [UK_metadata_project_processes_project_name] UNIQUE ([project_id], [name]),
     CONSTRAINT [CK_metadata_project_processes_no_self_parent] CHECK ([parent_process_id] IS NULL OR [parent_process_id] <> [id])
 ) ON [PRIMARY];
 GO
@@ -76,7 +76,7 @@ CREATE TABLE [metadata].[project_tables] (
 
     CONSTRAINT [PK_metadata_project_tables] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_metadata_project_tables_database_id] FOREIGN KEY ([database_id]) REFERENCES [metadata].[project_databases]([id]),
-    CONSTRAINT [UQ_metadata_project_tables_database_schema_name] UNIQUE ([database_id], [schema_name], [name])
+    CONSTRAINT [UK_metadata_project_tables_database_schema_name] UNIQUE ([database_id], [schema_name], [name])
 ) ON [PRIMARY];
 GO
 
@@ -159,7 +159,7 @@ CREATE TABLE [metadata].[project_columns] (
 
     CONSTRAINT [PK_metadata_project_columns] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_metadata_project_columns_table_id] FOREIGN KEY ([table_id]) REFERENCES [metadata].[project_tables]([id]),
-    CONSTRAINT [UQ_metadata_project_columns_table_name] UNIQUE ([table_id], [name]),
+    CONSTRAINT [UK_metadata_project_columns_table_name] UNIQUE ([table_id], [name]),
     CONSTRAINT [CK_metadata_project_columns_position] CHECK ([position] > 0),
     CONSTRAINT [CK_metadata_project_columns_size] CHECK ([size] IS NULL OR [size] > 0),
     CONSTRAINT [CK_metadata_project_columns_size_scale]
@@ -194,7 +194,7 @@ CREATE TABLE [metadata].[project_process_actions]
     CONSTRAINT [PK_metadata_project_process_actions] PRIMARY KEY ([id]),
     CONSTRAINT [FK_metadata_project_process_actions_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
     CONSTRAINT [FK_metadata_project_process_actions_execution_database_id] FOREIGN KEY ([execution_database_id]) REFERENCES [metadata].[project_databases]([id]),
-    CONSTRAINT [UQ_metadata_project_process_actions_process_position] UNIQUE ([project_process_id], [position])
+    CONSTRAINT [UK_metadata_project_process_actions_process_position] UNIQUE ([project_process_id], [position])
 
 ) ON [PRIMARY];
 GO
@@ -227,7 +227,7 @@ CREATE TABLE [metadata].[project_process_monitoring_metrics]
     CONSTRAINT [PK_metadata_project_process_monitoring_metrics] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_metadata_project_process_monitoring_metrics_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
     CONSTRAINT [FK_metadata_project_process_monitoring_metrics_metric_code_id] FOREIGN KEY ([monitoring_metric_code_id]) REFERENCES [reference].[monitoring_metric_codes]([id]),
-    CONSTRAINT [UQ_metadata_project_process_monitoring_metrics_process_metric] UNIQUE ([project_process_id], [monitoring_metric_code_id]),
+    CONSTRAINT [UK_metadata_project_process_monitoring_metrics_process_metric] UNIQUE ([project_process_id], [monitoring_metric_code_id]),
     CONSTRAINT [CK_metadata_project_process_monitoring_metrics_severity] CHECK ([severity] IN ('ERROR', 'WARNING', 'INFO')),
     CONSTRAINT [CK_metadata_project_process_monitoring_metrics_bigint_range]
         CHECK
@@ -280,7 +280,7 @@ CREATE TABLE [metadata].[project_notifications]
     CONSTRAINT [PK_metadata_project_notifications] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_metadata_project_notifications_project_id] FOREIGN KEY ([project_id]) REFERENCES [metadata].[projects]([id]),
     CONSTRAINT [FK_metadata_project_notifications_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
-    CONSTRAINT [UQ_metadata_project_notifications_process_method] UNIQUE ([project_process_id], [notification_method]),
+    CONSTRAINT [UK_metadata_project_notifications_process_method] UNIQUE ([project_process_id], [notification_method]),
     CONSTRAINT [CK_metadata_project_notifications_notification_method] CHECK ([notification_method] IN ('EMAIL', 'TEAMS', 'WEBHOOK'))
 );
 GO

@@ -77,7 +77,7 @@ CREATE TABLE [observability].[monitoring_results] (
     CONSTRAINT [PK_observability_monitoring_results] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_observability_monitoring_results_execution_step_id] FOREIGN KEY ([execution_step_id]) REFERENCES [runtime].[execution_steps]([id]),
     CONSTRAINT [FK_observability_monitoring_results_project_process_monitoring_metric_id] FOREIGN KEY ([project_process_monitoring_metric_id]) REFERENCES [metadata].[project_process_monitoring_metrics]([id]),
-    CONSTRAINT [UQ_observability_monitoring_results_step_metric] UNIQUE ([execution_step_id], [project_process_monitoring_metric_id]),
+    CONSTRAINT [UK_observability_monitoring_results_step_metric] UNIQUE ([execution_step_id], [project_process_monitoring_metric_id]),
     CONSTRAINT [CK_observability_monitoring_results_single_actual_value]
         CHECK
         (

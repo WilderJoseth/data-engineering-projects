@@ -14,7 +14,8 @@
     - DataOps_Project_Executor:
         Used by ETL/ELT project service accounts.
         Can read metadata and reference data, execute runtime procedures,
-        log technical errors, and publish validation/reconciliation evidence.
+        log technical errors through procedures, and publish validation,
+        reconciliation, and monitoring evidence.
 
     Important:
     - This script does not create SQL Server logins or database users.
@@ -90,7 +91,7 @@ GO
     - Read framework metadata and reference values.
     - Execute runtime procedures.
     - Execute observability procedures such as technical error logging.
-    - Insert validation and reconciliation evidence.
+    - Insert validation, reconciliation, and monitoring evidence.
     - Read runtime and observability history for troubleshooting.
 
     This role should not:
@@ -107,6 +108,7 @@ GRANT EXECUTE ON SCHEMA::[observability] TO [DataOps_Project_Executor];
 
 GRANT INSERT ON [observability].[validation_results] TO [DataOps_Project_Executor];
 GRANT INSERT ON [observability].[reconciliation_results] TO [DataOps_Project_Executor];
+GRANT INSERT ON [observability].[monitoring_results] TO [DataOps_Project_Executor];
 
 GRANT SELECT ON SCHEMA::[runtime] TO [DataOps_Project_Executor];
 GRANT SELECT ON SCHEMA::[observability] TO [DataOps_Project_Executor];
