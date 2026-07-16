@@ -24,7 +24,7 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 | Data Category | Source Table | Bronze Target Table | Silver Target Table | Gold Target Table | Match Key | Refresh Control Column | Load Strategy |
 |---|---|---|---|---|---|---|---|
 | Transactional | `SalesOrderHeader` | `SalesOrderHeader` | `SalesOrderHeader` | `FactSales` | Not required | `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
-| Transactional | `SalesOrderDetail` | `SalesOrderDetail` | `SalesOrderDetail` | `FactSales` | Not required | Header `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
+| Transactional | `SalesOrderDetail` | `SalesOrderDetail` | `SalesOrderDetail` | `FactSales` | Not required | Header-level `OrderDate` | Bronze append; Silver monthly batch reload; Gold monthly batch reload |
 | Master / Core | `Customer` | `Customer` | `Customer` | `DimCustomer` | `SourceCustomerID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 | Master / Core | `SalesPerson` | `SalesPerson` | `SalesPerson` | `DimSalesPerson` | `SourceSalesPersonID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |
 | Master / Core | `Product`, `ProductCategory` | `Product`, `ProductCategory` | `Product`, `ProductCategory` | `DimProduct` | `SourceProductID` | `created_at`, `updated_at` | Bronze append; Silver upsert; Gold upsert |

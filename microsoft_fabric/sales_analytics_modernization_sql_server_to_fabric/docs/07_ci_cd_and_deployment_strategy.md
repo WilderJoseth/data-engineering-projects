@@ -26,7 +26,7 @@ The project uses one Fabric deployment pipeline.
 The expected promotion path is:
 
 ```text
-Development → Production
+Development -> Production
 ```
 
 ## Workspace Items
@@ -45,16 +45,16 @@ Each workspace contains the core Fabric items required for the environment.
 
 Connections are configured per environment and managed through Fabric connection management. Because connection objects are not treated as workspace-local objects, physical connection names include the environment suffix (`_dev`, `_prod`) to clearly separate Development and Production connection instances.
 
-Pipeline and notebook logic should not hardcode environment-specific connection names. Instead, the Variable Library stores the correct connection id for each deployment stage.
+Pipeline and notebook logic should not hardcode environment-specific connection names. Instead, the Variable Library stores the correct connection ID for each deployment stage.
 
-| Development Connection          | Production Connection            | Purpose                                                 | Category             |
-| ------------------------------- | -------------------------------- | ------------------------------------------------------- | -------------------- |
-| `cn_sql_sales_operational_dev`  | `cn_sql_sales_operational_prod`  | Connects to the on-premise `Sales_Operational` database | Source connection    |
-| `cn_sql_sales_analytics_dev`    | `cn_sql_sales_analytics_prod`    | Connects to the on-premise `Sales_Analytics` database   | Source connection    |
-| `cn_sql_dataops_control_dev`    | `cn_sql_dataops_control_prod`    | Connects to the `DataOps_Control` database              | Control connection   |
-| `cn_lh_sales_operational_dev`   | `cn_lh_sales_operational_prod`   | Connects to Lakehouse `lh_sales_operational`            | Lakehouse connection |
-| `cn_wh_sales_analytics_dev`     | `cn_wh_sales_analytics_prod`     | Connects to Warehouse `wh_sales_analytics`              | Warehouse connection |
-| `cn_pipeline_orchestration_dev` | `cn_pipeline_orchestration_prod` | Supports pipeline orchestration where required          | Pipeline connection  |
+| Development Connection | Production Connection | Purpose | Category |
+|---|---|---|---|
+| `cn_sql_sales_operational_dev` | `cn_sql_sales_operational_prod` | Connects to the on-premise `Sales_Operational` database | Source connection |
+| `cn_sql_sales_analytics_dev` | `cn_sql_sales_analytics_prod` | Connects to the on-premise `Sales_Analytics` database | Source connection |
+| `cn_sql_dataops_control_dev` | `cn_sql_dataops_control_prod` | Connects to the `DataOps_Control` database | Control connection |
+| `cn_lh_sales_operational_dev` | `cn_lh_sales_operational_prod` | Connects to Lakehouse `lh_sales_operational` | Lakehouse connection |
+| `cn_wh_sales_analytics_dev` | `cn_wh_sales_analytics_prod` | Connects to Warehouse `wh_sales_analytics` | Warehouse connection |
+| `cn_pipeline_orchestration_dev` | `cn_pipeline_orchestration_prod` | Supports pipeline orchestration where required | Pipeline connection |
 
 The on-premise SQL Server source connections use the on-premise data gateway.
 
@@ -62,25 +62,25 @@ The on-premise SQL Server source connections use the on-premise data gateway.
 
 The project uses one Variable Library to manage stage-specific values for Development and Production.
 
-| Variable Library                   | Purpose                                                      |
-| ---------------------------------- | ------------------------------------------------------------ |
+| Variable Library | Purpose |
+|---|---|
 | `vl_sales_reporting_modernization` | Stores stage-specific values used by pipelines and notebooks |
 
 The Variable Library has default values for Development and production-specific values for Production. Variables use the prefix `vl_`.
 
-| Variable                              | Development Value                    | Production Value                      | Purpose                                               |
-| ------------------------------------- | ------------------------------------ | ------------------------------------- | ----------------------------------------------------- |
-| `vl_cn_sql_sales_operational_id`      | Id of `cn_sql_sales_operational_dev` | Id of `cn_sql_sales_operational_prod` | Resolves the `Sales_Operational` source connection    |
-| `vl_cn_sql_sales_analytics_id`        | Id of `cn_sql_sales_analytics_dev`   | Id of `cn_sql_sales_analytics_prod`   | Resolves the `Sales_Analytics` source connection      |
-| `vl_cn_sql_dataops_control_id`        | Id of `cn_sql_dataops_control_dev`   | Id of `cn_sql_dataops_control_prod`   | Resolves the `DataOps_Control` connection             |
-| `vl_cn_lh_sales_operational_id`       | Id of `cn_lh_sales_operational_dev`  | Id of `cn_lh_sales_operational_prod`  | Resolves the Lakehouse connection                     |
-| `vl_cn_wh_sales_analytics_id`         | Id of `cn_wh_sales_analytics_dev`    | Id of `cn_wh_sales_analytics_prod`    | Resolves the Warehouse connection                     |
-| `vl_wh_sales_analytics_id`            | Id of DEV `wh_sales_analytics`       | Id of PROD `wh_sales_analytics`       | Resolves the Warehouse item                           |
-| `vl_lh_sales_operational_id`          | Id of DEV `lh_sales_operational`     | Id of PROD `lh_sales_operational`     | Resolves the Lakehouse item                           |
-| `vl_wh_sales_analytics_sql_cn_string` | DEV Warehouse SQL connection string  | PROD Warehouse SQL connection string  | Resolves the Warehouse SQL endpoint connection string |
-| `vl_workspace_id`                     | Development workspace id             | Production workspace id               | Resolves the current workspace                        |
+| Variable | Development Value | Production Value | Purpose |
+|---|---|---|---|
+| `vl_cn_sql_sales_operational_id` | ID of `cn_sql_sales_operational_dev` | ID of `cn_sql_sales_operational_prod` | Resolves the `Sales_Operational` source connection |
+| `vl_cn_sql_sales_analytics_id` | ID of `cn_sql_sales_analytics_dev` | ID of `cn_sql_sales_analytics_prod` | Resolves the `Sales_Analytics` source connection |
+| `vl_cn_sql_dataops_control_id` | ID of `cn_sql_dataops_control_dev` | ID of `cn_sql_dataops_control_prod` | Resolves the `DataOps_Control` connection |
+| `vl_cn_lh_sales_operational_id` | ID of `cn_lh_sales_operational_dev` | ID of `cn_lh_sales_operational_prod` | Resolves the Lakehouse connection |
+| `vl_cn_wh_sales_analytics_id` | ID of `cn_wh_sales_analytics_dev` | ID of `cn_wh_sales_analytics_prod` | Resolves the Warehouse connection |
+| `vl_wh_sales_analytics_id` | ID of DEV `wh_sales_analytics` | ID of PROD `wh_sales_analytics` | Resolves the Warehouse item |
+| `vl_lh_sales_operational_id` | ID of DEV `lh_sales_operational` | ID of PROD `lh_sales_operational` | Resolves the Lakehouse item |
+| `vl_wh_sales_analytics_sql_cn_string` | DEV Warehouse SQL connection string | PROD Warehouse SQL connection string | Resolves the Warehouse SQL endpoint connection string |
+| `vl_workspace_id` | Development workspace ID | Production workspace ID | Resolves the current workspace |
 
-Variable Library values allow the same pipeline and notebook logic to run in different stages without hardcoding environment-specific connection ids, item ids, workspace ids, or SQL connection strings.
+Variable Library values allow the same pipeline and notebook logic to run in different stages without hardcoding environment-specific connection IDs, item IDs, workspace IDs, or SQL connection strings.
 
 ## Deployment Approach by Asset
 
@@ -114,29 +114,29 @@ Recommended repository structure:
 
 ```text
 sales_analytics_modernization_sql_server_to_fabric
-├── artifacts
-│   ├── source
-│   │   └── sql_server
-│   │       ├── Sales_Analytics
-│   │       └── Sales_Operational
-│   ├── target
-│   │   └── fabric
-│   │       ├── pipelines
-│   │       │   ├── historical_reporting_data_flow
-│   │       │   └── new_reporting_data_flow
-│   │       └── notebooks
-│   │           ├── historical_reporting_data_flow
-│   │           └── new_reporting_data_flow
-│   └── deployment
-│       └── fabric
-│           ├── lakehouse
-│           ├── warehouse
-│           ├── variable_library
-│           └── validation_checklists
-├── docs
-│   ├── diagrams
-│   └── images
-└── README.md
+|-- artifacts
+|   |-- source
+|   |   |-- sql_server
+|   |       |-- Sales_Analytics
+|   |       |-- Sales_Operational
+|   |-- target
+|   |   |-- fabric
+|   |       |-- pipelines
+|   |       |   |-- historical_reporting_data_flow
+|   |       |   |-- new_reporting_data_flow
+|   |       |-- notebooks
+|   |           |-- historical_reporting_data_flow
+|   |           |-- new_reporting_data_flow
+|   |-- deployment
+|       |-- fabric
+|           |-- lakehouse
+|           |-- warehouse
+|           |-- variable_library
+|           |-- validation_checklists
+|-- docs
+|   |-- diagrams
+|   |-- images
+|-- README.md
 ```
 
 | Repository Area | Purpose |

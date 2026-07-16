@@ -11,7 +11,7 @@ This document defines the initial validation and reconciliation strategy used to
 | Avoid redundant checks | Do not validate rules that are already guaranteed by table constraints unless validation occurs before the constrained load step |
 | Reconcile at the right grain | Use table-level reconciliation for small or dimensional objects and batch-level reconciliation for transactional or fact data |
 | Keep checks traceable | Validation and reconciliation results should be linked to the execution step that produced the data |
-| Separate warning from failure | Not every issue should stop the pipeline; severity should reflect business impact |
+| Separate warnings from failures | Not every issue should stop the pipeline; severity should reflect business impact |
 
 ## Validation Codes
 
