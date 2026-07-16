@@ -34,7 +34,7 @@ The solution uses three main refresh strategies and one Bronze-specific write pa
 
 ### Sales_Analytics
 
-`Sales_Analytics` provides trusted historical reporting data used to initialize the target reporting model before cutover.
+`Sales_Analytics` provides trusted historical reporting data used to initialize the target reporting platform before cutover.
 
 | Data Category | Source Table | Staging Target Table | Gold Target Table | Match Key | Refresh Control Column | Load Strategy |
 |---|---|---|---|---|---|---|

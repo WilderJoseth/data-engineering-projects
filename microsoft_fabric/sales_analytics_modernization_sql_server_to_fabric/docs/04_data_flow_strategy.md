@@ -104,7 +104,7 @@ During this phase, `Sales_Analytics` may still be available as the existing repo
 | Temporary fallback | Keep `Sales_Analytics` available until target reporting through the Power BI semantic model is accepted |
 | Period control | Avoid loading the same reporting period from both `Sales_Analytics` and `Sales_Operational` |
 
-Coexistence should be temporary. After cutover, the target reporting model should become the reporting source of truth.
+Coexistence should be temporary. After cutover, the target reporting platform should become the reporting source of truth.
 
 ## Flow Ownership Rules
 

@@ -75,7 +75,7 @@ The main driver is to evolve the trusted Sales analytical model into a governed 
 | AI and data science enablement | Provide governed access to historical and new Sales data in a cloud analytical platform |
 | Reusable data products | Publish curated Sales data for multiple consumers instead of creating one-off extracts |
 | Open analytical storage | Store analytical data using Delta/Parquet-based patterns for broader analytical use |
-| Analytical workload separation | Keep operational processing on-premise while moving analytical ownership to the target analytics platform |
+| Analytical workload separation | Keep operational processing on-premise while moving analytical ownership to the target reporting platform |
 | Long-term maintainability | Reduce dependency on year-based physical table copies for historical reporting data |
 | Enterprise analytical consumption | Prepare Sales data for reporting, AI, data science, and cross-domain analytics |
 
@@ -87,5 +87,5 @@ The project is not a full replacement of the Sales platform.
 |---|---|
 | `Sales_Operational` | Remains on-premise and continues supporting transactional operations |
 | `Sales_Analytics` | Provides historical reporting data for the historical reporting baseline |
-| `Sales_Operational` | Provides new transactional data for reporting transformation in the target analytics platform |
+| `Sales_Operational` | Provides new transactional data for reporting transformation in the target reporting platform |
 | Warehouse Gold model and Power BI semantic model | Target reporting source of truth |
