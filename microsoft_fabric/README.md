@@ -2,7 +2,7 @@
 
 This section of the repository contains **hands-on projects built with Microsoft Fabric**, showcasing how to design, load, and transform data in a **modern data warehouse / lakehouse** environment.
 
-Each project demonstrates a different scenario — from classic ETL migrations to cloud-scale analytics — using **Pipelines**, **Spark pools** and **Data Flow Gen2** across **bronze, silver, and gold** layers.
+Each project demonstrates a different scenario — from classic ETL migrations to cloud-scale analytics — using Microsoft Fabric capabilities such as **Pipelines**, **Notebooks**, **Spark**, **Data Flow Gen2**, and **Warehouse/Lakehouse** patterns across **bronze, silver, and gold** layers.
 
 ## Technologies involved
 
@@ -24,5 +24,6 @@ Each project demonstrates a different scenario — from classic ETL migrations t
 
 ## 🗂️ Project List
 
-* Study space missions
-* Adventure work DW 2022 migration (Synapse to Fabric)
+* [Data Engineering Project – Medallion Architecture with Microsoft Fabric](https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/study_space_missions)
+* [Synapse Dedicated DW → Microsoft Fabric DW Migration (Medallion + Control Plane)](https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/adventure_works_dw_2022_migration)
+* [Sales Analytics Modernization: SQL Server to Microsoft Fabric](https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/sales_analytics_modernization_sql_server_to_fabric)
