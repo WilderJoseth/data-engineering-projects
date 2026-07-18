@@ -30,7 +30,7 @@ This project is part of a data engineering portfolio focused on cloud modernizat
 | Operational system replacement | `Sales_Operational` remains on-premise and is not replaced by Microsoft Fabric |
 | Real-time streaming | The first version focuses on batch-based historical and incremental processing |
 | Full enterprise migration | The scope is limited to the Sales reporting domain |
-| Production implementation | The project defines the design and implementation approach, but full production rollout is outside the portfolio scope |
+| Live production deployment | The project is a portfolio design baseline and is not deployed as a live production system |
 | Power BI report development | The semantic model is considered later; report/dashboard design is not part of the current scope |
 
 ## High-Level Architecture
@@ -49,6 +49,15 @@ This project is part of a data engineering portfolio focused on cloud modernizat
 | Processing | SQL / PySpark |
 | Reporting | Power BI |
 | Control layer | Azure SQL Database |
+
+## Project Dependencies
+
+This project depends on supporting portfolio projects that provide source database structures and execution control capabilities.
+
+| Dependency | Purpose | Repository |
+|---|---|---|
+| SQL Server Sales databases | Provides the `Sales_Operational` and `Sales_Analytics` source databases used by this modernization project. | [Sales Domain Architecture: Oracle to SQL Server Migration](https://github.com/WilderJoseth/data-engineering-projects/tree/main/on_premise/oracle_mssql_migration) |
+| `DataOps_Control` | Provides the metadata-driven execution control, validation, reconciliation, logging, and rerun control database used by the Fabric pipelines. | [Metadata-Driven Control Framework for Data Engineering Projects](https://github.com/WilderJoseth/data-engineering-projects/tree/main/on_premise/DataOps_Control) |
 
 ## Documentation
 

@@ -12,6 +12,12 @@ It serves two purposes:
 
 ## ⭐ Featured Projects
 
+#### Sales Analytics Modernization: SQL Server to Microsoft Fabric
+* Portfolio design baseline for modernizing Sales reporting from on-premise SQL Server to Microsoft Fabric.
+* Defines the new documentation standard for future projects, including scope, architecture, source profiling, data flows, load strategy, validation/reconciliation, CI/CD, security, and project dependencies.
+* Implementation is planned as the next phase.
+* Link: <https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/sales_analytics_modernization_sql_server_to_fabric>
+
 #### Synapse Dedicated DW → Microsoft Fabric DW Migration (Medallion + Control Plane)
 * End-to-end migration data project built using Microsoft Fabric and Synapse.
 * Link: <https://github.com/WilderJoseth/data-engineering-projects/tree/main/microsoft_fabric/adventure_works_dw_2022_migration>
@@ -28,7 +34,7 @@ It serves two purposes:
 
 | Folder | Description |
 |---------|--------------|
-| **/zure_synapse/** | Projects using Azure Synapse (Serverless/Dedicated), with examples of external tables, CTAS, and `COPY INTO` for initial loads and incremental ingestion. Some follow the **Medallion Architecture** pattern (bronze/silver/gold). |
+| **/azure_synapse/** | Projects using Azure Synapse (Serverless/Dedicated), with examples of external tables, CTAS, and `COPY INTO` for initial loads and incremental ingestion. Some follow the **Medallion Architecture** pattern (bronze/silver/gold). |
 | **/databricks/** | Notebooks demonstrating Delta Lake pipelines, transformations with PySpark, and cost/performance experiments (Delta optimization, caching, partitioning). |
 | **/on_premise/** | Legacy or hybrid SQL Server workloads showing incremental loads, historical data management, and CDC strategies before cloud migration. |
 | **/microsoft_fabric/** | Projects using Microsoft Fabric. |
