@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="DataOps_Control"
+  DTS:DTSID="{248B846D-257D-4960-B092-2545A0A85847}"
+  DTS:CreationName="OLEDB">
+  <DTS:PropertyExpression
+    DTS:Name="InitialCatalog">@[$Project::p_DataOps_Control_database]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="Password">@[$Project::p_DataOps_Control_password]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="ServerName">@[$Project::p_DataOps_Control_server]</DTS:PropertyExpression>
+  <DTS:PropertyExpression
+    DTS:Name="UserName">@[$Project::p_DataOps_Control_username]</DTS:PropertyExpression>
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectRetryCount="1"
+      DTS:ConnectRetryInterval="5"
+      DTS:ConnectionString="Data Source=LocalHost;User ID=login_sales_operational_executor;Initial Catalog=DataOps_Control;Provider=SQLOLEDB.1;Auto Translate=False;Application Name=SSIS-Sales_Operational_Migration-{248B846D-257D-4960-B092-2545A0A85847}WILDER-LOQ.control_db.WilderSQL;">
+      <DTS:Password
+        DTS:Name="Password"
+        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAADUb8ioJWdzc5XsT25N68mnF760yWKFTQ1tCk1dhVyhCwAAAAAOgAAAAAIAACAAAABXnGa4RKNKy+Pno+asuylNPdbkvxbm5sGzRA3w3UAKrZAAAACybQ6l6l3zHzq7t+/mpVwK07s9+ba7OGUqJWp+24A8ZZls59NFezb+37KJ8dGByM+mCl4Zw3J7vfCNUXVcFDFp7b/nRnZpiCH22l4fA+d4JKoXYodit6GJ8ZC57Uyvomle2D0VTJM5jhsUcF7CRLUAwGLxeubLKmZThBAW6E9NYzmjcsMCXIcXA3La0li8WXpAAAAAjoFbxd2hv8H5CuIC+WJW0CX1Al/gnRiSszM1W6oZH2WJzSy+Jw59+o+yBCiib7PvejRxu4tx1pFleADLKJW4Aw==</DTS:Password>
+    </DTS:ConnectionManager>
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

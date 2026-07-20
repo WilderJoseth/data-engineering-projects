@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<DTS:ConnectionManager xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:ObjectName="ADVENTUREWORKS2022_ODBC"
+  DTS:DTSID="{BC5C4B1E-CB5A-4AF4-BAE5-9B240EFDDE88}"
+  DTS:CreationName="ADO.NET:System.Data.Odbc.OdbcConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+  <DTS:ObjectData>
+    <DTS:ConnectionManager
+      DTS:ConnectionString="uid=ADVENTUREWORKS2022;Dsn=Oracle_AdventureWorks2022;">
+      <DTS:Password
+        DTS:Name="pwd"
+        Sensitive="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAM8fNEWzbRUCgTb6BNi7BHwAAAAACAAAAAAAQZgAAAAEAACAAAABgJ66+GYH5HrsLuZAxer9HmTmEhqQOQI43eVpdibVboAAAAAAOgAAAAAIAACAAAADSapOUOJtuMcCPnkSBhQIQN/ziLasCDx0PPljfGyCylIAAAABjlsEWo0sUbegLZ5WPY9DDjIM5AznO/GMa/aVOwflPsOYemIcwpldmqeUpVMPiRSWUqtPyfhD7MIPiAnEeHyww+xw6/12b+BchE+8uUDSho/eIeHqynmJYGFRYBL7zrTgyrHPquyBWo6X5p85i3HIvjaS/bUZqACOUZLWAYYigxEAAAAAP3FxPPpHAxoEkc4UTbrqKe3fVVVMAfnxZIc4raJztpFcP9AKGVcgMtwYef/1qDyH3FJZyEFVnYj8a8hJeaMbi</DTS:Password>
+    </DTS:ConnectionManager>
+  </DTS:ObjectData>
+</DTS:ConnectionManager>

@@ -1,0 +1,2830 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/26/2026 9:08:05 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="WILDER-LOQ"
+  DTS:CreatorName="WILDER-LOQ\WILDER"
+  DTS:DTSID="{554A2E1A-BE9A-4D42-8C31-2367A1D6E79C}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1010.2"
+  DTS:LocaleID="10250"
+  DTS:ObjectName="PKG_DIM_DATA"
+  DTS:PackageType="5"
+  DTS:VersionBuild="26"
+  DTS:VersionGUID="{47768984-4202-456F-9A9B-A9954F1BA654}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Clean Up Dim Staging and Work Tables - End"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{1591f28c-cf1d-4285-8ba0-0b14b53ba359}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean Up Dim Staging and Work Tables - End"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{9758f9f1-5f1e-4603-8a3c-909fa460c1d7}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean Up Dim Staging and Work Tables - Start"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DimCustomer Load"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{90bbbcbd-320b-4231-83a4-9f33b6394ec8}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DimCustomer Load">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Extract DimCustomer to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{cec7a300-5887-43b9-b041-9feddf60679b}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract DimCustomer to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Load DimCustomer to Dim"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{aa372390-45db-4137-861d-f82c4925d88a}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimCustomer to Dim"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Register DimCustomer Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{cdc5dc4a-a492-442f-8e56-92bef71f7f54}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimCustomer Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Register DimCustomer Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{542c52e5-96cc-414c-b559-d9680d1d8b40}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimCustomer Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{2ddaa657-c224-4d46-817d-f4cfe0790379}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Update DimCustomer Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{bcc9dfca-e2f5-44aa-85c2-0c1fa3956a7d}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update DimCustomer Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimCustomer Load\Validate and Load DimCustomer to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{bf4e2ec1-ed20-4527-bc0c-0ed2c05cd2fd}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load DimCustomer to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimCustomer Load.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{c2fa839c-c5d7-4e5f-9c38-45903e83799a}"
+          DTS:From="Package\DimCustomer Load\Extract DimCustomer to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\DimCustomer Load\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimCustomer Load.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{d6af333b-cc5e-4863-b716-7f57067535e8}"
+          DTS:From="Package\DimCustomer Load\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\DimCustomer Load\Validate and Load DimCustomer to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimCustomer Load.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{5af67d7a-6a1a-42c4-8dd0-61d1f581dc7b}"
+          DTS:From="Package\DimCustomer Load\Register DimCustomer Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\DimCustomer Load\Extract DimCustomer to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimCustomer Load.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{771b1e14-d7ba-4041-950f-0f8737b94924}"
+          DTS:From="Package\DimCustomer Load\Validate and Load DimCustomer to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\DimCustomer Load\Load DimCustomer to Dim" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimCustomer Load.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{83025800-f625-4fca-8b89-8733dbffab97}"
+          DTS:From="Package\DimCustomer Load\Load DimCustomer to Dim"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\DimCustomer Load\Register DimCustomer Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimCustomer Load.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{5f5a8d17-bb89-4d30-aadf-d39826be51bc}"
+          DTS:From="Package\DimCustomer Load\Register DimCustomer Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\DimCustomer Load\Update DimCustomer Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DimPaymentMethod Load"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{d5b1df96-b5e1-4fbd-9493-2695ea6822f4}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DimPaymentMethod Load">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Extract DimPaymentMethod to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{86e11ede-cd2c-4549-8f52-127dbaf43398}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract DimPaymentMethod to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Load DimPaymentMethod to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f2d71f65-f318-4bbe-b816-3b6ff0d4f159}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimPaymentMethod to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Register DimPaymentMethod Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{20415071-582e-4c88-a4a4-83b278df8817}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimPaymentMethod Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Register DimPaymentMethod Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5a07e93e-e283-47a4-af95-fb64a0e991e7}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimPaymentMethod Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{27e84eb2-a95a-4702-9fa6-676e901a318e}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Update DimPaymentMethod Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{d261da8d-8c12-40e6-8b23-469e8f78e6dd}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update DimPaymentMethod Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimPaymentMethod Load\Validate and Load DimPaymentMethod to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f395e6a7-b8d2-4e24-bc4c-b94c5fcd1765}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load DimPaymentMethod to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="0">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{04441b19-3b1d-4519-b3ff-850750fd952c}"
+          DTS:From="Package\DimPaymentMethod Load\Extract DimPaymentMethod to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\DimPaymentMethod Load\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{1471fce8-081a-46b5-9af9-f0778da1ce53}"
+          DTS:From="Package\DimPaymentMethod Load\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\DimPaymentMethod Load\Validate and Load DimPaymentMethod to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{c03e4483-e6c6-42df-8ada-7c63db865a24}"
+          DTS:From="Package\DimPaymentMethod Load\Register DimPaymentMethod Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\DimPaymentMethod Load\Extract DimPaymentMethod to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{451fefe0-648c-4ee4-aab0-bdacabcaa7ad}"
+          DTS:From="Package\DimPaymentMethod Load\Validate and Load DimPaymentMethod to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\DimPaymentMethod Load\Load DimPaymentMethod to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{fcb885fb-48df-4f21-9b5c-7211905b25b3}"
+          DTS:From="Package\DimPaymentMethod Load\Load DimPaymentMethod to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\DimPaymentMethod Load\Register DimPaymentMethod Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{87d48df1-6574-4067-9eea-8ca586a82838}"
+          DTS:From="Package\DimPaymentMethod Load\Register DimPaymentMethod Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\DimPaymentMethod Load\Update DimPaymentMethod Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DimProduct Load"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{709ac2d8-4aef-4da3-a625-ec74688d8029}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DimProduct Load">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Extract DimProduct to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{7188a853-45db-420d-90fd-de760f413455}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract DimProduct to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Load DimProduct to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{b4ad08d5-efc9-4cb3-b3ac-2d6deeeef7f4}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimProduct to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Register DimProduct Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{4c3f60d4-476e-4c67-ad0f-a3adde8b55cf}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimProduct Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Register DimProduct Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{a7244d1e-bc54-4f33-9ab0-f9660cb50e8e}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimProduct Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{80158798-f468-4805-bf01-79627b8ad4e6}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Update DimProduct Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{7fe04360-8fe7-468b-925c-0fd97b443467}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update DimProduct Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimProduct Load\Validate and Load DimProduct to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{8a6c4b48-9331-491d-bdde-b012e9ead66e}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load DimProduct to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="4">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimProduct Load.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{65aaaed4-7952-4952-8bc7-96fb30f88e9c}"
+          DTS:From="Package\DimProduct Load\Extract DimProduct to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\DimProduct Load\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimProduct Load.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{764c1347-0825-4a35-9fc0-156283eab2dc}"
+          DTS:From="Package\DimProduct Load\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\DimProduct Load\Validate and Load DimProduct to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimProduct Load.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{0f0fb640-d0d0-4246-adb6-ed9282c76e05}"
+          DTS:From="Package\DimProduct Load\Register DimProduct Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\DimProduct Load\Extract DimProduct to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimProduct Load.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{444c9f0a-08e7-4899-a269-fd4621e910c9}"
+          DTS:From="Package\DimProduct Load\Validate and Load DimProduct to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\DimProduct Load\Load DimProduct to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimProduct Load.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{200d5fcd-454f-4fc5-90dc-23c32da79738}"
+          DTS:From="Package\DimProduct Load\Load DimProduct to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\DimProduct Load\Register DimProduct Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimProduct Load.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{98050775-c510-4a84-bd80-c61f9d4edc60}"
+          DTS:From="Package\DimProduct Load\Register DimProduct Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\DimProduct Load\Update DimProduct Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DimSalesPerson Load"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{f7cc7daf-1f2e-4ad7-bd7d-29aa9103a5f4}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DimSalesPerson Load">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Extract DimSalesPerson to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{71fcae87-ad65-4985-b3e6-113a7d8f4d0a}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract DimSalesPerson to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Load DimSalesPerson to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{7c549d01-7906-4d6c-8111-7f9f42907b44}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimSalesPerson to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="2">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Register DimSalesPerson Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{11cc00ae-94c0-4d0f-b49c-842cbfa52905}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimSalesPerson Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="2">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Register DimSalesPerson Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5cc6746f-b3c9-4dc0-81d0-167670a23f70}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimSalesPerson Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="2">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{bd6caaa2-0598-439c-99a9-6a8edc54f53f}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="2">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Update DimSalesPerson Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{e2c3d220-852c-494f-9661-1fba9666348a}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update DimSalesPerson Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="2">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesPerson Load\Validate and Load DimSalesPerson to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f0bc3aca-8a9e-43d9-8d4a-743e7ac6dcee}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load DimSalesPerson to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="2">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{1dfe19db-4164-4cd2-9fc7-7cf4ad7116cf}"
+          DTS:From="Package\DimSalesPerson Load\Extract DimSalesPerson to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\DimSalesPerson Load\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{0c7079a1-eed5-4dc2-ae9c-2693c63f79b5}"
+          DTS:From="Package\DimSalesPerson Load\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\DimSalesPerson Load\Validate and Load DimSalesPerson to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{97b39b0e-23e4-49c4-b361-60c1beb7f7d1}"
+          DTS:From="Package\DimSalesPerson Load\Register DimSalesPerson Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\DimSalesPerson Load\Extract DimSalesPerson to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{d9e38c98-4bd9-4a62-ac0f-6e9a31ff24ad}"
+          DTS:From="Package\DimSalesPerson Load\Validate and Load DimSalesPerson to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\DimSalesPerson Load\Load DimSalesPerson to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{49422f23-1a6b-4f0a-8a08-c4a156af57c1}"
+          DTS:From="Package\DimSalesPerson Load\Load DimSalesPerson to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\DimSalesPerson Load\Register DimSalesPerson Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{e98987c0-8371-46d1-938f-4b507e9bd370}"
+          DTS:From="Package\DimSalesPerson Load\Register DimSalesPerson Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\DimSalesPerson Load\Update DimSalesPerson Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DimSalesTerritory Load"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{cfae855f-fd28-42f3-bb4b-cc7fdcb35257}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DimSalesTerritory Load">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Extract DimSalesTerritory to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{38d860db-fa40-45c0-8362-c53644ad284b}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract DimSalesTerritory to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Load DimSalesTerritory to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{8dcbb550-e62c-4b62-aa25-fdf4415d95cb}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimSalesTerritory to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="3">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Register DimSalesTerritory Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{c9e78b8b-cc73-4d47-bc6e-65386b078d0b}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimSalesTerritory Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="3">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Register DimSalesTerritory Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{23fe04e1-76f3-4226-9ba7-e11fe90eee05}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimSalesTerritory Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="3">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{e49e506c-7b4d-4c02-a80e-2b84a5aec0ce}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="3">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Update DimSalesTerritory Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{43072230-7c7e-42d1-94e3-d01b8a11ce67}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update DimSalesTerritory Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="3">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimSalesTerritory Load\Validate and Load DimSalesTerritory to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{5bc33a90-b33d-40f1-96bf-069052b1832e}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load DimSalesTerritory to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="3">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{ea9fbda8-c54d-49d8-8043-5ad95e05f5bc}"
+          DTS:From="Package\DimSalesTerritory Load\Extract DimSalesTerritory to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\DimSalesTerritory Load\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{cfde2cfc-a118-41de-8b24-ce482ddaaa76}"
+          DTS:From="Package\DimSalesTerritory Load\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\DimSalesTerritory Load\Validate and Load DimSalesTerritory to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{8be107a3-59a3-4010-9c7a-2d9db553191f}"
+          DTS:From="Package\DimSalesTerritory Load\Register DimSalesTerritory Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\DimSalesTerritory Load\Extract DimSalesTerritory to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{d4126d97-bc49-450f-b4d7-702093ec9890}"
+          DTS:From="Package\DimSalesTerritory Load\Validate and Load DimSalesTerritory to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\DimSalesTerritory Load\Load DimSalesTerritory to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{2d54483e-a403-453c-b454-7ff71d5f1e40}"
+          DTS:From="Package\DimSalesTerritory Load\Load DimSalesTerritory to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\DimSalesTerritory Load\Register DimSalesTerritory Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{0ae720a0-0f75-4fd5-b535-01561f4f2f3d}"
+          DTS:From="Package\DimSalesTerritory Load\Register DimSalesTerritory Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\DimSalesTerritory Load\Update DimSalesTerritory Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\DimShipMethod Load"
+      DTS:CreationName="STOCK:SEQUENCE"
+      DTS:Description="Sequence Container"
+      DTS:DTSID="{77a5249a-ab72-42ed-9d95-ef787d02cc5f}"
+      DTS:ExecutableType="STOCK:SEQUENCE"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="DimShipMethod Load">
+      <DTS:Variables />
+      <DTS:Executables>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Extract DimShipMethod to Staging"
+          DTS:CreationName="Microsoft.Pipeline"
+          DTS:Description="Tarea Flujo de datos"
+          DTS:DTSID="{b9d8413f-53ed-468c-be41-b989435a6412}"
+          DTS:ExecutableType="Microsoft.Pipeline"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Extract DimShipMethod to Staging"
+          DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <pipeline
+              version="1" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Load DimShipMethod to Prod"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{bc07042b-b4fc-49d6-a350-e3997168258c}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Load DimShipMethod to Prod"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="5">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Register DimShipMethod Load End"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{3c4c6139-fac8-4de6-86a4-9cc4ca120500}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimShipMethod Load End"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="5">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Register DimShipMethod Load Start"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{e2c4bb20-7a70-40c0-b0a2-fda0d608fa8b}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register DimShipMethod Load Start"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="5">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Register Initial Count"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{21cb709b-9cc6-41bf-a3f4-f8dfb374128a}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Register Initial Count"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="5">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Update DimShipMethod Load Status"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{f455bb4f-7fcc-42d0-a993-ff5d29344a8b}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Update DimShipMethod Load Status"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="5">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+        <DTS:Executable
+          DTS:refId="Package\DimShipMethod Load\Validate and Load DimShipMethod to Work"
+          DTS:CreationName="Microsoft.ExecuteSQLTask"
+          DTS:Description="Execute SQL Task"
+          DTS:DTSID="{98a13f7d-ecad-4874-b3a8-e4a5e273c36b}"
+          DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+          DTS:LocaleID="-1"
+          DTS:ObjectName="Validate and Load DimShipMethod to Work"
+          DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+          DTS:ThreadHint="5">
+          <DTS:Variables />
+          <DTS:ObjectData>
+            <SQLTask:SqlTaskData
+              SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+              SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+          </DTS:ObjectData>
+        </DTS:Executable>
+      </DTS:Executables>
+      <DTS:PrecedenceConstraints>
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimShipMethod Load.PrecedenceConstraints[Constraint]"
+          DTS:CreationName=""
+          DTS:DTSID="{efcffe5b-fb02-4631-af34-74c2fcba6c84}"
+          DTS:From="Package\DimShipMethod Load\Extract DimShipMethod to Staging"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint"
+          DTS:To="Package\DimShipMethod Load\Register Initial Count" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 1]"
+          DTS:CreationName=""
+          DTS:DTSID="{6a877d62-4516-45e0-a3fd-06bd43400825}"
+          DTS:From="Package\DimShipMethod Load\Register Initial Count"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 1"
+          DTS:To="Package\DimShipMethod Load\Validate and Load DimShipMethod to Work" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 2]"
+          DTS:CreationName=""
+          DTS:DTSID="{7ad843a4-4c1a-44fc-b274-e5a8a0d3dcb6}"
+          DTS:From="Package\DimShipMethod Load\Register DimShipMethod Load Start"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 2"
+          DTS:To="Package\DimShipMethod Load\Extract DimShipMethod to Staging" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 3]"
+          DTS:CreationName=""
+          DTS:DTSID="{6bb0f4c1-d562-4e60-8dcb-9d1f87c0486a}"
+          DTS:From="Package\DimShipMethod Load\Validate and Load DimShipMethod to Work"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 3"
+          DTS:To="Package\DimShipMethod Load\Load DimShipMethod to Prod" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 4]"
+          DTS:CreationName=""
+          DTS:DTSID="{6af22365-27dc-43cf-b5f6-58f9e7dc3927}"
+          DTS:From="Package\DimShipMethod Load\Load DimShipMethod to Prod"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 4"
+          DTS:To="Package\DimShipMethod Load\Register DimShipMethod Load End" />
+        <DTS:PrecedenceConstraint
+          DTS:refId="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 5]"
+          DTS:CreationName=""
+          DTS:DTSID="{c759a9a2-254c-4faa-97f1-c80e87e05d71}"
+          DTS:From="Package\DimShipMethod Load\Register DimShipMethod Load End"
+          DTS:LogicalAnd="True"
+          DTS:ObjectName="Constraint 5"
+          DTS:To="Package\DimShipMethod Load\Update DimShipMethod Load Status" />
+      </DTS:PrecedenceConstraints>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\End Dim Data Subprocess"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{52015254-6094-4f43-bfaa-66094ee514bd}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="End Dim Data Subprocess"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get Dim Load Configuration"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{7017fdba-b569-43c3-b07a-5fd2392f2007}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Dim Load Configuration"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Start Dim Data Subprocess"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6541997a-7286-4ba8-b13a-81dc09cd714f}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Start Dim Data Subprocess"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{845032AD-8B0C-433F-B54E-46FEA912F98E}"
+          SQLTask:SqlStatementSource="SELECT 1" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{279b3b76-2d82-41a8-b613-71864f243df4}"
+      DTS:From="Package\Start Dim Data Subprocess"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Get Dim Load Configuration" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{cc092727-258f-42e7-947d-f6562eb116a6}"
+      DTS:From="Package\Get Dim Load Configuration"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - Start" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 10]"
+      DTS:CreationName=""
+      DTS:DTSID="{3A741BFD-2FD2-48D8-8255-A06CAA5F96DD}"
+      DTS:From="Package\DimSalesTerritory Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 10"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 11]"
+      DTS:CreationName=""
+      DTS:DTSID="{2c21b25d-5665-4551-839f-62ae0cf89849}"
+      DTS:From="Package\DimCustomer Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 11"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 12]"
+      DTS:CreationName=""
+      DTS:DTSID="{73b4ce77-55d5-41f3-a3f5-929d29f50e34}"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - End"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 12"
+      DTS:To="Package\End Dim Data Subprocess" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 13]"
+      DTS:CreationName=""
+      DTS:DTSID="{cc6c9bbf-96ed-4a4a-96d9-f1c6143ac6c0}"
+      DTS:From="Package\DimProduct Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 13"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 14]"
+      DTS:CreationName=""
+      DTS:DTSID="{B4B432CD-4AA3-43CD-B28A-93DAFC31983C}"
+      DTS:From="Package\DimSalesPerson Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 14"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{1abf9041-87f7-4cd5-a166-f256ff7f656c}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::creditCardToStart]  == True"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\DimCustomer Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{5ab4c1a8-7aa4-480d-80d1-23072d9c6883}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::creditCardToStart]  == True"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\DimPaymentMethod Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{9adcb92e-b782-4d28-822f-640c2a060215}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::creditCardToStart]  == True"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\DimProduct Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 5]"
+      DTS:CreationName=""
+      DTS:DTSID="{76b5d3ba-9176-4c59-bec7-085b6bae6810}"
+      DTS:EvalOp="3"
+      DTS:Expression="@[User::creditCardToStart]  == True"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 5"
+      DTS:To="Package\DimShipMethod Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 6]"
+      DTS:CreationName=""
+      DTS:DTSID="{B3FA03C3-A008-41F6-90B8-387364BA1222}"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 6"
+      DTS:To="Package\DimSalesTerritory Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 7]"
+      DTS:CreationName=""
+      DTS:DTSID="{032256D4-F067-44D8-BC73-D3E09DD800B5}"
+      DTS:From="Package\Clean Up Dim Staging and Work Tables - Start"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 7"
+      DTS:To="Package\DimSalesPerson Load" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 8]"
+      DTS:CreationName=""
+      DTS:DTSID="{6175A7AF-7F6E-4CE2-A846-607B4739875A}"
+      DTS:From="Package\DimPaymentMethod Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 8"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - End" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 9]"
+      DTS:CreationName=""
+      DTS:DTSID="{D9C6C6D3-721B-436F-9836-8070AA26A962}"
+      DTS:From="Package\DimShipMethod Load"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 9"
+      DTS:To="Package\Clean Up Dim Staging and Work Tables - End" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="128" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="289.6,41.6"
+          Id="Package\Clean Up Dim Staging and Work Tables - End"
+          TopLeft="879.283225583456,1112.41111282168" />
+        <NodeLayout
+          Size="293.6,41.6"
+          Id="Package\Clean Up Dim Staging and Work Tables - Start"
+          TopLeft="868.29987720202,227.266665503516" />
+        <NodeLayout
+          Size="226.4,41.6"
+          Id="Package\DimCustomer Load\Extract DimCustomer to Staging"
+          TopLeft="37.5611022400914,107.744442454632" />
+        <NodeLayout
+          Size="200.8,41.6"
+          Id="Package\DimCustomer Load\Load DimCustomer to Dim"
+          TopLeft="48.0166393251068,358.899998930262" />
+        <NodeLayout
+          Size="230.4,41.6"
+          Id="Package\DimCustomer Load\Register DimCustomer Load End"
+          TopLeft="34.4055289576736,439.06666503946" />
+        <NodeLayout
+          Size="234.4,41.6"
+          Id="Package\DimCustomer Load\Register DimCustomer Load Start"
+          TopLeft="27.8777515365581,24.4333325589034" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\DimCustomer Load\Register Initial Count"
+          TopLeft="59.3666566042438,187.76666412039" />
+        <NodeLayout
+          Size="236.8,41.6"
+          Id="Package\DimCustomer Load\Update DimCustomer Load Status"
+          TopLeft="33.8499734324727,530.355553293537" />
+        <NodeLayout
+          Size="267.2,41.6"
+          Id="Package\DimCustomer Load\Validate and Load DimCustomer to Work"
+          TopLeft="11.3111036743281,273.133330193427" />
+        <EdgeLayout
+          Id="Package\DimCustomer Load.PrecedenceConstraints[Constraint]"
+          TopLeft="148.863879422168,149.344442454632">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.422221665758"
+              Start="0,0"
+              End="0,30.922221665758">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.922221665758" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimCustomer Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="145.938880139286,229.36666412039">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.766666073037"
+              Start="0,0"
+              End="0,36.266666073037">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.266666073037" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimCustomer Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="147.919426888325,66.0333325589034">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.7111098957286"
+              Start="0,0"
+              End="0,34.2111098957286">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.2111098957286" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimCustomer Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="146.663871499717,314.733330193427">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.1666687368349"
+              Start="0,0"
+              End="0,36.6666687368349">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.6666687368349" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimCustomer Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="149.01108414139,400.499998930262">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.5666661091981"
+              Start="0,0"
+              End="0,31.0666661091981">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.0666661091981" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimCustomer Load.PrecedenceConstraints[Constraint 5]"
+          TopLeft="150.927751195073,480.66666503946">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,49.6888882540767"
+              Start="0,0"
+              End="0,42.1888882540767">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,42.1888882540767" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="297.6,631.2"
+          Size="297.6,674.4"
+          Id="Package\DimCustomer Load"
+          TopLeft="30.9499386010098,322.533332887358" />
+        <NodeLayout
+          Size="257.6,41.6"
+          Id="Package\DimPaymentMethod Load\Extract DimPaymentMethod to Staging"
+          TopLeft="24.2277696352592,106.011109133352" />
+        <NodeLayout
+          Size="234.4,41.6"
+          Id="Package\DimPaymentMethod Load\Load DimPaymentMethod to Prod"
+          TopLeft="41.3499730226907,358.899998930262" />
+        <NodeLayout
+          Size="261.6,41.6"
+          Id="Package\DimPaymentMethod Load\Register DimPaymentMethod Load End"
+          TopLeft="32.7388623820697,439.06666503946" />
+        <NodeLayout
+          Size="264.8,41.6"
+          Id="Package\DimPaymentMethod Load\Register DimPaymentMethod Load Start"
+          TopLeft="18.711085370736,25.2999992195434" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\DimPaymentMethod Load\Register Initial Count"
+          TopLeft="64.3666563310557,184.29999747783" />
+        <NodeLayout
+          Size="264,41.6"
+          Id="Package\DimPaymentMethod Load\Update DimPaymentMethod Load Status"
+          TopLeft="26.3499738422547,524.288886669057" />
+        <NodeLayout
+          Size="297.6,41.6"
+          Id="Package\DimPaymentMethod Load\Validate and Load DimPaymentMethod to Work"
+          TopLeft="7.97777052311989,272.266663532787" />
+        <EdgeLayout
+          Id="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint]"
+          TopLeft="152.497212983157,147.611109133352">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36.6888883444779"
+              Start="0,0"
+              End="0,29.1888883444779">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,29.1888883444779" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="154.372213427088,225.89999747783">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,46.3666660549571"
+              Start="0,0"
+              End="0,38.8666660549571">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,38.8666660549571" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="152.069427502998,66.8999992195434">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,39.1111099138086"
+              Start="0,0"
+              End="0,31.6111099138086">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.6111099138086" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="157.663871772905,313.866663532787">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,45.033335397475"
+              Start="0,0"
+              End="0,37.533335397475">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,37.533335397475" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="161.04441770238,400.499998930262">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.566666109198"
+              Start="0,0"
+              End="0,31.066666109198">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.066666109198" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimPaymentMethod Load.PrecedenceConstraints[Constraint 5]"
+          TopLeft="160.944418112162,480.66666503946">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.622221629597"
+              Start="0,0"
+              End="0,36.122221629597">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.122221629597" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="313.6,631.2"
+          Size="313.6,674.4"
+          Id="Package\DimPaymentMethod Load"
+          TopLeft="348.449925624583,325.199998155833" />
+        <NodeLayout
+          Size="217.6,41.6"
+          Id="Package\DimProduct Load\Extract DimProduct to Staging"
+          TopLeft="40.8944353912994,107.744442454632" />
+        <NodeLayout
+          Size="195.2,41.6"
+          Id="Package\DimProduct Load\Load DimProduct to Prod"
+          TopLeft="49.6833059007108,358.899998930262" />
+        <NodeLayout
+          Size="221.6,41.6"
+          Id="Package\DimProduct Load\Register DimProduct Load End"
+          TopLeft="37.7388621088815,439.06666503946" />
+        <NodeLayout
+          Size="224.8,41.6"
+          Id="Package\DimProduct Load\Register DimProduct Load Start"
+          TopLeft="34.5444178389744,23.5666658982635" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\DimProduct Load\Register Initial Count"
+          TopLeft="59.3666566042436,192.09999742359" />
+        <NodeLayout
+          Size="227.2,41.6"
+          Id="Package\DimProduct Load\Update DimProduct Load Status"
+          TopLeft="41.3499730226908,524.288886669057" />
+        <NodeLayout
+          Size="257.6,41.6"
+          Id="Package\DimProduct Load\Validate and Load DimProduct to Work"
+          TopLeft="24.6444362791603,274.866663514707" />
+        <EdgeLayout
+          Id="Package\DimProduct Load.PrecedenceConstraints[Constraint]"
+          TopLeft="148.330545997771,149.344442454632">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.7555549689578"
+              Start="0,0"
+              End="0,35.2555549689578">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.2555549689578" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimProduct Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="150.205546441702,233.69999742359">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.1666660911172"
+              Start="0,0"
+              End="0,33.6666660911172">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.6666660911172" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimProduct Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="148.319426615137,65.1666658982635">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.5777765563685"
+              Start="0,0"
+              End="0,35.0777765563685">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.0777765563685" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimProduct Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="150.363871089936,316.466663514707">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.433335415555"
+              Start="0,0"
+              End="0,34.933335415555">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.933335415555" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimProduct Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="147.911084004796,400.499998930262">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.566666109198"
+              Start="0,0"
+              End="0,31.066666109198">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.066666109198" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimProduct Load.PrecedenceConstraints[Constraint 5]"
+          TopLeft="151.744417565786,480.66666503946">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.6222216295969"
+              Start="0,0"
+              End="0,36.1222216295969">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.1222216295969" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="297.6,631.2"
+          Size="297.6,674.4"
+          Id="Package\DimProduct Load"
+          TopLeft="994.249914423867,334.299998092553" />
+        <NodeLayout
+          Size="240.8,41.6"
+          Id="Package\DimSalesPerson Load\Extract DimSalesPerson to Staging"
+          TopLeft="33.2555469197807,107.744442454632" />
+        <NodeLayout
+          Size="218.4,41.6"
+          Id="Package\DimSalesPerson Load\Load DimSalesPerson to Prod"
+          TopLeft="43.4333062421958,358.899998930262" />
+        <NodeLayout
+          Size="244.8,41.6"
+          Id="Package\DimSalesPerson Load\Register DimSalesPerson Load End"
+          TopLeft="37.7388621088815,439.06666503946" />
+        <NodeLayout
+          Size="248,41.6"
+          Id="Package\DimSalesPerson Load\Register DimSalesPerson Load Start"
+          TopLeft="26.905529367456,23.5666658982635" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\DimSalesPerson Load\Register Initial Count"
+          TopLeft="59.3666566042436,190.65555298919" />
+        <NodeLayout
+          Size="250.4,41.6"
+          Id="Package\DimSalesPerson Load\Update DimSalesPerson Load Status"
+          TopLeft="41.3499730226906,523.566664451857" />
+        <NodeLayout
+          Size="280.8,41.6"
+          Id="Package\DimSalesPerson Load\Validate and Load DimSalesPerson to Work"
+          TopLeft="12.4499921003153,274.866663514707" />
+        <EdgeLayout
+          Id="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint]"
+          TopLeft="150.311101762012,149.344442454632">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.3111105345579"
+              Start="0,0"
+              End="0,33.8111105345579">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.8111105345579" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="149.908324352279,232.25555298919">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.6111105255169"
+              Start="0,0"
+              End="0,35.1111105255169">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.1111105255169" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="152.280538143618,65.1666658982635">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.5777765563686"
+              Start="0,0"
+              End="0,35.0777765563686">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.0777765563686" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="152.741649171256,316.466663514707">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.433335415555"
+              Start="0,0"
+              End="0,34.933335415555">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.933335415555" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="156.386084175539,400.499998930262">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.566666109198"
+              Start="0,0"
+              End="0,31.066666109198">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.066666109198" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesPerson Load.PrecedenceConstraints[Constraint 5]"
+          TopLeft="163.344417565786,480.66666503946">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.8999994123969"
+              Start="0,0"
+              End="0,35.3999994123969">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.3999994123969" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="310.4,631.2"
+          Size="310.4,674.4"
+          Id="Package\DimSalesPerson Load"
+          TopLeft="1636.94991838509,326.644442590232" />
+        <NodeLayout
+          Size="246.4,41.6"
+          Id="Package\DimSalesTerritory Load\Extract DimSalesTerritory to Staging"
+          TopLeft="33.9499913262825,107.022220237432" />
+        <NodeLayout
+          Size="224,41.6"
+          Id="Package\DimSalesTerritory Load\Load DimSalesTerritory to Prod"
+          TopLeft="51.7666391202156,358.899998930262" />
+        <NodeLayout
+          Size="250.4,41.6"
+          Id="Package\DimSalesTerritory Load\Register DimSalesTerritory Load End"
+          TopLeft="37.7388621088815,439.06666503946" />
+        <NodeLayout
+          Size="253.6,41.6"
+          Id="Package\DimSalesTerritory Load\Register DimSalesTerritory Load Start"
+          TopLeft="26.9055293674562,22.1222214638636" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\DimSalesTerritory Load\Register Initial Count"
+          TopLeft="67.005545075762,190.65555298919" />
+        <NodeLayout
+          Size="256,41.6"
+          Id="Package\DimSalesTerritory Load\Update DimSalesTerritory Load Status"
+          TopLeft="30.9333069251657,525.011108886257" />
+        <NodeLayout
+          Size="286.4,41.6"
+          Id="Package\DimSalesTerritory Load\Validate and Load DimSalesTerritory to Work"
+          TopLeft="12.838881368632,274.144441297507" />
+        <EdgeLayout
+          Id="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint]"
+          TopLeft="155.877768201022,148.622220237432">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.0333327517581"
+              Start="0,0"
+              End="0,34.5333327517581">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.5333327517581" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="155.322213222197,232.25555298919">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.888888308317"
+              Start="0,0"
+              End="0,34.388888308317">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.388888308317" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="155.427760346869,63.7222214638636">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.2999987735684"
+              Start="0,0"
+              End="0,35.7999987735684">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.7999987735684" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="159.902760244424,315.744441297507">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.1555576327548"
+              Start="0,0"
+              End="0,35.6555576327548">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.6555576327548" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="163.352750614549,400.499998930262">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.566666109198"
+              Start="0,0"
+              End="0,31.066666109198">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.066666109198" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimSalesTerritory Load.PrecedenceConstraints[Constraint 5]"
+          TopLeft="160.936084517024,480.66666503946">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,44.3444438467971"
+              Start="0,0"
+              End="0,36.8444438467971">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.8444438467971" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="316,631.2"
+          Size="316,674.4"
+          Id="Package\DimSalesTerritory Load"
+          TopLeft="1300.87769498664,326.933331477112" />
+        <NodeLayout
+          Size="236.8,41.6"
+          Id="Package\DimShipMethod Load\Extract DimShipMethod to Staging"
+          TopLeft="33.3944358010812,107.744442454632" />
+        <NodeLayout
+          Size="214.4,41.6"
+          Id="Package\DimShipMethod Load\Load DimShipMethod to Prod"
+          TopLeft="47.1833060373045,357.166665608982" />
+        <NodeLayout
+          Size="241.6,41.6"
+          Id="Package\DimShipMethod Load\Register DimShipMethod Load End"
+          TopLeft="34.4055289576737,439.9333317001" />
+        <NodeLayout
+          Size="244.8,41.6"
+          Id="Package\DimShipMethod Load\Register DimShipMethod Load Start"
+          TopLeft="24.5444183853499,23.5666658982635" />
+        <NodeLayout
+          Size="175.2,41.6"
+          Id="Package\DimShipMethod Load\Register Initial Count"
+          TopLeft="61.0333231798479,186.89999745975" />
+        <NodeLayout
+          Size="247.2,41.6"
+          Id="Package\DimShipMethod Load\Update DimShipMethod Load Status"
+          TopLeft="30.5166402812646,528.622219972257" />
+        <NodeLayout
+          Size="277.6,41.6"
+          Id="Package\DimShipMethod Load\Validate and Load DimShipMethod to Work"
+          TopLeft="11.3111036743279,272.266663532787" />
+        <EdgeLayout
+          Id="Package\DimShipMethod Load.PrecedenceConstraints[Constraint]"
+          TopLeft="150.213879490465,149.344442454632">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,37.5555550051179"
+              Start="0,0"
+              End="0,30.0555550051179">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.0555550051179" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 1]"
+          TopLeft="149.372213427088,228.49999745975">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.7666660730369"
+              Start="0,0"
+              End="0,36.2666660730369">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,36.2666660730369" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 2]"
+          TopLeft="149.369427093216,65.1666658982635">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.5777765563685"
+              Start="0,0"
+              End="0,35.0777765563685">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.0777765563685" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 3]"
+          TopLeft="152.247204855816,313.866663532787">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,43.3000020761953"
+              Start="0,0"
+              End="0,35.8000020761953">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.8000020761953" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 4]"
+          TopLeft="154.794417497489,398.766665608982">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,41.1666660911179"
+              Start="0,0"
+              End="0,33.6666660911179">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,33.6666660911179" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\DimShipMethod Load.PrecedenceConstraints[Constraint 5]"
+          TopLeft="154.661084619469,481.5333317001">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,47.0888882721567"
+              Start="0,0"
+              End="0,39.5888882721567">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,39.5888882721567" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <ContainerLayout
+          HeaderHeight="43"
+          IsExpanded="True"
+          PanelSize="297.6,631.2"
+          Size="297.6,674.4"
+          Id="Package\DimShipMethod Load"
+          TopLeft="681.149946523461,322.599998173913" />
+        <NodeLayout
+          Size="200.8,41.6"
+          Id="Package\End Dim Data Subprocess"
+          TopLeft="920.116556685755,1196.74444564274" />
+        <NodeLayout
+          Size="207.2,41.6"
+          Id="Package\Get Dim Load Configuration"
+          TopLeft="915.799874606735,147.533332724638" />
+        <NodeLayout
+          Size="204,41.6"
+          Id="Package\Start Dim Data Subprocess"
+          TopLeft="913.299874743329,72.1333332489596" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="1017.34987467503,113.73333324896">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,33.7999994756781"
+              Start="0,0"
+              End="0,26.2999994756781">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.2999994756781" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="1017.24987590438,189.133332724638">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,38.1333327788779"
+              Start="0,0"
+              End="0,30.6333327788779">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,30.6333327788779" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 10]"
+          TopLeft="1458.87769498664,1001.33333147711">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-374.45161226033,111.077781344568"
+              Start="0,0"
+              End="-374.45161226033,103.577781344568">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,66.1573025740618" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,66.1573025740618"
+                    Point2="0,70.1573025740618"
+                    Point3="-4,70.1573025740618" />
+                  <mssgle:LineSegment
+                    End="-370.45161226033,70.1573025740618" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-370.45161226033,70.1573025740618"
+                    Point2="-374.45161226033,70.1573025740618"
+                    Point3="-374.45161226033,74.1573025740618" />
+                  <mssgle:LineSegment
+                    End="-374.45161226033,103.577781344568" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 11]"
+          TopLeft="179.74993860101,996.933332887358">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="797.399953649113,115.477779934326"
+              Start="0,0"
+              End="797.399953649113,107.977779934326">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,64.9059719827904" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,64.9059719827904"
+                    Point2="0,68.9059719827904"
+                    Point3="4,68.9059719827904" />
+                  <mssgle:LineSegment
+                    End="793.399953649113,68.9059719827904" />
+                  <mssgle:CubicBezierSegment
+                    Point1="793.399953649113,68.9059719827904"
+                    Point2="797.399953649113,68.9059719827904"
+                    Point3="797.399953649113,72.9059719827904" />
+                  <mssgle:LineSegment
+                    End="797.399953649113,107.977779934326" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 12]"
+          TopLeft="1022.29989113461,1154.01111282168">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,42.73333282106"
+              Start="0,0"
+              End="0,35.23333282106">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.23333282106" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 13]"
+          TopLeft="1143.04991442387,1008.69999809255">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-98.8524031261259,103.711114729127"
+              Start="0,0"
+              End="-98.8524031261259,96.2111147291273">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,51.7260315359645" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,51.7260315359645"
+                    Point2="0,55.7260315359645"
+                    Point3="-4,55.7260315359645" />
+                  <mssgle:LineSegment
+                    End="-94.8524031261259,55.7260315359645" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-94.8524031261259,55.7260315359645"
+                    Point2="-98.8524031261259,55.7260315359645"
+                    Point3="-98.8524031261259,59.7260315359645" />
+                  <mssgle:LineSegment
+                    End="-98.8524031261259,96.2111147291273" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 14]"
+          TopLeft="1792.14991838509,1001.04444259023">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-667.495264230208,111.366670231448"
+              Start="0,0"
+              End="-667.495264230208,103.866670231448">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,81.3092933393258" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,81.3092933393258"
+                    Point2="0,85.3092933393258"
+                    Point3="-4,85.3092933393258" />
+                  <mssgle:LineSegment
+                    End="-663.495264230208,85.3092933393258" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-663.495264230208,85.3092933393258"
+                    Point2="-667.495264230208,85.3092933393258"
+                    Point3="-667.495264230208,89.3092933393258" />
+                  <mssgle:LineSegment
+                    End="-667.495264230208,103.866670231448" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="913.09987720202,268.866665503516">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-733.34993860101,53.6666673838424"
+              Start="0,0"
+              End="-733.34993860101,46.1666673838424">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,8.54836481626377" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,8.54836481626377"
+                    Point2="0,12.5483648162638"
+                    Point3="-4,12.5483648162638" />
+                  <mssgle:LineSegment
+                    End="-729.34993860101,12.5483648162638" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-729.34993860101,12.5483648162638"
+                    Point2="-733.34993860101,12.5483648162638"
+                    Point3="-733.34993860101,16.5483648162638" />
+                  <mssgle:LineSegment
+                    End="-733.34993860101,46.1666673838424" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-374.674969300505,17.5483648162638,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="953.89987720202,268.866665503516">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-448.649951577437,56.333332652317"
+              Start="0,0"
+              End="-448.649951577437,48.833332652317">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.7492825948294" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.7492825948294"
+                    Point2="0,20.7492825948294"
+                    Point3="-4,20.7492825948294" />
+                  <mssgle:LineSegment
+                    End="-444.649951577437,20.7492825948294" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-444.649951577437,20.7492825948294"
+                    Point2="-448.649951577437,20.7492825948294"
+                    Point3="-448.649951577437,24.7492825948294" />
+                  <mssgle:LineSegment
+                    End="-448.649951577437,48.833332652317" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-232.324975788719,25.7492825948294,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="1035.49987720202,268.866665503516">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="107.550037221847,65.4333325890368"
+              Start="0,0"
+              End="107.550037221847,57.9333325890368">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,26.2736941407549" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26.2736941407549"
+                    Point2="0,30.2736941407549"
+                    Point3="4,30.2736941407549" />
+                  <mssgle:LineSegment
+                    End="103.550037221847,30.2736941407549" />
+                  <mssgle:CubicBezierSegment
+                    Point1="103.550037221847,30.2736941407549"
+                    Point2="107.550037221847,30.2736941407549"
+                    Point3="107.550037221847,34.2736941407549" />
+                  <mssgle:LineSegment
+                    End="107.550037221847,57.9333325890368" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="45.7750186109237,35.2736941407549,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 5]"
+          TopLeft="994.69987720202,268.866665503516">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-164.749930678559,53.7333326703971"
+              Start="0,0"
+              End="-164.749930678559,46.2333326703971">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,20.8605170188074" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,20.8605170188074"
+                    Point2="0,24.8605170188074"
+                    Point3="-4,24.8605170188074" />
+                  <mssgle:LineSegment
+                    End="-160.749930678559,24.8605170188074" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-160.749930678559,24.8605170188074"
+                    Point2="-164.749930678559,24.8605170188074"
+                    Point3="-164.749930678559,28.8605170188074" />
+                  <mssgle:LineSegment
+                    End="-164.749930678559,46.2333326703971" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-90.3749653392795,29.8605170188074,16,16"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 6]"
+          TopLeft="1076.29987720202,268.866665503516">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="382.577817784623,58.0666659735958"
+              Start="0,0"
+              End="382.577817784623,50.5666659735958">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,17.3877220625637" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,17.3877220625637"
+                    Point2="0,21.3877220625637"
+                    Point3="4,21.3877220625637" />
+                  <mssgle:LineSegment
+                    End="378.577817784623,21.3877220625637" />
+                  <mssgle:CubicBezierSegment
+                    Point1="378.577817784623,21.3877220625637"
+                    Point2="382.577817784623,21.3877220625637"
+                    Point3="382.577817784623,25.3877220625637" />
+                  <mssgle:LineSegment
+                    End="382.577817784623,50.5666659735958" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 7]"
+          TopLeft="1117.09987720202,268.866665503516">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="675.050041183073,57.7777770867159"
+              Start="0,0"
+              End="675.050041183073,50.2777770867159">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,9.50962637518201" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,9.50962637518201"
+                    Point2="0,13.509626375182"
+                    Point3="4,13.509626375182" />
+                  <mssgle:LineSegment
+                    End="671.050041183073,13.509626375182" />
+                  <mssgle:CubicBezierSegment
+                    Point1="671.050041183073,13.509626375182"
+                    Point2="675.050041183073,13.509626375182"
+                    Point3="675.050041183073,17.509626375182" />
+                  <mssgle:LineSegment
+                    End="675.050041183073,50.2777770867159" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 8]"
+          TopLeft="505.249925624583,999.599998155833">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="458.490442816016,112.811114665847"
+              Start="0,0"
+              End="458.490442816016,105.311114665847">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,67.2520848861557" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,67.2520848861557"
+                    Point2="0,71.2520848861557"
+                    Point3="4,71.2520848861557" />
+                  <mssgle:LineSegment
+                    End="454.490442816016,71.2520848861557" />
+                  <mssgle:CubicBezierSegment
+                    Point1="454.490442816016,71.2520848861557"
+                    Point2="458.490442816016,71.2520848861557"
+                    Point3="458.490442816016,75.2520848861557" />
+                  <mssgle:LineSegment
+                    End="458.490442816016,105.311114665847" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 9]"
+          TopLeft="829.949946523461,996.999998173913">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="174.018993345709,115.411114647767"
+              Start="0,0"
+              End="174.018993345709,107.911114647767">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,58.012672713622" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,58.012672713622"
+                    Point2="0,62.012672713622"
+                    Point3="4,62.012672713622" />
+                  <mssgle:LineSegment
+                    End="170.018993345709,62.012672713622" />
+                  <mssgle:CubicBezierSegment
+                    Point1="170.018993345709,62.012672713622"
+                    Point2="174.018993345709,62.012672713622"
+                    Point3="174.018993345709,66.012672713622" />
+                  <mssgle:LineSegment
+                    End="174.018993345709,107.911114647767" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
