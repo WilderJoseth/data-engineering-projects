@@ -4,67 +4,78 @@
 
 This project presents a migration and modernization case study for moving a legacy Sales data domain from Oracle to SQL Server 2022.
 
-The objective is to design and document a phased migration solution using professional data engineering practices, from problem framing and target architecture to implementation.
-
-This case study is intended to:
-
-- Explain the migration problem.
-- Propose a target solution from architecture to implementation design.
-- Justify the main technical decisions.
-- Demonstrate the application of key data engineering design concepts.
-
-## Problem Context
-
-The scenario assumes that a company has operated for more than 10 years with a legacy Oracle database as its main business data platform.
-
-Over time, the company has accumulated transactional, historical, and reference data in Oracle while also relying on database-side logic to support operational processing and reporting. As the business evolves, a **new web platform** is introduced to modernize operational processes and improve maintainability. As a result, business data must be migrated to a new database platform hosted on SQL Server 2022.
-
-The company has chosen to execute the migration in phases defined by business domain. For that reason, the first migration scope is focused on the **Sales domain**, including the supporting entities required for customer, product, territory, and related sales processing. This means the project does not attempt to migrate the full legacy platform at once, but focuses on one domain with clear business value and strong dependency.
-
-## Architecture Overview
-
-The proposed architecture separates the migration into operational and analytical workloads.
-
-Data is first migrated from the Oracle Sales domain into `Sales_Operational`, which becomes the normalized operational target for the new application. After the operational data is validated and reconciled, `Sales_Analytics` is built from `Sales_Operational` as the curated source.
-
-A reusable `DataOps_Control` database acts as the technical control plane for the solution. It stores project metadata, execution tracking, validation and reconciliation results, error logs, and rerun support information used by the ETL processes.
-
-![Sales Domain Architecture](docs/img/data_processing_design.png)
-
-## Data Source Profile
-
-The source model is based on an Oracle-adapted version of **AdventureWorks2022** and represents a multi-domain environment that includes Sales and supporting areas such as customer, product, and purchasing data.
-
-From a migration perspective, the source cannot be treated as a uniform dataset. It contains:
-- **Reference data**, which is generally low-volume and relatively stable
-- **Master data**, which is low-to-medium volume and supports core Sales processing
-- **Transactional data**, which represents the main operational workload and includes larger tables that may reach millions of rows
-- **Historical data**, which may span many years and includes very large tables
-
-### Characteristics
-- Oracle XE 21c
-- Source schema: `ADVENTUREWORKS2022`
-
-## Related Documentation
-
-For the technical design, see:
-- [Solution Design](docs/solution_design.md)
+The objective is to design and document a phased migration solution using professional data engineering practices, from problem framing and target architecture to implementation. The case study explains the migration problem, proposes a target solution, records the main technical decisions, and demonstrates key data engineering design concepts.
 
 ## Project Scope
 
-### In Scope
+| Area | In Scope |
+|---|---|
+| Source platform | Oracle XE 21c |
+| Source system | Oracle-adapted AdventureWorks2022 Sales domain |
+| Target platform | SQL Server 2022 |
+| Data processing | Offline migration of operational and analytical Sales data |
+| Data architecture | Separation between operational, analytical, and DataOps control databases |
+| ETL | SSIS-based extraction, orchestration, and loading |
+| Validation | Execution validation, reconciliation, and traceability |
+| Security | Design-level access control, credential handling, and role separation |
 
-- Sales domain migration and modernization
-- Supporting entities required for Sales processing
-- SQL Server 2022 target design
-- Operational and analytical workload separation
-- Technical control framework
-- Execution traceability and reconciliation
+## Out of Scope
 
-### Out of Scope
+| Area | Reason |
+|---|---|
+| Full enterprise migration | The scope is limited to the Sales domain and its supporting entities. |
+| Full ERP replatforming | The project focuses on data migration and modernization, not complete ERP replacement. |
+| Continuous synchronization | The migration is executed during an offline migration window. |
+| Web application design | The new web platform is a dependency, but its detailed application design is outside the project scope. |
+| Production infrastructure design | Infrastructure sizing, high availability, and deployment topology are not covered. |
+| Live production deployment | The repository documents a proposed architecture and implementation design rather than a deployed production solution. |
 
-- Full migration of all source domains
-- Full ERP replatforming
-- Detailed application design for the new web platform
-- Exhaustive debate about platform selection
-- Production infrastructure sizing and deployment topology
+## High-Level Architecture
+
+![Sales Domain Architecture](docs/img/data_processing_design.png)
+
+## Technologies
+
+| Category | Technology |
+|---|---|
+| Source system | Oracle XE 21c |
+| Source model | Oracle-adapted AdventureWorks2022 |
+| Target platform | SQL Server 2022 |
+| Orchestration | SQL Server Integration Services (SSIS) |
+| Processing | Transact-SQL stored procedures |
+| Scheduling | SQL Server Agent |
+| Development environment | Visual Studio 2026 |
+| Control layer | `DataOps_Control` |
+
+## Project Dependencies
+
+This project depends on a supporting portfolio project that provides execution control capabilities
+
+| Dependency | Purpose | Repository |
+|---|---|---|
+| `DataOps_Control` | Provides the metadata-driven execution control, validation, reconciliation, logging, and rerun control database used by the Fabric pipelines. | [Metadata-Driven Control Framework for Data Engineering Projects](https://github.com/WilderJoseth/data-engineering-projects/tree/main/on_premise/DataOps_Control) |
+
+## Documentation
+
+The solution design is supported by the following documents.
+
+| Area | Document | Purpose |
+|---|---|---|
+| Source Data Profile | [01_source_data_profile.md](docs/01_source_data_profile.md) | Defines the Oracle source scope, characteristics, source model, and table inventory |
+| Target Data Architecture | [02_target_data_architecture.md](docs/02_target_data_architecture.md) | Defines the target databases, schemas, data models, architecture decisions, and table standards |
+| Data Flow Strategy | [03_data_flow_strategy.md](docs/03_data_flow_strategy.md) | Defines the end-to-end routes, SSIS orchestration, dependencies, and flow diagrams |
+| Load Strategy | [04_load_strategy.md](docs/04_load_strategy.md) | Defines stored procedure patterns, table-level and batch-level loading, rerun, and recovery |
+| Validation and Reconciliation | [05_validation_and_reconciliation_strategy.md](docs/05_validation_and_reconciliation_strategy.md) | Defines validation, reconciliation, error recording, traceability, and execution outcomes |
+| Security and Access | [06_security_and_access_strategy.md](docs/06_security_and_access_strategy.md) | Defines access principles, schema restrictions, credential handling, and role categories |
+
+## Project Status
+
+| Area | Status |
+|---|---|
+| Project framing | Done |
+| Architecture documentation | Done |
+| Documentation restructuring | Done |
+| SSIS implementation | In progress |
+| Validation and reconciliation implementation | Planned |
+| Security implementation | Planned |
+| End-to-end testing | Planned |

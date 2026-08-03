@@ -1,0 +1,258 @@
+Table SALES_SALESORDERHEADER {
+  SalesOrderID int [pk, not null]
+  RevisionNumber int [not null]
+  OrderDate datetime [not null]
+  DueDate datetime [not null]
+  ShipDate datetime
+  Status int [not null]
+  OnlineOrderFlag boolean [not null]
+  PurchaseOrderNumber varchar(25)
+  AccountNumber varchar(15)
+  CustomerID int [not null]
+  SalesPersonID int
+  TerritoryID int
+  BillToAddressID int [not null]
+  ShipToAddressID int [not null]
+  ShipMethodID int [not null]
+  CreditCardID int
+  CreditCardApprovalCode varchar(15)
+  CurrencyRateID int
+  SubTotal decimal(19,4) [not null]
+  TaxAmt decimal(19,4) [not null]
+  Freight decimal(19,4) [not null]
+  Comment varchar(128)
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_SALESORDERDETAIL {
+  SalesOrderID int [pk, not null]
+  SalesOrderDetailID int [pk, not null]
+  CarrierTrackingNumber varchar(25)
+  OrderQty int [not null]
+  ProductID int [not null]
+  SpecialOfferID int [not null]
+  UnitPrice decimal(19,4) [not null]
+  UnitPriceDiscount decimal(19,4) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_CUSTOMER {
+  CustomerID int [pk, not null]
+  PersonID int
+  StoreID int
+  TerritoryID int
+  ModifiedDate datetime [not null]
+}
+
+Table PERSON_PERSON {
+  BusinessEntityID int [pk, not null]
+  PersonType varchar(2) [not null]
+  NameStyle boolean [not null]
+  Title varchar(8)
+  FirstName varchar(50) [not null]
+  MiddleName varchar(50)
+  LastName varchar(50) [not null]
+  Suffix varchar(10)
+  EmailPromotion int [not null]
+  AdditionalContactInfo text
+  Demographics text
+  ModifiedDate datetime [not null]
+}
+
+Table HUMANRESOURCES_EMPLOYEE {
+  BusinessEntityID int [pk, not null]
+  NationalIDNumber varchar(15) [not null]
+  LoginID varchar(256) [not null]
+  JobTitle varchar(50) [not null]
+  BirthDate date [not null]
+  MaritalStatus varchar(1) [not null]
+  Gender varchar(1) [not null]
+  HireDate date [not null]
+  SalariedFlag boolean [not null]
+  VacationHours int [not null]
+  SickLeaveHours int [not null]
+  CurrentFlag boolean [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_SALESPERSON {
+  BusinessEntityID int [pk, not null]
+  TerritoryID int
+  SalesQuota decimal(19,4)
+  Bonus decimal(19,4) [not null]
+  CommissionPct decimal(19,4) [not null]
+  SalesYTD decimal(19,4) [not null]
+  SalesLastYear decimal(19,4) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table PERSON_ADDRESS {
+  AddressID int [pk, not null]
+  AddressLine1 varchar(60) [not null]
+  AddressLine2 varchar(60)
+  City varchar(30) [not null]
+  StateProvinceID int [not null]
+  PostalCode varchar(15) [not null]
+  SpatialLocation text
+  ModifiedDate datetime [not null]
+}
+
+Table PRODUCTION_PRODUCT {
+  ProductID int [pk, not null]
+  Name varchar(50) [not null]
+  ProductNumber varchar(25) [not null]
+  MakeFlag boolean [not null]
+  FinishedGoodsFlag boolean [not null]
+  Color varchar(15)
+  SafetyStockLevel int [not null]
+  ReorderPoint int [not null]
+  StandardCost decimal(19,4) [not null]
+  ListPrice decimal(19,4) [not null]
+  Size varchar(5)
+  SizeUnitMeasureCode varchar(3)
+  WeightUnitMeasureCode varchar(3)
+  Weight decimal(8,2)
+  DaysToManufacture int [not null]
+  ProductLine varchar(2)
+  Class varchar(2)
+  Style varchar(2)
+  ProductSubcategoryID int
+  ProductModelID int
+  SellStartDate datetime [not null]
+  SellEndDate datetime
+  DiscontinuedDate datetime
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_CREDITCARD {
+  CreditCardID int [pk, not null]
+  CardType varchar(50) [not null]
+  CardNumber varchar(25) [not null]
+  ExpMonth int [not null]
+  ExpYear int [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table PURCHASING_SHIPMETHOD {
+  ShipMethodID int [pk, not null]
+  Name varchar(50) [not null]
+  ShipBase decimal(19,4) [not null]
+  ShipRate decimal(19,4) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table PERSON_ADDRESSTYPE {
+  AddressTypeID int [pk, not null]
+  Name varchar(50) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table PERSON_STATEPROVINCE {
+  StateProvinceID int [pk, not null]
+  StateProvinceCode varchar(3) [not null]
+  CountryRegionCode varchar(3) [not null]
+  IsOnlyStateProvinceFlag boolean [not null]
+  Name varchar(50) [not null]
+  TerritoryID int [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table PERSON_COUNTRYREGION {
+  CountryRegionCode varchar(3) [pk, not null]
+  Name varchar(50) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_CURRENCYRATE {
+  CurrencyRateID int [pk, not null]
+  CurrencyRateDate datetime [not null]
+  FromCurrencyCode varchar(3) [not null]
+  ToCurrencyCode varchar(3) [not null]
+  AverageRate decimal(19,4) [not null]
+  EndOfDayRate decimal(19,4) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_CURRENCY {
+  CurrencyCode varchar(3) [pk, not null]
+  Name varchar(50) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_SALESTERRITORY {
+  TerritoryID int [pk, not null]
+  Name varchar(50) [not null]
+  CountryRegionCode varchar(3) [not null]
+  "Group" varchar(50) [not null]
+  SalesYTD decimal(19,4) [not null]
+  SalesLastYear decimal(19,4) [not null]
+  CostYTD decimal(19,4) [not null]
+  CostLastYear decimal(19,4) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_SPECIALOFFER {
+  SpecialOfferID int [pk, not null]
+  Description varchar(255) [not null]
+  DiscountPct decimal(19,4) [not null]
+  Type varchar(50) [not null]
+  Category varchar(50) [not null]
+  StartDate datetime [not null]
+  EndDate datetime [not null]
+  MinQty int [not null]
+  MaxQty int
+  ModifiedDate datetime [not null]
+}
+
+Table PRODUCTION_PRODUCTSUBCATEGORY {
+  ProductSubcategoryID int [pk, not null]
+  ProductCategoryID int [not null]
+  Name varchar(50) [not null]
+  ModifiedDate datetime [not null]
+}
+
+Table PERSON_BUSINESSENTITYADDRESS {
+  BusinessEntityID int [pk, not null]
+  AddressID int [pk, not null]
+  AddressTypeID int [pk, not null]
+  ModifiedDate datetime [not null]
+}
+
+Table SALES_SPECIALOFFERPRODUCT {
+  SpecialOfferID int [pk, not null]
+  ProductID int [pk, not null]
+  ModifiedDate datetime [not null]
+}
+
+Ref: HUMANRESOURCES_EMPLOYEE.BusinessEntityID - PERSON_PERSON.BusinessEntityID
+Ref: SALES_SALESPERSON.BusinessEntityID - HUMANRESOURCES_EMPLOYEE.BusinessEntityID
+Ref: SALES_SALESPERSON.TerritoryID > SALES_SALESTERRITORY.TerritoryID
+
+Ref: SALES_CUSTOMER.PersonID > PERSON_PERSON.BusinessEntityID
+Ref: SALES_CUSTOMER.TerritoryID > SALES_SALESTERRITORY.TerritoryID
+
+Ref: PERSON_ADDRESS.StateProvinceID > PERSON_STATEPROVINCE.StateProvinceID
+Ref: PERSON_STATEPROVINCE.CountryRegionCode > PERSON_COUNTRYREGION.CountryRegionCode
+Ref: PERSON_STATEPROVINCE.TerritoryID > SALES_SALESTERRITORY.TerritoryID
+Ref: SALES_SALESTERRITORY.CountryRegionCode > PERSON_COUNTRYREGION.CountryRegionCode
+
+Ref: PERSON_BUSINESSENTITYADDRESS.AddressID > PERSON_ADDRESS.AddressID
+Ref: PERSON_BUSINESSENTITYADDRESS.AddressTypeID > PERSON_ADDRESSTYPE.AddressTypeID
+
+Ref: PRODUCTION_PRODUCT.ProductSubcategoryID > PRODUCTION_PRODUCTSUBCATEGORY.ProductSubcategoryID
+Ref: SALES_SPECIALOFFERPRODUCT.ProductID > PRODUCTION_PRODUCT.ProductID
+Ref: SALES_SPECIALOFFERPRODUCT.SpecialOfferID > SALES_SPECIALOFFER.SpecialOfferID
+Ref: SALES_SALESORDERDETAIL.(SpecialOfferID, ProductID) > SALES_SPECIALOFFERPRODUCT.(SpecialOfferID, ProductID)
+
+Ref: SALES_CURRENCYRATE.FromCurrencyCode > SALES_CURRENCY.CurrencyCode
+Ref: SALES_CURRENCYRATE.ToCurrencyCode > SALES_CURRENCY.CurrencyCode
+
+Ref: SALES_SALESORDERHEADER.CustomerID > SALES_CUSTOMER.CustomerID
+Ref: SALES_SALESORDERHEADER.SalesPersonID > SALES_SALESPERSON.BusinessEntityID
+Ref: SALES_SALESORDERHEADER.TerritoryID > SALES_SALESTERRITORY.TerritoryID
+Ref: SALES_SALESORDERHEADER.BillToAddressID > PERSON_ADDRESS.AddressID
+Ref: SALES_SALESORDERHEADER.ShipToAddressID > PERSON_ADDRESS.AddressID
+Ref: SALES_SALESORDERHEADER.ShipMethodID > PURCHASING_SHIPMETHOD.ShipMethodID
+Ref: SALES_SALESORDERHEADER.CreditCardID > SALES_CREDITCARD.CreditCardID
+Ref: SALES_SALESORDERHEADER.CurrencyRateID > SALES_CURRENCYRATE.CurrencyRateID
+Ref: SALES_SALESORDERDETAIL.SalesOrderID > SALES_SALESORDERHEADER.SalesOrderID
