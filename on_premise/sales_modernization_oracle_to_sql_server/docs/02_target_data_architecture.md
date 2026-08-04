@@ -1,8 +1,8 @@
 # Target Data Architecture
 
-## Purpose
+## Document Goal
 
-This document defines the target databases, schemas, data models, architecture decisions, and table implementation standards for the Sales-domain migration.
+This document describes the target databases, schemas, data models, architecture decisions, and table implementation standards for the Sales-domain migration.
 
 ## Target Databases
 

@@ -1,6 +1,6 @@
 # Source Data Profile
 
-## Purpose
+## Document Goal
 
 This document describes the Oracle source platform, source schema, source object categories, estimated data volumes, growth assumptions, and LOB storage relevant to the Sales-domain migration.
 
