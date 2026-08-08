@@ -6,15 +6,11 @@ This document describes the Oracle source platform, source schema, source object
 
 ## Source Platform Overview
 
-The current Sales platform runs on an on-premise Oracle XE 21c instance. Although `ADVENTUREWORKS2022` is a multi-domain schema, this document includes only the source objects required for the Sales-domain migration.
-
 | Source Schema | Current Responsibility | Data Model | Modernization Role |
 |---|---|---|---|
 | `ADVENTUREWORKS2022` | Supports the legacy Sales domain and its related operational data | Normalized model | Provides transactional and reporting data |
 
 ## Source Data Categories
-
-The source data is grouped by business role.
 
 | Data Category | Description | Source Schema | Expected Data Volume | Estimated Row Count |
 |---|---|---|---|---|
@@ -25,13 +21,13 @@ The source data is grouped by business role.
 
 ## Source Volume Summary
 
-The following production-like estimates represent the 20 Sales-domain source tables included in the migration scope, not the complete `ADVENTUREWORKS2022` schema or actual measured mock-data storage. The source timeframe is February 2012 to March 2023.
+The source timeframe is February 2012 to March 2023.
 
 | Source Schema | Selected Tables | Rows | Table Data Size | Index Count | Index Size | LOB Size | Source Object Footprint | Planning Range with 20–30% Buffer |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
 | `ADVENTUREWORKS2022` | 20 | ~1.305B | ~210.1 GB | 77 | ~276.4 GB | ~27.5 GB | ~513.9 GB | ~616.7–668.1 GB |
 
-The source object footprint includes table data, indexes, and LOB storage. It excludes temp, undo, redo, archive logs, backups, free space, and other operational capacity that is not migrated as a source object.
+It excludes temp, undo, redo, archive logs, backups, free space, and other operational capacity that is not migrated as a source object.
 
 ## Source Data Model
 
@@ -41,7 +37,7 @@ The source model shows the selected Sales-domain tables included in the moderniz
 
 ## Source Tables
 
-For target ingestion, only final persisted business tables are included in the source inventory. `SALES_SALESORDERDETAIL` is the largest table at approximately 1 billion rows, followed by `SALES_SALESORDERHEADER` at approximately 200 million rows.
+For target ingestion, only final persisted business tables are included in the source inventory.
 
 | Data Category | Source Table | Estimated Monthly Growth | Estimated Current Rows | Estimated Current Data Size | Estimated Index Count | Estimated Current Index Size |
 |---|---|---|---:|---:|---:|---:|
@@ -68,7 +64,7 @@ For target ingestion, only final persisted business tables are included in the s
 
 ## LOB Assessment
 
-LOB storage is documented separately because Oracle manages LOB segments and their supporting indexes independently from base tables and standard indexes. The estimated LOB size is included as a separate component in the Source Volume Summary.
+LOB storage is documented separately because Oracle manages LOB segments and their supporting indexes independently from base tables and standard indexes.
 
 | Source Table | LOB Column | Oracle LOB Type | Estimated LOB Size | Assessment |
 |---|---|---|---:|---|
