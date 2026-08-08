@@ -61,12 +61,13 @@ The solution design is supported by the following documents.
 
 | Area | Document | Purpose |
 |---|---|---|
-| Source Data Profile | [01_source_data_profile.md](docs/01_source_data_profile.md) | Defines the Oracle source scope, characteristics, source model, and table inventory |
-| Target Data Architecture | [02_target_data_architecture.md](docs/02_target_data_architecture.md) | Defines the target databases, schemas, data models, architecture decisions, and table standards |
-| Data Flow Strategy | [03_data_flow_strategy.md](docs/03_data_flow_strategy.md) | Defines the end-to-end routes, SSIS orchestration, dependencies, and flow diagrams |
-| Load Strategy | [04_load_strategy.md](docs/04_load_strategy.md) | Defines stored procedure patterns, table-level and batch-level loading, rerun, and recovery |
-| Validation and Reconciliation | [05_validation_and_reconciliation_strategy.md](docs/05_validation_and_reconciliation_strategy.md) | Defines validation, reconciliation, error recording, traceability, and execution outcomes |
-| Security and Access | [06_security_and_access_strategy.md](docs/06_security_and_access_strategy.md) | Defines access principles, schema restrictions, credential handling, and role categories |
+| Current state assessment | [01_current_state_assessment.md](docs/01_current_state_assessment.md) | Defines the current Sales data platform, its limitations, and the modernization need |
+| Source Data Profile | [02_source_data_profile.md](docs/02_source_data_profile.md) | Defines the Oracle source scope, characteristics, source model, and table inventory |
+| Target Data Architecture | [03_target_data_architecture.md](docs/03_target_data_architecture.md) | Defines the target databases, schemas, data models, architecture decisions, and table standards |
+| Data Flow Strategy | [04_data_flow_strategy.md](docs/04_data_flow_strategy.md) | Defines the end-to-end routes, SSIS orchestration, dependencies, and flow diagrams |
+| Load Strategy | [05_load_strategy.md](docs/05_load_strategy.md) | Defines stored procedure patterns, table-level and batch-level loading, rerun, and recovery |
+| Validation and Reconciliation | [06_validation_and_reconciliation_strategy.md](docs/06_validation_and_reconciliation_strategy.md) | Defines validation, reconciliation, error recording, traceability, and execution outcomes |
+| Security and Access | [07_security_and_access_strategy.md](docs/07_security_and_access_strategy.md) | Defines access principles, schema restrictions, credential handling, and role categories |
 
 ## Project Status
 
