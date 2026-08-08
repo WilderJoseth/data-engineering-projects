@@ -6,7 +6,7 @@ This document describes the target databases, schemas, data models, architecture
 
 ## Target Databases
 
-The target solution uses two databases with separate logical responsibilities:
+The target solution uses two databases with separate logical responsibilities.
 
 | Database | Responsibility | Platform |
 |---|---|---|
@@ -14,6 +14,8 @@ The target solution uses two databases with separate logical responsibilities:
 | `Sales_Analytics` | Stores reporting-ready dimensional data and historical Sales measures | SQL Server 2022 |
 
 ## Sales_Operational
+
+`Sales_Operational` is populated exclusively from `ADVENTUREWORKS2022`.
 
 ![Sales_Operational Data Model](img/data_model_Sales_Operational.png)
 
@@ -25,8 +27,6 @@ The target solution uses two databases with separate logical responsibilities:
 | `control` | Stores database-specific helper objects used by ETL and integration with `DataOps_Control` |
 
 ### Staging Tables
-
-Staging tables store raw source-aligned records from `ADVENTUREWORKS2022`.
 
 | Data Category | Source Table | Target Schema | Target Table | Purpose |
 |---|---|---|---|---|
@@ -53,10 +53,6 @@ Staging tables store raw source-aligned records from `ADVENTUREWORKS2022`.
 
 ### Work Tables
 
-Work tables store curated operational data from Staging.
-
-Bridge / associative tables are loaded only to `staging`. They support joins, traceability, and transformation logic from `staging` to `work`, but they are not migrated as final operational entities.
-
 | Data Category | Source Schema | Source Table | Target Schema | Target Table | Purpose |
 |---|---|---|---|---|---|
 | Transactional | `staging` | `SalesOrderHeader` | `work` | `SalesOrderHeader` | Stores curated sales order header records |
@@ -76,9 +72,9 @@ Bridge / associative tables are loaded only to `staging`. They support joins, tr
 | Reference / Lookup | `staging` | `SpecialOffer` | `work` | `SpecialOffer` | Stores curated promotion and discount values |
 | Reference / Lookup | `staging` | `ProductSubCategory` | `work` | `ProductCategory` | Stores curated product category values |
 
-### Production Tables
+Bridge / associative tables are loaded only to `staging`. They support joins, traceability, and transformation logic from `staging` to `work`, but they are not migrated as final operational entities.
 
-Production tables store operational data from Work.
+### Production Tables
 
 | Data Category | Source Schema | Source Table | Target Schema | Target Table | Purpose |
 |---|---|---|---|---|---|
@@ -107,15 +103,13 @@ Production tables store operational data from Work.
 
 | Schema | Purpose |
 |---|---|
-| `dim` | Stores analytical dimensions. |
-| `fact` | Stores analytical fact tables. |
-| `staging` | Stores data extracted from `Sales_Operational` before analytical validation and transformation. |
-| `work` | Stores intermediate dimensional and fact processing data. |
-| `control` | Stores database-specific helper objects used by ETL and integration with `DataOps_Control`. |
+| `dim` | Stores analytical dimensions |
+| `fact` | Stores analytical fact tables |
+| `staging` | Stores data extracted from `Sales_Operational` before analytical validation and transformation |
+| `work` | Stores intermediate dimensional and fact processing data |
+| `control` | Stores database-specific helper objects used by ETL and integration with `DataOps_Control` |
 
 ### Staging Tables
-
-Staging tables store raw source-aligned records from `Sales_Operational`.
 
 | Data Category | Source Schema | Source Table | Target Schema | Target Table | Purpose |
 |---|---|---|---|---|---|
@@ -138,8 +132,6 @@ Staging tables store raw source-aligned records from `Sales_Operational`.
 
 ### Work Tables
 
-Work tables store curated operational data from Staging.
-
 | Data Category | Source Schema | Source Table | Target Schema | Target Table | Purpose |
 |---|---|---|---|---|---|
 | Analytical Fact | `staging` | `SalesOrderHeader`, `SalesOrderDetail` | `work` | `FactSales` | Stores sales fact data |
@@ -153,8 +145,6 @@ Work tables store curated operational data from Staging.
 
 ### Final Tables
 
-Final tables store final reporting-ready facts and dimensions.
-
 | Data Category | Source Schema | Source Table | Target Schema | Target Table | Purpose |
 |---|---|---|---|---|---|
 | Analytical Fact | `work` | `FactSales` | `fact` | `FactSales` | Stores final sales transaction measures for reporting |
@@ -165,52 +155,3 @@ Final tables store final reporting-ready facts and dimensions.
 | Analytical Dimension | `work` | `DimProduct` | `dim` | `DimProduct` | Stores final product and category dimension attributes |
 | Analytical Dimension | `work` | `DimPaymentMethod` | `dim` | `DimPaymentMethod` | Stores final payment method dimension attributes |
 | Analytical Dimension | `work` | `DimShipMethod` | `dim` | `DimShipMethod` | Stores final ship method dimension attributes |
-
-## Table Implementation Standards
-
-### Data Type Mapping Guidelines
-
-Oracle source types should be mapped to SQL Server target types based on business meaning, precision, and expected usage.
-
-| Oracle source type | SQL Server target type | Mapping rule |
-|---|---|---|
-| `NUMBER(p, 0)` | `INT` or `BIGINT` | Use for whole-number identifiers and counters |
-| `NUMBER(p, s)` | `DECIMAL(p, s)` | Use for monetary values, rates, and percentages |
-| `VARCHAR2(n)` | `VARCHAR(n)` or `NVARCHAR(n)` | Use `NVARCHAR` when Unicode support is required |
-| `CHAR(n)` | `CHAR(n)` | Use for stable fixed or short code values |
-| `DATE` | `DATE` or `DATETIME2` | Use `DATE` for date-only attributes and `DATETIME2` when time must be preserved |
-| `TIMESTAMP` | `DATETIME2` | Use when datetime precision is required |
-
-### Audit Columns
-
-Final business tables may include audit/technical columns when required.
-
-| Column | Purpose | Type | Allow nulls | Default value |
-|---|---|---|---|---|
-| `created_at` | When the record was inserted. | DATETIME2 | No | SYSUTCDATETIME() |
-| `created_by` | User or process that inserted the record. | VARCHAR(50) | No | USER_NAME() |
-| `updated_at` | When the record was last updated. | DATETIME2 | Yes | |
-| `updated_by` | User or process that last updated the record. | VARCHAR(50) | Yes | |
-| `created_execution_step_id` | Execution step that inserted the record. | INT | No | |
-| `last_updated_execution_step_id` | Execution step that last updated the record. | INT | Yes | |
-| `is_active` | Indicates whether the record is active. | BIT | No | 1 |
-
-### Key and Identifier Column Guidelines
-
-- Final business tables should use a SQL Server-generated `IDENTITY` surrogate key.
-- Surrogate keys should use the suffix `Key`, for example `CustomerKey`, `ProductKey`, or `SalesOrderHeaderKey`.
-- Source business keys should be preserved with a `Source` prefix, for example `SourceCustomerID`, `SourceProductID`, or `SourceSalesOrderID`, for:
-  - Source-to-target traceability
-  - Reconciliation
-  - Rerun logic
-  - Historical audit
-  - Integration with other source-derived objects
-
-### Constraint Rules
-
-- All tables should have a primary key constraint.
-- Final business tables should use the surrogate key as the primary key.
-- Avoid composite primary keys in final business tables unless there is a clear design reason.
-- Foreign keys should be defined where they support target integrity and do not conflict with the migration/reload strategy.
-- Primary key names follow `pk_[schema]_[table]_[column]`.
-- Foreign key names follow `fk_[schema]_[table]_[column]`.

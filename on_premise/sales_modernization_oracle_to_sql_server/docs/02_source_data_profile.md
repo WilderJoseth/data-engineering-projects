@@ -68,6 +68,6 @@ LOB storage is documented separately because Oracle manages LOB segments and the
 
 | Source Table | LOB Column | Oracle LOB Type | Estimated LOB Size | Assessment |
 |---|---|---|---:|---|
-| `PERSON_PERSON` | `ADDITIONALCONTACTINFO` | `CLOB` | 6.00 GB | Stores optional additional contact payloads; the estimate reflects an assumed population rate. |
-| `PERSON_PERSON` | `DEMOGRAPHICS` | `CLOB` | 12.00 GB | Stores XML- or text-like demographic payloads. |
-| `PERSON_ADDRESS` | `SPATIALLOCATION` | `CLOB` | 9.50 GB | Stores the spatial-like payload represented as a CLOB in the Oracle simulation. |
+| `PERSON_PERSON` | `ADDITIONALCONTACTINFO` | `CLOB` | 6.00 GB | Stores optional additional contact payloads; the estimate reflects an assumed population rate |
+| `PERSON_PERSON` | `DEMOGRAPHICS` | `CLOB` | 12.00 GB | Stores XML- or text-like demographic payloads |
+| `PERSON_ADDRESS` | `SPATIALLOCATION` | `CLOB` | 9.50 GB | Stores the spatial-like payload represented as a CLOB in the Oracle simulation |
