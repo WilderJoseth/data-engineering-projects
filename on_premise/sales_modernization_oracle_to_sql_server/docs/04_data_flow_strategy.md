@@ -6,16 +6,14 @@ This document describes the source-to-target movement patterns, flow ownership, 
 
 ## Data Flow Overview
 
-The solution supports two main data flows: migrating the Sales domain to `Sales_Operational` and building reporting data in `Sales_Analytics` from curated operational data.
+The solution supports two main data flows.
 
-| Flow | Source | Purpose |
-|---|---|---|
-| Operational migration flow | `ADVENTUREWORKS2022` | Migrates Sales-domain data into the curated operational model |
-| Analytical migration flow | `Sales_Operational.prod` | Builds reporting-ready facts and dimensions from curated operational data |
+| Flow | Source | Target | Purpose |
+|---|---|---|---|
+| Operational migration flow | `ADVENTUREWORKS2022` | `Sales_Operational` | Migrates Sales-domain data into the curated operational model |
+| Analytical migration flow | `Sales_Operational` | `Sales_Analytics` | Builds reporting-ready facts and dimensions from curated operational data |
 
 ## Operational Migration Flow
-
-The operational migration flow loads Sales-domain data from the Oracle source into the normalized `Sales_Operational` database.
 
 This flow uses `staging` for source-aligned extraction, `work` for validation and transformation, and `prod` for the final operational model.
 
@@ -44,8 +42,6 @@ Sales_Operational.prod
 ```
 
 ## Analytical Migration Flow
-
-The analytical migration flow builds reporting-ready data in `Sales_Analytics` from curated operational data in `Sales_Operational.prod`.
 
 This flow uses `staging` for extraction, `work` for dimensional transformation, and `dim` and `fact` for the analytical target model.
 
@@ -77,10 +73,6 @@ Sales_Analytics.fact / Sales_Analytics.dim
 |---|---|
 | Oracle remains the migration source | `ADVENTUREWORKS2022` provides the source data for the operational migration flow |
 | `Sales_Operational.prod` is the curated operational source | `Sales_Analytics` is populated from curated operational data, not directly from Oracle |
-| `Sales_Operational` owns the operational model | Operational entities are validated, transformed, and published in `Sales_Operational.prod` |
-| `Sales_Analytics` owns the reporting model | Reporting-ready facts and dimensions are published in the `dim` and `fact` schemas |
-| `staging` is not a consumption layer | Staging schemas preserve source-aligned data for loading and transformation |
-| `work` is not a final consumption layer | Work schemas support validation, consolidation, and target-shaped transformations |
 
 ## Data Flow Control Requirements
 
@@ -90,7 +82,7 @@ Each flow should be controlled and observable through `DataOps_Control`.
 |---|---|
 | Execution registration | Tracks when each flow starts, runs, completes, or fails |
 | Step tracking | Tracks extraction, staging, transformation, validation, and publication steps |
-| Source identification | Identifies whether data came from `ADVENTUREWORKS2022` or `Sales_Operational.prod` |
+| Source identification | Identifies whether data came from `ADVENTUREWORKS2022` or `Sales_Operational` |
 | Batch identification | Tracks the applicable migration batch or reporting period |
 | Validation status | Confirms whether data passed the required validation checks |
 | Reconciliation status | Confirms whether source and target results match the expected values |
