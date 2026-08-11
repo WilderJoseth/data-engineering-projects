@@ -20,7 +20,7 @@ Table SALES_SALESORDERHEADER {
   SubTotal decimal(19,4) [not null]
   TaxAmt decimal(19,4) [not null]
   Freight decimal(19,4) [not null]
-  Comment varchar(128)
+  OrderComment varchar(128)
   ModifiedDate datetime [not null]
 }
 
@@ -108,7 +108,7 @@ Table PRODUCTION_PRODUCT {
   ReorderPoint int [not null]
   StandardCost decimal(19,4) [not null]
   ListPrice decimal(19,4) [not null]
-  Size varchar(5)
+  ProductSize varchar(5)
   SizeUnitMeasureCode varchar(3)
   WeightUnitMeasureCode varchar(3)
   Weight decimal(8,2)
@@ -183,7 +183,7 @@ Table SALES_SALESTERRITORY {
   TerritoryID int [pk, not null]
   Name varchar(50) [not null]
   CountryRegionCode varchar(3) [not null]
-  "Group" varchar(50) [not null]
+  TerritoryGroup varchar(50) [not null]
   SalesYTD decimal(19,4) [not null]
   SalesLastYear decimal(19,4) [not null]
   CostYTD decimal(19,4) [not null]
