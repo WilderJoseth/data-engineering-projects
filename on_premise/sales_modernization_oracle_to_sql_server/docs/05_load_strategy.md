@@ -6,9 +6,7 @@ This document describes the load strategies used to load Sales data.
 
 ## Load Strategy Overview
 
-The solution uses two main load strategies.
-
-| Strategy / Pattern | Purpose |
+| Strategy | Purpose |
 |---|---|
 | Full load | Loads the complete dataset |
 | Batch period load | Loads a specific monthly business period based on `OrderDate` |
@@ -76,8 +74,6 @@ The solution uses two main load strategies.
 
 | Rule | Description |
 |---|---|
-| Full loads apply to approved objects | Use full loads for objects that do not require period-based processing |
-| Batch period loads use `OrderDate` | Transactional objects and analytical facts are loaded by monthly period derived from `OrderDate` |
 | Each period must be processed once | A migration batch must not create duplicate records for the same business period |
 | Reruns must be controlled | Reloaded objects or periods must be linked to execution metadata in `DataOps_Control` |
 | Load behavior should be metadata-driven | Object-level load strategy and batch behavior should be configurable through `DataOps_Control` where practical |
@@ -91,4 +87,3 @@ The solution uses two main load strategies.
 | Transactional period failure | Rerun the affected `OrderDate` month |
 | Analytical dimension failure | Rerun the affected full load |
 | Analytical fact failure | Reload the affected `OrderDate` month |
-| Reconciliation failure | Keep the affected object or batch unaccepted until corrected or approved |
