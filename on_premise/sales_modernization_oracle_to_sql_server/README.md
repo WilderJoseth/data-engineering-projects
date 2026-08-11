@@ -67,7 +67,6 @@ The solution design is supported by the following documents.
 | Data Flow Strategy | [04_data_flow_strategy.md](docs/04_data_flow_strategy.md) | Defines the end-to-end routes, SSIS orchestration, dependencies, and flow diagrams |
 | Load Strategy | [05_load_strategy.md](docs/05_load_strategy.md) | Defines stored procedure patterns, table-level and batch-level loading, rerun, and recovery |
 | Validation and Reconciliation | [06_validation_and_reconciliation_strategy.md](docs/06_validation_and_reconciliation_strategy.md) | Defines validation, reconciliation, error recording, traceability, and execution outcomes |
-| Security and Access | [07_security_and_access_strategy.md](docs/07_security_and_access_strategy.md) | Defines access principles, schema restrictions, credential handling, and role categories |
 
 ## Project Status
 
