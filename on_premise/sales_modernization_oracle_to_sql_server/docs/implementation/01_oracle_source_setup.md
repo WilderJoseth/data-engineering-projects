@@ -11,7 +11,7 @@ ADVENTUREWORKS2022/
 ├── ddl/              Creates the schema, tables, sequences, constraints, indexes, and views
 ├── seed/             Populates synthetic source data and validation scenarios
 └── cleanup/
-    ├── data/         Removes seeded data and resets sequences while retaining schema objects
+    ├── seed/         Removes seeded data and resets sequences while retaining schema objects
     └── objects/      Drops source objects to support a full rebuild
 ```
 
@@ -105,7 +105,7 @@ Validate data by running scripts located in `seed`.
 
 ### Project Scripts
 
-Delete data by running scripts located in `cleanup/data`.
+Delete data by running scripts located in `cleanup/seed`.
 
 1. Run `01_cleanup_transactional_data.sql`.
 2. Run `02_cleanup_bridge_data.sql`.
