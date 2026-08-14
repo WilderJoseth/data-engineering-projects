@@ -1,0 +1,11 @@
+/* Purpose: Seed final dimensions from work. Order: 03. */
+USE [Sales_Analytics];
+GO
+INSERT dim.DimDate(FullDate,DayNumberOfWeek,DayName,DayNumberOfMonth,DayNumberOfYear,WeekNumberOfYear,MonthNumber,MonthName,CalendarQuarter,CalendarYear) SELECT FullDate,DayNumberOfWeek,DayName,DayNumberOfMonth,DayNumberOfYear,WeekNumberOfYear,MonthNumber,MonthName,CalendarQuarter,CalendarYear FROM work.DimDate w WHERE NOT EXISTS(SELECT 1 FROM dim.DimDate d WHERE d.FullDate=w.FullDate) ORDER BY WorkDimDateKey;
+INSERT dim.DimCustomer(SourceCustomerID,AccountNumber,CustomerName,PersonType) SELECT SourceCustomerID,AccountNumber,CustomerName,PersonType FROM work.DimCustomer w WHERE NOT EXISTS(SELECT 1 FROM dim.DimCustomer d WHERE d.SourceCustomerID=w.SourceCustomerID);
+INSERT dim.DimSalesPerson(SourceSalesPersonID,SalesPersonName,JobTitle,Gender,HireDate) SELECT SourceSalesPersonID,SalesPersonName,JobTitle,Gender,HireDate FROM work.DimSalesPerson w WHERE NOT EXISTS(SELECT 1 FROM dim.DimSalesPerson d WHERE d.SourceSalesPersonID=w.SourceSalesPersonID);
+INSERT dim.DimSalesTerritory(SourceSalesTerritoryID,TerritoryName,TerritoryGroup,CountryRegionCode,CountryRegionName) SELECT SourceSalesTerritoryID,TerritoryName,TerritoryGroup,CountryRegionCode,CountryRegionName FROM work.DimSalesTerritory w WHERE NOT EXISTS(SELECT 1 FROM dim.DimSalesTerritory d WHERE d.SourceSalesTerritoryID=w.SourceSalesTerritoryID);
+INSERT dim.DimProduct(SourceProductID,ProductNumber,ProductName,Color,Size,ProductCategoryName,StandardCost,ListPrice) SELECT SourceProductID,ProductNumber,ProductName,Color,Size,ProductCategoryName,StandardCost,ListPrice FROM work.DimProduct w WHERE NOT EXISTS(SELECT 1 FROM dim.DimProduct d WHERE d.SourceProductID=w.SourceProductID);
+INSERT dim.DimPaymentMethod(SourceCreditCardID,PaymentMethodType,CardType,CardNumberLast4) SELECT SourceCreditCardID,PaymentMethodType,CardType,CardNumberLast4 FROM work.DimPaymentMethod w WHERE NOT EXISTS(SELECT 1 FROM dim.DimPaymentMethod d WHERE d.SourceCreditCardID=w.SourceCreditCardID);
+INSERT dim.DimShipMethod(SourceShipMethodID,ShipMethodName,ShipBase,ShipRate) SELECT SourceShipMethodID,ShipMethodName,ShipBase,ShipRate FROM work.DimShipMethod w WHERE NOT EXISTS(SELECT 1 FROM dim.DimShipMethod d WHERE d.SourceShipMethodID=w.SourceShipMethodID);
+GO
