@@ -1,5 +1,5 @@
 /*
-    Script: create_dataops_admin_user.sql
+    Script: 01_create_security_admin_objects.sql
     Database: DataOps_Control
 
     Purpose:
@@ -38,7 +38,7 @@ IF NOT EXISTS (
 )
 BEGIN
     CREATE LOGIN [login_dataops_admin]
-    WITH PASSWORD = 'Change_This_Strong_Password_123!';
+    WITH PASSWORD = 'SQLServerPwd_123!';
 END;
 GO
 
@@ -79,11 +79,11 @@ IF NOT EXISTS (
         ON r.[principal_id] = drm.[role_principal_id]
     INNER JOIN sys.database_principals m
         ON m.[principal_id] = drm.[member_principal_id]
-    WHERE r.[name] = 'DataOps_Admin'
+    WHERE r.[name] = 'role_dataops_admin'
       AND m.[name] = 'user_dataops_admin'
 )
 BEGIN
-    ALTER ROLE [DataOps_Admin]
+    ALTER ROLE [role_dataops_admin]
     ADD MEMBER [user_dataops_admin];
 END;
 GO
@@ -100,6 +100,6 @@ INNER JOIN sys.database_principals r
     ON r.[principal_id] = drm.[role_principal_id]
 INNER JOIN sys.database_principals m
     ON m.[principal_id] = drm.[member_principal_id]
-WHERE r.[name] = 'DataOps_Admin'
+WHERE r.[name] = 'role_dataops_admin'
   AND m.[name] = 'user_dataops_admin';
 GO

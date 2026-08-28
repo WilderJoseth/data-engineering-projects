@@ -34,22 +34,22 @@ GO
 IF NOT EXISTS (
     SELECT 1
     FROM sys.database_principals
-    WHERE [name] = 'DataOps_Admin'
+    WHERE [name] = 'role_dataops_admin'
     AND [type] = 'R'
 )
 BEGIN
-    CREATE ROLE [DataOps_Admin];
+    CREATE ROLE [role_dataops_admin];
 END;
 GO
 
 IF NOT EXISTS (
     SELECT 1
     FROM sys.database_principals
-    WHERE [name] = 'DataOps_Project_Executor'
+    WHERE [name] = 'role_dataops_operator'
     AND [type] = 'R'
 )
 BEGIN
-    CREATE ROLE [DataOps_Project_Executor];
+    CREATE ROLE [role_dataops_operator];
 END;
 GO
 
@@ -67,13 +67,13 @@ GO
     - Execute framework procedures.
 ==============================================================*/
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[metadata] TO [DataOps_Admin];
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[reference] TO [DataOps_Admin];
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[runtime] TO [DataOps_Admin];
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[observability] TO [DataOps_Admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[metadata] TO [role_dataops_admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[reference] TO [role_dataops_admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[runtime] TO [role_dataops_admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[observability] TO [role_dataops_admin];
 
-GRANT EXECUTE ON SCHEMA::[runtime] TO [DataOps_Admin];
-GRANT EXECUTE ON SCHEMA::[observability] TO [DataOps_Admin];
+GRANT EXECUTE ON SCHEMA::[runtime] TO [role_dataops_admin];
+GRANT EXECUTE ON SCHEMA::[observability] TO [role_dataops_admin];
 GO
 
 /*==============================================================
@@ -99,15 +99,12 @@ GO
     - Directly update runtime records outside controlled procedures.
 ==============================================================*/
 
-GRANT SELECT ON SCHEMA::[metadata] TO [DataOps_Project_Executor];
-GRANT SELECT ON SCHEMA::[reference] TO [DataOps_Project_Executor];
+GRANT SELECT ON SCHEMA::[metadata] TO [role_dataops_operator];
+GRANT SELECT ON SCHEMA::[reference] TO [role_dataops_operator];
 
-GRANT EXECUTE ON SCHEMA::[runtime] TO [DataOps_Project_Executor];
-GRANT EXECUTE ON SCHEMA::[observability] TO [DataOps_Project_Executor];
+GRANT EXECUTE ON SCHEMA::[runtime] TO [role_dataops_operator];
+GRANT EXECUTE ON SCHEMA::[observability] TO [role_dataops_operator];
 
-GRANT INSERT ON [observability].[validation_results] TO [DataOps_Project_Executor];
-GRANT INSERT ON [observability].[reconciliation_results] TO [DataOps_Project_Executor];
-
-GRANT SELECT ON SCHEMA::[runtime] TO [DataOps_Project_Executor];
-GRANT SELECT ON SCHEMA::[observability] TO [DataOps_Project_Executor];
+GRANT SELECT, INSERT ON SCHEMA::[runtime] TO [role_dataops_operator];
+GRANT SELECT, INSERT ON SCHEMA::[observability] TO [role_dataops_operator];
 GO

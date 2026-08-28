@@ -66,55 +66,54 @@ GO
 INSERT INTO [metadata].[project_processes]
 (
     [id],
-    [position],
     [name],
     [project_id],
     [parent_process_id]
 )
 VALUES
     -- Migration roots
-    (1,  1, 'Sales_Operational_Migration', 1, NULL),
-    (2,  2, 'Sales_Analytics_Migration',   1, NULL),
+    (1,  'Sales_Operational_Migration', 1, NULL),
+    (2,  'Sales_Analytics_Migration',   1, NULL),
 
     -- Operational migration packages
-    (3,  1, 'PKG_OPERATIONAL_MIGRATION', 1, 1),
-    (4,  1, 'PKG_REFERENCE_DATA',        1, 3),
-    (5,  2, 'PKG_MASTER_DATA',           1, 3),
-    (6,  3, 'PKG_TRANSACTIONAL_DATA',    1, 3),
+    (3,  'PKG_OPERATIONAL_MIGRATION', 1, 1),
+    (4,  'PKG_REFERENCE_DATA',        1, 3),
+    (5,  'PKG_MASTER_DATA',           1, 3),
+    (6,  'PKG_TRANSACTIONAL_DATA',    1, 3),
 
     -- Analytics migration packages
-    (7,  1, 'PKG_ANALYTICS_MIGRATION', 1, 2),
-    (8,  1, 'PKG_DIMENSIONS',          1, 7),
-    (9,  2, 'PKG_FACTS',               1, 7),
+    (7,  'PKG_ANALYTICS_MIGRATION', 1, 2),
+    (8,  'PKG_DIMENSIONS',          1, 7),
+    (9,  'PKG_FACTS',               1, 7),
 
     -- Reference data loads
-    (10, 1, 'AddressType Load',      1, 4),
-    (11, 2, 'ProductCategory Load',  1, 4),
-    (12, 3, 'SpecialOffer Load',     1, 4),
-    (13, 4, 'ShipMethod Load',       1, 4),
-    (14, 5, 'Geography Load',        1, 4),
-    (15, 6, 'Currency Load',         1, 4),
+    (10, 'AddressType Load',      1, 4),
+    (11, 'ProductCategory Load',  1, 4),
+    (12, 'SpecialOffer Load',     1, 4),
+    (13, 'ShipMethod Load',       1, 4),
+    (14, 'Geography Load',        1, 4),
+    (15, 'Currency Load',         1, 4),
 
     -- Master data loads
-    (16, 1, 'CreditCard Load',   1, 5),
-    (17, 2, 'Address Load',      1, 5),
-    (18, 3, 'Product Load',      1, 5),
-    (19, 4, 'SalesPerson Load',  1, 5),
-    (20, 5, 'Customer Load',     1, 5),
+    (16, 'CreditCard Load',   1, 5),
+    (17, 'Address Load',      1, 5),
+    (18, 'Product Load',      1, 5),
+    (19, 'SalesPerson Load',  1, 5),
+    (20, 'Customer Load',     1, 5),
 
     -- Transactional data loads
-    (21, 1, 'Sales Load',        1, 6),
+    (21, 'Sales Load',        1, 6),
 
     -- Dimension loads
-    (22, 1, 'DimCustomer Load',        1, 8),
-    (23, 2, 'DimPaymentMethod Load',   1, 8),
-    (24, 3, 'DimShipMethod Load',      1, 8),
-    (25, 4, 'DimProduct Load',         1, 8),
-    (26, 5, 'DimSalesTerritory Load',  1, 8),
-    (27, 6, 'DimSalesPerson Load',     1, 8),
+    (22, 'DimCustomer Load',        1, 8),
+    (23, 'DimPaymentMethod Load',   1, 8),
+    (24, 'DimShipMethod Load',      1, 8),
+    (25, 'DimProduct Load',         1, 8),
+    (26, 'DimSalesTerritory Load',  1, 8),
+    (27, 'DimSalesPerson Load',     1, 8),
 
     -- Fact loads
-    (28, 1, 'FactSales Load', 1, 9);
+    (28, 'FactSales Load', 1, 9);
 GO
 
 /*============================================================================
