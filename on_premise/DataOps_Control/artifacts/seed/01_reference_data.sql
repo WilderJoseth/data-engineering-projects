@@ -26,12 +26,15 @@ INSERT INTO [reference].[status_codes]
     [is_active]
 )
 VALUES
-    (1, 'Pending',       'Execution is registered but has not started yet.', 1),
-    (2, 'Running',       'Execution is currently in progress.', 1),
-    (3, 'Success',       'Execution completed successfully without control issues.', 1),
-    (4, 'Failed',        'Execution failed due to a technical error.', 1),
-    (5, 'Skipped',       'Execution was intentionally skipped.', 1),
-    (6, 'Observed',      'Execution completed technically, but validation or reconciliation results require review.', 1);
+    (1, 'PENDING',   'Execution is registered but has not started yet.', 1),
+    (2, 'RUNNING',   'Execution is currently in progress.', 1),
+    (3, 'SUCCESS',   'Execution completed successfully without control issues.', 1),
+    (4, 'FAILED',    'Execution failed due to a technical error.', 1),
+    (5, 'SKIPPED',   'Execution was intentionally skipped.', 1),
+    (6, 'OBSERVED',  'Execution completed technically, but validation or reconciliation results require review.', 1),
+    (7, 'READY',     'Execution is ready to start because prerequisite conditions are satisfied.', 1),
+    (8, 'BLOCKED',   'Execution cannot start or continue because one or more dependencies are blocked or failed.', 1),
+    (9, 'CANCELLED', 'Execution was cancelled before completion.', 1);
 GO
 
 /*============================================================================
@@ -47,13 +50,13 @@ INSERT INTO [reference].[validation_codes]
     [is_active]
 )
 VALUES
-    (1, 'NOT_NULL',       'Required column contains null values.', 'Error', 1),
-    (2, 'DUPLICATE',      'Duplicate records were found based on expected key columns.', 'Error', 1),
-    (3, 'FK_CHECK',       'Referenced value does not exist in the expected parent or lookup table.', 'Error', 1),
-    (4, 'DATA_TYPE',      'Value does not match the expected data type or conversion rule.', 'Error', 1),
-    (5, 'LENGTH_CHECK',   'Text value exceeds the expected length.', 'Error', 1),
-    (6, 'DATE_RANGE',     'Date value is outside the expected range.', 'Warning', 1),
-    (7, 'NEGATIVE_VALUE', 'Numeric value is negative where it may require review.', 'Warning', 1),
-    (8, 'RECON_WARNING',  'Validation passed with reconciliation or tolerance warning.', 'Warning', 1),
-    (9, 'INFO_CHECK',     'Informational validation result.', 'Info', 1);
+    (1, 'NOT_NULL',       'Required column contains null values.', 'ERROR', 1),
+    (2, 'DUPLICATE',      'Duplicate records were found based on expected key columns.', 'ERROR', 1),
+    (3, 'FK_CHECK',       'Referenced value does not exist in the expected parent or lookup table.', 'ERROR', 1),
+    (4, 'DATA_TYPE',      'Value does not match the expected data type or conversion rule.', 'ERROR', 1),
+    (5, 'LENGTH_CHECK',   'Text value exceeds the expected length.', 'ERROR', 1),
+    (6, 'DATE_RANGE',     'Date value is outside the expected range.', 'WARNING', 1),
+    (7, 'NEGATIVE_VALUE', 'Numeric value is negative where it may require review.', 'WARNING', 1),
+    (8, 'RECON_WARNING',  'Validation passed with reconciliation or tolerance warning.', 'WARNING', 1),
+    (9, 'INFO_CHECK',     'Informational validation result.', 'INFO', 1);
 GO

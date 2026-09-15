@@ -18,9 +18,9 @@ RETURN
 
         Important:
         - This function returns immediate children only.
-        - It does not inspect table-level execution flags.
-        - Table-level execution remains available through project_process_tables
-          and project_tables when the selected process needs table context.
+        - It does not inspect object-level execution flags.
+        - Object-level execution remains available through project_process_objects
+          and project_objects when the selected process needs object context.
     */
 
     SELECT
@@ -48,13 +48,13 @@ RETURN
         ON child_p.[parent_process_id] = parent_p.[id]
         AND child_p.[project_id] = parent_p.[project_id]
         AND child_p.[is_active] = 1
-        AND child_p.[execution_required] = 1
+        AND child_p.[is_execution_required] = 1
     WHERE parent_p.[id] = @p_parent_project_process_id
     AND parent_p.[is_active] = 1
 );
 GO
 
-CREATE OR ALTER FUNCTION [metadata].[ufn_list_project_process_table_batches]
+CREATE OR ALTER FUNCTION [metadata].[ufn_list_project_process_object_batches]
 (
     @p_project_process_id INT
 )
@@ -82,10 +82,10 @@ RETURN
 
         Important:
         - This function returns batches for one project process only.
-        - Batch definitions are attached to the source table used for filtering.
-        - Target table context is resolved through metadata.project_process_tables.
+        - Batch definitions are attached to the source object used for filtering.
+        - Target object context is resolved through metadata.project_process_objects.
         - Batch execution scope is resolved through
-          metadata.project_process_table_batches.
+          metadata.project_process_object_batches.
     */
 
     SELECT
@@ -97,12 +97,12 @@ RETURN
         b.[batch_end_value],
         b.[batch_column_name]
     FROM [metadata].[project_processes] p
-    INNER JOIN [metadata].[project_process_table_batches] ptb
+    INNER JOIN [metadata].[project_process_object_batches] ptb
         ON ptb.[process_id] = p.[id]
-    INNER JOIN [metadata].[project_table_batches] b
+    INNER JOIN [metadata].[project_object_batches] b
         ON b.[id] = ptb.[batch_id]
         AND b.[is_active] = 1
-        AND b.[execution_required] = 1
+        AND b.[is_execution_required] = 1
     WHERE p.[id] = @p_project_process_id
     AND p.[is_active] = 1
 );

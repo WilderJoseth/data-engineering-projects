@@ -27,9 +27,9 @@ INSERT INTO [metadata].[project_databases]
     [project_id]
 )
 VALUES
-    (14, 'Sales_Operational', 'SQL Server 2022', 'Source', 4),
-    (15, 'ADVENTUREWORKS2022', 'Oracle XE 21c', 'Source', 4),
-    (16, 'Enterprise_Operational', 'Azure SQL Database', 'Target', 4);
+    (14, 'Sales_Operational', 'SQL SERVER 2022', 'SOURCE', 4),
+    (15, 'ADVENTUREWORKS2022', 'ORACLE XE 21C', 'SOURCE', 4),
+    (16, 'Enterprise_Operational', 'AZURE SQL DATABASE', 'TARGET', 4);
 GO
 
 /*============================================================================
@@ -55,18 +55,34 @@ INSERT INTO [metadata].[project_processes]
     [id],
     [name],
     [project_id],
-    [parent_process_id]
+    [parent_process_id],
+    [load_strategy],
+    [is_execution_required]
 )
 VALUES
     -- Roots
-    (60, 'Ingest Sales Operational Data', 4, NULL),
-    (61, 'Ingest ADVENTUREWORKS2022 Operational Data', 4, NULL),
+    (59, 'Sales_Operational Ingestion', 4, NULL, NULL, 1),
+    (60, 'ADVENTUREWORKS2022 Operational Ingestion', 4, NULL, NULL, 1),
 
-    (62,  'Load Bronze Data', 4, 60),
-    (63,  'Load Silver Data', 4, 60),
-    (64,  'Load Serving Data', 4, 60),
-    (65,  'Load Bronze Data', 4, 61),
-    (66,  'Load Silver Data', 4, 61),
-    (67,  'Load Serving Data', 4, 61);
+    -- Layer/category processes
+    (142, 'Bronze Data Ingestion - Reference', 4, 59, 'INCREMENTAL', 1),
+    (143, 'Silver Data Ingestion - Reference', 4, 59, 'INCREMENTAL', 1),
+    (144, 'Gold Data Ingestion - Reference', 4, 59, 'INCREMENTAL', 1),
+    (145, 'Bronze Data Ingestion - Master', 4, 59, 'INCREMENTAL', 1),
+    (146, 'Silver Data Ingestion - Master', 4, 59, 'INCREMENTAL', 1),
+    (147, 'Gold Data Ingestion - Master', 4, 59, 'INCREMENTAL', 1),
+    (148, 'Bronze Data Ingestion - Transactional', 4, 59, 'BATCH', 1),
+    (149, 'Silver Data Ingestion - Transactional', 4, 59, 'BATCH', 1),
+    (150, 'Gold Data Ingestion - Transactional', 4, 59, 'BATCH', 1),
+
+    (151, 'Bronze Data Ingestion - Reference', 4, 60, 'INCREMENTAL', 1),
+    (152, 'Silver Data Ingestion - Reference', 4, 60, 'INCREMENTAL', 1),
+    (153, 'Gold Data Ingestion - Reference', 4, 60, 'INCREMENTAL', 1),
+    (154, 'Bronze Data Ingestion - Master', 4, 60, 'INCREMENTAL', 1),
+    (155, 'Silver Data Ingestion - Master', 4, 60, 'INCREMENTAL', 1),
+    (156, 'Gold Data Ingestion - Master', 4, 60, 'INCREMENTAL', 1),
+    (157, 'Bronze Data Ingestion - Transactional', 4, 60, 'BATCH', 1),
+    (158, 'Silver Data Ingestion - Transactional', 4, 60, 'BATCH', 1),
+    (159, 'Gold Data Ingestion - Transactional', 4, 60, 'BATCH', 1);
 GO
 

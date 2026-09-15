@@ -37,7 +37,7 @@ SELECT
     pp.[name] AS [process_name],
     pp.[parent_process_id],
     parent_pp.[name] AS [parent_process_name],
-    pp.[execution_required],
+    pp.[is_execution_required],
     pp.[is_active],
     CAST
     (
@@ -91,6 +91,36 @@ GO
 
 
 /*============================================================================
+  View: metadata.vw_project_process_object_strategy_summary
+
+  Purpose:
+  - Shows process load strategy and object write strategy.
+  - Helps review the executable process-to-object strategy configuration.
+============================================================================*/
+
+CREATE OR ALTER VIEW [metadata].[vw_project_process_object_strategy_summary]
+AS
+SELECT
+    p.[id] AS [project_id],
+    p.[name] AS [project_name],
+    pp.[id] AS [project_process_id],
+    pp.[name] AS [process_name],
+    pd.[id] AS [database_id],
+    pd.[name] AS [database_name],
+    pt.[id] AS [object_id],
+    pt.[schema_name],
+    pt.[name] AS [object_name],
+    pp.[load_strategy],
+    ppt.[write_strategy]
+FROM [metadata].[project_process_objects] ppt
+INNER JOIN [metadata].[project_processes] pp ON pp.[id] = ppt.[process_id]
+INNER JOIN [metadata].[projects] p ON p.[id] = pp.[project_id]
+INNER JOIN [metadata].[project_objects] pt ON pt.[id] = ppt.[object_id]
+INNER JOIN [metadata].[project_databases] pd ON pd.[id] = pt.[database_id];
+GO
+
+
+/*============================================================================
   View: metadata.vw_project_process_action_summary
 
   Purpose:
@@ -128,8 +158,8 @@ GO
   View: metadata.vw_project_batch_execution_scope
 
   Purpose:
-  - Shows process-table-batch execution scope in one place.
-  - Helps review which batches are assigned to which process/table scope.
+  - Shows process-object-batch execution scope in one place.
+  - Helps review which batches are assigned to which process/object scope.
   - Does not decide whether a process should execute.
 ============================================================================*/
 
@@ -140,62 +170,62 @@ SELECT
     p.[name] AS [project_name],
     pp.[id] AS [project_process_id],
     pp.[name] AS [process_name],
-    controlled_t.[id] AS [controlled_table_id],
+    controlled_t.[id] AS [controlled_object_id],
     controlled_db.[name] AS [controlled_database_name],
     controlled_t.[schema_name] AS [controlled_schema_name],
-    controlled_t.[name] AS [controlled_table_name],
+    controlled_t.[name] AS [controlled_object_name],
     b.[id] AS [batch_id],
     b.[position] AS [batch_position],
-    source_t.[id] AS [batch_source_table_id],
-    source_db.[name] AS [batch_source_database_name],
-    source_t.[schema_name] AS [batch_source_schema_name],
-    source_t.[name] AS [batch_source_table_name],
+    source_t.[id] AS [batch_driver_object_id],
+    source_db.[name] AS [batch_driver_database_name],
+    source_t.[schema_name] AS [batch_driver_schema_name],
+    source_t.[name] AS [batch_driver_object_name],
     b.[batch_column_name],
     b.[batch_column_type],
     b.[batch_value],
     b.[batch_start_value],
     b.[batch_end_value],
-    b.[execution_required] AS [batch_execution_required],
+    b.[is_execution_required] AS [is_batch_execution_required],
     b.[is_active] AS [batch_is_active]
-FROM [metadata].[project_process_table_batches] pptb
+FROM [metadata].[project_process_object_batches] pptb
 INNER JOIN [metadata].[project_processes] pp ON pp.[id] = pptb.[process_id]
 INNER JOIN [metadata].[projects] p ON p.[id] = pp.[project_id]
-INNER JOIN [metadata].[project_tables] controlled_t ON controlled_t.[id] = pptb.[table_id]
+INNER JOIN [metadata].[project_objects] controlled_t ON controlled_t.[id] = pptb.[object_id]
 INNER JOIN [metadata].[project_databases] controlled_db ON controlled_db.[id] = controlled_t.[database_id]
-INNER JOIN [metadata].[project_table_batches] b ON b.[id] = pptb.[batch_id]
-INNER JOIN [metadata].[project_tables] source_t ON source_t.[id] = b.[batch_source_table_id]
+INNER JOIN [metadata].[project_object_batches] b ON b.[id] = pptb.[batch_id]
+INNER JOIN [metadata].[project_objects] source_t ON source_t.[id] = b.[batch_driver_object_id]
 INNER JOIN [metadata].[project_databases] source_db ON source_db.[id] = source_t.[database_id];
 GO
 
 
 /*============================================================================
-  View: metadata.vw_project_table_lineage_summary
+  View: metadata.vw_project_object_lineage_summary
 
   Purpose:
-  - Shows source-to-target table lineage.
-  - Helps review table mappings without showing column-level metadata.
+  - Shows source-to-target object lineage.
+  - Helps review object mappings without showing column-level metadata.
 ============================================================================*/
 
-CREATE OR ALTER VIEW [metadata].[vw_project_table_lineage_summary]
+CREATE OR ALTER VIEW [metadata].[vw_project_object_lineage_summary]
 AS
 SELECT
     source_db.[project_id],
     p.[name] AS [project_name],
     source_db.[id] AS [source_database_id],
     source_db.[name] AS [source_database_name],
-    source_t.[id] AS [source_table_id],
+    source_t.[id] AS [source_object_id],
     source_t.[schema_name] AS [source_schema_name],
-    source_t.[name] AS [source_table_name],
+    source_t.[name] AS [source_object_name],
     target_db.[id] AS [target_database_id],
     target_db.[name] AS [target_database_name],
-    target_t.[id] AS [target_table_id],
+    target_t.[id] AS [target_object_id],
     target_t.[schema_name] AS [target_schema_name],
-    target_t.[name] AS [target_table_name]
-FROM [metadata].[project_table_mappings] ptm
-INNER JOIN [metadata].[project_tables] source_t ON source_t.[id] = ptm.[table_source_id]
+    target_t.[name] AS [target_object_name]
+FROM [metadata].[project_object_mappings] ptm
+INNER JOIN [metadata].[project_objects] source_t ON source_t.[id] = ptm.[object_source_id]
 INNER JOIN [metadata].[project_databases] source_db ON source_db.[id] = source_t.[database_id]
 INNER JOIN [metadata].[projects] p ON p.[id] = source_db.[project_id]
-INNER JOIN [metadata].[project_tables] target_t ON target_t.[id] = ptm.[table_target_id]
+INNER JOIN [metadata].[project_objects] target_t ON target_t.[id] = ptm.[object_target_id]
 INNER JOIN [metadata].[project_databases] target_db
     ON target_db.[id] = target_t.[database_id];
 GO
@@ -387,13 +417,13 @@ SELECT
     ew.[id] AS [execution_watermark_id],
     ewc.[project_process_id],
     pp.[name] AS [process_name],
-    ewc.[table_id],
+    ewc.[object_id],
     pd.[name] AS [database_name],
     pt.[schema_name],
-    pt.[name] AS [table_name],
-    ewc.[watermark_column_id],
-    pc.[name] AS [watermark_column_name],
-    pc.[type] AS [watermark_column_type],
+    pt.[name] AS [object_name],
+    ewc.[watermark_object_column_id],
+    pc.[name] AS [watermark_object_column_name],
+    pc.[type] AS [watermark_object_column_type],
     ewc.[last_committed_watermark_value],
     ewc.[lower_bound_operator],
     ewc.[upper_bound_operator],
@@ -412,9 +442,9 @@ FROM [runtime].[execution_watermark_controls] ewc
 LEFT JOIN [runtime].[execution_watermarks] ew
     ON ew.[execution_watermark_control_id] = ewc.[id]
 INNER JOIN [metadata].[project_processes] pp ON pp.[id] = ewc.[project_process_id]
-INNER JOIN [metadata].[project_tables] pt ON pt.[id] = ewc.[table_id]
+INNER JOIN [metadata].[project_objects] pt ON pt.[id] = ewc.[object_id]
 INNER JOIN [metadata].[project_databases] pd ON pd.[id] = pt.[database_id]
-INNER JOIN [metadata].[project_columns] pc ON pc.[id] = ewc.[watermark_column_id]
+INNER JOIN [metadata].[project_object_columns] pc ON pc.[id] = ewc.[watermark_object_column_id]
 LEFT JOIN [runtime].[execution_steps] es ON es.[id] = ew.[execution_step_id]
 LEFT JOIN [reference].[status_codes] sc ON sc.[id] = ew.[status_code_id];
 GO

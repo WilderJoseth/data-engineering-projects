@@ -42,12 +42,12 @@ FROM (VALUES
     ('metadata.project_databases'),
     ('metadata.project_database_mappings'),
     ('metadata.project_processes'),
-    ('metadata.project_tables'),
-    ('metadata.project_table_mappings'),
-    ('metadata.project_process_tables'),
-    ('metadata.project_process_table_batches'),
-    ('metadata.project_table_batches'),
-    ('metadata.project_columns'),
+    ('metadata.project_objects'),
+    ('metadata.project_object_mappings'),
+    ('metadata.project_process_objects'),
+    ('metadata.project_process_object_batches'),
+    ('metadata.project_object_batches'),
+    ('metadata.project_object_columns'),
     ('runtime.execution_runs'),
     ('runtime.execution_steps'),
     ('observability.error_logs'),
@@ -72,8 +72,7 @@ WHERE OBJECT_ID(v.[name], 'P') IS NULL;
 INSERT INTO @missing_objects
 SELECT 'FUNCTION', v.[name]
 FROM (VALUES
-    ('metadata.ufn_list_project_process_tables'),
-    ('metadata.ufn_list_project_process_table_batches')
+    ('metadata.ufn_list_project_process_object_batches')
 ) v([name])
 WHERE OBJECT_ID(v.[name], 'IF') IS NULL;
 
@@ -81,8 +80,8 @@ WHERE OBJECT_ID(v.[name], 'IF') IS NULL;
 INSERT INTO @missing_objects
 SELECT 'ROLE', v.[name]
 FROM (VALUES
-    ('DataOps_Admin'),
-    ('DataOps_Project_Executor')
+    ('role_dataops_admin'),
+    ('role_dataops_operator')
 ) v([name])
 WHERE NOT EXISTS (
     SELECT 1
@@ -95,12 +94,15 @@ WHERE NOT EXISTS (
 INSERT INTO @missing_objects
 SELECT 'REFERENCE STATUS', v.[code]
 FROM (VALUES
-    ('Pending'),
-    ('Running'),
-    ('Success'),
-    ('Observed'),
-    ('Failed'),
-    ('Skipped')
+    ('PENDING'),
+    ('RUNNING'),
+    ('SUCCESS'),
+    ('FAILED'),
+    ('SKIPPED'),
+    ('OBSERVED'),
+    ('READY'),
+    ('BLOCKED'),
+    ('CANCELLED')
 ) v([code])
 WHERE NOT EXISTS (
     SELECT 1

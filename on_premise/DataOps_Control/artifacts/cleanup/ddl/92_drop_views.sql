@@ -32,10 +32,13 @@ GO
 DROP VIEW IF EXISTS [metadata].[vw_project_process_monitoring_metric_summary];
 GO
 
-DROP VIEW IF EXISTS [metadata].[vw_project_table_lineage_summary];
+DROP VIEW IF EXISTS [metadata].[vw_project_object_lineage_summary];
 GO
 
 DROP VIEW IF EXISTS [metadata].[vw_project_batch_execution_scope];
+GO
+
+DROP VIEW IF EXISTS [metadata].[vw_project_process_object_strategy_summary];
 GO
 
 DROP VIEW IF EXISTS [metadata].[vw_project_process_action_summary];

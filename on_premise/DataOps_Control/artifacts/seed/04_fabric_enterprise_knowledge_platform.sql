@@ -27,13 +27,13 @@ INSERT INTO [metadata].[project_databases]
     [project_id]
 )
 VALUES
-    (7, 'Sales_Operational', 'SQL Server 2022', 'Source', 3),
-    (8, 'Sales_Analytics', 'SQL Server 2022', 'Source', 3),
-    (9, 'DataOps_Control', 'SQL Server 2022', 'Source', 3),
-    (10, 'Sales Domain Migration Oracle to SQL Server', 'GitHub', 'Source', 3),
-    (11, 'DataOps_Control Migration-Driven Control Framework', 'GitHub', 'Source', 3),
-    (12, 'Sales Knowledge Portal', 'SharePoint', 'Source', 3),
-    (13, 'wh_knowledge_platform', 'Fabric Warehouse', 'Target', 3);
+    (7, 'Sales_Operational', 'SQL SERVER 2022', 'SOURCE', 3),
+    (8, 'Sales_Analytics', 'SQL SERVER 2022', 'SOURCE', 3),
+    (9, 'DataOps_Control', 'SQL SERVER 2022', 'SOURCE', 3),
+    (10, 'Sales Domain Migration Oracle to SQL Server', 'GITHUB', 'SOURCE', 3),
+    (11, 'DataOps_Control Migration-Driven Control Framework', 'GITHUB', 'SOURCE', 3),
+    (12, 'Sales Knowledge Portal', 'SHAREPOINT', 'SOURCE', 3),
+    (13, 'lh_knowledge_platform', 'FABRIC WAREHOUSE', 'TARGET', 3);
 GO
 
 /*============================================================================
@@ -63,33 +63,36 @@ INSERT INTO [metadata].[project_processes]
     [id],
     [name],
     [project_id],
-    [parent_process_id]
+    [parent_process_id],
+    [load_strategy],
+    [is_execution_required]
 )
 VALUES
-    -- Roots
-    (36, 'Ingest Sales Operational Data', 3, NULL),
-    (37, 'Ingest Sales Analytics Data', 3, NULL),
-    (38, 'Ingest DataOps Control Data', 3, NULL),
-    (39, 'Ingest Sales Domain Migration GitHub', 3, NULL),
-    (40, 'Ingest DataOps Control GitHub', 3, NULL),
-    (41, 'Ingest Sales Knowledge SharePoint', 3, NULL),
+    (36, 'Knowledge Source Ingestion', 3, NULL, 'INCREMENTAL', 1),
+    (37, 'Ingest Sales_Operational Metadata', 3, 36, 'INCREMENTAL', 1),
+    (38, 'Ingest Sales_Analytics Metadata', 3, 36, 'INCREMENTAL', 1),
+    (39, 'Ingest DataOps_Control Metadata', 3, 36, 'INCREMENTAL', 1),
+    (40, 'Ingest Sales Domain Migration Content', 3, 36, 'INCREMENTAL', 1),
+    (41, 'Ingest DataOps_Control Content', 3, 36, 'INCREMENTAL', 1),
+    (42, 'Ingest Sales Knowledge Portal Content', 3, 36, 'INCREMENTAL', 1),
 
-    (42,  'Load Bronze Data', 3, 36),
-    (43,  'Load Silver Data', 3, 36),
-    (44,  'Load Gold Data', 3, 36),
-    (45,  'Load Bronze Data', 3, 37),
-    (46,  'Load Silver Data', 3, 37),
-    (47,  'Load Gold Data', 3, 37),
-    (48,  'Load Bronze Data', 3, 38),
-    (49,  'Load Silver Data', 3, 38),
-    (50,  'Load Gold Data', 3, 38),
-    (51,  'Load Bronze Data', 3, 39),
-    (52,  'Load Silver Data', 3, 39),
-    (53,  'Load Gold Data', 3, 39),
-    (54,  'Load Bronze Data', 3, 40),
-    (55,  'Load Silver Data', 3, 40),
-    (56,  'Load Gold Data', 3, 40),
-    (57,  'Load Bronze Data', 3, 41),
-    (58,  'Load Silver Data', 3, 41),
-    (59,  'Load Gold Data', 3, 41);
+    (43, 'Knowledge Standardization', 3, NULL, 'INCREMENTAL', 1),
+    (44, 'Metadata Standardization', 3, 43, 'INCREMENTAL', 1),
+    (45, 'Standardize Sales_Operational Metadata', 3, 44, 'INCREMENTAL', 1),
+    (46, 'Standardize Sales_Analytics Metadata', 3, 44, 'INCREMENTAL', 1),
+    (47, 'Standardize DataOps_Control Metadata', 3, 44, 'INCREMENTAL', 1),
+    (48, 'Knowledge Extraction', 3, 43, 'INCREMENTAL', 1),
+    (49, 'Extract Sales Domain Migration Knowledge', 3, 48, 'INCREMENTAL', 1),
+    (50, 'Extract DataOps_Control Knowledge', 3, 48, 'INCREMENTAL', 1),
+    (51, 'Extract Sales Knowledge Portal Knowledge', 3, 48, 'INCREMENTAL', 1),
+
+    (52, 'Knowledge Integration', 3, NULL, 'INCREMENTAL', 1),
+    (53, 'Integrate Knowledge', 3, 52, 'INCREMENTAL', 1),
+
+    (54, 'Retrieval Preparation', 3, NULL, 'INCREMENTAL', 1),
+    (55, 'Generate Knowledge Chunks', 3, 54, 'INCREMENTAL', 1),
+    (56, 'Generate Knowledge Embeddings', 3, 54, 'INCREMENTAL', 1),
+
+    (57, 'Search Index Publication', 3, NULL, 'INCREMENTAL', 1),
+    (58, 'Publish Sales Domain Search Index', 3, 57, 'INCREMENTAL', 1);
 GO

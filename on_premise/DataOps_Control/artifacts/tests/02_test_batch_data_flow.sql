@@ -5,10 +5,10 @@ GO
     Test Script: Batch Data Flow
 
     Goal:
-    - Simulate a batch-enabled table flow using explicit process-table-batch scope.
-    - Get batch execution scope from metadata.ufn_list_project_process_table_batches.
-    - Run only target tables and batches marked as execution_required = 1.
-    - Start one execution step per process-table-batch item.
+    - Simulate a batch-enabled object flow using explicit process-object-batch scope.
+    - Get batch execution scope from metadata.ufn_list_project_process_object_batches.
+    - Run only target objects and batches marked as execution_required = 1.
+    - Start one execution step per process-object-batch item.
     - Register reconciliation and validation results.
     - End each batch execution step.
     - End the execution run and validate final status.
@@ -20,10 +20,10 @@ GO
     - Child process:
         Sales Load
 
-    - Target table:
+    - Target object:
         SalesOrderHeader
 
-    - Batch source table:
+    - Batch source object:
         SALES_SALESORDERHEADER
 
     Expected result:
@@ -32,10 +32,10 @@ GO
     - Execution Run = Observed
 
     Design note:
-    - metadata.project_process_table_batches defines which batches are assigned
-      to each process-table execution scope.
+    - metadata.project_process_object_batches defines which batches are assigned
+      to each process-object execution scope.
     - runtime.execution_steps remains process-based.
-    - Table and batch context is visible through metadata scope and
+    - Object and batch context is visible through metadata scope and
       observability.reconciliation_key.
 */
 
@@ -53,33 +53,33 @@ DECLARE @execution_run_id INT;
 -- This section simulates metadata configuration before the ETL starts.
 --
 -- execution_required = 1 means the orchestration layer should execute
--- that table or batch.
+-- that object or batch.
 --
 -- For this test:
 -- - SalesOrderHeader requires execution.
 -- - Two batches require execution: 2011-05 and 2011-06.
 -- - Batch assignments are controlled by:
---     metadata.project_process_table_batches
+--     metadata.project_process_object_batches
 -------------------------------------------------------------------------
 
-UPDATE [metadata].[project_tables]
+UPDATE [metadata].[project_objects]
 SET [execution_required] = 0;
 
-UPDATE [metadata].[project_table_batches]
+UPDATE [metadata].[project_object_batches]
 SET [execution_required] = 0;
 
-UPDATE [metadata].[project_tables]
+UPDATE [metadata].[project_objects]
 SET [execution_required] = 1
-WHERE [id] = 33; -- SalesOrderHeader target table
+WHERE [id] = 33; -- SalesOrderHeader target object
 
-UPDATE [metadata].[project_table_batches]
+UPDATE [metadata].[project_object_batches]
 SET [execution_required] = 1
 WHERE [batch_value] IN
 (
     '2011-05',
     '2011-06'
 )
-AND [batch_source_table_id] = 17; -- SALES_SALESORDERHEADER source table
+AND [batch_driver_object_id] = 17; -- SALES_SALESORDERHEADER source object
 
 -------------------------------------------------------------------------
 -- 2. Get batch execution scope
@@ -87,16 +87,16 @@ AND [batch_source_table_id] = 17; -- SALES_SALESORDERHEADER source table
 -- This function returns:
 -- - parent process
 -- - child process
--- - target table
--- - source table used for batch filtering
+-- - target object
+-- - source object used for batch filtering
 -- - batch definition
 --
 -- The function should now resolve batch scope through:
 --
 -- metadata.project_processes
---     -> metadata.project_process_tables
---         -> metadata.project_process_table_batches
---             -> metadata.project_table_batches
+--     -> metadata.project_process_objects
+--         -> metadata.project_process_object_batches
+--             -> metadata.project_object_batches
 --
 -- In SSIS, this metadata result would be used by a Foreach Loop or
 -- equivalent orchestration pattern.
@@ -109,13 +109,13 @@ DECLARE @batch_scope TABLE
     process_name VARCHAR(50),
     process_child_id INT,
     process_child_name VARCHAR(50),
-    target_table_id INT,
-    target_table_schema_name VARCHAR(50),
-    target_table_name VARCHAR(50),
-    target_table_execution_required BIT,
-    batch_source_table_id INT,
-    batch_source_schema_name VARCHAR(50),
-    batch_source_table_name VARCHAR(50),
+    target_object_id INT,
+    target_object_schema_name VARCHAR(50),
+    target_object_name VARCHAR(50),
+    target_object_execution_required BIT,
+    batch_driver_object_id INT,
+    batch_driver_schema_name VARCHAR(50),
+    batch_driver_object_name VARCHAR(50),
     batch_id INT,
     batch_column_name VARCHAR(50),
     batch_value VARCHAR(50),
@@ -131,13 +131,13 @@ INSERT INTO @batch_scope
     process_name,
     process_child_id,
     process_child_name,
-    target_table_id,
-    target_table_schema_name,
-    target_table_name,
-    target_table_execution_required,
-    batch_source_table_id,
-    batch_source_schema_name,
-    batch_source_table_name,
+    target_object_id,
+    target_object_schema_name,
+    target_object_name,
+    target_object_execution_required,
+    batch_driver_object_id,
+    batch_driver_schema_name,
+    batch_driver_object_name,
     batch_id,
     batch_column_name,
     batch_value,
@@ -151,13 +151,13 @@ SELECT
     process_name,
     process_child_id,
     process_child_name,
-    target_table_id,
-    target_table_schema_name,
-    target_table_name,
-    target_table_execution_required,
-    batch_source_table_id,
-    batch_source_schema_name,
-    batch_source_table_name,
+    target_object_id,
+    target_object_schema_name,
+    target_object_name,
+    target_object_execution_required,
+    batch_driver_object_id,
+    batch_driver_schema_name,
+    batch_driver_object_name,
     batch_id,
     batch_column_name,
     batch_value,
@@ -165,25 +165,25 @@ SELECT
     batch_end_value,
     batch_column_type,
     batch_execution_required
-FROM [metadata].[ufn_list_project_process_table_batches]
+FROM [metadata].[ufn_list_project_process_object_batches]
 (
     @project_id,
     @parent_process_id
 )
-WHERE [target_table_execution_required] = 1
+WHERE [target_object_execution_required] = 1
 AND [batch_execution_required] = 1
-AND [target_table_name] = 'SalesOrderHeader';
+AND [target_object_name] = 'SalesOrderHeader';
 
 -- Review the batch execution scope returned by the function.
 SELECT *
 FROM @batch_scope
 ORDER BY
-    target_table_name,
+    target_object_name,
     batch_start_value;
 
 IF NOT EXISTS (SELECT 1 FROM @batch_scope)
 BEGIN
-    THROW 51000, 'No batch execution scope was found. Validate metadata.project_process_table_batches and execution_required flags.', 1;
+    THROW 51000, 'No batch execution scope was found. Validate metadata.project_process_object_batches and execution_required flags.', 1;
 END;
 
 -------------------------------------------------------------------------
@@ -211,19 +211,19 @@ SELECT @execution_run_id = [execution_run_id]
 FROM @execution_run_output;
 
 -------------------------------------------------------------------------
--- 4. Execute process-table-batch scope
+-- 4. Execute process-object-batch scope
 --
 -- This loop simulates an orchestration tool iterating over batch metadata.
 --
 -- Current runtime model:
--- - One execution step is created per process-table-batch item.
+-- - One execution step is created per process-object-batch item.
 -- - The execution step references the process.
--- - The table and batch context is registered in reconciliation_key.
+-- - The object and batch context is registered in reconciliation_key.
 --
 -- Note:
--- - runtime.execution_steps does not store table_id or batch_id directly.
--- - The process-table-batch scope comes from metadata.
--- - Observability records keep the execution evidence for each table/batch.
+-- - runtime.execution_steps does not store object_id or batch_id directly.
+-- - The process-object-batch scope comes from metadata.
+-- - Observability records keep the execution evidence for each object/batch.
 -------------------------------------------------------------------------
 
 DECLARE
@@ -231,8 +231,8 @@ DECLARE
     @max_row_id INT,
     @current_process_child_id INT,
     @current_process_child_name VARCHAR(50),
-    @current_target_table_id INT,
-    @current_target_table_name VARCHAR(50),
+    @current_target_object_id INT,
+    @current_target_object_name VARCHAR(50),
     @current_batch_id INT,
     @current_batch_value VARCHAR(50),
     @current_execution_step_id BIGINT,
@@ -250,14 +250,14 @@ BEGIN
     SELECT
         @current_process_child_id = [process_child_id],
         @current_process_child_name = [process_child_name],
-        @current_target_table_id = [target_table_id],
-        @current_target_table_name = [target_table_name],
+        @current_target_object_id = [target_object_id],
+        @current_target_object_name = [target_object_name],
         @current_batch_id = [batch_id],
         @current_batch_value = [batch_value]
     FROM @batch_scope
     WHERE [row_id] = @current_row_id;
 
-    SET @reconciliation_key = CONCAT('TABLE=', @current_target_table_name, ';BATCH=', @current_batch_value);
+    SET @reconciliation_key = CONCAT('OBJECT=', @current_target_object_name, ';BATCH=', @current_batch_value);
 
     ---------------------------------------------------------------------
     -- 4.1 Start execution step.
@@ -289,7 +289,7 @@ BEGIN
     SET @source_amount = NULL;
     SET @target_amount = NULL;
 
-    IF @current_target_table_name = 'SalesOrderHeader'
+    IF @current_target_object_name = 'SalesOrderHeader'
        AND @current_batch_value = '2011-05'
     BEGIN
         SET @source_row_count = 436;
@@ -298,7 +298,7 @@ BEGIN
         SET @target_amount = 815233.4200;
     END;
 
-    IF @current_target_table_name = 'SalesOrderHeader'
+    IF @current_target_object_name = 'SalesOrderHeader'
        AND @current_batch_value = '2011-06'
     BEGIN
         SET @source_row_count = 500;
@@ -349,7 +349,7 @@ BEGIN
     -- validation/reconciliation evidence requires review.
     ---------------------------------------------------------------------
 
-    IF @current_target_table_name = 'SalesOrderHeader'
+    IF @current_target_object_name = 'SalesOrderHeader'
        AND @current_batch_value = '2011-06'
     BEGIN
         INSERT INTO [observability].[validation_results]
@@ -361,7 +361,7 @@ BEGIN
         )
         VALUES
         (
-            CONCAT('2 source rows were excluded from ', @current_target_table_name, ' batch ', @current_batch_value, ' because required customer references were not found.'),
+            CONCAT('2 source rows were excluded from ', @current_target_object_name, ' batch ', @current_batch_value, ' because required customer references were not found.'),
             2,
             @current_execution_step_id,
             3 -- FK_CHECK
@@ -422,7 +422,7 @@ WHERE er.[id] = @execution_run_id;
 --
 -- Note:
 -- - All steps reference the Sales Load process.
--- - Table and batch context is visible through reconciliation_key.
+-- - Object and batch context is visible through reconciliation_key.
 -------------------------------------------------------------------------
 
 SELECT
@@ -495,20 +495,20 @@ ORDER BY
 -------------------------------------------------------------------------
 -- 10. Review metadata scope used by the test
 --
--- This confirms that the SalesOrderHeader target table and its batches were
--- selected through the process-table-batch execution scope.
+-- This confirms that the SalesOrderHeader target object and its batches were
+-- selected through the process-object-batch execution scope.
 -------------------------------------------------------------------------
 
 SELECT
     [process_child_name],
-    [target_table_name],
-    [batch_source_table_name],
+    [target_object_name],
+    [batch_driver_object_name],
     [batch_value],
-    [target_table_execution_required],
+    [target_object_execution_required],
     [batch_execution_required]
 FROM @batch_scope
 ORDER BY
     [process_child_name],
-    [target_table_name],
+    [target_object_name],
     [batch_value];
 GO

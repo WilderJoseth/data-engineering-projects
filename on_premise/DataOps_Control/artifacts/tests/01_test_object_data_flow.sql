@@ -2,22 +2,22 @@ USE [DataOps_Control];
 GO
 
 /* 
-    Test Script: Table Flow + Grouped Table Flow
+    Test Script: Object Flow + Grouped Object Flow
 
     Goal:
     - Simulate the way SSIS will use DataOps_Control metadata.
-    - Get execution flags from metadata.ufn_list_project_process_tables.
-    - Run only tables marked as execution_required = 1.
+    - Get execution flags from metadata.ufn_list_project_process_objects.
+    - Run only objects marked as execution_required = 1.
     - Start and end execution steps.
     - Register reconciliation and validation results.
     - End the execution run and validate final status.
 
     Test scope:
-    - Simple table flow:
+    - Simple object flow:
         AddressType
         ProductCategory
 
-    - Grouped table flow:
+    - Grouped object flow:
         Geography Load
             CountryRegion
             StateProvince
@@ -34,7 +34,7 @@ GO
 
 DECLARE @project_id SMALLINT = 1;
 DECLARE @parent_process_id INT = 4; -- Reference Data Load / PKG_REFERENCE_DATA
-DECLARE @batch_column_active BIT = 0;
+DECLARE @include_batch_objects BIT = 0;
 
 DECLARE @status_success SMALLINT = 3;
 DECLARE @status_observed SMALLINT = 6;
@@ -60,16 +60,16 @@ DECLARE @run_SalesTerritory_load INT = 0;
 -- This section simulates metadata configuration before the ETL starts.
 --
 -- execution_required = 1 means the orchestration layer should execute
--- that table load.
+-- that object load.
 --
--- execution_required = 0 means the table is part of the model, but it
+-- execution_required = 0 means the object is part of the model, but it
 -- should not run in this test.
 -------------------------------------------------------------------------
 
-UPDATE [metadata].[project_tables]
+UPDATE [metadata].[project_objects]
 SET [execution_required] = 0;
 
-UPDATE [metadata].[project_tables]
+UPDATE [metadata].[project_objects]
 SET [execution_required] = 1
 WHERE [id] IN
 (
@@ -81,36 +81,36 @@ WHERE [id] IN
 );
 
 -------------------------------------------------------------------------
--- 2. Get process/table execution scope
+-- 2. Get process/object execution scope
 --
--- This function returns the child processes and controlled tables that
+-- This function returns the child processes and controlled objects that
 -- belong to the parent process.
 --
 -- In SSIS, this metadata result would be used to decide which containers
 -- should run.
 -------------------------------------------------------------------------
 
-DECLARE @process_tables TABLE
+DECLARE @process_objects TABLE
 (
     process_id INT,
     process_name VARCHAR(50),
     process_child_id INT,
     process_child_name VARCHAR(50),
-    table_id INT,
-    table_schema_name VARCHAR(50),
-    table_name VARCHAR(50),
+    object_id INT,
+    object_schema_name VARCHAR(50),
+    object_name VARCHAR(50),
     execution_required BIT
 );
 
-INSERT INTO @process_tables
+INSERT INTO @process_objects
 (
     process_id,
     process_name,
     process_child_id,
     process_child_name,
-    table_id,
-    table_schema_name,
-    table_name,
+    object_id,
+    object_schema_name,
+    object_name,
     execution_required
 )
 SELECT
@@ -118,21 +118,21 @@ SELECT
     process_name,
     process_child_id,
     process_child_name,
-    table_id,
-    table_schema_name,
-    table_name,
+    object_id,
+    object_schema_name,
+    object_name,
     execution_required
-FROM [metadata].[ufn_list_project_process_tables]
+FROM [metadata].[ufn_list_project_process_objects]
 (
     @project_id,
     @parent_process_id,
-    @batch_column_active
+    @include_batch_objects
 );
 
 -- Review the full metadata execution scope returned by the function.
 SELECT *
-FROM @process_tables
-ORDER BY process_child_name, table_name;
+FROM @process_objects
+ORDER BY process_child_name, object_name;
 
 -------------------------------------------------------------------------
 -- 3. Resolve run flags and process IDs
@@ -149,35 +149,35 @@ ORDER BY process_child_name, table_name;
 
 SELECT
     @run_AddressType_load =
-        MAX(IIF([table_id] = 19 AND [execution_required] = 1, 1, 0)),
+        MAX(IIF([object_id] = 19 AND [execution_required] = 1, 1, 0)),
     @AddressTypeProcessId =
-        MAX(IIF([table_id] = 19 AND [execution_required] = 1, [process_child_id], NULL)),
+        MAX(IIF([object_id] = 19 AND [execution_required] = 1, [process_child_id], NULL)),
 
     @run_ProductCategory_load =
-        MAX(IIF([table_id] = 20 AND [execution_required] = 1, 1, 0)),
+        MAX(IIF([object_id] = 20 AND [execution_required] = 1, 1, 0)),
     @ProductCategoryProcessId =
-        MAX(IIF([table_id] = 20 AND [execution_required] = 1, [process_child_id], NULL)),
+        MAX(IIF([object_id] = 20 AND [execution_required] = 1, [process_child_id], NULL)),
 
     -- Parent/group flag. Geography container should run if any Geography
-    -- child table requires execution.
+    -- child object requires execution.
     @run_Geography_load =
-        MAX(IIF([table_id] IN (23, 24, 25) AND [execution_required] = 1, 1, 0)),
+        MAX(IIF([object_id] IN (23, 24, 25) AND [execution_required] = 1, 1, 0)),
 
     @run_CountryRegion_load =
-        MAX(IIF([table_id] = 23 AND [execution_required] = 1, 1, 0)),
+        MAX(IIF([object_id] = 23 AND [execution_required] = 1, 1, 0)),
     @CountryRegionProcessId =
-        MAX(IIF([table_id] = 23 AND [execution_required] = 1, [process_child_id], NULL)),
+        MAX(IIF([object_id] = 23 AND [execution_required] = 1, [process_child_id], NULL)),
 
     @run_StateProvince_load =
-        MAX(IIF([table_id] = 24 AND [execution_required] = 1, 1, 0)),
+        MAX(IIF([object_id] = 24 AND [execution_required] = 1, 1, 0)),
     @StateProvinceProcessId =
-        MAX(IIF([table_id] = 24 AND [execution_required] = 1, [process_child_id], NULL)),
+        MAX(IIF([object_id] = 24 AND [execution_required] = 1, [process_child_id], NULL)),
 
     @run_SalesTerritory_load =
-        MAX(IIF([table_id] = 25 AND [execution_required] = 1, 1, 0)),
+        MAX(IIF([object_id] = 25 AND [execution_required] = 1, 1, 0)),
     @SalesTerritoryProcessId =
-        MAX(IIF([table_id] = 25 AND [execution_required] = 1, [process_child_id], NULL))
-FROM @process_tables;
+        MAX(IIF([object_id] = 25 AND [execution_required] = 1, [process_child_id], NULL))
+FROM @process_objects;
 
 -- Review the flags that would normally be mapped to SSIS variables.
 SELECT
@@ -234,7 +234,7 @@ FROM @execution_run_output;
 -- Flow:
 --   1. Check run flag.
 --   2. Start execution step.
---   3. Simulate table load.
+--   3. Simulate object load.
 --   4. Register reconciliation results.
 --   5. End execution step as Success.
 -------------------------------------------------------------------------
@@ -275,8 +275,8 @@ BEGIN
         [execution_step_id]
     )
     VALUES
-        ('ROW_COUNT', 'TABLE=AddressType', 'SOURCE', 6, @AddressTypeStepId),
-        ('ROW_COUNT', 'TABLE=AddressType', 'TARGET', 6, @AddressTypeStepId);
+        ('ROW_COUNT', 'OBJECT=AddressType', 'SOURCE', 6, @AddressTypeStepId),
+        ('ROW_COUNT', 'OBJECT=AddressType', 'TARGET', 6, @AddressTypeStepId);
 
     ---------------------------------------------------------------------
     -- End execution step
@@ -327,8 +327,8 @@ BEGIN
         [execution_step_id]
     )
     VALUES
-        ('ROW_COUNT', 'TABLE=ProductCategory', 'SOURCE', 37, @ProductCategoryStepId),
-        ('ROW_COUNT', 'TABLE=ProductCategory', 'TARGET', 37, @ProductCategoryStepId);
+        ('ROW_COUNT', 'OBJECT=ProductCategory', 'SOURCE', 37, @ProductCategoryStepId),
+        ('ROW_COUNT', 'OBJECT=ProductCategory', 'TARGET', 37, @ProductCategoryStepId);
 
     ---------------------------------------------------------------------
     -- End execution step as Success.
@@ -349,11 +349,11 @@ END;
 --     ├── StateProvince Load
 --     └── SalesTerritory Load
 --
--- The parent group runs if at least one Geography child table has
+-- The parent group runs if at least one Geography child object has
 -- execution_required = 1.
 --
--- Each child table still creates its own execution step so observability
--- remains table-specific.
+-- Each child object still creates its own execution step so observability
+-- remains object-specific.
 -------------------------------------------------------------------------
 
 IF @run_Geography_load = 1
@@ -393,8 +393,8 @@ BEGIN
             [execution_step_id]
         )
         VALUES
-            ('ROW_COUNT', 'TABLE=CountryRegion', 'SOURCE', 6, @CountryRegionStepId),
-            ('ROW_COUNT', 'TABLE=CountryRegion', 'TARGET', 6, @CountryRegionStepId);
+            ('ROW_COUNT', 'OBJECT=CountryRegion', 'SOURCE', 6, @CountryRegionStepId),
+            ('ROW_COUNT', 'OBJECT=CountryRegion', 'TARGET', 6, @CountryRegionStepId);
 
         -----------------------------------------------------------------
         -- End execution step as Success.
@@ -455,8 +455,8 @@ BEGIN
             [execution_step_id]
         )
         VALUES
-            ('ROW_COUNT', 'TABLE=StateProvince', 'SOURCE', 181, @StateProvinceStepId),
-            ('ROW_COUNT', 'TABLE=StateProvince', 'TARGET', 180, @StateProvinceStepId);
+            ('ROW_COUNT', 'OBJECT=StateProvince', 'SOURCE', 181, @StateProvinceStepId),
+            ('ROW_COUNT', 'OBJECT=StateProvince', 'TARGET', 180, @StateProvinceStepId);
 
         -----------------------------------------------------------------
         -- Register validation result.
@@ -475,7 +475,7 @@ BEGIN
         )
         VALUES
         (
-            '1 source row was excluded from the target load because CountryRegionCode does not exist in the CountryRegion target table.',
+            '1 source row was excluded from the target object load because CountryRegionCode does not exist in the CountryRegion target object.',
             1,
             @StateProvinceStepId,
             3 -- FK_CHECK
@@ -528,8 +528,8 @@ BEGIN
             [execution_step_id]
         )
         VALUES
-            ('ROW_COUNT', 'TABLE=SalesTerritory', 'SOURCE', 10, @SalesTerritoryStepId),
-            ('ROW_COUNT', 'TABLE=SalesTerritory', 'TARGET', 10, @SalesTerritoryStepId);
+            ('ROW_COUNT', 'OBJECT=SalesTerritory', 'SOURCE', 10, @SalesTerritoryStepId),
+            ('ROW_COUNT', 'OBJECT=SalesTerritory', 'TARGET', 10, @SalesTerritoryStepId);
 
         -----------------------------------------------------------------
         -- End execution step as Success.

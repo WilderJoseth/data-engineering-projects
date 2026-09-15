@@ -1248,7 +1248,7 @@ BEGIN
             AND epp.[project_process_id] = child.[id]
         WHERE child.[parent_process_id] = @parent_project_process_id
         AND child.[is_active] = 1
-        AND child.[execution_required] = 0
+        AND child.[is_execution_required] = 0
         AND child_step.[id] IS NULL;
 
         IF @execution_plan_id IS NOT NULL
@@ -1261,7 +1261,7 @@ BEGIN
             WHERE epp.[execution_plan_id] = @execution_plan_id
             AND child.[parent_process_id] = @parent_project_process_id
             AND child.[is_active] = 1
-            AND child.[execution_required] = 0;
+            AND child.[is_execution_required] = 0;
         END;
 
         COMMIT TRANSACTION;

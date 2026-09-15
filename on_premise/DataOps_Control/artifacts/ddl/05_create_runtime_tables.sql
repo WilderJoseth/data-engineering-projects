@@ -47,8 +47,8 @@ GO
 CREATE TABLE [runtime].[execution_watermark_controls] (
     [id] BIGINT IDENTITY(1,1) NOT NULL,
     [project_process_id] INT NOT NULL,
-    [table_id] INT NOT NULL,
-    [watermark_column_id] INT NOT NULL,
+    [object_id] INT NOT NULL,
+    [watermark_object_column_id] INT NOT NULL,
     [last_committed_watermark_value] NVARCHAR(4000) NULL,
     [lower_bound_operator] VARCHAR(5) NOT NULL CONSTRAINT [DF_runtime_execution_watermark_controls_lower_bound_operator] DEFAULT ('>'),
     [upper_bound_operator] VARCHAR(5) NOT NULL CONSTRAINT [DF_runtime_execution_watermark_controls_upper_bound_operator] DEFAULT ('<='),
@@ -59,9 +59,9 @@ CREATE TABLE [runtime].[execution_watermark_controls] (
 
     CONSTRAINT [PK_runtime_execution_watermark_controls] PRIMARY KEY CLUSTERED ([id] ASC),
     CONSTRAINT [FK_runtime_execution_watermark_controls_project_process_id] FOREIGN KEY ([project_process_id]) REFERENCES [metadata].[project_processes]([id]),
-    CONSTRAINT [FK_runtime_execution_watermark_controls_table_id] FOREIGN KEY ([table_id]) REFERENCES [metadata].[project_tables]([id]),
-    CONSTRAINT [FK_runtime_execution_watermark_controls_watermark_column_id] FOREIGN KEY ([watermark_column_id]) REFERENCES [metadata].[project_columns]([id]),
-    CONSTRAINT [UK_runtime_execution_watermark_controls_process_table_column] UNIQUE ([project_process_id], [table_id], [watermark_column_id]),
+    CONSTRAINT [FK_runtime_execution_watermark_controls_object_id] FOREIGN KEY ([object_id]) REFERENCES [metadata].[project_objects]([id]),
+    CONSTRAINT [FK_runtime_execution_watermark_controls_watermark_object_column_id] FOREIGN KEY ([watermark_object_column_id]) REFERENCES [metadata].[project_object_columns]([id]),
+    CONSTRAINT [UK_runtime_execution_watermark_controls_process_object_column] UNIQUE ([project_process_id], [object_id], [watermark_object_column_id]),
     CONSTRAINT [CK_runtime_execution_watermark_controls_lower_bound_operator] CHECK ([lower_bound_operator] IN ('>', '>=', '=', '<', '<=')),
     CONSTRAINT [CK_runtime_execution_watermark_controls_upper_bound_operator] CHECK ([upper_bound_operator] IN ('>', '>=', '=', '<', '<=')),
     CONSTRAINT [CK_runtime_execution_watermark_controls_upper_bound_strategy] CHECK ([upper_bound_strategy] IN ('EXECUTION_START_TIME', 'CURRENT_UTC_TIMESTAMP', 'STATIC_VALUE', 'MAX_SOURCE_VALUE'))
