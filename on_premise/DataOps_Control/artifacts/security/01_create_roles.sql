@@ -11,16 +11,17 @@
         Used by framework maintainers or deployment scripts.
         Can maintain metadata, reference data, runtime records, and observability records.
 
-    - DataOps_Project_Executor:
+    - role_dataops_operator:
         Used by ETL/ELT project service accounts.
         Can read metadata and reference data, execute runtime procedures,
-        log technical errors, and publish validation/reconciliation evidence.
+        log technical errors through observability.usp_log_error, and publish
+        validation/reconciliation/monitoring evidence.
 
     Important:
     - This script does not create SQL Server logins or database users.
     - Each consuming project should create or use its own login/service account.
     - That login/service account should be mapped to a database user in DataOps_Control.
-    - The database user should then be added to DataOps_Project_Executor.
+    - The database user should then be added to role_dataops_operator.
     - Project execution accounts should not directly modify metadata or reference data.
 */
 
@@ -34,22 +35,22 @@ GO
 IF NOT EXISTS (
     SELECT 1
     FROM sys.database_principals
-    WHERE [name] = 'DataOps_Admin'
+    WHERE [name] = 'role_dataops_admin'
     AND [type] = 'R'
 )
 BEGIN
-    CREATE ROLE [DataOps_Admin];
+    CREATE ROLE [role_dataops_admin];
 END;
 GO
 
 IF NOT EXISTS (
     SELECT 1
     FROM sys.database_principals
-    WHERE [name] = 'DataOps_Project_Executor'
+    WHERE [name] = 'role_dataops_operator'
     AND [type] = 'R'
 )
 BEGIN
-    CREATE ROLE [DataOps_Project_Executor];
+    CREATE ROLE [role_dataops_operator];
 END;
 GO
 
@@ -67,17 +68,17 @@ GO
     - Execute framework procedures.
 ==============================================================*/
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[metadata] TO [DataOps_Admin];
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[reference] TO [DataOps_Admin];
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[runtime] TO [DataOps_Admin];
-GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[observability] TO [DataOps_Admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[metadata] TO [role_dataops_admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[reference] TO [role_dataops_admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[runtime] TO [role_dataops_admin];
+GRANT SELECT, INSERT, UPDATE, DELETE ON SCHEMA::[observability] TO [role_dataops_admin];
 
-GRANT EXECUTE ON SCHEMA::[runtime] TO [DataOps_Admin];
-GRANT EXECUTE ON SCHEMA::[observability] TO [DataOps_Admin];
+GRANT EXECUTE ON SCHEMA::[runtime] TO [role_dataops_admin];
+GRANT EXECUTE ON SCHEMA::[observability] TO [role_dataops_admin];
 GO
 
 /*==============================================================
-    3. DataOps_Project_Executor permissions
+    3. role_dataops_operator permissions
 
     This role is intended for:
     - SSIS packages.
@@ -88,26 +89,27 @@ GO
 
     This role can:
     - Read framework metadata and reference values.
+    - Read runtime and observability history for troubleshooting.
     - Execute runtime procedures.
     - Execute observability procedures such as technical error logging.
-    - Insert validation and reconciliation evidence.
-    - Read runtime and observability history for troubleshooting.
+    - Insert validation, reconciliation, and monitoring evidence.
 
     This role should not:
     - Modify metadata configuration.
     - Modify reference values.
-    - Directly update runtime records outside controlled procedures.
+    - Directly insert or update runtime records outside controlled procedures.
+    - Directly insert technical error logs outside observability.usp_log_error.
 ==============================================================*/
 
-GRANT SELECT ON SCHEMA::[metadata] TO [DataOps_Project_Executor];
-GRANT SELECT ON SCHEMA::[reference] TO [DataOps_Project_Executor];
+GRANT SELECT ON SCHEMA::[metadata] TO [role_dataops_operator];
+GRANT SELECT ON SCHEMA::[reference] TO [role_dataops_operator];
+GRANT SELECT ON SCHEMA::[runtime] TO [role_dataops_operator];
+GRANT SELECT ON SCHEMA::[observability] TO [role_dataops_operator];
 
-GRANT EXECUTE ON SCHEMA::[runtime] TO [DataOps_Project_Executor];
-GRANT EXECUTE ON SCHEMA::[observability] TO [DataOps_Project_Executor];
+GRANT EXECUTE ON SCHEMA::[runtime] TO [role_dataops_operator];
+GRANT EXECUTE ON SCHEMA::[observability] TO [role_dataops_operator];
 
-GRANT INSERT ON [observability].[validation_results] TO [DataOps_Project_Executor];
-GRANT INSERT ON [observability].[reconciliation_results] TO [DataOps_Project_Executor];
-
-GRANT SELECT ON SCHEMA::[runtime] TO [DataOps_Project_Executor];
-GRANT SELECT ON SCHEMA::[observability] TO [DataOps_Project_Executor];
+GRANT INSERT ON [observability].[validation_results] TO [role_dataops_operator];
+GRANT INSERT ON [observability].[reconciliation_results] TO [role_dataops_operator];
+GRANT INSERT ON [observability].[monitoring_results] TO [role_dataops_operator];
 GO
